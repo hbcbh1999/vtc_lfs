@@ -1,0 +1,96 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCounterTests", "OptAssignTest\TrafficCounterTests.csproj", "{DCD19F54-9C68-484E-B07F-BBF46BFBB4BF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{73BBB56A-D39C-459A-BED0-EBEFF159C22B} = {73BBB56A-D39C-459A-BED0-EBEFF159C22B}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{634B0138-6F56-40CB-946C-271F88129B4F}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+		TrafficCounter.vsmdi = TrafficCounter.vsmdi
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCounter", "TrafficCounter\TrafficCounter.csproj", "{6A2C2CF3-4F2C-43B5-B34C-A4A24B60B093}"
+	ProjectSection(ProjectDependencies) = postProject
+		{73BBB56A-D39C-459A-BED0-EBEFF159C22B} = {73BBB56A-D39C-459A-BED0-EBEFF159C22B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC.Kernel", "VTC.Kernel\VTC.Kernel.csproj", "{D8A795D9-F343-4DB5-A993-EB35D1A4C182}"
+	ProjectSection(ProjectDependencies) = postProject
+		{73BBB56A-D39C-459A-BED0-EBEFF159C22B} = {73BBB56A-D39C-459A-BED0-EBEFF159C22B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC.KernelTests", "VTC.KernelTests\VTC.KernelTests.csproj", "{F63D44BD-1FB3-41A3-84B6-2A2E48D9AF2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC.Reporting", "VTC.Reporting\VTC.Reporting.csproj", "{0CE41230-5E22-4B13-8520-AE201EED01BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseManager", "LicenseManager\LicenseManager.csproj", "{65F06EAC-770B-4CE9-88B4-D69297F83673}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC.Common", "VTC.Common\VTC.Common.csproj", "{4C7016DF-C1A1-485D-846C-22C7EABB4368}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC.Classifier", "VTC.Classifier\VTC.Classifier.csproj", "{73BBB56A-D39C-459A-BED0-EBEFF159C22B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Indicators", "Indicators\Indicators.csproj", "{EAB5A391-2876-44F9-BE43-163753F00450}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCD19F54-9C68-484E-B07F-BBF46BFBB4BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCD19F54-9C68-484E-B07F-BBF46BFBB4BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCD19F54-9C68-484E-B07F-BBF46BFBB4BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCD19F54-9C68-484E-B07F-BBF46BFBB4BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A2C2CF3-4F2C-43B5-B34C-A4A24B60B093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A2C2CF3-4F2C-43B5-B34C-A4A24B60B093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A2C2CF3-4F2C-43B5-B34C-A4A24B60B093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A2C2CF3-4F2C-43B5-B34C-A4A24B60B093}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A795D9-F343-4DB5-A993-EB35D1A4C182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A795D9-F343-4DB5-A993-EB35D1A4C182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A795D9-F343-4DB5-A993-EB35D1A4C182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A795D9-F343-4DB5-A993-EB35D1A4C182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F63D44BD-1FB3-41A3-84B6-2A2E48D9AF2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F63D44BD-1FB3-41A3-84B6-2A2E48D9AF2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F63D44BD-1FB3-41A3-84B6-2A2E48D9AF2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F63D44BD-1FB3-41A3-84B6-2A2E48D9AF2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CE41230-5E22-4B13-8520-AE201EED01BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CE41230-5E22-4B13-8520-AE201EED01BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CE41230-5E22-4B13-8520-AE201EED01BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CE41230-5E22-4B13-8520-AE201EED01BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65F06EAC-770B-4CE9-88B4-D69297F83673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65F06EAC-770B-4CE9-88B4-D69297F83673}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65F06EAC-770B-4CE9-88B4-D69297F83673}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65F06EAC-770B-4CE9-88B4-D69297F83673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C7016DF-C1A1-485D-846C-22C7EABB4368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C7016DF-C1A1-485D-846C-22C7EABB4368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C7016DF-C1A1-485D-846C-22C7EABB4368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C7016DF-C1A1-485D-846C-22C7EABB4368}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73BBB56A-D39C-459A-BED0-EBEFF159C22B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73BBB56A-D39C-459A-BED0-EBEFF159C22B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73BBB56A-D39C-459A-BED0-EBEFF159C22B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73BBB56A-D39C-459A-BED0-EBEFF159C22B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAB5A391-2876-44F9-BE43-163753F00450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB5A391-2876-44F9-BE43-163753F00450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB5A391-2876-44F9-BE43-163753F00450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB5A391-2876-44F9-BE43-163753F00450}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA9F0106-394B-4F8E-A00A-6F6C22CD9DBC}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = TrafficCounter.vsmdi
+	EndGlobalSection
+EndGlobal

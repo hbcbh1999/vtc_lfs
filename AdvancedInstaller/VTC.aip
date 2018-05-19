@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer" CreateVersion="14.6" version="14.6" Modules="professional" RootPath="." Language="en" Id="{176F7798-5715-420E-9B5F-71EE47F29DB2}">
+  <COMPONENT cid="caphyon.advinst.msicomp.ProjectOptionsComponent">
+    <ROW Name="HiddenItems" Value="AppXProductDetailsComponent;AppXDependenciesComponent;AppXAppDetailsComponent;AppXVisualAssetsComponent;AppXCapabilitiesComponent;AppXAppDeclarationsComponent;AppXUriRulesComponent;MsiJavaComponent;MsiDriverPackagesComponent;UserAccountsComponent;ScheduledTasksComponent;SqlConnectionComponent;AutorunComponent;FirewallExceptionComponent;GameUxComponent;MsiDirectEditorComponent;SharePointSlnComponent;SilverlightSlnComponent;MultipleInstancesComponent;SccmComponent;ActSyncAppComponent"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
+    <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0" MultiBuildValue="DefaultBuild:2"/>
+    <ROW Property="AI_FINDEXE_TITLE" Value="Select the installation package for [|ProductName]" ValueLocId="AI.Property.FindExeTitle"/>
+    <ROW Property="AI_PREDEF_LCONDS_PROPS" Value="AI_DETECTED_DOTNET_VERSION;AI_DETECTED_INTERNET_CONNECTION"/>
+    <ROW Property="AI_REQUIRED_DOTNET_DISPLAY" MultiBuildValue="DefaultBuild:4.5.2" ValueLocId="-"/>
+    <ROW Property="AI_REQUIRED_DOTNET_VERSION" MultiBuildValue="DefaultBuild:4.5.2" ValueLocId="-"/>
+    <ROW Property="AI_ThemeStyle" Value="aero" MsiKey="AI_ThemeStyle"/>
+    <ROW Property="ALLUSERS" Value="1"/>
+    <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
+    <ROW Property="ARPCONTACT" Value="alex@roadometry.com"/>
+    <ROW Property="ARPNOMODIFY" Value="1"/>
+    <ROW Property="ARPNOREPAIR" MultiBuildValue="DefaultBuild:1"/>
+    <ROW Property="ARPPRODUCTICON" Value="favicon.exe" Type="8"/>
+    <ROW Property="ARPURLINFOABOUT" Value="https://roadometry.com"/>
+    <ROW Property="BannerBitmap" Value="banner" MultiBuildValue="DefaultBuild:BannerBitmap.bmp_1" Type="1" MsiKey="BannerBitmap"/>
+    <ROW Property="DialogBitmap" Value="dialog" MultiBuildValue="DefaultBuild:SplashScreen.bmp_1" Type="1" MsiKey="DialogBitmap"/>
+    <ROW Property="LIMITUI" Value="1"/>
+    <ROW Property="Manufacturer" Value="Roadometry"/>
+    <ROW Property="ProductCode" Value="1033:{F246D294-6F0C-42DF-9519-1E6A3AE210EF} " Type="16"/>
+    <ROW Property="ProductLanguage" Value="1033"/>
+    <ROW Property="ProductName" Value="VTC"/>
+    <ROW Property="ProductVersion" Value="1.0.0" Type="32"/>
+    <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
+    <ROW Property="UpgradeCode" Value="{61CC6191-A4B3-4513-B3EE-E13E694060B0}"/>
+    <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsType9XDisplay" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT40Display" MultiBuildValue="DefaultBuild:Windows NT 4.0" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT50Display" MultiBuildValue="DefaultBuild:Windows 2000" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5X" MultiBuildValue="DefaultBuild:Windows XP/2003 RTM, Windows XP/2003 SP1, Windows XP SP2 x86" ValueLocId="-"/>
+    <ROW Property="WindowsTypeNT5XDisplay" MultiBuildValue="DefaultBuild:Windows XP/2003 RTM, Windows XP/2003 SP1, Windows XP SP2 x86" ValueLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
+    <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
+    <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
+    <ROW Directory="DetectionNetwork_Dir" Directory_Parent="APPDIR" DefaultDir="DETECT~1|DetectionNetwork"/>
+    <ROW Directory="ReportAssets_Dir" Directory_Parent="APPDIR" DefaultDir="REPORT~1|ReportAssets"/>
+    <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
+    <ROW Directory="amd64_Dir" Directory_Parent="APPDIR" DefaultDir="amd64"/>
+    <ROW Directory="config_Dir" Directory_Parent="APPDIR" DefaultDir="config"/>
+    <ROW Directory="de_Dir" Directory_Parent="APPDIR" DefaultDir="de"/>
+    <ROW Directory="es_Dir" Directory_Parent="APPDIR" DefaultDir="es"/>
+    <ROW Directory="fr_Dir" Directory_Parent="APPDIR" DefaultDir="fr"/>
+    <ROW Directory="hu_Dir" Directory_Parent="APPDIR" DefaultDir="hu"/>
+    <ROW Directory="i386_Dir" Directory_Parent="APPDIR" DefaultDir="i386"/>
+    <ROW Directory="it_Dir" Directory_Parent="APPDIR" DefaultDir="it"/>
+    <ROW Directory="ja_Dir" Directory_Parent="APPDIR" DefaultDir="ja"/>
+    <ROW Directory="pt_Dir" Directory_Parent="APPDIR" DefaultDir="pt"/>
+    <ROW Directory="ru_Dir" Directory_Parent="APPDIR" DefaultDir="ru"/>
+    <ROW Directory="sk_Dir" Directory_Parent="APPDIR" DefaultDir="sk"/>
+    <ROW Directory="sv_Dir" Directory_Parent="APPDIR" DefaultDir="sv"/>
+    <ROW Directory="tr_Dir" Directory_Parent="APPDIR" DefaultDir="tr"/>
+    <ROW Directory="x64_Dir" Directory_Parent="APPDIR" DefaultDir="x64"/>
+    <ROW Directory="x86_Dir" Directory_Parent="APPDIR" DefaultDir="x86"/>
+    <ROW Directory="zhcn_Dir" Directory_Parent="APPDIR" DefaultDir="zh-cn"/>
+    <ROW Directory="zhtw_Dir" Directory_Parent="APPDIR" DefaultDir="zh-tw"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
+    <ROW Component="AI_ExePath" ComponentId="{E6BF0315-A771-49D1-9659-0745CA91654E}" Directory_="APPDIR" Attributes="4" KeyPath="AI_ExePath"/>
+    <ROW Component="Akka.dll" ComponentId="{AE40258C-E4F7-4164-B868-CAC1CBF65C04}" Directory_="APPDIR" Attributes="0" KeyPath="Akka.dll"/>
+    <ROW Component="Akka.xml" ComponentId="{33A64FBC-6E61-4732-B924-FB84887F201A}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.UI.xml" Type="0"/>
+    <ROW Component="BigLogo.png" ComponentId="{971B9ADB-7CCA-4091-B2BF-3065841B99FE}" Directory_="ReportAssets_Dir" Attributes="0" KeyPath="BigLogo.png" Type="0"/>
+    <ROW Component="DirectShowLib2005.dll" ComponentId="{8FA7D140-ECB5-4B0C-86A1-241A95266D9A}" Directory_="APPDIR" Attributes="0" KeyPath="DirectShowLib2005.dll"/>
+    <ROW Component="Emgu.CV.UI.dll" ComponentId="{1DC46624-190D-4FE1-B177-5B84BCC49625}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.UI.dll"/>
+    <ROW Component="Emgu.CV.World.dll" ComponentId="{EF44FC1C-068F-47C8-87DD-E965A5E88C93}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.World.dll"/>
+    <ROW Component="GeoAPI.dll" ComponentId="{4AFD1976-D129-4875-8745-927613FA8D98}" Directory_="APPDIR" Attributes="0" KeyPath="GeoAPI.dll"/>
+    <ROW Component="IPManager.dll" ComponentId="{C7924FFA-6A9B-4207-A6CA-83572E2D11A8}" Directory_="APPDIR" Attributes="0" KeyPath="IPManager.dll"/>
+    <ROW Component="Indicators.dll" ComponentId="{8C66BD06-B966-40D7-A270-B6D8D7EF4B33}" Directory_="APPDIR" Attributes="0" KeyPath="Indicators.dll"/>
+    <ROW Component="LicenseManager.exe" ComponentId="{564F755C-A110-4A2B-B4A2-083F1F172EF9}" Directory_="APPDIR" Attributes="0" KeyPath="LicenseManager.exe"/>
+    <ROW Component="LicenseSpot.Framework.dll" ComponentId="{E87F7A34-77A5-482D-B664-0661784B8255}" Directory_="APPDIR" Attributes="0" KeyPath="LicenseSpot.Framework.dll"/>
+    <ROW Component="MathNet.Numerics.IO.dll" ComponentId="{D5B33551-E9FB-4749-9EA4-B6F7B2A16633}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Numerics.IO.dll"/>
+    <ROW Component="MathNet.Numerics.dll" ComponentId="{F7D5951F-F8F0-4A20-9317-F547E9E3C9E8}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Numerics.dll"/>
+    <ROW Component="Microsoft.CSharp.dll" ComponentId="{402EC139-4E54-40D5-9432-992789FD60D3}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.CSharp.dll"/>
+    <ROW Component="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" ComponentId="{DE62FA17-6704-4C18-B7C9-D43CEBE58CD8}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"/>
+    <ROW Component="NDtw.dll" ComponentId="{B66D970C-5802-41D9-AE9F-B0362A7E47D9}" Directory_="APPDIR" Attributes="0" KeyPath="NDtw.dll"/>
+    <ROW Component="NLog.dll" ComponentId="{056F04C6-9F15-49CC-BA3F-05186F080AD6}" Directory_="APPDIR" Attributes="0" KeyPath="NLog.dll"/>
+    <ROW Component="NetTopologySuite.dll" ComponentId="{C1E38598-4678-4FE5-849E-44722605B4F9}" Directory_="APPDIR" Attributes="0" KeyPath="NetTopologySuite.dll"/>
+    <ROW Component="Newtonsoft.Json.dll" ComponentId="{433F8312-A6C8-4F27-A10D-9880011DBA08}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
+    <ROW Component="NvAPIWrapper.Net.dll" ComponentId="{F84B5D0D-589F-434F-91B4-2438B7DCA0A5}" Directory_="APPDIR" Attributes="0" KeyPath="NvAPIWrapper.Net.dll"/>
+    <ROW Component="OptAssignTest.dll" ComponentId="{00176C66-C9E0-4AF4-A666-D41F18D3DEAF}" Directory_="APPDIR" Attributes="0" KeyPath="OptAssignTest.dll"/>
+    <ROW Component="PowerCollections.dll" ComponentId="{1B34FDDB-8712-4ED5-A131-18A80F89B20A}" Directory_="APPDIR" Attributes="0" KeyPath="PowerCollections.dll"/>
+    <ROW Component="ProductInformation" ComponentId="{D084E5D9-16AD-46DB-B135-D8D9AB1FC552}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="System.Collections.Immutable.dll" ComponentId="{E75BFB47-3319-4750-A996-D17AD2B1E0EB}" Directory_="APPDIR" Attributes="0" KeyPath="System.Collections.Immutable.dll"/>
+    <ROW Component="TrafficCounter.exe" ComponentId="{E7E20C7B-866F-4727-9DA7-C017AA35E1D1}" Directory_="APPDIR" Attributes="0" KeyPath="TrafficCounter.exe"/>
+    <ROW Component="VTC.Classifier.dll" ComponentId="{37755E33-A0EB-49A5-85F9-750CD854055E}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Classifier.dll"/>
+    <ROW Component="VTC.Common.dll" ComponentId="{198F6402-2CC5-49E2-BFE0-672D0014E8B9}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Common.dll"/>
+    <ROW Component="VTC.Kernel.dll" ComponentId="{CC43C065-57B8-457B-8546-D757A5517C1D}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Kernel.dll"/>
+    <ROW Component="VTC.KernelTests.dll" ComponentId="{375C8E41-FA38-4DEF-94A7-2DAB6E5064DA}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.KernelTests.dll"/>
+    <ROW Component="VTC.Reporting.dll" ComponentId="{66A98A81-7961-4836-9053-C138B8F6610E}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Reporting.dll"/>
+    <ROW Component="ZedGraph.dll" ComponentId="{B6E361CA-C535-4261-A537-47730AF1ABDB}" Directory_="APPDIR" Attributes="0" KeyPath="ZedGraph.dll"/>
+    <ROW Component="ZedGraph.resources.dll" ComponentId="{2DF5D12A-D91E-48BF-857E-4D81DB265A88}" Directory_="de_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll"/>
+    <ROW Component="ZedGraph.resources.dll_25" ComponentId="{FBEAE3BA-6E4B-4295-8C06-082433A2177B}" Directory_="es_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_25"/>
+    <ROW Component="ZedGraph.resources.dll_26" ComponentId="{45AA45A2-9645-4711-A092-29D08B6B8680}" Directory_="fr_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_26"/>
+    <ROW Component="ZedGraph.resources.dll_27" ComponentId="{3788AB10-FD49-43BB-9273-56F362CD4055}" Directory_="hu_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_27"/>
+    <ROW Component="ZedGraph.resources.dll_28" ComponentId="{3F9D4323-6B27-4C49-BCDB-44395A495763}" Directory_="it_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_28"/>
+    <ROW Component="ZedGraph.resources.dll_29" ComponentId="{6765D9F4-E51A-4DBB-8011-C1D7C929D759}" Directory_="ja_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_29"/>
+    <ROW Component="ZedGraph.resources.dll_30" ComponentId="{3BFE59DF-A5B8-400B-BF40-8C6EEF21F66C}" Directory_="pt_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_30"/>
+    <ROW Component="ZedGraph.resources.dll_31" ComponentId="{664982F5-164C-411B-A849-64AB8FA5CD89}" Directory_="ru_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_31"/>
+    <ROW Component="ZedGraph.resources.dll_32" ComponentId="{722E6B58-E39F-4830-80D7-03922D0E4430}" Directory_="sk_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_32"/>
+    <ROW Component="ZedGraph.resources.dll_33" ComponentId="{B4B5354A-920B-4E2D-8679-4F316613AF87}" Directory_="sv_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_33"/>
+    <ROW Component="ZedGraph.resources.dll_34" ComponentId="{5F84DDA3-65DA-4773-BC43-EF8278DAFDD9}" Directory_="tr_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_34"/>
+    <ROW Component="ZedGraph.resources.dll_35" ComponentId="{6B27F40D-3A7F-4291-A2A4-73FB39B542C2}" Directory_="zhcn_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_35"/>
+    <ROW Component="ZedGraph.resources.dll_36" ComponentId="{5F539976-5225-4D03-8B5E-623DF464D5E0}" Directory_="zhtw_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_36"/>
+    <ROW Component="ZeroMQ.dll" ComponentId="{AE93886C-88FB-4C34-801C-85E3142C94AB}" Directory_="APPDIR" Attributes="0" KeyPath="ZeroMQ.dll"/>
+    <ROW Component="concrt140.dll" ComponentId="{0FDA1D3D-6BB4-4109-8A09-0970619CC5D3}" Directory_="x64_Dir" Attributes="256" KeyPath="concrt140.dll"/>
+    <ROW Component="concrt140.dll_3" ComponentId="{3EECE84A-4F5C-4060-A12A-1054AC74F8C8}" Directory_="x86_Dir" Attributes="0" KeyPath="concrt140.dll_3"/>
+    <ROW Component="cublas64_91.dll" ComponentId="{D478032A-780B-4C14-9D7D-5EA94056F8DB}" Directory_="APPDIR" Attributes="256" KeyPath="cublas64_91.dll"/>
+    <ROW Component="cudart64_91.dll" ComponentId="{A9D2735B-E692-423B-9387-591BEE4A907A}" Directory_="APPDIR" Attributes="256" KeyPath="cudart64_91.dll"/>
+    <ROW Component="cudnn64_7.dll" ComponentId="{C218F338-17EA-49E8-8265-4C70A4824238}" Directory_="APPDIR" Attributes="256" KeyPath="cudnn64_7.dll"/>
+    <ROW Component="curand64_91.dll" ComponentId="{0E7F4C53-E30F-4BB9-9BD5-0FF5DD7351CA}" Directory_="APPDIR" Attributes="256" KeyPath="curand64_91.dll"/>
+    <ROW Component="cvextern.dll" ComponentId="{A4C00B9F-1B5F-4337-B604-B0F919986522}" Directory_="x64_Dir" Attributes="256" KeyPath="cvextern.dll"/>
+    <ROW Component="cvextern.dll_2" ComponentId="{D442786C-4643-4188-A6A5-2549D0E20F39}" Directory_="x86_Dir" Attributes="0" KeyPath="cvextern.dll_2"/>
+    <ROW Component="eventConfig.xml" ComponentId="{24AADE08-3DCB-40D4-9409-A281ED57F27B}" Directory_="config_Dir" Attributes="0" KeyPath="eventConfig.xml" Type="0"/>
+    <ROW Component="libsodium.dll" ComponentId="{91CDA345-1A78-405C-8422-9A0D7D28B7EB}" Directory_="amd64_Dir" Attributes="256" KeyPath="libsodium.dll"/>
+    <ROW Component="libsodium.dll_3" ComponentId="{12BBCB0D-808F-417A-ADB0-081047205319}" Directory_="i386_Dir" Attributes="0" KeyPath="libsodium.dll_3"/>
+    <ROW Component="libsodium.so" ComponentId="{15838000-7DB8-4EA5-9FCF-36278230672E}" Directory_="amd64_Dir" Attributes="0" KeyPath="libsodium.so" Type="0"/>
+    <ROW Component="libsodium.so_3" ComponentId="{80D13DBD-57A3-46CD-B0E3-027C2973090F}" Directory_="i386_Dir" Attributes="0" KeyPath="libsodium.so_3" Type="0"/>
+    <ROW Component="libzmq.dll" ComponentId="{A14357E9-ED95-4B08-AF48-101EB615349E}" Directory_="amd64_Dir" Attributes="256" KeyPath="libzmq.dll"/>
+    <ROW Component="libzmq.dll_3" ComponentId="{13F73166-C28C-4189-AE01-B154E782E836}" Directory_="i386_Dir" Attributes="0" KeyPath="libzmq.dll_3"/>
+    <ROW Component="msvcp140.dll" ComponentId="{2E3ECB49-A1ED-40C4-A540-DED8D54272E6}" Directory_="x64_Dir" Attributes="256" KeyPath="msvcp140.dll"/>
+    <ROW Component="msvcp140.dll_3" ComponentId="{F03F421C-B6A7-43BA-A3E0-5F3142A034FF}" Directory_="x86_Dir" Attributes="0" KeyPath="msvcp140.dll_3"/>
+    <ROW Component="nvapi.dll" ComponentId="{9D797778-D2ED-498D-A62C-5275F16F9C0E}" Directory_="APPDIR" Attributes="0" KeyPath="nvapi.dll"/>
+    <ROW Component="nvapi64.dll" ComponentId="{3C62E731-CA8C-4FCF-A18B-C3FF5DEC4241}" Directory_="APPDIR" Attributes="256" KeyPath="nvapi64.dll"/>
+    <ROW Component="opencv_ffmpeg341.dll" ComponentId="{886E8D97-3D1E-43F6-A113-7BE83C9E629E}" Directory_="x86_Dir" Attributes="0" KeyPath="opencv_ffmpeg341.dll"/>
+    <ROW Component="opencv_ffmpeg341_64.dll" ComponentId="{A2F0C4AD-D2B1-4343-AD79-B4F3798D5606}" Directory_="x64_Dir" Attributes="256" KeyPath="opencv_ffmpeg341_64.dll"/>
+    <ROW Component="pthreadGC2.dll" ComponentId="{1CBD8253-7C1F-4F30-B787-65D8B0A6D36A}" Directory_="APPDIR" Attributes="256" KeyPath="pthreadGC2.dll"/>
+    <ROW Component="pthreadVC2.dll" ComponentId="{CAE72B65-D818-46BF-AA7C-E6ECB1294150}" Directory_="APPDIR" Attributes="256" KeyPath="pthreadVC2.dll"/>
+    <ROW Component="transport.names" ComponentId="{3CC4BD76-4045-4CB6-B433-2DABF3B00E9B}" Directory_="DetectionNetwork_Dir" Attributes="0" KeyPath="transport.names" Type="0"/>
+    <ROW Component="vcruntime140.dll" ComponentId="{0B822658-635D-4A74-A0F0-ABB694EAE76C}" Directory_="x64_Dir" Attributes="256" KeyPath="vcruntime140.dll"/>
+    <ROW Component="vcruntime140.dll_3" ComponentId="{13521B28-F2E8-4248-80DA-CC6A16475FAA}" Directory_="x86_Dir" Attributes="0" KeyPath="vcruntime140.dll_3"/>
+    <ROW Component="yolo_cpp_dll.dll" ComponentId="{D83E20C2-4941-4A2D-9AD0-1C74ECB8DAFC}" Directory_="APPDIR" Attributes="256" KeyPath="yolo_cpp_dll.dll"/>
+    <ROW Component="yolo_cpp_dll_no_gpu.dll" ComponentId="{9E34F1F9-E3DE-485D-809B-239B36028484}" Directory_="APPDIR" Attributes="256" KeyPath="yolo_cpp_dll_no_gpu.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
+    <ROW Feature="A9B3CC_B8E4_4F03_B719_D9E76675954E" Title="Visual C++ 2010 x64 (MFC Security Update)" Description="Visual C++ 2010 x64 (MFC Security Update)" Display="3" Level="1" Attributes="0" Components="AI_ExePath"/>
+    <ROW Feature="B63_41B8_9CB7_8C5E07C0FC18_" Title="Visual C++ 2010 SP1 x64 (MFC Security Update)" Description="Visual C++ 2010 SP1 x64 (MFC Security Update)" Display="9" Level="1" Attributes="0" Components="AI_ExePath"/>
+    <ROW Feature="CB585686_DAA3_4384_BDDF_08ABA631E9F3_" Title="Visual C++ 2010 SP1 x86 (MFC Security Update)" Description="Visual C++ 2010 SP1 x86 (MFC Security Update)" Display="7" Level="1" Attributes="0" Components="AI_ExePath"/>
+    <ROW Feature="FAA_5658_49AA_A41D_71074C8A5006" Title="Visual C++ 2010 x86 (MFC Security Update)" Description="Visual C++ 2010 x86 (MFC Security Update)" Display="5" Level="1" Attributes="0" Components="AI_ExePath"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath Akka.dll Akka.xml BigLogo.png DirectShowLib2005.dll Emgu.CV.UI.dll Emgu.CV.World.dll GeoAPI.dll IPManager.dll Indicators.dll LicenseManager.exe LicenseSpot.Framework.dll MathNet.Numerics.IO.dll MathNet.Numerics.dll Microsoft.CSharp.dll Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll NDtw.dll NLog.dll NetTopologySuite.dll Newtonsoft.Json.dll NvAPIWrapper.Net.dll OptAssignTest.dll PowerCollections.dll ProductInformation System.Collections.Immutable.dll TrafficCounter.exe VTC.Classifier.dll VTC.Common.dll VTC.Kernel.dll VTC.KernelTests.dll VTC.Reporting.dll ZedGraph.dll ZedGraph.resources.dll ZedGraph.resources.dll_25 ZedGraph.resources.dll_26 ZedGraph.resources.dll_27 ZedGraph.resources.dll_28 ZedGraph.resources.dll_29 ZedGraph.resources.dll_30 ZedGraph.resources.dll_31 ZedGraph.resources.dll_32 ZedGraph.resources.dll_33 ZedGraph.resources.dll_34 ZedGraph.resources.dll_35 ZedGraph.resources.dll_36 ZeroMQ.dll concrt140.dll concrt140.dll_3 cublas64_91.dll cudart64_91.dll cudnn64_7.dll curand64_91.dll cvextern.dll cvextern.dll_2 eventConfig.xml libsodium.dll libsodium.dll_3 libsodium.so libsodium.so_3 libzmq.dll libzmq.dll_3 msvcp140.dll msvcp140.dll_3 nvapi.dll nvapi64.dll opencv_ffmpeg341.dll opencv_ffmpeg341_64.dll pthreadGC2.dll pthreadVC2.dll transport.names vcruntime140.dll vcruntime140.dll_3 yolo_cpp_dll.dll yolo_cpp_dll_no_gpu.dll"/>
+    <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
+    <ROW File="Akka.dll" Component_="Akka.dll" FileName="Akka.dll" Attributes="0" SourcePath="..\bin\Akka.dll" SelfReg="false" NextFile="Akka.xml"/>
+    <ROW File="Akka.xml" Component_="Akka.xml" FileName="Akka.xml" Attributes="0" SourcePath="..\bin\Akka.xml" SelfReg="false" NextFile="cublas64_91.dll"/>
+    <ROW File="BigLogo.png" Component_="BigLogo.png" FileName="BigLogo.png" Attributes="0" SourcePath="..\bin\ReportAssets\BigLogo.png" SelfReg="false" NextFile="favicon.ico"/>
+    <ROW File="DirectShowLib2005.dll" Component_="DirectShowLib2005.dll" FileName="DIRECT~1.DLL|DirectShowLib-2005.dll" Attributes="0" SourcePath="..\bin\DirectShowLib-2005.dll" SelfReg="false" NextFile="Emgu.CV.UI.dll"/>
+    <ROW File="Emgu.CV.UI.dll" Component_="Emgu.CV.UI.dll" FileName="EMGUCV~1.DLL|Emgu.CV.UI.dll" Attributes="0" SourcePath="..\bin\Emgu.CV.UI.dll" SelfReg="false" NextFile="Emgu.CV.UI.xml"/>
+    <ROW File="Emgu.CV.UI.xml" Component_="Akka.xml" FileName="EMGUCV~1.XML|Emgu.CV.UI.xml" Attributes="0" SourcePath="..\bin\Emgu.CV.UI.xml" SelfReg="false" NextFile="Emgu.CV.World.dll"/>
+    <ROW File="Emgu.CV.World.dll" Component_="Emgu.CV.World.dll" FileName="EMGUCV~2.DLL|Emgu.CV.World.dll" Attributes="0" SourcePath="..\bin\Emgu.CV.World.dll" SelfReg="false" NextFile="Emgu.CV.World.xml"/>
+    <ROW File="Emgu.CV.World.xml" Component_="Akka.xml" FileName="EMGUCV~2.XML|Emgu.CV.World.xml" Attributes="0" SourcePath="..\bin\Emgu.CV.World.xml" SelfReg="false" NextFile="GeoAPI.dll"/>
+    <ROW File="GeoAPI.dll" Component_="GeoAPI.dll" FileName="GeoAPI.dll" Attributes="0" SourcePath="..\bin\GeoAPI.dll" SelfReg="false" NextFile="GeoAPI.xml"/>
+    <ROW File="GeoAPI.xml" Component_="Akka.xml" FileName="GeoAPI.xml" Attributes="0" SourcePath="..\bin\GeoAPI.xml" SelfReg="false" NextFile="Indicators.dll"/>
+    <ROW File="IPManager.dll" Component_="IPManager.dll" FileName="IPMANA~1.DLL|IPManager.dll" Attributes="0" SourcePath="..\bin\IPManager.dll" SelfReg="false" NextFile="LicenseManager.exe"/>
+    <ROW File="Indicators.dll" Component_="Indicators.dll" FileName="INDICA~1.DLL|Indicators.dll" Attributes="0" SourcePath="..\bin\Indicators.dll" SelfReg="false" NextFile="Indicators.dll.config"/>
+    <ROW File="Indicators.dll.config" Component_="Akka.xml" FileName="INDICA~1.CON|Indicators.dll.config" Attributes="0" SourcePath="..\bin\Indicators.dll.config" SelfReg="false" NextFile="Indicators.pdb"/>
+    <ROW File="Indicators.pdb" Component_="Indicators.dll" FileName="INDICA~1.PDB|Indicators.pdb" Attributes="0" SourcePath="..\bin\Indicators.pdb" SelfReg="false" NextFile="IPManager.dll"/>
+    <ROW File="LicenseManager.exe" Component_="LicenseManager.exe" FileName="LICENS~1.EXE|LicenseManager.exe" Attributes="0" SourcePath="..\bin\LicenseManager.exe" SelfReg="false" NextFile="LicenseManager.exe.config" DigSign="true"/>
+    <ROW File="LicenseManager.exe.config" Component_="Akka.xml" FileName="LICENS~1.CON|LicenseManager.exe.config" Attributes="0" SourcePath="..\bin\LicenseManager.exe.config" SelfReg="false" NextFile="LicenseManager.pdb"/>
+    <ROW File="LicenseManager.pdb" Component_="LicenseManager.exe" FileName="LICENS~1.PDB|LicenseManager.pdb" Attributes="0" SourcePath="..\bin\LicenseManager.pdb" SelfReg="false" NextFile="LicenseSpot.Framework.dll"/>
+    <ROW File="LicenseSpot.Framework.dll" Component_="LicenseSpot.Framework.dll" FileName="LICENS~1.DLL|LicenseSpot.Framework.dll" Attributes="0" SourcePath="..\bin\LicenseSpot.Framework.dll" SelfReg="false" NextFile="Logo.ico"/>
+    <ROW File="Logo.ico" Component_="Akka.xml" FileName="Logo.ico" Attributes="0" SourcePath="..\bin\Logo.ico" SelfReg="false" NextFile="MathNet.Numerics.dll"/>
+    <ROW File="MathNet.Numerics.IO.dll" Component_="MathNet.Numerics.IO.dll" FileName="MATHNE~2.DLL|MathNet.Numerics.IO.dll" Attributes="0" SourcePath="..\bin\MathNet.Numerics.IO.dll" SelfReg="false" NextFile="MathNet.Numerics.IO.pdb"/>
+    <ROW File="MathNet.Numerics.IO.pdb" Component_="MathNet.Numerics.IO.dll" FileName="MATHNE~1.PDB|MathNet.Numerics.IO.pdb" Attributes="0" SourcePath="..\bin\MathNet.Numerics.IO.pdb" SelfReg="false" NextFile="MathNet.Numerics.IO.xml"/>
+    <ROW File="MathNet.Numerics.IO.xml" Component_="Akka.xml" FileName="MATHNE~1.XML|MathNet.Numerics.IO.xml" Attributes="0" SourcePath="..\bin\MathNet.Numerics.IO.xml" SelfReg="false" NextFile="MathNet.Numerics.pdb"/>
+    <ROW File="MathNet.Numerics.dll" Component_="MathNet.Numerics.dll" FileName="MATHNE~1.DLL|MathNet.Numerics.dll" Attributes="0" SourcePath="..\bin\MathNet.Numerics.dll" SelfReg="false" NextFile="MathNet.Numerics.IO.dll"/>
+    <ROW File="MathNet.Numerics.pdb" Component_="MathNet.Numerics.dll" FileName="MATHNE~2.PDB|MathNet.Numerics.pdb" Attributes="0" SourcePath="..\bin\MathNet.Numerics.pdb" SelfReg="false" NextFile="MathNet.Numerics.xml"/>
+    <ROW File="MathNet.Numerics.xml" Component_="Akka.xml" FileName="MATHNE~2.XML|MathNet.Numerics.xml" Attributes="0" SourcePath="..\bin\MathNet.Numerics.xml" SelfReg="false" NextFile="Microsoft.CSharp.dll"/>
+    <ROW File="Microsoft.CSharp.dll" Component_="Microsoft.CSharp.dll" FileName="MICROS~1.DLL|Microsoft.CSharp.dll" Attributes="0" SourcePath="..\bin\Microsoft.CSharp.dll" SelfReg="false" NextFile="Microsoft.CSharp.xml"/>
+    <ROW File="Microsoft.CSharp.xml" Component_="Akka.xml" FileName="MICROS~1.XML|Microsoft.CSharp.xml" Attributes="0" SourcePath="..\bin\Microsoft.CSharp.xml" SelfReg="false" NextFile="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"/>
+    <ROW File="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" Component_="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" FileName="MICROS~2.DLL|Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" Attributes="0" SourcePath="..\bin\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" SelfReg="false" NextFile="NDtw.dll"/>
+    <ROW File="NDtw.dll" Component_="NDtw.dll" FileName="NDtw.dll" Attributes="0" SourcePath="..\bin\NDtw.dll" SelfReg="false" NextFile="NetTopologySuite.dll"/>
+    <ROW File="NLog.dll" Component_="NLog.dll" FileName="NLog.dll" Attributes="0" SourcePath="..\bin\NLog.dll" SelfReg="false" NextFile="NLog.xml"/>
+    <ROW File="NLog.xml" Component_="Akka.xml" FileName="NLog.xml" Attributes="0" SourcePath="..\bin\NLog.xml" SelfReg="false" NextFile="NvAPIWrapper.Net.dll"/>
+    <ROW File="NetTopologySuite.dll" Component_="NetTopologySuite.dll" FileName="NETTOP~1.DLL|NetTopologySuite.dll" Attributes="0" SourcePath="..\bin\NetTopologySuite.dll" SelfReg="false" NextFile="NetTopologySuite.xml"/>
+    <ROW File="NetTopologySuite.xml" Component_="Akka.xml" FileName="NETTOP~1.XML|NetTopologySuite.xml" Attributes="0" SourcePath="..\bin\NetTopologySuite.xml" SelfReg="false" NextFile="Newtonsoft.Json.dll"/>
+    <ROW File="Newtonsoft.Json.dll" Component_="Newtonsoft.Json.dll" FileName="NEWTON~1.DLL|Newtonsoft.Json.dll" Attributes="0" SourcePath="..\bin\Newtonsoft.Json.dll" SelfReg="false" NextFile="Newtonsoft.Json.xml"/>
+    <ROW File="Newtonsoft.Json.xml" Component_="Akka.xml" FileName="NEWTON~1.XML|Newtonsoft.Json.xml" Attributes="0" SourcePath="..\bin\Newtonsoft.Json.xml" SelfReg="false" NextFile="NLog.dll"/>
+    <ROW File="NvAPIWrapper.Net.dll" Component_="NvAPIWrapper.Net.dll" FileName="NVAPIW~1.DLL|NvAPIWrapper.Net.dll" Attributes="0" SourcePath="..\bin\NvAPIWrapper.Net.dll" SelfReg="false" NextFile="NvAPIWrapper.Net.xml"/>
+    <ROW File="NvAPIWrapper.Net.xml" Component_="Akka.xml" FileName="NVAPIW~1.XML|NvAPIWrapper.Net.xml" Attributes="0" SourcePath="..\bin\NvAPIWrapper.Net.xml" SelfReg="false" NextFile="OptAssignTest.dll"/>
+    <ROW File="OptAssignTest.dll" Component_="OptAssignTest.dll" FileName="OPTASS~1.DLL|OptAssignTest.dll" Attributes="0" SourcePath="..\bin\OptAssignTest.dll" SelfReg="false" NextFile="OptAssignTest.dll.config"/>
+    <ROW File="OptAssignTest.dll.config" Component_="Akka.xml" FileName="OPTASS~1.CON|OptAssignTest.dll.config" Attributes="0" SourcePath="..\bin\OptAssignTest.dll.config" SelfReg="false" NextFile="OptAssignTest.pdb"/>
+    <ROW File="OptAssignTest.pdb" Component_="OptAssignTest.dll" FileName="OPTASS~1.PDB|OptAssignTest.pdb" Attributes="0" SourcePath="..\bin\OptAssignTest.pdb" SelfReg="false" NextFile="PowerCollections.dll"/>
+    <ROW File="PowerCollections.dll" Component_="PowerCollections.dll" FileName="POWERC~1.DLL|PowerCollections.dll" Attributes="0" SourcePath="..\bin\PowerCollections.dll" SelfReg="false" NextFile="PowerCollections.xml"/>
+    <ROW File="PowerCollections.xml" Component_="Akka.xml" FileName="POWERC~1.XML|PowerCollections.xml" Attributes="0" SourcePath="..\bin\PowerCollections.xml" SelfReg="false" NextFile="pthreadGC2.dll"/>
+    <ROW File="System.Collections.Immutable.dll" Component_="System.Collections.Immutable.dll" FileName="SYSTEM~1.DLL|System.Collections.Immutable.dll" Attributes="0" SourcePath="..\bin\System.Collections.Immutable.dll" SelfReg="false" NextFile="System.Collections.Immutable.xml"/>
+    <ROW File="System.Collections.Immutable.xml" Component_="Akka.xml" FileName="SYSTEM~1.XML|System.Collections.Immutable.xml" Attributes="0" SourcePath="..\bin\System.Collections.Immutable.xml" SelfReg="false" NextFile="VTC.Common.dll"/>
+    <ROW File="TrafficCounter.exe" Component_="TrafficCounter.exe" FileName="TRAFFI~1.EXE|TrafficCounter.exe" Attributes="0" SourcePath="..\bin\TrafficCounter.exe" SelfReg="false" NextFile="TrafficCounter.pdb" DigSign="true"/>
+    <ROW File="TrafficCounter.exe.config" Component_="Akka.xml" FileName="TRAFFI~1.CON|TrafficCounter.exe.config" Attributes="0" SourcePath="..\bin\TrafficCounter.exe.config" SelfReg="false"/>
+    <ROW File="TrafficCounter.pdb" Component_="TrafficCounter.exe" FileName="TRAFFI~1.PDB|TrafficCounter.pdb" Attributes="0" SourcePath="..\bin\TrafficCounter.pdb" SelfReg="false" NextFile="VTC.Classifier.dll"/>
+    <ROW File="VTC.Classifier.dll" Component_="VTC.Classifier.dll" FileName="VTCCLA~1.DLL|VTC.Classifier.dll" Attributes="0" SourcePath="..\bin\VTC.Classifier.dll" SelfReg="false" NextFile="VTC.Classifier.pdb"/>
+    <ROW File="VTC.Classifier.dll.config" Component_="Akka.xml" FileName="VTCCLA~1.CON|VTC.Classifier.dll.config" Attributes="0" SourcePath="..\bin\VTC.Classifier.dll.config" SelfReg="false" NextFile="TrafficCounter.exe.config"/>
+    <ROW File="VTC.Classifier.pdb" Component_="VTC.Classifier.dll" FileName="VTCCLA~1.PDB|VTC.Classifier.pdb" Attributes="0" SourcePath="..\bin\VTC.Classifier.pdb" SelfReg="false" NextFile="VTC.Classifier.dll.config"/>
+    <ROW File="VTC.Common.dll" Component_="VTC.Common.dll" FileName="VTCCOM~1.DLL|VTC.Common.dll" Attributes="0" SourcePath="..\bin\VTC.Common.dll" SelfReg="false" NextFile="VTC.Common.dll.config"/>
+    <ROW File="VTC.Common.dll.config" Component_="Akka.xml" FileName="VTCCOM~1.CON|VTC.Common.dll.config" Attributes="0" SourcePath="..\bin\VTC.Common.dll.config" SelfReg="false" NextFile="VTC.Common.pdb"/>
+    <ROW File="VTC.Common.pdb" Component_="VTC.Common.dll" FileName="VTCCOM~1.PDB|VTC.Common.pdb" Attributes="0" SourcePath="..\bin\VTC.Common.pdb" SelfReg="false" NextFile="VTC.Kernel.dll"/>
+    <ROW File="VTC.Kernel.dll" Component_="VTC.Kernel.dll" FileName="VTCKER~1.DLL|VTC.Kernel.dll" Attributes="0" SourcePath="..\bin\VTC.Kernel.dll" SelfReg="false" NextFile="VTC.Kernel.dll.config"/>
+    <ROW File="VTC.Kernel.dll.config" Component_="Akka.xml" FileName="VTCKER~1.CON|VTC.Kernel.dll.config" Attributes="0" SourcePath="..\bin\VTC.Kernel.dll.config" SelfReg="false" NextFile="VTC.Kernel.pdb"/>
+    <ROW File="VTC.Kernel.pdb" Component_="VTC.Kernel.dll" FileName="VTCKER~1.PDB|VTC.Kernel.pdb" Attributes="0" SourcePath="..\bin\VTC.Kernel.pdb" SelfReg="false" NextFile="VTC.KernelTests.dll"/>
+    <ROW File="VTC.KernelTests.dll" Component_="VTC.KernelTests.dll" FileName="VTCKER~2.DLL|VTC.KernelTests.dll" Attributes="0" SourcePath="..\bin\VTC.KernelTests.dll" SelfReg="false" NextFile="VTC.KernelTests.dll.config"/>
+    <ROW File="VTC.KernelTests.dll.config" Component_="Akka.xml" FileName="VTCKER~2.CON|VTC.KernelTests.dll.config" Attributes="0" SourcePath="..\bin\VTC.KernelTests.dll.config" SelfReg="false" NextFile="VTC.KernelTests.pdb"/>
+    <ROW File="VTC.KernelTests.pdb" Component_="VTC.KernelTests.dll" FileName="VTCKER~2.PDB|VTC.KernelTests.pdb" Attributes="0" SourcePath="..\bin\VTC.KernelTests.pdb" SelfReg="false" NextFile="VTC.Reporting.dll"/>
+    <ROW File="VTC.Reporting.dll" Component_="VTC.Reporting.dll" FileName="VTCREP~1.DLL|VTC.Reporting.dll" Attributes="0" SourcePath="..\bin\VTC.Reporting.dll" SelfReg="false" NextFile="VTC.Reporting.dll.config"/>
+    <ROW File="VTC.Reporting.dll.config" Component_="Akka.xml" FileName="VTCREP~1.CON|VTC.Reporting.dll.config" Attributes="0" SourcePath="..\bin\VTC.Reporting.dll.config" SelfReg="false" NextFile="VTC.Reporting.pdb"/>
+    <ROW File="VTC.Reporting.pdb" Component_="VTC.Reporting.dll" FileName="VTCREP~1.PDB|VTC.Reporting.pdb" Attributes="0" SourcePath="..\bin\VTC.Reporting.pdb" SelfReg="false" NextFile="yolo_cpp_dll.dll"/>
+    <ROW File="ZedGraph.dll" Component_="ZedGraph.dll" FileName="ZedGraph.dll" Attributes="0" SourcePath="..\bin\ZedGraph.dll" SelfReg="false" NextFile="ZedGraph.xml"/>
+    <ROW File="ZedGraph.resources.dll" Component_="ZedGraph.resources.dll" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\de\ZedGraph.resources.dll" SelfReg="false" NextFile="transport.names"/>
+    <ROW File="ZedGraph.resources.dll_25" Component_="ZedGraph.resources.dll_25" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\es\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_26"/>
+    <ROW File="ZedGraph.resources.dll_26" Component_="ZedGraph.resources.dll_26" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\fr\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_27"/>
+    <ROW File="ZedGraph.resources.dll_27" Component_="ZedGraph.resources.dll_27" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\hu\ZedGraph.resources.dll" SelfReg="false" NextFile="libsodium.dll_3"/>
+    <ROW File="ZedGraph.resources.dll_28" Component_="ZedGraph.resources.dll_28" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\it\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_29"/>
+    <ROW File="ZedGraph.resources.dll_29" Component_="ZedGraph.resources.dll_29" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\ja\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_30"/>
+    <ROW File="ZedGraph.resources.dll_30" Component_="ZedGraph.resources.dll_30" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\pt\ZedGraph.resources.dll" SelfReg="false" NextFile="BigLogo.png"/>
+    <ROW File="ZedGraph.resources.dll_31" Component_="ZedGraph.resources.dll_31" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\ru\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_32"/>
+    <ROW File="ZedGraph.resources.dll_32" Component_="ZedGraph.resources.dll_32" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\sk\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_33"/>
+    <ROW File="ZedGraph.resources.dll_33" Component_="ZedGraph.resources.dll_33" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\sv\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_34"/>
+    <ROW File="ZedGraph.resources.dll_34" Component_="ZedGraph.resources.dll_34" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\tr\ZedGraph.resources.dll" SelfReg="false" NextFile="concrt140.dll"/>
+    <ROW File="ZedGraph.resources.dll_35" Component_="ZedGraph.resources.dll_35" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\zh-cn\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_36"/>
+    <ROW File="ZedGraph.resources.dll_36" Component_="ZedGraph.resources.dll_36" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\zh-tw\ZedGraph.resources.dll" SelfReg="false" NextFile="Akka.dll"/>
+    <ROW File="ZedGraph.xml" Component_="Akka.xml" FileName="ZedGraph.xml" Attributes="0" SourcePath="..\bin\ZedGraph.xml" SelfReg="false" NextFile="ZeroMQ.dll"/>
+    <ROW File="ZeroMQ.dll" Component_="ZeroMQ.dll" FileName="ZeroMQ.dll" Attributes="0" SourcePath="..\bin\ZeroMQ.dll" SelfReg="false" NextFile="ZeroMQ.xml"/>
+    <ROW File="ZeroMQ.xml" Component_="Akka.xml" FileName="ZeroMQ.xml" Attributes="0" SourcePath="..\bin\ZeroMQ.xml" SelfReg="false" NextFile="libsodium.dll"/>
+    <ROW File="concrt140.dll" Component_="concrt140.dll" FileName="CONCRT~1.DLL|concrt140.dll" Attributes="0" SourcePath="..\bin\x64\concrt140.dll" SelfReg="false" NextFile="cvextern.dll"/>
+    <ROW File="concrt140.dll_3" Component_="concrt140.dll_3" FileName="CONCRT~1.DLL|concrt140.dll" Attributes="0" SourcePath="..\bin\x86\concrt140.dll" SelfReg="false" NextFile="cvextern.dll_2"/>
+    <ROW File="cublas64_91.dll" Component_="cublas64_91.dll" FileName="CUBLAS~1.DLL|cublas64_91.dll" Attributes="0" SourcePath="..\Thirdparty\CUDA9.1\cublas64_91.dll" SelfReg="false" NextFile="cudart64_91.dll"/>
+    <ROW File="cudart64_91.dll" Component_="cudart64_91.dll" FileName="CUDART~1.DLL|cudart64_91.dll" Attributes="0" SourcePath="..\Thirdparty\CUDA9.1\cudart64_91.dll" SelfReg="false" NextFile="cudnn64_7.dll"/>
+    <ROW File="cudnn64_7.dll" Component_="cudnn64_7.dll" FileName="CUDNN6~1.DLL|cudnn64_7.dll" Attributes="0" SourcePath="..\Thirdparty\CUDA9.1\cudnn64_7.dll" SelfReg="false" NextFile="curand64_91.dll"/>
+    <ROW File="curand64_91.dll" Component_="curand64_91.dll" FileName="CURAND~1.DLL|curand64_91.dll" Attributes="0" SourcePath="..\Thirdparty\CUDA9.1\curand64_91.dll" SelfReg="false" NextFile="nvapi.dll"/>
+    <ROW File="cvextern.dll" Component_="cvextern.dll" FileName="cvextern.dll" Attributes="0" SourcePath="..\bin\x64\cvextern.dll" SelfReg="false" NextFile="msvcp140.dll"/>
+    <ROW File="cvextern.dll_2" Component_="cvextern.dll_2" FileName="cvextern.dll" Attributes="0" SourcePath="..\bin\x86\cvextern.dll" SelfReg="false" NextFile="msvcp140.dll_3"/>
+    <ROW File="eventConfig.xml" Component_="eventConfig.xml" FileName="EVENTC~1.XML|eventConfig.xml" Attributes="0" SourcePath="..\bin\config\eventConfig.xml" SelfReg="false" NextFile="regionConfig.xml"/>
+    <ROW File="favicon.ico" Component_="BigLogo.png" FileName="favicon.ico" Attributes="0" SourcePath="..\bin\ReportAssets\favicon.ico" SelfReg="false" NextFile="jquery.sparkline.min.js"/>
+    <ROW File="jquery.sparkline.min.js" Component_="BigLogo.png" FileName="JQUERY~1.JS|jquery.sparkline.min.js" Attributes="0" SourcePath="..\bin\ReportAssets\jquery.sparkline.min.js" SelfReg="false" NextFile="report.css"/>
+    <ROW File="libsodium.dll" Component_="libsodium.dll" FileName="LIBSOD~1.DLL|libsodium.dll" Attributes="0" SourcePath="..\bin\amd64\libsodium.dll" SelfReg="false" NextFile="libsodium.so"/>
+    <ROW File="libsodium.dll_3" Component_="libsodium.dll_3" FileName="LIBSOD~1.DLL|libsodium.dll" Attributes="0" SourcePath="..\bin\i386\libsodium.dll" SelfReg="false" NextFile="libsodium.so_3"/>
+    <ROW File="libsodium.so" Component_="libsodium.so" FileName="LIBSOD~1.SO|libsodium.so" Attributes="0" SourcePath="..\bin\amd64\libsodium.so" SelfReg="false" NextFile="libzmq.dll"/>
+    <ROW File="libsodium.so_3" Component_="libsodium.so_3" FileName="LIBSOD~1.SO|libsodium.so" Attributes="0" SourcePath="..\bin\i386\libsodium.so" SelfReg="false" NextFile="libzmq.dll_3"/>
+    <ROW File="libzmq.dll" Component_="libzmq.dll" FileName="libzmq.dll" Attributes="0" SourcePath="..\bin\amd64\libzmq.dll" SelfReg="false" NextFile="libzmq.so"/>
+    <ROW File="libzmq.dll_3" Component_="libzmq.dll_3" FileName="libzmq.dll" Attributes="0" SourcePath="..\bin\i386\libzmq.dll" SelfReg="false" NextFile="libzmq.so_3"/>
+    <ROW File="libzmq.so" Component_="libsodium.so" FileName="libzmq.so" Attributes="0" SourcePath="..\bin\amd64\libzmq.so" SelfReg="false" NextFile="eventConfig.xml"/>
+    <ROW File="libzmq.so_3" Component_="libsodium.so_3" FileName="libzmq.so" Attributes="0" SourcePath="..\bin\i386\libzmq.so" SelfReg="false" NextFile="ZedGraph.resources.dll_28"/>
+    <ROW File="msvcp140.dll" Component_="msvcp140.dll" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x64\msvcp140.dll" SelfReg="false" NextFile="opencv_ffmpeg341_64.dll"/>
+    <ROW File="msvcp140.dll_3" Component_="msvcp140.dll_3" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x86\msvcp140.dll" SelfReg="false" NextFile="opencv_ffmpeg341.dll"/>
+    <ROW File="nvapi.dll" Component_="nvapi.dll" FileName="nvapi.dll" Attributes="0" SourcePath="..\Thirdparty\CUDA9.1\nvapi.dll" SelfReg="false" NextFile="nvapi64.dll"/>
+    <ROW File="nvapi64.dll" Component_="nvapi64.dll" FileName="nvapi64.dll" Attributes="0" SourcePath="..\Thirdparty\CUDA9.1\nvapi64.dll" SelfReg="false" NextFile="TrafficCounter.exe"/>
+    <ROW File="opencv_ffmpeg341.dll" Component_="opencv_ffmpeg341.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg341.dll" Attributes="0" SourcePath="..\bin\x86\opencv_ffmpeg341.dll" SelfReg="false" NextFile="vcruntime140.dll_3"/>
+    <ROW File="opencv_ffmpeg341_64.dll" Component_="opencv_ffmpeg341_64.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg341_64.dll" Attributes="0" SourcePath="..\bin\x64\opencv_ffmpeg341_64.dll" SelfReg="false" NextFile="vcruntime140.dll"/>
+    <ROW File="pthreadGC2.dll" Component_="pthreadGC2.dll" FileName="PTHREA~1.DLL|pthreadGC2.dll" Attributes="0" SourcePath="..\bin\pthreadGC2.dll" SelfReg="false" NextFile="pthreadVC2.dll"/>
+    <ROW File="pthreadVC2.dll" Component_="pthreadVC2.dll" FileName="PTHREA~2.DLL|pthreadVC2.dll" Attributes="0" SourcePath="..\bin\pthreadVC2.dll" SelfReg="false" NextFile="System.Collections.Immutable.dll"/>
+    <ROW File="regionConfig.xml" Component_="eventConfig.xml" FileName="REGION~1.XML|regionConfig.xml" Attributes="0" SourcePath="..\bin\config\regionConfig.xml" SelfReg="false" NextFile="ZedGraph.resources.dll"/>
+    <ROW File="report.css" Component_="BigLogo.png" FileName="report.css" Attributes="0" SourcePath="..\bin\ReportAssets\report.css" SelfReg="false" NextFile="report.js"/>
+    <ROW File="report.js" Component_="BigLogo.png" FileName="report.js" Attributes="0" SourcePath="..\bin\ReportAssets\report.js" SelfReg="false" NextFile="ZedGraph.resources.dll_31"/>
+    <ROW File="transport.names" Component_="transport.names" FileName="TRANSP~1.NAM|transport.names" Attributes="0" SourcePath="..\bin\DetectionNetwork\transport.names" SelfReg="false" NextFile="transport_v3_d1.cfg"/>
+    <ROW File="transport_v3_d1.cfg" Component_="transport.names" FileName="TRANSP~1.CFG|transport_v3_d1.cfg" Attributes="0" SourcePath="..\bin\DetectionNetwork\transport_v3_d1.cfg" SelfReg="false" NextFile="transport_v3_d1.weights"/>
+    <ROW File="transport_v3_d1.weights" Component_="transport.names" FileName="TRANSP~1.WEI|transport_v3_d1.weights" Attributes="0" SourcePath="..\bin\DetectionNetwork\transport_v3_d1.weights" SelfReg="false" NextFile="ZedGraph.resources.dll_25"/>
+    <ROW File="vcruntime140.dll" Component_="vcruntime140.dll" FileName="VCRUNT~1.DLL|vcruntime140.dll" Attributes="0" SourcePath="..\bin\x64\vcruntime140.dll" SelfReg="false" NextFile="concrt140.dll_3"/>
+    <ROW File="vcruntime140.dll_3" Component_="vcruntime140.dll_3" FileName="VCRUNT~1.DLL|vcruntime140.dll" Attributes="0" SourcePath="..\bin\x86\vcruntime140.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_35"/>
+    <ROW File="yolo_cpp_dll.dll" Component_="yolo_cpp_dll.dll" FileName="YOLO_C~1.DLL|yolo_cpp_dll.dll" Attributes="0" SourcePath="..\bin\yolo_cpp_dll.dll" SelfReg="false" NextFile="yolo_cpp_dll_no_gpu.dll"/>
+    <ROW File="yolo_cpp_dll_no_gpu.dll" Component_="yolo_cpp_dll_no_gpu.dll" FileName="YOLO_C~2.DLL|yolo_cpp_dll_no_gpu.dll" Attributes="0" SourcePath="..\bin\yolo_cpp_dll_no_gpu.dll" SelfReg="false" NextFile="ZedGraph.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
+    <ROW BootstrOptKey="GlobalOptions" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BootstrapperUISequenceComponent">
+    <ROW Action="AI_DetectSoftware" Sequence="101"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="Output" Languages="en" InstallationType="4" CabsLocation="1" PackageType="1" FilesInsideExe="true" ExtUI="true" UseLargeSchema="true"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
+    <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
+    <ROW Path="&lt;AI_DICTS&gt;ui_en.ail"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.FragmentComponent">
+    <ROW Fragment="CommonUI.aip" Path="&lt;AI_FRAGS&gt;CommonUI.aip"/>
+    <ROW Fragment="FolderDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\FolderDlg.aip"/>
+    <ROW Fragment="MaintenanceTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceTypeDlg.aip"/>
+    <ROW Fragment="MaintenanceWelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceWelcomeDlg.aip"/>
+    <ROW Fragment="PreparePrereqDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\PreparePrereqDlg.aip"/>
+    <ROW Fragment="PrerequisitesDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\PrerequisitesDlg.aip"/>
+    <ROW Fragment="ProgressPrereqDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\ProgressPrereqDlg.aip"/>
+    <ROW Fragment="SequenceDialogs.aip" Path="&lt;AI_THEMES&gt;classic\fragments\SequenceDialogs.aip"/>
+    <ROW Fragment="Sequences.aip" Path="&lt;AI_FRAGS&gt;Sequences.aip"/>
+    <ROW Fragment="StaticUIStrings.aip" Path="&lt;AI_FRAGS&gt;StaticUIStrings.aip"/>
+    <ROW Fragment="UI.aip" Path="&lt;AI_THEMES&gt;classic\fragments\UI.aip"/>
+    <ROW Fragment="Validation.aip" Path="&lt;AI_FRAGS&gt;Validation.aip"/>
+    <ROW Fragment="VerifyRemoveDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRemoveDlg.aip"/>
+    <ROW Fragment="VerifyRepairDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\VerifyRepairDlg.aip"/>
+    <ROW Fragment="WelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\WelcomeDlg.aip"/>
+    <ROW Fragment="WelcomePrereqDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\WelcomePrereqDlg.aip"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiActionTextComponent">
+    <ROW Action="AI_DeleteLzma" Description="Deleting files extracted from archive" DescriptionLocId="ActionText.Description.AI_DeleteLzma" TemplateLocId="-"/>
+    <ROW Action="AI_DeleteRLzma" Description="Deleting files extracted from archive" DescriptionLocId="ActionText.Description.AI_DeleteLzma" TemplateLocId="-"/>
+    <ROW Action="AI_ExtractFiles" Description="Extracting files from archive" DescriptionLocId="ActionText.Description.AI_ExtractLzma" TemplateLocId="-"/>
+    <ROW Action="AI_ExtractLzma" Description="Extracting files from archive" DescriptionLocId="ActionText.Description.AI_ExtractLzma" TemplateLocId="-"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiAppSearchComponent">
+    <ROW Property="AI_SETUPEXEPATH" Signature_="AI_EXE_PATH_CU" Builds="DefaultBuild"/>
+    <ROW Property="AI_SETUPEXEPATH" Signature_="AI_EXE_PATH_LM" Builds="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiBinaryComponent">
+    <ROW Name="BannerBitmap.bmp_1" SourcePath="..\TrafficCounter\BannerBitmap.bmp"/>
+    <ROW Name="Prereq.dll" SourcePath="&lt;AI_CUSTACTS&gt;Prereq.dll"/>
+    <ROW Name="SoftwareDetector.dll" SourcePath="&lt;AI_CUSTACTS&gt;SoftwareDetector.dll"/>
+    <ROW Name="SplashScreen.bmp_1" SourcePath="..\TrafficCounter\SplashScreen.bmp"/>
+    <ROW Name="aicustact.dll" SourcePath="&lt;AI_CUSTACTS&gt;aicustact.dll"/>
+    <ROW Name="lzmaextractor.dll" SourcePath="&lt;AI_CUSTACTS&gt;lzmaextractor.dll"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
+    <ROW Dialog_="FatalError" Control_="Finish" Event="DoAction" Argument="AI_SHOW_LOG" Condition="(MsiLogFileLocation AND AI_LOG_CHECKBOX)" Ordering="101" MsiKey="FatalError#Finish#DoAction#AI_SHOW_LOG#(MsiLogFileLocation AND AI_LOG_CHECKBOX)"/>
+    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="FolderDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="MaintenanceWelcomeDlg" Control_="Next" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="99"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_MAINT" Ordering="198"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="202"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_INSTALL" Ordering="197"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="201"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_MAINT" Ordering="101"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="ChangeButton" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="501"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceWelcomeDlg" Condition="AI_MAINT" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RemoveButton" Event="NewDialog" Argument="VerifyRemoveDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="1"/>
+    <ROW Dialog_="MaintenanceTypeDlg" Control_="RepairButton" Event="NewDialog" Argument="VerifyRepairDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="601"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Back" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="1"/>
+    <ROW Dialog_="VerifyRepairDlg" Control_="Repair" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Repair&quot;" Ordering="399" Options="1"/>
+    <ROW Dialog_="VerifyRemoveDlg" Control_="Remove" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="299" Options="1"/>
+    <ROW Dialog_="PatchWelcomeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_PATCH" Ordering="201"/>
+    <ROW Dialog_="ResumeDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_RESUME" Ordering="299"/>
+    <ROW Dialog_="WelcomePrereqDlg" Control_="Next" Event="NewDialog" Argument="PrerequisitesDlg" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
+    <ROW Dialog_="PrerequisitesDlg" Control_="Next" Event="EndDialog" Argument="Return" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
+    <ROW Dialog_="PrerequisitesDlg" Control_="Back" Event="NewDialog" Argument="WelcomePrereqDlg" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_PATCH" Ordering="199"/>
+    <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="PatchWelcomeDlg" Condition="AI_PATCH" Ordering="203"/>
+    <ROW Dialog_="CustomizeDlg" Control_="Next" Event="DoAction" Argument="AI_InstallModeCheck" Condition="AI_MAINT" Ordering="100" MsiKey="CustomizeDlg#Next#DoAction#AI_InstallModeCheck#AI_MAINT"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
+    <ROW Action="AI_AppSearchEx" Type="1" Source="Prereq.dll" Target="DoAppSearchEx"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH_ORIGINAL" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DATA_SETTER" Type="51" Source="AI_ExtractFiles" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
+    <ROW Action="AI_DeleteCadLzma" Type="51" Source="AI_DeleteLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DeleteLzma" Type="1025" Source="lzmaextractor.dll" Target="DeleteLZMAFiles"/>
+    <ROW Action="AI_DeleteRCadLzma" Type="51" Source="AI_DeleteRLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_DeleteRLzma" Type="1281" Source="lzmaextractor.dll" Target="DeleteLZMAFiles"/>
+    <ROW Action="AI_DetectSoftware" Type="257" Source="SoftwareDetector.dll" Target="OnDetectSoftware"/>
+    <ROW Action="AI_DpiContentScale" Type="1" Source="aicustact.dll" Target="DpiContentScale"/>
+    <ROW Action="AI_EnableDebugLog" Type="321" Source="aicustact.dll" Target="EnableDebugLog"/>
+    <ROW Action="AI_EstimateExtractFiles" Type="1" Source="Prereq.dll" Target="EstimateExtractFiles"/>
+    <ROW Action="AI_ExtractCadLzma" Type="51" Source="AI_ExtractLzma" Target="[AI_SETUPEXEPATH]"/>
+    <ROW Action="AI_ExtractFiles" Type="1025" Source="Prereq.dll" Target="ExtractSourceFiles" AdditionalSeq="AI_DATA_SETTER"/>
+    <ROW Action="AI_ExtractLzma" Type="1025" Source="lzmaextractor.dll" Target="ExtractLZMAFiles"/>
+    <ROW Action="AI_FindExeLzma" Type="1" Source="lzmaextractor.dll" Target="FindEXE"/>
+    <ROW Action="AI_InstallModeCheck" Type="1" Source="aicustact.dll" Target="UpdateInstallMode" WithoutSeq="true"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Type="65" Source="aicustact.dll" Target="PrepareUpgrade"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH" Target="[AI_SETUPEXEPATH_ORIGINAL]"/>
+    <ROW Action="AI_RESTORE_LOCATION" Type="65" Source="aicustact.dll" Target="RestoreLocation"/>
+    <ROW Action="AI_ResolveKnownFolders" Type="1" Source="aicustact.dll" Target="AI_ResolveKnownFolders"/>
+    <ROW Action="AI_SHOW_LOG" Type="65" Source="aicustact.dll" Target="LaunchLogFile" WithoutSeq="true"/>
+    <ROW Action="AI_STORE_LOCATION" Type="51" Source="ARPINSTALLLOCATION" Target="[APPDIR]"/>
+    <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]"/>
+    <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
+    <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="TrafficCounter.exe" SourcePath="..\bin\Logo.ico" Index="0"/>
+    <ROW Name="favicon.exe" SourcePath="..\bin\ReportAssets\favicon.ico" Index="0"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
+    <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="749"/>
+    <ROW Action="AI_STORE_LOCATION" Condition="(Not Installed) OR REINSTALL" Sequence="1501"/>
+    <ROW Action="AI_PREPARE_UPGRADE" Condition="AI_UPGRADE=&quot;No&quot; AND (Not Installed)" Sequence="1399"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="53"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
+    <ROW Action="AI_DetectSoftware" Sequence="103"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Sequence="99" Builds="DefaultBuild"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Condition="AI_SETUPEXEPATH_ORIGINAL" Sequence="102" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="199" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteRCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="198" Builds="DefaultBuild"/>
+    <ROW Action="AI_ExtractCadLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="197" Builds="DefaultBuild"/>
+    <ROW Action="AI_FindExeLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="196" Builds="DefaultBuild"/>
+    <ROW Action="AI_ExtractLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="1549" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteRLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="1548" Builds="DefaultBuild"/>
+    <ROW Action="AI_DeleteLzma" Condition="SETUPEXEDIR=&quot;&quot; AND Installed AND (REMOVE&lt;&gt;&quot;ALL&quot;) AND (AI_INSTALL_MODE&lt;&gt;&quot;Remove&quot;) AND (NOT PATCH)" Sequence="6599" Builds="DefaultBuild"/>
+    <ROW Action="AI_ExtractFiles" Sequence="3998" Builds="DefaultBuild"/>
+    <ROW Action="AI_DATA_SETTER" Sequence="3997"/>
+    <ROW Action="AI_EstimateExtractFiles" Sequence="3999" Builds="DefaultBuild"/>
+    <ROW Action="AI_AppSearchEx" Sequence="101"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiInstallUISequenceComponent">
+    <ROW Action="AI_RESTORE_LOCATION" Condition="APPDIR=&quot;&quot;" Sequence="749"/>
+    <ROW Action="AI_ResolveKnownFolders" Sequence="53"/>
+    <ROW Action="AI_DpiContentScale" Sequence="52"/>
+    <ROW Action="AI_EnableDebugLog" Sequence="51"/>
+    <ROW Action="AI_DetectSoftware" Sequence="103"/>
+    <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Sequence="99"/>
+    <ROW Action="AI_RESTORE_AI_SETUPEXEPATH" Condition="AI_SETUPEXEPATH_ORIGINAL" Sequence="102"/>
+    <ROW Action="AI_AppSearchEx" Sequence="101"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiLaunchConditionsComponent">
+    <ROW Condition="(VersionNT &lt;&gt; 400)" Description="[ProductName] cannot be installed on [WindowsTypeNT40Display]." DescriptionLocId="AI.LaunchCondition.NoNT40" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT &lt;&gt; 500)" Description="[ProductName] cannot be installed on [WindowsTypeNT50Display]." DescriptionLocId="AI.LaunchCondition.NoNT50" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="(VersionNT64 OR ((VersionNT &lt;&gt; 501) OR (ServicePackLevel = 3))) AND ((VersionNT &lt;&gt; 502) OR (ServicePackLevel = 2))" Description="[ProductName] cannot be installed on [WindowsTypeNT5XDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT5X" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="AI_DETECTED_DOTNET_VERSION &gt;= AI_REQUIRED_DOTNET_VERSION" Description="[ProductName] cannot be installed on systems with .NET Framework version lower than [AI_REQUIRED_DOTNET_DISPLAY]." DescriptionLocId="AI.LaunchCondition.DotNET" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="AI_DETECTED_INTERNET_CONNECTION" Description="[ProductName] requires an active Internet connection for installation. Please check your network configuration and proxy settings." DescriptionLocId="AI.LaunchCondition.Internet" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="SETUPEXEDIR OR (REMOVE=&quot;ALL&quot;)" Description="This package can only be run from a bootstrapper." DescriptionLocId="AI.LaunchCondition.RequireBootstrapper" IsPredefined="true" Builds="DefaultBuild"/>
+    <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]." DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="DefaultBuild"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegLocatorComponent">
+    <ROW Signature_="AI_EXE_PATH_CU" Root="1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Type="2"/>
+    <ROW Signature_="AI_EXE_PATH_LM" Root="2" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Type="2"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
+    <ROW Registry="AI_ExePath" Root="-1" Key="Software\Caphyon\Advanced Installer\LZMA\[ProductCode]\[ProductVersion]" Name="AI_ExePath" Value="[AI_SETUPEXEPATH]" Component_="AI_ExePath"/>
+    <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
+    <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
+    <ROW Shortcut="VTC" Directory_="DesktopFolder" Name="VTC" Component_="TrafficCounter.exe" Target="[#TrafficCounter.exe]" Description="Video Traffic Counter by Roadometry" Hotkey="0" Icon_="TrafficCounter.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
+    <ATTRIBUTE name="UsedTheme" value="classic"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiUpgradeComponent">
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="0.0.1" VersionMax="[|ProductVersion]" Attributes="257" ActionProperty="OLDPRODUCTS"/>
+    <ROW UpgradeCode="[|UpgradeCode]" VersionMin="[|ProductVersion]" Attributes="2" ActionProperty="AI_NEWERPRODUCTFOUND"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.PreReqComponent">
+    <ROW PrereqKey="A9B3CC_B8E4_4F03_B719_D9E76675954E" DisplayName="Visual C++ 2010 x64 (MFC Security Update)" VersionMin="10.0" SetupFileUrl="Prerequisites\Visual C++ 2010\vcredist_x64.exe" Location="0" ExactSize="0" WinNTVersions="Windows 9x/ME/NT/2000/XP/Vista/Windows 7/Windows 8 x86/Windows 8.1 x86/Windows 10 x86" Operator="1" NoUiComLine="/q /norestart" Options="y" TargetName="Visual C++ 2010\vcredist_x64.exe"/>
+    <ROW PrereqKey="B63_41B8_9CB7_8C5E07C0FC18_" DisplayName="Visual C++ 2010 SP1 x64 (MFC Security Update)" VersionMin="10.0" SetupFileUrl="Prerequisites\Visual C++ 2010 SP1\vcredist_x64.exe" Location="0" ExactSize="0" WinNTVersions="Windows 9x/ME/NT/2000/XP/Vista/Windows 7/Windows 8 x86/Windows 8.1 x86/Windows 10 x86" Operator="1" NoUiComLine="/q /norestart" Options="y" TargetName="Visual C++ 2010 SP1\vcredist_x64.exe"/>
+    <ROW PrereqKey="BE1A492345959ED6A4D5ACBD0EC0" DisplayName=".NET Framework 4.5.2" SetupFileUrl="http://download.microsoft.com/download/E/2/1/E21644B5-2DF2-47C2-91BD-63C560427900/NDP452-KB2901907-x86-x64-AllOS-ENU.exe" Location="1" ExactSize="69999448" WinNTVersions="Windows XP SP3 x86, Windows Server 2003 SP2 x86, Windows 10 x86" WinNT64Versions="Windows XP SP2 x64, Windows Server 2003 SP2 x64, Windows 10 x64, Windows Server 2016 x64" Operator="1" NoUiComLine="/q /norestart" Options="xy" MD5="ee01fc4110c73a8e5efc7cabda0f5ff7" TargetName=".NET Framework 4.5.2"/>
+    <ROW PrereqKey="CB585686_DAA3_4384_BDDF_08ABA631E9F3_" DisplayName="Visual C++ 2010 SP1 x86 (MFC Security Update)" VersionMin="10.0" SetupFileUrl="Prerequisites\Visual C++ 2010 SP1\vcredist_x86.exe" Location="0" ExactSize="0" Operator="1" NoUiComLine="/q /norestart" Options="y" TargetName="Visual C++ 2010 SP1\vcredist_x86.exe"/>
+    <ROW PrereqKey="D36C9FE0826D4D2B9C2DDCCE2C83E860" DisplayName="Visual C++ Redistributable for Visual Studio 2017 x64" VersionMin="14.10" SetupFileUrl="Prerequisites\Visual C++ Redistributable for Visual Studio 2017\vc_redist.x64.exe" Location="0" ExactSize="0" WinNTVersions="Windows 9x/ME/NT/2000/XP/Vista/Windows 7/Windows 8 x86/Windows 8.1 x86/Windows 10 x86" WinNT64Versions="Windows Vista RTM x64, Windows Vista SP1 x64, Windows Server 2008 RTM x64, Windows 7 RTM x64, Windows Server 2008 R2 RTM x64" Operator="1" Options="xy" TargetName="Visual C++ Redistributable for Visual Studio 2017\vc_redist.x64.exe"/>
+    <ROW PrereqKey="FAA_5658_49AA_A41D_71074C8A5006" DisplayName="Visual C++ 2010 x86 (MFC Security Update)" VersionMin="10.0" SetupFileUrl="Prerequisites\Visual C++ 2010\vcredist_x86.exe" Location="0" ExactSize="0" Operator="1" NoUiComLine="/q /norestart" Options="y" TargetName="Visual C++ 2010\vcredist_x86.exe"/>
+    <ATTRIBUTE name="PrereqsOrder" value="BE1A492345959ED6A4D5ACBD0EC0 D36C9FE0826D4D2B9C2DDCCE2C83E860 A9B3CC_B8E4_4F03_B719_D9E76675954E FAA_5658_49AA_A41D_71074C8A5006 CB585686_DAA3_4384_BDDF_08ABA631E9F3_ B63_41B8_9CB7_8C5E07C0FC18_"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.PreReqSearchComponent">
+    <ROW SearchKey="A9B3CC_B8E4_4F03_B719_D9E76675954EV" Prereq="A9B3CC_B8E4_4F03_B719_D9E76675954E" SearchType="2" SearchString="HKLM\SOFTWARE\Microsoft\DevDiv\VC\Servicing\10.0\red\amd64\1033\Version" VerMin="30319.415" Order="1" Property="PreReqSearch_A9B3CC_B8E4_4F03_B719_"/>
+    <ROW SearchKey="B63_41B8_9CB7_8C5E07C0FC18_Version" Prereq="B63_41B8_9CB7_8C5E07C0FC18_" SearchType="2" SearchString="HKLM\SOFTWARE\Microsoft\DevDiv\VC\Servicing\10.0\red\amd64\1033\Version" VerMin="40219.325" Order="1" Property="PreReqSearch_B63_41B8_9CB7_8C5E07C0"/>
+    <ROW SearchKey="BE1A492345959ED6A4D5ACBD0EC0Release" Prereq="BE1A492345959ED6A4D5ACBD0EC0" SearchType="9" SearchString="HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Release" RefContent="G379892" Order="1" Property="PreReqSearch_BE1A492345959ED6A4D5AC"/>
+    <ROW SearchKey="CB585686_DAA3_4384_BDDF_08ABA631E9F" Prereq="CB585686_DAA3_4384_BDDF_08ABA631E9F3_" SearchType="2" SearchString="HKLM\SOFTWARE\Microsoft\DevDiv\VC\Servicing\10.0\red\x86\1033\Version" VerMin="40219.325" Order="1" Property="PreReqSearch_CB585686_DAA3_4384_BDD"/>
+    <ROW SearchKey="D36C9FE0826D4D2B9C2DDCCE2C83E860Ver" Prereq="D36C9FE0826D4D2B9C2DDCCE2C83E860" SearchType="2" SearchString="HKLM\SOFTWARE\Microsoft\DevDiv\VC\Servicing\14.0\RuntimeMinimum\Version" VerMin="14.10.25008" Order="1" Property="PreReqSearch_D36C9FE0826D4D2B9C2DDC" Platform="1"/>
+    <ROW SearchKey="FAA_5658_49AA_A41D_71074C8A5006Vers" Prereq="FAA_5658_49AA_A41D_71074C8A5006" SearchType="2" SearchString="HKLM\SOFTWARE\Microsoft\DevDiv\VC\Servicing\10.0\red\x86\1033\Version" VerMin="30319.415" Order="1" Property="PreReqSearch_FAA_5658_49AA_A41D_710"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.SynchronizedFolderComponent">
+    <ROW Directory_="APPDIR" SourcePath="..\bin" Feature="MainFeature" ExcludePattern="*~|#*#|%*%|._|CVS|.cvsignore|SCCS|vssver.scc|mssccprj.scc|vssver2.scc|.svn|.DS_Store" ExcludeFlags="6"/>
+  </COMPONENT>
+</DOCUMENT>
