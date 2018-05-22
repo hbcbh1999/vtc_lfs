@@ -42,13 +42,13 @@ namespace VTC.Common.RegionConfig
         public string IntersectionId { get; set; } = "1";
 
         [DataMember]
-        public double Q_position { get; set; } = 500;
+        public double Q_position { get; set; } = 300;
 
         [DataMember]
         public double Q_color { get; set; } = 100000;
 
         [DataMember]
-        public double R_position { get; set; } = 15;
+        public double R_position { get; set; } = 25;
 
         [DataMember]
         public double R_color { get; set; } = 100000;
@@ -111,7 +111,7 @@ namespace VTC.Common.RegionConfig
         public bool PushToServer { get; set; } = false;
 
         [DataMember]
-        public int MinPathLength { get; set; } = 100;
+        public int MinPathLength { get; set; } = 200;
 
         [DataMember]
         public int MaxHypTreeDepth { get; set; } = 5;
@@ -123,7 +123,7 @@ namespace VTC.Common.RegionConfig
         public int KHypotheses { get; set; } = 4;
 
         [DataMember]
-        public int ValRegDeviation { get; set; } = 6;
+        public int ValRegDeviation { get; set; } = 4;
 
         [DataMember]
         public int MaxObjectCount { get; set; } = 6;

@@ -281,6 +281,7 @@ namespace VTC.Actors
         private void AssociateJobWithConfiguration(RegionConfig config, Guid jobGuid)
         {
             bool eachHasConfiguration = true;
+            Console.WriteLine("Got config:" + config.Title);
             foreach (var bvj in _automationRequestJobs.Values)
             {
                 if (bvj.JobGuid == jobGuid)

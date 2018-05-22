@@ -32,6 +32,7 @@ namespace VTC.Common
                 var y_increment = next_position.Y - current_position.Y;
                 var total_increment = Math.Sqrt(Math.Pow(x_increment, 2) + Math.Pow(y_increment, 2));
                 distance_integral += total_increment;
+                current_position = next_position;
             }
 
             //StateEstimate initialPosition = StateHistory.First();
