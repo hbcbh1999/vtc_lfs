@@ -58,7 +58,8 @@ namespace VTC.RegionConfiguration
                     {
                         name = $"{cs.Name} ({i++})";
                     }
-                    _thumbnails[name] = cs.QueryFrame().Convert<Bgr, float>();
+                    Image<Bgr,float> thumbnailBase = cs.QueryFrame().Convert<Bgr, float>();
+                    _thumbnails[name] = thumbnailBase;
                 }
                 catch (Exception e) //Todo: Make this more specific
                 {
@@ -70,6 +71,46 @@ namespace VTC.RegionConfiguration
             {
                 _thumbnails["No capture sources found!"] = new ThumbnailImage(640, 480, new Bgr(Color.White));
             }
+
+            var thumbnailBindingSource = new BindingSource {DataSource = _thumbnails};
+            cbCaptureSource.DataSource = thumbnailBindingSource;
+            cbCaptureSource.DisplayMember = "Key";
+            cbCaptureSource.ValueMember = "Value";
+
+            _preview.Dock = DockStyle.Fill;
+            
+            panelImage.Controls.Add(_preview);
+
+            if (currentlySelectedConfig != null)
+            {
+                for (int i = 0; i < lbRegionConfigurations.Items.Count; i++)
+                {
+                    if (lbRegionConfigurations.Items[i].Equals(currentlySelectedConfig))
+                    {
+                        lbRegionConfigurations.SelectedIndex = i;
+                    }
+                }
+            }
+        }
+
+        public RegionEditor(Image<Bgr,byte> background, string name, IRegionConfigDataAccessLayer regionConfigDal, RegionConfig currentlySelectedConfig = null)
+        {
+            InitializeComponent();
+
+            _regionConfigDal = regionConfigDal;
+
+            var regionConfigs = _regionConfigDal.LoadRegionConfigList();
+
+            _regionConfigurationsBindingSource = new BindingSource { DataSource = regionConfigs };
+            PopulateConfigurationList();
+
+            lbRegionConfigurations.DataSource = _regionConfigurationsBindingSource;
+            lbRegionConfigurations.DisplayMember = "Title";
+            lbRegionConfigurations.ValueMember = "";
+
+            tbRegionConfigName.DataBindings.Add("Text", _regionConfigurationsBindingSource, "Title", true, DataSourceUpdateMode.OnPropertyChanged);
+
+            _thumbnails[name] = background.Convert<Bgr,float>();   
 
             var thumbnailBindingSource = new BindingSource {DataSource = _thumbnails};
             cbCaptureSource.DataSource = thumbnailBindingSource;

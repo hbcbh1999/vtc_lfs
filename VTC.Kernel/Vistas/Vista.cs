@@ -39,8 +39,6 @@ namespace VTC.Kernel.Vistas
         private static readonly int MeasurementArrayQueueMaxLength = 300;
 
         private static readonly int MHTMaxUpdateTimeMs = 1000;
-        private static readonly string[] ClassDetectionWhitelist = { "car", "truck", "bus", "person", "bicycle", "motorcycle" };
-
 
         //************* Strings ****************
         private static readonly string ApproachText = "Approach";
@@ -132,7 +130,7 @@ namespace VTC.Kernel.Vistas
 
                 var measurementsList = _yoloClassifier.DetectFrameYolo(newFrame);
                 var measurementsFilteredByROI = measurementsList.Where(m => IsContainedInROI(m));
-                MeasurementsArray = measurementsFilteredByROI.Where(m => ClassDetectionWhitelist.Contains(_yoloNameMapping.ObjectClass(m.ObjectClass).ToLower())).ToArray();
+                MeasurementsArray = measurementsFilteredByROI.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(_yoloNameMapping.ObjectClass(m.ObjectClass).ToLower())).ToArray();
                 MeasurementArrayQueue.Enqueue(MeasurementsArray);
                 while (MeasurementArrayQueue.Count > MeasurementArrayQueueMaxLength)
                     MeasurementArrayQueue.Dequeue();

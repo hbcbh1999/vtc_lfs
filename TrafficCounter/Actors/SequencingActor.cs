@@ -87,6 +87,12 @@ namespace VTC.Actors
 
         private void SendNotificationForLastAndDequeue()
         {
+            if(_currentJob == null)
+            {
+                _loggingActor.Tell(new LogMessage("SequencingActor thinks a non-existant job has completed. This can happen with unreliable IP-camera streams.", LogLevel.Error));
+                return;
+            }
+
             var vprm = new VideoProcessingCompleteNotificationMessage();
             vprm.JobGuid = _currentJob.JobGuid;
             vprm.ConfigurationName = _currentJob.RegionConfiguration.Title;

@@ -3,25 +3,58 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VTC.Reporting.Properties;
+using VTC.Common;
 using NLog;
 
 namespace VTC.Reporting
 {
+    public class MovementCountRow
+    {
+        public MovementCount MovementCt = new MovementCount();
+        public DateTime Time;
+
+        public long MovementTypeCount(Turn tt)
+        {
+            long count = 0;
+
+            foreach(var mc in MovementCt)
+            {
+                if(mc.Key.TurnType == tt)
+                {
+                    count += mc.Value;
+                }
+            }
+
+            return count;
+        }
+
+        public long MovementTypeApproachCount(Turn tt, string approachName)
+        {
+            long count = 0;
+
+            foreach(var mc in MovementCt)
+            {
+                if(mc.Key.TurnType == tt && mc.Key.Approach == approachName)
+                {
+                    count += mc.Value;
+                }
+            }
+
+            return count;
+        }
+    }
+
+    public class MovementCountRowList : List<MovementCountRow>
+    {
+
+    }
+
     public class SummaryReportGenerator
     {
 
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
 
         const int MaxNumSparklineSamples = 80;
-
-        private class MovementCountRow
-        {
-            public int LeftCount;
-            public int RightCount;
-            public int ThruCount;
-            public int UTurnCount;
-            public DateTime Time;
-        }
 
         public static void CopyAssetsToExportFolder(string exportPath)
         {
@@ -44,13 +77,13 @@ namespace VTC.Reporting
 
         private class FlowMetrics
         {
-            public int PeakFlow;
+            public long PeakFlow;
             public DateTime PeakTime;
-            public int TotalFlow;
-            public int TotalLeft;
-            public int TotalRight;
-            public int TotalStraight;
-            public int TotalUTurn;
+            public long TotalFlow;
+            public long TotalLeft;
+            public long TotalRight;
+            public long TotalStraight;
+            public long TotalUTurn;
         }
 
         public static void GenerateSummaryReportHTML(string exportPath, string location, DateTime videoTime)
@@ -58,39 +91,23 @@ namespace VTC.Reporting
             try
             {
                 //parse CSV files
-                var filename5min = "5-minute binned counts.csv";
+                var filename5min = "5-minute binned counts [car].csv";
                 var filepath5Min = Path.Combine(exportPath, filename5min);
 
-                var filename15min = "15-minute binned counts.csv";
+                var filename15min = "15-minute binned counts [car].csv";
                 var filepath15Min = Path.Combine(exportPath, filename15min);
 
-                var filename60min = "60-minute binned counts.csv";
+                var filename60min = "60-minute binned counts [car].csv";
                 var filepath60Min = Path.Combine(exportPath, filename60min);
 
+                var mcrl5min = ParseCSVToListCounts(filepath5Min);
+                var mcrl15min = ParseCSVToListCounts(filepath15Min);
+                var mcrl60min = ParseCSVToListCounts(filepath60Min);
 
-                List<MovementCountRow> a1C5M = new List<MovementCountRow>();
-                List<MovementCountRow> a2C5M = new List<MovementCountRow>();
-                List<MovementCountRow> a3C5M = new List<MovementCountRow>();
-                List<MovementCountRow> a4C5M = new List<MovementCountRow>();
-
-                List<MovementCountRow> a1C15M = new List<MovementCountRow>();
-                List<MovementCountRow> a2C15M = new List<MovementCountRow>();
-                List<MovementCountRow> a3C15M = new List<MovementCountRow>();
-                List<MovementCountRow> a4C15M = new List<MovementCountRow>();
-
-                List<MovementCountRow> a1C60M = new List<MovementCountRow>();
-                List<MovementCountRow> a2C60M = new List<MovementCountRow>();
-                List<MovementCountRow> a3C60M = new List<MovementCountRow>();
-                List<MovementCountRow> a4C60M = new List<MovementCountRow>();
-
-                ParseCSVToListCounts(filepath5Min, a1C5M, a2C5M, a3C5M, a4C5M);
-                ParseCSVToListCounts(filepath15Min, a1C15M, a2C15M, a3C15M, a4C15M);
-                ParseCSVToListCounts(filepath60Min, a1C60M, a2C60M, a3C60M, a4C60M);
-
-                var a1Metrics = CalculateFlowMetrics(a1C5M);
-                var a2Metrics = CalculateFlowMetrics(a2C5M);
-                var a3Metrics = CalculateFlowMetrics(a3C5M);
-                var a4Metrics = CalculateFlowMetrics(a4C5M);
+                var a1Metrics = CalculateFlowMetrics(mcrl5min,"Approach 1");
+                var a2Metrics = CalculateFlowMetrics(mcrl5min,"Approach 2");
+                var a3Metrics = CalculateFlowMetrics(mcrl5min,"Approach 3");
+                var a4Metrics = CalculateFlowMetrics(mcrl5min,"Approach 4");
 
                 //Populate tables
                 //Write summary statistics
@@ -113,10 +130,10 @@ namespace VTC.Reporting
                 summaryReport += Resources.rowTopBufferDivOpenTag; //summary statistics
                 summaryReport += "<h3>Summary statistics</h3>";
 
-                var summaryReportA1 = SummaryReportForApproach(a1Metrics, "Approach 1", a1C5M);
-                var summaryReportA2 = SummaryReportForApproach(a2Metrics, "Approach 2", a2C5M);
-                var summaryReportA3 = SummaryReportForApproach(a3Metrics, "Approach 3", a3C5M);
-                var summaryReportA4 = SummaryReportForApproach(a4Metrics, "Approach 4", a4C5M);
+                var summaryReportA1 = SummaryReportForApproach(a1Metrics, "Approach 1", mcrl5min);
+                var summaryReportA2 = SummaryReportForApproach(a2Metrics, "Approach 2", mcrl5min);
+                var summaryReportA3 = SummaryReportForApproach(a3Metrics, "Approach 3", mcrl5min);
+                var summaryReportA4 = SummaryReportForApproach(a4Metrics, "Approach 4", mcrl5min);
 
                 if (a1Metrics != null)
                     summaryReport += summaryReportA1;
@@ -132,19 +149,19 @@ namespace VTC.Reporting
 
                 summaryReport += "</div>"; //summary statistics row close
 
-                if (a1C60M.Count + a2C60M.Count + a3C60M.Count + a4C60M.Count > 0)
+                if (mcrl60min.Count > 0)
                 {
-                    summaryReport += AddRowOfApproachTables("60", a1C60M, a2C60M, a3C60M, a4C60M);
+                    summaryReport += AddRowOfApproachTables(mcrl60min, "60");
                 }
 
-                if (a1C15M.Count + a2C15M.Count + a3C15M.Count + a4C15M.Count > 0)
+                if (mcrl15min.Count > 0)
                 {
-                    summaryReport += AddRowOfApproachTables("15", a1C15M, a2C15M, a3C15M, a4C15M);
+                    summaryReport += AddRowOfApproachTables(mcrl15min, "15");
                 }
 
-                if (a1C5M.Count + a2C5M.Count + a3C5M.Count + a4C5M.Count > 0)
+                if (mcrl5min.Count > 0)
                 {
-                    summaryReport += AddRowOfApproachTables("5", a1C5M, a2C5M, a3C5M, a4C5M);
+                    summaryReport += AddRowOfApproachTables(mcrl5min, "5");
                 }
 
                 summaryReport += "</div>"; //Container close
@@ -180,12 +197,12 @@ namespace VTC.Reporting
                 .Replace("@thru", fmetrics.TotalStraight.ToString())
                 .Replace("@uturn", fmetrics.TotalUTurn.ToString());
             summaryReportA1 += "<br><br>";
-            summaryReportA1 += GenerateSparkline(approachCountRows);
+            summaryReportA1 += GenerateSparkline(approachCountRows, name);
             summaryReportA1 += "</div>";
             return summaryReportA1;
         }
 
-        private static FlowMetrics CalculateFlowMetrics(List<MovementCountRow> countRows)
+        private static FlowMetrics CalculateFlowMetrics(List<MovementCountRow> countRows, string approachName)
         {
             var metrics = new FlowMetrics();
 
@@ -193,90 +210,66 @@ namespace VTC.Reporting
                 return null;
             
             var a1PeakSample =
-                countRows.OrderByDescending(m => m.LeftCount + m.RightCount + m.ThruCount + m.UTurnCount).FirstOrDefault();
+                countRows.OrderByDescending(m => m.MovementTypeApproachCount(Turn.Left, approachName) + m.MovementTypeApproachCount(Turn.Right, approachName) + m.MovementTypeApproachCount(Turn.Straight, approachName) + m.MovementTypeApproachCount(Turn.UTurn, approachName)).FirstOrDefault();
 
             if (a1PeakSample != null)
             {
-                metrics.PeakFlow = a1PeakSample.LeftCount + a1PeakSample.RightCount + a1PeakSample.ThruCount +
-                                     a1PeakSample.UTurnCount;
+                metrics.PeakFlow = a1PeakSample.MovementTypeApproachCount(Turn.Left, approachName) + a1PeakSample.MovementTypeApproachCount(Turn.Right, approachName) + a1PeakSample.MovementTypeApproachCount(Turn.Straight, approachName) +
+                                     a1PeakSample.MovementTypeApproachCount(Turn.UTurn, approachName);
                 metrics.PeakTime = a1PeakSample.Time;
             }
-            metrics.TotalFlow = countRows.Sum(mc => mc.LeftCount + mc.RightCount + mc.ThruCount + mc.UTurnCount);
-            metrics.TotalLeft = countRows.Sum(mc => mc.LeftCount);
-            metrics.TotalRight = countRows.Sum(mc => mc.RightCount);
-            metrics.TotalStraight = countRows.Sum(mc => mc.ThruCount);
-            metrics.TotalUTurn = countRows.Sum(mc => mc.UTurnCount);
+            metrics.TotalFlow = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Left, approachName) + mc.MovementTypeApproachCount(Turn.Right, approachName) + mc.MovementTypeApproachCount(Turn.Straight, approachName) + mc.MovementTypeApproachCount(Turn.UTurn, approachName));
+            metrics.TotalLeft = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Left, approachName));
+            metrics.TotalRight = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Right, approachName));
+            metrics.TotalStraight = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Straight, approachName));
+            metrics.TotalUTurn = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.UTurn, approachName));
             return metrics;
         }
 
-        private static void ParseCSVToListCounts(string filepath5Min, List<MovementCountRow> a1C, List<MovementCountRow> a2C, List<MovementCountRow> a3C, List<MovementCountRow> a4C)
+        private static MovementCountRowList ParseCSVToListCounts(string filepath)
         {
-            if (File.Exists(filepath5Min))
+            var mcrl = new MovementCountRowList();
+            var filenameSubstrings = filepath.Split(new char[]{'[',']'});
+            var objectTypeString = CommonFunctions.FirstCharToUpper(filenameSubstrings[1]);
+            var objectType = (ObjectType) Enum.Parse(typeof(ObjectType),objectTypeString);
+            
+            if (File.Exists(filepath))
             {
-                foreach (var l in File.ReadLines(filepath5Min))
+                //For each line in the CSV file
+                foreach (var l in File.ReadLines(filepath))
                 {
-                    var mcr1 = new MovementCountRow(); // One for each approach 
-                    var mcr2 = new MovementCountRow();
-                    var mcr3 = new MovementCountRow();
-                    var mcr4 = new MovementCountRow();
-
+                    //Split the line into individual movement-counts
+                    var mcr = new MovementCountRow();
                     var elements = l.Split(',');
-                    mcr1.Time = DateTime.Parse(elements[0]);
-                    mcr2.Time = DateTime.Parse(elements[0]);
-                    mcr3.Time = DateTime.Parse(elements[0]);
-                    mcr4.Time = DateTime.Parse(elements[0]);
+                    var timestamp = DateTime.Parse(elements[0]);
+                    mcr.Time = timestamp;
 
-                    for (int i = 1; i < elements.Length; i += 4)
+                    for (int i = 1; i < elements.Length; i += 3)
                     {
                         if (i >= elements.Length - 1) break;
+                        if (i + 2 >= elements.Length - 1) break;
 
                         var movementName = elements[i];
-                        var movementCount = Convert.ToInt32(elements[i + 3]);
-                        var movementType = elements[i + 1].ToLower();
+                        var movementCount = Convert.ToInt32(elements[i + 2]);
+                        var turnType = (Turn) Enum.Parse(typeof(Turn), elements[i + 1]);
 
-                        if (movementName.Contains("Approach 1"))
-                        {
-                            if (movementType.Contains("left")) mcr1.LeftCount += movementCount;
-                            if (movementType.Contains("right")) mcr1.RightCount += movementCount;
-                            if (movementType.Contains("straight")) mcr1.ThruCount += movementCount;
-                            if (movementType.Contains("uturn")) mcr1.UTurnCount += movementCount;
-                        }
+                        var splitIndex = movementName.IndexOf("to");
+                        var strings = movementName.Split(new string[]{" to "}, StringSplitOptions.RemoveEmptyEntries);
+                        var approach = strings[0];
+                        var exit = strings[1];
 
-                        if (movementName.Contains("Approach 2"))
-                        {
-                            if (movementType.Contains("left")) mcr2.LeftCount += movementCount;
-                            if (movementType.Contains("right")) mcr2.RightCount += movementCount;
-                            if (movementType.Contains("straight")) mcr2.ThruCount += movementCount;
-                            if (movementType.Contains("uturn")) mcr2.UTurnCount += movementCount;
-                        }
-
-                        if (movementName.Contains("Approach 3"))
-                        {
-                            if (movementType.Contains("left")) mcr3.LeftCount += movementCount;
-                            if (movementType.Contains("right")) mcr3.RightCount += movementCount;
-                            if (movementType.Contains("straight")) mcr3.ThruCount += movementCount;
-                            if (movementType.Contains("uturn")) mcr3.UTurnCount += movementCount;
-                        }
-
-                        if (movementName.Contains("Approach 4"))
-                        {
-                            if (movementType.Contains("left")) mcr4.LeftCount += movementCount;
-                            if (movementType.Contains("right")) mcr4.RightCount += movementCount;
-                            if (movementType.Contains("straight")) mcr4.ThruCount += movementCount;
-                            if (movementType.Contains("uturn")) mcr4.UTurnCount += movementCount;
-                        }
+                        var movement = new Movement(approach, exit, turnType, objectType, null);
+                        mcr.MovementCt.Add(movement,movementCount);
                     }
 
-                    a1C.Add(mcr1);
-                    a2C.Add(mcr2);
-                    a3C.Add(mcr3);
-                    a4C.Add(mcr4);
+                    mcrl.Add(mcr);
                 }
             }
+
+            return mcrl;
         }
 
-        private static string AddRowOfApproachTables(string minutes, List<MovementCountRow> approach1CountRows, List<MovementCountRow> approach2CountRows, List<MovementCountRow> approach3CountRows,
-            List<MovementCountRow> approach4CountRows)
+        private static string AddRowOfApproachTables(MovementCountRowList mcrl, string minutes)
         {
             string rowid = "row" + minutes;
             string rowOfTables = "";
@@ -285,29 +278,29 @@ namespace VTC.Reporting
             rowOfTables += "<span class=\"glyphicon glyphicon-collapse-down\"></span>";
             rowOfTables += "</button>";
             rowOfTables += Resources.rowTopBufferDivOpenTagCollapse.Replace("@rowid", rowid); // counts
-            rowOfTables += GenerateSingleTable(approach1CountRows, "Approach 1");
-            rowOfTables += GenerateSingleTable(approach2CountRows, "Approach 2");
-            rowOfTables += GenerateSingleTable(approach3CountRows, "Approach 3");
-            rowOfTables += GenerateSingleTable(approach4CountRows, "Approach 4");
+            rowOfTables += GenerateSingleTable(mcrl, "Approach 1");
+            rowOfTables += GenerateSingleTable(mcrl, "Approach 2");
+            rowOfTables += GenerateSingleTable(mcrl, "Approach 3");
+            rowOfTables += GenerateSingleTable(mcrl, "Approach 4");
 
             rowOfTables += "</div>"; // row close
             return rowOfTables;
         }
 
-        private static string GenerateSingleTable(List<MovementCountRow> approachCountRows, string name)
+        private static string GenerateSingleTable(MovementCountRowList mcrl, string approachName)
         {
             string table = "";
             table += Resources.colSm3DivOpenTag; // Approach 1
-            table += "<h4>" + name + "</h4>";
+            table += "<h4>" + approachName + "</h4>";
             table += "<table>";
             table += Resources.tableHeaderRow;
-            table += LayoutRows(approachCountRows);
+            table += LayoutRows(mcrl, approachName);
             table += "</table>";
             table += "</div>"; //Approach 1 column close
             return table;
         }
 
-        private static string GenerateSparkline(List<MovementCountRow> countRows)
+        private static string GenerateSparkline(List<MovementCountRow> countRows, string approachName)
         {
             if (!countRows.Any())
             {
@@ -315,7 +308,7 @@ namespace VTC.Reporting
             }
 
             var counts =
-                countRows.Select(c => (c.LeftCount + c.RightCount + c.ThruCount + c.UTurnCount).ToString());
+                countRows.Select(c => (c.MovementTypeApproachCount(Turn.Left, approachName) + c.MovementTypeApproachCount(Turn.Right, approachName) + c.MovementTypeApproachCount(Turn.Straight, approachName) + c.MovementTypeApproachCount(Turn.UTurn, approachName)).ToString());
 
             while (counts.Count() > MaxNumSparklineSamples)
             {
@@ -327,17 +320,17 @@ namespace VTC.Reporting
             return rowOfTables;
         }
 
-        private static string LayoutRows(List<MovementCountRow> movementCountRows)
+        private static string LayoutRows(MovementCountRowList movementCountRows, string approachName)
         {
             string rowsString = "";
             foreach (var mcr in movementCountRows)
             {
                 var tableRow = (string) Resources.tableCountRow.Clone();
                 tableRow = tableRow.Replace("@time", mcr.Time.ToShortTimeString());
-                tableRow = tableRow.Replace("@left", mcr.LeftCount.ToString());
-                tableRow = tableRow.Replace("@right", mcr.RightCount.ToString());
-                tableRow = tableRow.Replace("@thru", mcr.ThruCount.ToString());
-                tableRow = tableRow.Replace("@uturn", mcr.UTurnCount.ToString());
+                tableRow = tableRow.Replace("@left", mcr.MovementTypeApproachCount(Turn.Left,approachName).ToString());
+                tableRow = tableRow.Replace("@right", mcr.MovementTypeApproachCount(Turn.Right,approachName).ToString());
+                tableRow = tableRow.Replace("@thru", mcr.MovementTypeApproachCount(Turn.Straight,approachName).ToString());
+                tableRow = tableRow.Replace("@uturn", mcr.MovementTypeApproachCount(Turn.UTurn,approachName).ToString());
                 rowsString += tableRow;
             }
             return rowsString;

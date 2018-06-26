@@ -100,6 +100,11 @@ namespace VTC.Actors
             {
                 var cloned = frame.Clone();
                 { ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned)); }
+                if(FramesProcessed < 10)
+                { 
+                    var configurationActor = Context.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+                    configurationActor.Tell(new FrameMessage(cloned));
+                }
                 FramesProcessed++;
                 Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
             }

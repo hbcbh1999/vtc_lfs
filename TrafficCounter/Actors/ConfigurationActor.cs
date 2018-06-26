@@ -12,6 +12,8 @@ using VTC.Common.RegionConfig;
 using VTC.Kernel.Video;
 using VTC.Messages;
 using VTC.RegionConfiguration;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace VTC.Actors
 {
@@ -26,6 +28,7 @@ namespace VTC.Actors
         private BatchVideoJob _currentJob;
         private List<ICaptureSource> _cameras = new List<ICaptureSource>(); //List of all video input devices. Index, file location, name
         private List<BatchVideoJob> _videoJobs = new List<BatchVideoJob>();
+        private Image<Bgr,byte> _backgroundFrame;
 
         private static readonly string RegionConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                                               "\\VTC\\regionConfig.xml";
@@ -80,6 +83,10 @@ namespace VTC.Actors
                 Heartbeat()
             );
 
+            Receive<FrameMessage>(message =>
+                ReceiveNewBackground(message.Frame)
+            );
+
             Self.Tell(new ActorHeartbeatMessage());
         }
 
@@ -130,7 +137,11 @@ namespace VTC.Actors
                 if (_videoJobs.Count == 0)
                 {
                     RegionEditor regionEditor;
-                    if (_currentJob == null)
+                    if(_backgroundFrame != null)
+                    {
+                        regionEditor = new RegionEditor(_backgroundFrame, "Live", _regionConfigDataAccessLayer);
+                    }
+                    else if (_currentJob == null)
                     {
                         regionEditor = new RegionEditor(_cameras, _regionConfigDataAccessLayer);
                     }
@@ -143,6 +154,7 @@ namespace VTC.Actors
                     if (regionEditor.ShowDialog() == DialogResult.OK)
                     {
                         _processingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
+                        _loggingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
                         if (_currentJob != null)
                         {
                             _currentJob.RegionConfiguration = regionEditor.SelectedRegionConfig;
@@ -194,7 +206,7 @@ namespace VTC.Actors
 
         private void Heartbeat()
         {
-            _supervisorActor.Tell(new ActorHeartbeatMessage());
+            _supervisorActor?.Tell(new ActorHeartbeatMessage());
             Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
         }
 
@@ -209,6 +221,11 @@ namespace VTC.Actors
                     return;
                 }
             }
+        }
+
+        private void ReceiveNewBackground(Image<Bgr,byte> image)
+        { 
+            _backgroundFrame = image.Clone();
         }
     }
 }

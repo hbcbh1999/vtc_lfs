@@ -133,11 +133,12 @@ namespace VTC.Actors
                 tui.MovementMask = _vista.Movement_Mask;
                 tui.StateImage = stateImage;
                 tui.StateEstimates = _vista.CurrentVehicles.Select(v => v.StateHistory.Last()).ToArray();
-                tui.VelocityFieldImage = frame.Clone();
-                _vista.DrawVelocityField(tui.VelocityFieldImage, new Bgr(Color.White), 1);
                 _updateUiDelegate?.Invoke(tui); 
                 stateImage.Dispose();
-                _loggingActor?.Tell(new WriteAllBinnedCountsMessage(_config.Timestep));
+                if(_config != null)
+                { 
+                   _loggingActor?.Tell(new WriteAllBinnedCountsMessage(_config.Timestep));    
+                }
                 _loggingActor?.Tell(new LogDetectionsMessage(_vista.MeasurementsArray.ToList()));
                 // Now update child class specific stats
                 var args = new TrackingEvents.TrajectoryListEventArgs { TrackedObjects = _vista.DeletedVehicles };

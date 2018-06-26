@@ -7,8 +7,13 @@ using VTC.Common;
 
 namespace VTC.Common
 {
+    public class MovementCount : Dictionary<Movement,long>
+    {
+
+    }
+
     [DataContract]
-    public class Movement
+    public class Movement : IComparable<Movement>
     {
         [DataMember] public string Approach;
 
@@ -45,7 +50,11 @@ namespace VTC.Common
 
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType())
+            var typeThat = obj.GetType();
+            if(typeThat != typeof(Movement) && !typeThat.IsSubclassOf(typeof(Movement)))
+                return false;
+
+            if (obj == null)
                 return false;
 
             var other = (Movement) obj;
@@ -56,6 +65,11 @@ namespace VTC.Common
         public override int GetHashCode()
         {
             return ToString().GetHashCode();
+        }
+
+        public int CompareTo(Movement that)
+        {
+            return ToString().CompareTo(that.ToString());
         }
     }
 }

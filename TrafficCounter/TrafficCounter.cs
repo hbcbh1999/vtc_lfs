@@ -54,6 +54,7 @@ namespace VTC
         private readonly DateTime _applicationStartTime;
 
         private readonly List<ICaptureSource> _cameras = new List<ICaptureSource>(); //List of all video input devices. Index, file location, name
+        private ICaptureSource _selectedCaptureSource;
 
         // unit tests has own settings, so need to store "pairs" (capture, settings)
        private CaptureContext[] _testCaptureContexts;
@@ -433,16 +434,33 @@ namespace VTC
                 processingActor.Tell(new UpdateRegionConfigurationMessage(regionConfig));
             }
 
-            //Change the capture device.
+            var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
             var frameGrabActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/FrameGrabActor");
-            frameGrabActor.Tell(new NewVideoSourceMessage(_cameras[CameraComboBox.SelectedIndex]));
+            var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+            _selectedCaptureSource = _cameras[CameraComboBox.SelectedIndex];
+
+            //Create new output folder
+            loggingActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
+            DateTime videoTime = DateTime.Now;
+            loggingActor.Tell(new FileCreationTimeMessage(videoTime));
+
+            //Change the capture device.
+            frameGrabActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
             frameGrabActor.Tell(new GetNextFrameMessage());
+
+            //Tell the configuration actor about this camera
+            //var selected_camera_list = new List<ICaptureSource>();
+            //selected_camera_list.Add(_selectedCaptureSource);
+            //configurationActor.Tell(new CamerasMessage(selected_camera_list));
+            //configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
         }
 
         private void btnConfigureRegions_Click(object sender, EventArgs e)
         {
-            //var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/ConfigurationActor");
             var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+            var selected_camera_list = new List<ICaptureSource>();
+            selected_camera_list.Add(_selectedCaptureSource);
+            configurationActor.Tell(new CamerasMessage(selected_camera_list));
             configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
         }
 

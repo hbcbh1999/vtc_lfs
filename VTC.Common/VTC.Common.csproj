@@ -77,6 +77,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonFunctions.cs" />
+    <Compile Include="DetectionClasses.cs" />
     <Compile Include="ObjectType.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="JsonLogger.cs" />

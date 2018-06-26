@@ -35,10 +35,10 @@ namespace VTC.Actors
 
         private bool _batchMode = true;
 
-        private readonly Dictionary<Movement, long> _turnStats = new Dictionary<Movement, long>();
-        private readonly Dictionary<Movement, long> _5MinTurnStats = new Dictionary<Movement, long>();
-        private readonly Dictionary<Movement, long> _15MinTurnStats = new Dictionary<Movement, long>();
-        private readonly Dictionary<Movement, long> _60MinTurnStats = new Dictionary<Movement, long>();
+        private readonly MovementCount _turnStats = new MovementCount();
+        private readonly MovementCount _5MinTurnStats = new MovementCount();
+        private readonly MovementCount _15MinTurnStats = new MovementCount();
+        private readonly MovementCount _60MinTurnStats = new MovementCount();
 
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
         private static readonly Logger UserLogger = LogManager.GetLogger("userlog"); // special logger for user messages
@@ -176,35 +176,48 @@ namespace VTC.Actors
 
         private void WriteBinnedCounts(double timestep)
         {
-            _videoTime += TimeSpan.FromSeconds(timestep);
-
-            if (_videoTime - _lastLogVideoTime > TimeSpan.FromMilliseconds(_regionConfig.StateUploadIntervalMs))
+            if(_regionConfig == null)
             {
-                _lastLogVideoTime = _videoTime;
+                return; 
             }
 
-            if (_videoTime - _last5MinbinTime > TimeSpan.FromMinutes(5))
+            try
             {
-                WriteBinnedMovements5Min(_videoTime, _5MinTurnStats);
-                _last5MinbinTime = _videoTime;
-            }
+                _videoTime += TimeSpan.FromSeconds(timestep);
 
-            if (_videoTime - _last15MinbinTime > TimeSpan.FromMinutes(15))
-            {
-                WriteBinnedMovements15Min(_videoTime, _15MinTurnStats);
-                _last15MinbinTime = _videoTime;
-            }
+                if (_videoTime - _lastLogVideoTime > TimeSpan.FromMilliseconds(_regionConfig.StateUploadIntervalMs))
+                {
+                    _lastLogVideoTime = _videoTime;
+                }
 
-            if (_videoTime - _last60MinbinTime > TimeSpan.FromMinutes(60))
-            {
-                WriteBinnedMovements60Min(_videoTime, _60MinTurnStats);
-                _last60MinbinTime = _videoTime;
+                if (_videoTime - _last5MinbinTime > TimeSpan.FromMinutes(5))
+                {
+                    WriteBinnedMovements5Min(_videoTime, _5MinTurnStats);
+                    _last5MinbinTime = _videoTime;
+                }
+
+                if (_videoTime - _last15MinbinTime > TimeSpan.FromMinutes(15))
+                {
+                    WriteBinnedMovements15Min(_videoTime, _15MinTurnStats);
+                    _last15MinbinTime = _videoTime;
+                }
+
+                if (_videoTime - _last60MinbinTime > TimeSpan.FromMinutes(60))
+                {
+                    WriteBinnedMovements60Min(_videoTime, _60MinTurnStats);
+                    _last60MinbinTime = _videoTime;
+                }
             }
+            catch(NullReferenceException ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
+            }
+            
         }
 
-        private string GenerateCountFilename(int minutes)
+        private string GenerateCountFilename(int minutes, string className)
         {
-            string filename = $"{minutes}-minute binned counts.csv";
+            string filename = $"{minutes}-minute binned counts [{className}].csv";
             //TODO: Figure out how to access video name here
             string folderPath = VTCPaths.FolderPath(_currentVideoName);
             string filepath = Path.Combine(folderPath, filename);
@@ -216,8 +229,12 @@ namespace VTC.Actors
         {
             //TODO: Figure out how to get video name
             {
-                var filepath = GenerateCountFilename(5);
-                WriteBinnedMovementsToFile(filepath, turnStats, timestamp);
+                foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
+                {
+                    var filepath = GenerateCountFilename(5, detectionClass);
+                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType.ToString().ToLower() == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
+                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp);    
+                }
 
                 foreach (KeyValuePair<Movement, long> countpair in turnStats)
                 {
@@ -233,8 +250,13 @@ namespace VTC.Actors
         {
             //TODO: Figure out how to get video name
             {
-                var filepath = GenerateCountFilename(15);
-                WriteBinnedMovementsToFile(filepath, turnStats, timestamp);
+                foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
+                {
+                    var filepath = GenerateCountFilename(15,detectionClass);
+                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType.ToString().ToLower() == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
+                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp);
+                }
+                
                 _15MinTurnStats.Clear();
                 _15minSampleBinWritten = true;
             }
@@ -244,8 +266,13 @@ namespace VTC.Actors
         {
             //TODO: Figure out how to get video name
             {
-                var filepath = GenerateCountFilename(60);
-                WriteBinnedMovementsToFile(filepath, turnStats, timestamp);
+                foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
+                {
+                    var filepath = GenerateCountFilename(60,detectionClass);
+                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType.ToString().ToLower() == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
+                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp);
+                }
+                
                 _60MinTurnStats.Clear();
                 _60minSampleBinWritten = true;
             }
@@ -268,20 +295,60 @@ namespace VTC.Actors
             _60MinTurnStats.Clear();
         }
 
-
-
         private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp)
         {
-            using (var sw = File.AppendText(path))
+            try
             {
-                var binString = "";
-                binString += timestamp + ",";
-                foreach (var stat in turnStats)
-                {
-                    binString += stat.Key + "," + stat.Value + ", ";
+                //Pad turnStats with non-present movements with count equal to zero.
+                //1. Get full list of possible movements
+                foreach(var m in mts.TrajectoryPrototypes)
+                {            
+                    //2. Check which keys are not present
+                    if(!turnStats.Keys.Contains(m))
+                    { 
+                        //3. Add the non-present keys 
+                        turnStats.Add(m,0);
+                    }
                 }
-                sw.WriteLine(binString);
             }
+            catch(System.ArgumentException ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
+            }
+
+            
+            //Sort turnStats so that columns are consistent in output CSV
+            var sd = new SortedDictionary<Movement,long>();
+            foreach(var ts in turnStats)
+            {
+                try
+                {
+                    sd.Add(ts.Key,ts.Value);
+                }
+                catch(ArgumentException ex)
+                { 
+                    Logger.Log(LogLevel.Error, ex);
+                }
+            }
+
+            try
+            {
+                using (var sw = File.AppendText(path))
+                {
+                    var binString = "";
+                    binString += timestamp + ",";
+                    foreach (var stat in sd)
+                    {
+                        binString += stat.Key.Approach + " to " + stat.Key.Exit + "," + stat.Key.TurnType + "," + stat.Value + ",";
+                    }
+                    sw.WriteLine(binString);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
+            }
+
         }
 
         private void LogDetections(List<Measurement> detections)
@@ -353,18 +420,6 @@ namespace VTC.Actors
             {
                 var folderPath = VTCPaths.FolderPath(_currentVideoName);
                 GenerateRegionsLegendImage(folderPath);
-
-                {
-                    WriteBinnedMovements5Min(_videoTime, _5MinTurnStats);
-                }
-                
-                {
-                    WriteBinnedMovements15Min(_videoTime, _15MinTurnStats);
-                }
-                
-                {
-                    WriteBinnedMovements60Min(_videoTime, _60MinTurnStats);
-                }
 
                 //Check that accumulated totals from different sources make sense
                 if (_totalCountsWrittenTo5MinCsv != _totalTrajectoriesCounted)
@@ -443,28 +498,37 @@ namespace VTC.Actors
         private int _totalTrajectoriesCounted = 0;
         private void TrajectoryListHandler(TrackingEvents.TrajectoryListEventArgs args)
         {
-            foreach (var d in args.TrackedObjects)
+            try
             {
-                var mostLikelyClassType =
-                    YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
-                        _yoloNameMapping.IntegerToObjectClass);
-                var movement = MatchNearestTrajectory(d,mostLikelyClassType);
-                if (movement == null) continue;
-                var uppercaseClassType = FirstCharToUpper(mostLikelyClassType);
-                movement.TrafficObjectType = (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType);
-                movement.Timestamp = _videoTime;
-                movement.StateEstimates = d.StateHistory;
-                IncrementTurnStatistics(movement);
-                var tl = new TrajectoryLogger(movement);
-                var folderPath = VTCPaths.FolderPath(_currentVideoName);
-                const string filename = "Movements";
-                var filepath = Path.Combine(folderPath, filename);
-                tl.Save(filepath);
-                _totalTrajectoriesCounted++;
+                foreach (var d in args.TrackedObjects)
+                {
+                    var mostLikelyClassType =
+                        YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
+                            _yoloNameMapping.IntegerToObjectClass);
+                    var movement = MatchNearestTrajectory(d,mostLikelyClassType);
+                    if (movement == null) continue;
+                    var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
+                    movement.TrafficObjectType = (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType);
+                    movement.Timestamp = _videoTime;
+                    movement.StateEstimates = d.StateHistory;
+                    IncrementTurnStatistics(movement);
+                    var tl = new TrajectoryLogger(movement);
+                    var folderPath = VTCPaths.FolderPath(_currentVideoName);
+                    const string filename = "Movements";
+                    var filepath = Path.Combine(folderPath, filename);
+                    tl.Save(filepath);
+                    _totalTrajectoriesCounted++;
+                }
+
+                var stats = GetStatString();
+                _updateStatsUiDelegate?.Invoke(stats);
+            }
+            catch(Exception ex)
+            { 
+                Logger.Log(LogLevel.Error,ex.Message);    
             }
 
-            var stats = GetStatString();
-            _updateStatsUiDelegate?.Invoke(stats);
+            
         }
 
         private Movement MatchNearestTrajectory(TrackedObject d, string classType)
@@ -619,16 +683,6 @@ namespace VTC.Actors
             {
                 var ser = new DataContractJsonSerializer(typeof(VideoMetadata));  
                 ser.WriteObject(outputFile.BaseStream, vm);  
-            }
-        }
-
-        private static string FirstCharToUpper(string input)
-        {
-            switch (input)
-            {
-                case null: throw new ArgumentNullException(nameof(input));
-                case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
-                default: return input.First().ToString().ToUpper() + input.Substring(1);
             }
         }
     }
