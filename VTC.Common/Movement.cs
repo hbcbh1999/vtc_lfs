@@ -9,7 +9,15 @@ namespace VTC.Common
 {
     public class MovementCount : Dictionary<Movement,long>
     {
-
+        public long TotalCount()
+        {
+            long count = 0;
+            foreach(var mc in this)
+            {
+                count += mc.Value;
+            }
+            return count;
+        }
     }
 
     [DataContract]

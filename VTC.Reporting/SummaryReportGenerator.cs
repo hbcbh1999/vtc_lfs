@@ -86,18 +86,18 @@ namespace VTC.Reporting
             public long TotalUTurn;
         }
 
-        public static void GenerateSummaryReportHTML(string exportPath, string location, DateTime videoTime)
+        public static void GenerateSummaryReportHTML(string exportPath, string location, DateTime videoTime, string objectType)
         {
             try
             {
                 //parse CSV files
-                var filename5min = "5-minute binned counts [car].csv";
+                var filename5min = "5-minute binned counts ["+objectType+"].csv";
                 var filepath5Min = Path.Combine(exportPath, filename5min);
 
-                var filename15min = "15-minute binned counts [car].csv";
+                var filename15min = "15-minute binned counts ["+objectType+"].csv";
                 var filepath15Min = Path.Combine(exportPath, filename15min);
 
-                var filename60min = "60-minute binned counts [car].csv";
+                var filename60min = "60-minute binned counts ["+objectType+"].csv";
                 var filepath60Min = Path.Combine(exportPath, filename60min);
 
                 var mcrl5min = ParseCSVToListCounts(filepath5Min);
@@ -113,7 +113,7 @@ namespace VTC.Reporting
                 //Write summary statistics
                 //Generate HTML footer
 
-                var reportPath = Path.Combine(exportPath, "report.html");
+                var reportPath = Path.Combine(exportPath, "report ["+objectType+"].html");
                 string summaryReport = "";
                 summaryReport += "<!DOCTYPE html>";
                 summaryReport += "<html>";

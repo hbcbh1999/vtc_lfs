@@ -421,6 +421,21 @@ namespace VTC.Actors
                 var folderPath = VTCPaths.FolderPath(_currentVideoName);
                 GenerateRegionsLegendImage(folderPath);
 
+                if(_5MinTurnStats.TotalCount() > 0)
+                {
+                    WriteBinnedMovements5Min(_videoTime, _5MinTurnStats); 
+                }
+
+                if(_15MinTurnStats.TotalCount() > 0)
+                {
+                    WriteBinnedMovements15Min(_videoTime, _15MinTurnStats);
+                }
+                
+                if(_60MinTurnStats.TotalCount() > 0)
+                {
+                    WriteBinnedMovements60Min(_videoTime, _60MinTurnStats);     
+                }
+
                 //Check that accumulated totals from different sources make sense
                 if (_totalCountsWrittenTo5MinCsv != _totalTrajectoriesCounted)
                 {
@@ -433,7 +448,10 @@ namespace VTC.Actors
                 }
 
                 SummaryReportGenerator.CopyAssetsToExportFolder(folderPath);
-                SummaryReportGenerator.GenerateSummaryReportHTML(folderPath, _currentVideoName, _videoTime);
+                foreach(var type in Enum.GetValues(typeof(ObjectType)).Cast<ObjectType>())
+                {
+                    SummaryReportGenerator.GenerateSummaryReportHTML(folderPath, _currentVideoName, _videoTime, type.ToString().ToLower()); 
+                }
 
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
             }
