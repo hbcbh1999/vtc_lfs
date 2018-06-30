@@ -8,6 +8,6 @@ namespace VTC.Common
 {
     public static class DetectionClasses
     {
-        public static readonly string[] ClassDetectionWhitelist = { "car", "truck", "bus", "person", "bicycle", "motorcycle" };
+        public static readonly ObjectType[] ClassDetectionWhitelist = { ObjectType.Car, ObjectType.Person, ObjectType.Bicycle, ObjectType.Bus, ObjectType.Motorcycle, ObjectType.Truck };
     }
 }

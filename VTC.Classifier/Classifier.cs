@@ -374,7 +374,8 @@ namespace VTC.Classifier
     public class YoloIntegerNameMapping
     {
         private String IntegerToObjectClassFilepath = "coco.names";
-        public Dictionary<int, string> IntegerToObjectClass = new Dictionary<int, string>();
+        public Dictionary<int, ObjectType> IntegerToObjectType = new Dictionary<int, ObjectType>();
+        public Dictionary<int, string> IntegerToObjectName = new Dictionary<int, string>();
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
 
         public static string GetObjectNameFromClassInteger(int classId, Dictionary<int,string> idClassMapping)
@@ -382,14 +383,19 @@ namespace VTC.Classifier
             return idClassMapping.ContainsKey(classId) ? idClassMapping[classId] : "Unknown";
         }
 
-        public string ObjectClass(int ObjectID)
+        public static ObjectType GetObjectTypeFromClassInteger(int classId, Dictionary<int,ObjectType> idClassMapping)
         {
-            if (IntegerToObjectClass.ContainsKey(ObjectID))
+            return idClassMapping.ContainsKey(classId) ? idClassMapping[classId] : ObjectType.Unknown;
+        }
+
+        public ObjectType YoloIntegerToObjectType(int ObjectID)
+        {
+            if (IntegerToObjectType.ContainsKey(ObjectID))
             {
-                return IntegerToObjectClass[ObjectID];
+                return IntegerToObjectType[ObjectID];
             }
             
-            return "unknown";
+            return ObjectType.Unknown;
         }
 
         public YoloIntegerNameMapping()
@@ -413,7 +419,14 @@ namespace VTC.Classifier
             var lines = File.ReadAllLines(IntegerToObjectClassFilepath);
             for(int i=0; i < lines.Length; i++)
             {
-                IntegerToObjectClass.Add(i,lines[i]);
+                foreach(var c in DetectionClasses.ClassDetectionWhitelist)
+                {
+                    if(c.ToString().ToLower() == lines[i])
+                    {
+                        IntegerToObjectName.Add(i,lines[i]);       
+                        IntegerToObjectType.Add(i,c);       
+                    }
+                }
             }
         }
     }

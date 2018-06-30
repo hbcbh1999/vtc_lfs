@@ -215,9 +215,9 @@ namespace VTC.Actors
             
         }
 
-        private string GenerateCountFilename(int minutes, string className)
+        private string GenerateCountFilename(int minutes, ObjectType className)
         {
-            string filename = $"{minutes}-minute binned counts [{className}].csv";
+            string filename = $"{minutes}-minute binned counts [{className.ToString().ToLower()}].csv";
             //TODO: Figure out how to access video name here
             string folderPath = VTCPaths.FolderPath(_currentVideoName);
             string filepath = Path.Combine(folderPath, filename);
@@ -226,14 +226,13 @@ namespace VTC.Actors
 
         private long _totalCountsWrittenTo5MinCsv = 0;
         private void WriteBinnedMovements5Min(DateTime timestamp, Dictionary<Movement, long> turnStats)
-        {
-            //TODO: Figure out how to get video name
+        {            
             {
                 foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
                 {
                     var filepath = GenerateCountFilename(5, detectionClass);
-                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType.ToString().ToLower() == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
-                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp);    
+                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
+                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);    
                 }
 
                 foreach (KeyValuePair<Movement, long> countpair in turnStats)
@@ -253,8 +252,8 @@ namespace VTC.Actors
                 foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
                 {
                     var filepath = GenerateCountFilename(15,detectionClass);
-                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType.ToString().ToLower() == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
-                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp);
+                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
+                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);
                 }
                 
                 _15MinTurnStats.Clear();
@@ -269,8 +268,8 @@ namespace VTC.Actors
                 foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
                 {
                     var filepath = GenerateCountFilename(60,detectionClass);
-                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType.ToString().ToLower() == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
-                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp);
+                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
+                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);
                 }
                 
                 _60MinTurnStats.Clear();
@@ -295,19 +294,31 @@ namespace VTC.Actors
             _60MinTurnStats.Clear();
         }
 
-        private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp)
+        private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp, ObjectType objectType)
         {
             try
             {
                 //Pad turnStats with non-present movements with count equal to zero.
                 //1. Get full list of possible movements
                 foreach(var m in mts.TrajectoryPrototypes)
-                {            
+                {   
+                    var modified_prototype = m;
+                    modified_prototype.TrafficObjectType = objectType;
                     //2. Check which keys are not present
-                    if(!turnStats.Keys.Contains(m))
+                    if(!turnStats.Keys.Contains(modified_prototype))
                     { 
                         //3. Add the non-present keys 
-                        turnStats.Add(m,0);
+                        //3a. Only pad with crossing-movements if we're looking at Person stats
+                        if((modified_prototype.TurnType == Turn.CrossingLeft || modified_prototype.TurnType == Turn.CrossingRight) && objectType == ObjectType.Person)
+                        { 
+                            turnStats.Add(m,0);    
+                        }
+                        
+                        //3a. Only pad with road movements if we're looking at vehicle (anything other than Person) stats
+                        if((modified_prototype.TurnType != Turn.CrossingLeft && modified_prototype.TurnType != Turn.CrossingRight) && objectType != ObjectType.Person)
+                        { 
+                            turnStats.Add(m,0);    
+                        }
                     }
                 }
             }
@@ -522,7 +533,7 @@ namespace VTC.Actors
                 {
                     var mostLikelyClassType =
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
-                            _yoloNameMapping.IntegerToObjectClass);
+                            _yoloNameMapping.IntegerToObjectName);
                     var movement = MatchNearestTrajectory(d,mostLikelyClassType);
                     if (movement == null) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);

@@ -9,7 +9,7 @@ namespace VTC
 {
     public partial class VideoMux : Form
     {
-        public Dictionary<CheckBox, ImageBox> DisplayLookup = new Dictionary<CheckBox, ImageBox>();
+        public Dictionary<CheckBox, PictureBox> DisplayLookup = new Dictionary<CheckBox, PictureBox>();
         private readonly Timer _updateDebounceTimer;
         private int _displayedRowCount;
         private int _displayedColCount;
@@ -116,7 +116,7 @@ namespace VTC
             }
         }
 
-        public void AddDisplay(ImageBox imageBox, string name)
+        public void AddDisplay(PictureBox imageBox, string name)
         {
 
             if (DisplayLookup.Values.Any(d => d == imageBox))

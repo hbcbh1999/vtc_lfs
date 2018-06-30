@@ -9,16 +9,16 @@ namespace VTC
     {
 
         public string LayerName;
-		public Emgu.CV.UI.ImageBox ImageBox => imageBox;
+		public PictureBox ImageBox => imageBox;
 
         public void Update(Image<Bgr, byte> frame)
         {
-            imageBox.Image = frame;
+            imageBox.Image = frame.ToBitmap();
         }
 
         public void Update(Image<Bgr, float> frame)
         {
-            imageBox.Image = frame;
+            imageBox.Image = frame.ToBitmap();
         }
            
 

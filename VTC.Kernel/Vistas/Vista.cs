@@ -130,7 +130,7 @@ namespace VTC.Kernel.Vistas
 
                 var measurementsList = _yoloClassifier.DetectFrameYolo(newFrame);
                 var measurementsFilteredByROI = measurementsList.Where(m => IsContainedInROI(m));
-                MeasurementsArray = measurementsFilteredByROI.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(_yoloNameMapping.ObjectClass(m.ObjectClass).ToLower())).ToArray();
+                MeasurementsArray = measurementsFilteredByROI.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(YoloIntegerNameMapping.GetObjectTypeFromClassInteger(m.ObjectClass, _yoloNameMapping.IntegerToObjectType))).ToArray();
                 MeasurementArrayQueue.Enqueue(MeasurementsArray);
                 while (MeasurementArrayQueue.Count > MeasurementArrayQueueMaxLength)
                     MeasurementArrayQueue.Dequeue();
@@ -228,7 +228,7 @@ namespace VTC.Kernel.Vistas
 #if DEBUG
                 // Draw class
                 var g = Graphics.FromImage(stateImage.Bitmap);
-                var className = YoloIntegerNameMapping.GetObjectNameFromClassInteger(lastState.MostFrequentClassId(), _yoloNameMapping.IntegerToObjectClass);
+                var className = YoloIntegerNameMapping.GetObjectNameFromClassInteger(lastState.MostFrequentClassId(), _yoloNameMapping.IntegerToObjectName);
                 g.DrawString(className, new Font(FontFamily.GenericMonospace, (float) 10.0), new SolidBrush(Color.White), (float)vehicle.StateHistory.Last().X, (float)vehicle.StateHistory.Last().Y);  
                     
                 // Draw uncertainty circle

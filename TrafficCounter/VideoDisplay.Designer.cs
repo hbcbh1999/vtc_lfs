@@ -28,24 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoDisplay));
-            this.imageBox = new Emgu.CV.UI.ImageBox();
             this.xyLabel = new System.Windows.Forms.Label();
+            this.imageBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // imageBox
-            // 
-            this.imageBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageBox.FunctionalMode = Emgu.CV.UI.ImageBox.FunctionalModeOption.Minimum;
-            this.imageBox.Location = new System.Drawing.Point(0, 0);
-            this.imageBox.Name = "imageBox";
-            this.imageBox.Size = new System.Drawing.Size(644, 452);
-            this.imageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.imageBox.TabIndex = 3;
-            this.imageBox.TabStop = false;
-            this.imageBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imageBox_MouseMove);
             // 
             // xyLabel
             // 
@@ -56,6 +43,14 @@
             this.xyLabel.Size = new System.Drawing.Size(30, 13);
             this.xyLabel.TabIndex = 4;
             this.xyLabel.Text = "(X,Y)";
+            // 
+            // imageBox
+            // 
+            this.imageBox.Location = new System.Drawing.Point(0, 0);
+            this.imageBox.Name = "imageBox";
+            this.imageBox.Size = new System.Drawing.Size(645, 453);
+            this.imageBox.TabIndex = 5;
+            this.imageBox.TabStop = false;
             // 
             // VideoDisplay
             // 
@@ -75,8 +70,7 @@
         }
 
         #endregion
-
-        private Emgu.CV.UI.ImageBox imageBox;
         private System.Windows.Forms.Label xyLabel;
+        private System.Windows.Forms.PictureBox imageBox;
     }
 }

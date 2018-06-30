@@ -245,7 +245,7 @@ namespace VTC.Actors
         private void BroadcastClassIDMapping()
         {
             {
-                _loggingActor?.Tell(new HandleClassIDMappingMessage(_vista._yoloNameMapping.IntegerToObjectClass));
+                _loggingActor?.Tell(new HandleClassIDMappingMessage(_vista._yoloNameMapping.IntegerToObjectName));
             }
         }
     }
