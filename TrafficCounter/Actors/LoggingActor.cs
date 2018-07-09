@@ -302,8 +302,8 @@ namespace VTC.Actors
                 //1. Get full list of possible movements
                 foreach(var m in mts.TrajectoryPrototypes)
                 {   
-                    var modified_prototype = m;
-                    modified_prototype.TrafficObjectType = objectType;
+                    //var modified_prototype = m;
+                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, objectType, m.StateEstimates);
                     //2. Check which keys are not present
                     if(!turnStats.Keys.Contains(modified_prototype))
                     { 
@@ -537,11 +537,9 @@ namespace VTC.Actors
                     var movement = MatchNearestTrajectory(d,mostLikelyClassType);
                     if (movement == null) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
-                    movement.TrafficObjectType = (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType);
-                    movement.Timestamp = _videoTime;
-                    movement.StateEstimates = d.StateHistory;
-                    IncrementTurnStatistics(movement);
-                    var tl = new TrajectoryLogger(movement);
+                    var edited_movement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, _videoTime);
+                    IncrementTurnStatistics(edited_movement);
+                    var tl = new TrajectoryLogger(edited_movement);
                     var folderPath = VTCPaths.FolderPath(_currentVideoName);
                     const string filename = "Movements";
                     var filepath = Path.Combine(folderPath, filename);

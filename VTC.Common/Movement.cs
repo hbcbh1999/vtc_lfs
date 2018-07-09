@@ -23,19 +23,19 @@ namespace VTC.Common
     [DataContract]
     public class Movement : IComparable<Movement>
     {
-        [DataMember] public string Approach;
+        [DataMember] public readonly string Approach;
 
-        [DataMember] public string Exit;
-
-        [DataMember] [JsonConverter(typeof(StringEnumConverter))]
-        public Turn TurnType;
+        [DataMember] public readonly string Exit;
 
         [DataMember] [JsonConverter(typeof(StringEnumConverter))]
-        public ObjectType TrafficObjectType;
+        public readonly Turn TurnType;
+
+        [DataMember] [JsonConverter(typeof(StringEnumConverter))]
+        public readonly ObjectType TrafficObjectType;
 
         [DataMember] public List<StateEstimate> StateEstimates;
 
-        [DataMember] public DateTime Timestamp;
+        [DataMember] public readonly DateTime Timestamp;
 
         public Movement(string approach, string exit, Turn turn, ObjectType objectType, List<StateEstimate> stateEstimates)
         {
@@ -44,6 +44,16 @@ namespace VTC.Common
             TurnType = turn;
             TrafficObjectType = objectType;
             StateEstimates = stateEstimates;
+        }
+
+        public Movement(string approach, string exit, Turn turn, ObjectType objectType, List<StateEstimate> stateEstimates, DateTime timeStamp)
+        {
+            Approach = approach;
+            Exit = exit;
+            TurnType = turn;
+            TrafficObjectType = objectType;
+            StateEstimates = stateEstimates;
+            Timestamp = timeStamp;
         }
 
         public Movement()

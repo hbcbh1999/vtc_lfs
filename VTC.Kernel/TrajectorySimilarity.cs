@@ -180,29 +180,37 @@ namespace VTC.Kernel
             var matchedTrajectories = new List<MatchTrajectory>();
             foreach (var tp in trajectoryPrototypes)
             {
-                var mt = new MatchTrajectory();
-                mt.StateEstimates = tp.StateEstimates;
-                mt.Approach = tp.Approach;
-                mt.Exit = tp.Exit;
-                mt.TrafficObjectType = tp.TrafficObjectType;
-                mt.TurnType = tp.TurnType;
+                var mt = new MatchTrajectory(tp.Approach, tp.Exit, tp.TrafficObjectType, tp.TurnType,tp.StateEstimates);
+                //mt.StateEstimates = tp.StateEstimates;
+                //mt.Approach = tp.Approach;
+                //mt.Exit = tp.Exit;
+                //mt.TrafficObjectType = tp.TrafficObjectType;
+                //mt.TurnType = tp.TurnType;
                 //mt.matchCost = DWTCost(matchTrajectory, mt.StateHistory);
                 //mt.matchCost = EndpointCost(matchTrajectory, mt.StateEstimates);
-                mt.matchCost = NearestPointsCost(matchTrajectory, mt.StateEstimates);
+                bool isValidPersonMatch = classType.ToLower() == "person" && tp.TrafficObjectType == ObjectType.Person;
+                bool isValidVehicleMatch = classType.ToLower() != "person" && tp.TrafficObjectType != ObjectType.Person;
+                if(isValidPersonMatch || isValidVehicleMatch)
+                {
+                    mt.matchCost = NearestPointsCost(matchTrajectory, mt.StateEstimates); 
+                    matchedTrajectories.Add(mt);
+                }
+                //else
+                //{
+                //    mt.matchCost = double.PositiveInfinity;
+                //}
 
                 //If we're comparing a person against a Car-type synthetic trajectory, treat this as an impossible match.
-                if (classType.ToLower().Contains("person") && tp.TrafficObjectType == ObjectType.Car)
-                {
-                    mt.matchCost = double.PositiveInfinity;
-                }
+                //if (classType.ToLower().Contains("person") && tp.TrafficObjectType == ObjectType.Car)
+                //{
+                //    mt.matchCost = double.PositiveInfinity;
+                //}
 
                 //If we're comparing a non-person (possibly a Car, a Motorcycle, etc) against a Person-type synthetic trajectory, treat this as an impossible match.
-                if (!classType.ToLower().Contains("person") && tp.TrafficObjectType == ObjectType.Person)
-                {
-                    mt.matchCost = double.PositiveInfinity;
-                }    
-
-                matchedTrajectories.Add(mt);
+                //if (!classType.ToLower().Contains("person") && tp.TrafficObjectType == ObjectType.Person)
+                //{
+                //    mt.matchCost = double.PositiveInfinity;
+                //}    
             }
 
             matchedTrajectories.Sort(new MatchTrajectoryComparer());
@@ -222,10 +230,16 @@ namespace VTC.Kernel
         }
     }
 
-    class MatchTrajectory : Movement
+    public class MatchTrajectory : Movement
     {
         public double matchCost;
+
+        public MatchTrajectory(string approach, string exit, ObjectType ot, Turn turn, List<StateEstimate> stateEstimates) : base(approach,exit,turn,ot,stateEstimates)
+        { 
+        }
     }
+
+
 
     class MatchTrajectoryComparer : IComparer<MatchTrajectory>
     {
