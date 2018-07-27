@@ -171,6 +171,21 @@ namespace VTC.Reporting.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;col-sm-3&quot;&gt;
+        ///	&lt;h4&gt;@approach&lt;/h4&gt;
+        ///	Peak time: &lt;span class=&quot;summarystats&quot;&gt;@peaktime&lt;/span&gt;&lt;br&gt;
+        ///	Peak flow: &lt;span class=&quot;summarystats&quot;&gt;@peakflow people/5min&lt;/span&gt;&lt;br&gt;
+        ///	Total flow: &lt;span class=&quot;summarystats&quot;&gt;@total people&lt;/span&gt; &lt;br&gt;
+        ///	CrossingLeft: &amp;nbsp; &lt;span class=&quot;summarystats&quot;&gt;@crossingleft&lt;/span&gt; &lt;br&gt;
+        ///	CrossingRight: &lt;span class=&quot;summarystats&quot;&gt;@crossingright&lt;/span&gt; &lt;br&gt;.
+        /// </summary>
+        internal static string summaryStatisticsSidewalk {
+            get {
+                return ResourceManager.GetString("summaryStatisticsSidewalk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;tr&gt;
         ///    &lt;td  class=&quot;time&quot;&gt;@time&lt;/td&gt;
         ///    &lt;td&gt;@left&lt;/td&gt; 
@@ -187,6 +202,18 @@ namespace VTC.Reporting.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;tr&gt;
+        ///    &lt;td  class=&quot;time&quot;&gt;@time&lt;/td&gt;
+        ///    &lt;td&gt;@crossingleft&lt;/td&gt; 
+        ///	&lt;td&gt;@crossingright&lt;/td&gt;&lt;/tr&gt;.
+        /// </summary>
+        internal static string tableCountRowSidewalk {
+            get {
+                return ResourceManager.GetString("tableCountRowSidewalk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;tr&gt;
         ///    &lt;td&gt;&lt;/td&gt;
         ///    &lt;td class=&quot;turnlabel&quot;&gt;Left&lt;/td&gt; 
         ///	&lt;td class=&quot;turnlabel&quot;&gt;Right&lt;/td&gt; 
@@ -197,6 +224,18 @@ namespace VTC.Reporting.Properties {
         internal static string tableHeaderRow {
             get {
                 return ResourceManager.GetString("tableHeaderRow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;tr&gt;
+        ///    &lt;td&gt;&lt;/td&gt;
+        ///    &lt;td class=&quot;turnlabel&quot;&gt;CrossingLeft&lt;/td&gt; 
+        ///	&lt;td class=&quot;turnlabel&quot;&gt;CrossingRight&lt;/td&gt;&lt;/tr&gt;.
+        /// </summary>
+        internal static string tableHeaderRowSidewalk {
+            get {
+                return ResourceManager.GetString("tableHeaderRowSidewalk", resourceCulture);
             }
         }
     }

@@ -175,6 +175,15 @@
 	UTurn: &lt;span class="summarystats"&gt;@uturn&lt;/span&gt; &lt;br&gt;
 </value>
   </data>
+  <data name="summaryStatisticsSidewalk" xml:space="preserve">
+    <value>&lt;div class="col-sm-3"&gt;
+	&lt;h4&gt;@approach&lt;/h4&gt;
+	Peak time: &lt;span class="summarystats"&gt;@peaktime&lt;/span&gt;&lt;br&gt;
+	Peak flow: &lt;span class="summarystats"&gt;@peakflow people/5min&lt;/span&gt;&lt;br&gt;
+	Total flow: &lt;span class="summarystats"&gt;@total people&lt;/span&gt; &lt;br&gt;
+	CrossingLeft: &amp;nbsp; &lt;span class="summarystats"&gt;@crossingleft&lt;/span&gt; &lt;br&gt;
+	CrossingRight: &lt;span class="summarystats"&gt;@crossingright&lt;/span&gt; &lt;br&gt;</value>
+  </data>
   <data name="tableCountRow" xml:space="preserve">
     <value>&lt;tr&gt;
     &lt;td  class="time"&gt;@time&lt;/td&gt;
@@ -184,6 +193,12 @@
     &lt;td&gt;@uturn&lt;/td&gt;
   &lt;/tr&gt;</value>
   </data>
+  <data name="tableCountRowSidewalk" xml:space="preserve">
+    <value>&lt;tr&gt;
+    &lt;td  class="time"&gt;@time&lt;/td&gt;
+    &lt;td&gt;@crossingleft&lt;/td&gt; 
+	&lt;td&gt;@crossingright&lt;/td&gt;&lt;/tr&gt;</value>
+  </data>
   <data name="tableHeaderRow" xml:space="preserve">
     <value>&lt;tr&gt;
     &lt;td&gt;&lt;/td&gt;
@@ -192,5 +207,11 @@
 	&lt;td class="turnlabel"&gt;Thru&lt;/td&gt; 
 	&lt;td class="turnlabel"&gt;UTurn&lt;/td&gt; 
   &lt;/tr&gt;</value>
+  </data>
+  <data name="tableHeaderRowSidewalk" xml:space="preserve">
+    <value>&lt;tr&gt;
+    &lt;td&gt;&lt;/td&gt;
+    &lt;td class="turnlabel"&gt;CrossingLeft&lt;/td&gt; 
+	&lt;td class="turnlabel"&gt;CrossingRight&lt;/td&gt;&lt;/tr&gt;</value>
   </data>
 </root>

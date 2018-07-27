@@ -84,6 +84,8 @@ namespace VTC.Reporting
             public long TotalRight;
             public long TotalStraight;
             public long TotalUTurn;
+            public long TotalCrossingLeft;
+            public long TotalCrossingRight;
         }
 
         public static void GenerateSummaryReportHTML(string exportPath, string location, DateTime videoTime, string objectType)
@@ -103,11 +105,6 @@ namespace VTC.Reporting
                 var mcrl5min = ParseCSVToListCounts(filepath5Min);
                 var mcrl15min = ParseCSVToListCounts(filepath15Min);
                 var mcrl60min = ParseCSVToListCounts(filepath60Min);
-
-                var a1Metrics = CalculateFlowMetrics(mcrl5min,"Approach 1");
-                var a2Metrics = CalculateFlowMetrics(mcrl5min,"Approach 2");
-                var a3Metrics = CalculateFlowMetrics(mcrl5min,"Approach 3");
-                var a4Metrics = CalculateFlowMetrics(mcrl5min,"Approach 4");
 
                 //Populate tables
                 //Write summary statistics
@@ -130,38 +127,85 @@ namespace VTC.Reporting
                 summaryReport += Resources.rowTopBufferDivOpenTag; //summary statistics
                 summaryReport += "<h3>Summary statistics</h3>";
 
-                var summaryReportA1 = SummaryReportForApproach(a1Metrics, "Approach 1", mcrl5min);
-                var summaryReportA2 = SummaryReportForApproach(a2Metrics, "Approach 2", mcrl5min);
-                var summaryReportA3 = SummaryReportForApproach(a3Metrics, "Approach 3", mcrl5min);
-                var summaryReportA4 = SummaryReportForApproach(a4Metrics, "Approach 4", mcrl5min);
-
-                if (a1Metrics != null)
-                    summaryReport += summaryReportA1;
-
-                if (a2Metrics != null)
-                    summaryReport += summaryReportA2;
-
-                if (a3Metrics != null)
-                    summaryReport += summaryReportA3;
-
-                if (a4Metrics != null)
-                    summaryReport += summaryReportA4;
-
-                summaryReport += "</div>"; //summary statistics row close
-
-                if (mcrl60min.Count > 0)
+                if(objectType == "person")
                 {
-                    summaryReport += AddRowOfApproachTables(mcrl60min, "60");
+                    var s1Metrics = CalculateFlowMetrics(mcrl5min,"Sidewalk 1");
+                    var s2Metrics = CalculateFlowMetrics(mcrl5min,"Sidewalk 2");
+                    var s3Metrics = CalculateFlowMetrics(mcrl5min,"Sidewalk 3");
+                    var s4Metrics = CalculateFlowMetrics(mcrl5min,"Sidewalk 4");
+                    var summaryReportS1 = SummaryReportForSidewalk(s1Metrics, "Sidewalk 1", mcrl5min);
+                    var summaryReportS2 = SummaryReportForSidewalk(s2Metrics, "Sidewalk 2", mcrl5min);
+                    var summaryReportS3 = SummaryReportForSidewalk(s3Metrics, "Sidewalk 3", mcrl5min);
+                    var summaryReportS4 = SummaryReportForSidewalk(s4Metrics, "Sidewalk 4", mcrl5min);
+
+                    if (s1Metrics != null)
+                        summaryReport += summaryReportS1;
+
+                    if (s2Metrics != null)
+                        summaryReport += summaryReportS2;
+
+                    if (s3Metrics != null)
+                        summaryReport += summaryReportS3;
+
+                    if (s4Metrics != null)
+                        summaryReport += summaryReportS4;
+
+                    summaryReport += "</div>"; //summary statistics row close
+
+                    if (mcrl60min.Count > 0)
+                    {
+                        summaryReport += AddRowOfSidewalkTables(mcrl60min, "60");
+                    }
+
+                    if (mcrl15min.Count > 0)
+                    {
+                        summaryReport += AddRowOfSidewalkTables(mcrl15min, "15");
+                    }
+
+                    if (mcrl5min.Count > 0)
+                    {
+                        summaryReport += AddRowOfSidewalkTables(mcrl5min, "5");
+                    }
                 }
-
-                if (mcrl15min.Count > 0)
+                else
                 {
-                    summaryReport += AddRowOfApproachTables(mcrl15min, "15");
-                }
+                    var a1Metrics = CalculateFlowMetrics(mcrl5min,"Approach 1");
+                    var a2Metrics = CalculateFlowMetrics(mcrl5min,"Approach 2");
+                    var a3Metrics = CalculateFlowMetrics(mcrl5min,"Approach 3");
+                    var a4Metrics = CalculateFlowMetrics(mcrl5min,"Approach 4");
+                    var summaryReportA1 = SummaryReportForApproach(a1Metrics, "Approach 1", mcrl5min);
+                    var summaryReportA2 = SummaryReportForApproach(a2Metrics, "Approach 2", mcrl5min);
+                    var summaryReportA3 = SummaryReportForApproach(a3Metrics, "Approach 3", mcrl5min);
+                    var summaryReportA4 = SummaryReportForApproach(a4Metrics, "Approach 4", mcrl5min);
 
-                if (mcrl5min.Count > 0)
-                {
-                    summaryReport += AddRowOfApproachTables(mcrl5min, "5");
+                    if (a1Metrics != null)
+                        summaryReport += summaryReportA1;
+
+                    if (a2Metrics != null)
+                        summaryReport += summaryReportA2;
+
+                    if (a3Metrics != null)
+                        summaryReport += summaryReportA3;
+
+                    if (a4Metrics != null)
+                        summaryReport += summaryReportA4;
+
+                    summaryReport += "</div>"; //summary statistics row close
+
+                    if (mcrl60min.Count > 0)
+                    {
+                        summaryReport += AddRowOfApproachTables(mcrl60min, "60");
+                    }
+
+                    if (mcrl15min.Count > 0)
+                    {
+                        summaryReport += AddRowOfApproachTables(mcrl15min, "15");
+                    }
+
+                    if (mcrl5min.Count > 0)
+                    {
+                        summaryReport += AddRowOfApproachTables(mcrl5min, "5");
+                    }
                 }
 
                 summaryReport += "</div>"; //Container close
@@ -187,19 +231,37 @@ namespace VTC.Reporting
             if (fmetrics == null)
                 return "";
 
-            var summaryReportA1 =
+            var summaryReport =
                 Resources.summaryStatistics.Replace("@approach", name)
                     .Replace("@peakflow", fmetrics.PeakFlow.ToString())
                     .Replace("@peaktime", fmetrics.PeakTime.ToString("hh:mm"));
-            summaryReportA1 = summaryReportA1.Replace("@total", fmetrics.TotalFlow.ToString())
+            summaryReport = summaryReport.Replace("@total", fmetrics.TotalFlow.ToString())
                 .Replace("@left", fmetrics.TotalLeft.ToString())
                 .Replace("@right", fmetrics.TotalRight.ToString())
                 .Replace("@thru", fmetrics.TotalStraight.ToString())
                 .Replace("@uturn", fmetrics.TotalUTurn.ToString());
-            summaryReportA1 += "<br><br>";
-            summaryReportA1 += GenerateSparkline(approachCountRows, name);
-            summaryReportA1 += "</div>";
-            return summaryReportA1;
+            summaryReport += "<br><br>";
+            summaryReport += GenerateSparkline(approachCountRows, name);
+            summaryReport += "</div>";
+            return summaryReport;
+        }
+
+        private static string SummaryReportForSidewalk(FlowMetrics fmetrics, string name, List<MovementCountRow> approachCountRows)
+        {
+            if (fmetrics == null)
+                return "";
+
+            var summaryReport =
+                Resources.summaryStatisticsSidewalk.Replace("@approach", name)
+                    .Replace("@peakflow", fmetrics.PeakFlow.ToString())
+                    .Replace("@peaktime", fmetrics.PeakTime.ToString("hh:mm"));
+            summaryReport = summaryReport.Replace("@total", fmetrics.TotalFlow.ToString())
+                .Replace("@crossingleft", fmetrics.TotalCrossingLeft.ToString())
+                .Replace("@crossingright", fmetrics.TotalCrossingRight.ToString());
+            summaryReport += "<br><br>";
+            summaryReport += GenerateSparkline(approachCountRows, name);
+            summaryReport += "</div>";
+            return summaryReport;
         }
 
         private static FlowMetrics CalculateFlowMetrics(List<MovementCountRow> countRows, string approachName)
@@ -223,6 +285,8 @@ namespace VTC.Reporting
             metrics.TotalRight = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Right, approachName));
             metrics.TotalStraight = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Straight, approachName));
             metrics.TotalUTurn = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.UTurn, approachName));
+            metrics.TotalCrossingLeft =  countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.CrossingLeft, approachName));
+            metrics.TotalCrossingLeft =  countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.CrossingRight, approachName));
             return metrics;
         }
 
@@ -288,6 +352,24 @@ namespace VTC.Reporting
             return rowOfTables;
         }
 
+        private static string AddRowOfSidewalkTables(MovementCountRowList mcrl, string minutes)
+        {
+            string rowid = "row" + minutes;
+            string rowOfTables = "";
+            rowOfTables += "<h3>" + minutes + "-minute counts</h3>";
+            rowOfTables += "<button data-toggle=\"collapse\" class=\"btn\" data-target=\"#" + rowid + "\">";
+            rowOfTables += "<span class=\"glyphicon glyphicon-collapse-down\"></span>";
+            rowOfTables += "</button>";
+            rowOfTables += Resources.rowTopBufferDivOpenTagCollapse.Replace("@rowid", rowid); // counts
+            rowOfTables += GenerateSingleTableSidewalk(mcrl, "Sidewalk 1");
+            rowOfTables += GenerateSingleTableSidewalk(mcrl, "Sidewalk 2");
+            rowOfTables += GenerateSingleTableSidewalk(mcrl, "Sidewalk 3");
+            rowOfTables += GenerateSingleTableSidewalk(mcrl, "Sidewalk 4");
+
+            rowOfTables += "</div>"; // row close
+            return rowOfTables;
+        }
+
         private static string GenerateSingleTable(MovementCountRowList mcrl, string approachName)
         {
             string table = "";
@@ -296,6 +378,19 @@ namespace VTC.Reporting
             table += "<table>";
             table += Resources.tableHeaderRow;
             table += LayoutRows(mcrl, approachName);
+            table += "</table>";
+            table += "</div>"; //Approach 1 column close
+            return table;
+        }
+
+        private static string GenerateSingleTableSidewalk(MovementCountRowList mcrl, string approachName)
+        {
+            string table = "";
+            table += Resources.colSm3DivOpenTag; // Approach 1
+            table += "<h4>" + approachName + "</h4>";
+            table += "<table>";
+            table += Resources.tableHeaderRowSidewalk;
+            table += LayoutRowsSidewalk(mcrl, approachName);
             table += "</table>";
             table += "</div>"; //Approach 1 column close
             return table;
@@ -332,6 +427,20 @@ namespace VTC.Reporting
                 tableRow = tableRow.Replace("@right", mcr.MovementTypeApproachCount(Turn.Right,approachName).ToString());
                 tableRow = tableRow.Replace("@thru", mcr.MovementTypeApproachCount(Turn.Straight,approachName).ToString());
                 tableRow = tableRow.Replace("@uturn", mcr.MovementTypeApproachCount(Turn.UTurn,approachName).ToString());
+                rowsString += tableRow;
+            }
+            return rowsString;
+        }
+
+        private static string LayoutRowsSidewalk(MovementCountRowList movementCountRows, string approachName)
+        {
+            string rowsString = "";
+            foreach (var mcr in movementCountRows)
+            {
+                var tableRow = (string) Resources.tableCountRowSidewalk.Clone();
+                tableRow = tableRow.Replace("@time", mcr.Time.ToShortTimeString());
+                tableRow = tableRow.Replace("@crossingleft", mcr.MovementTypeApproachCount(Turn.CrossingLeft,approachName).ToString());
+                tableRow = tableRow.Replace("@crossingright", mcr.MovementTypeApproachCount(Turn.CrossingRight,approachName).ToString());
                 rowsString += tableRow;
             }
             return rowsString;

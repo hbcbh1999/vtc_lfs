@@ -114,49 +114,10 @@ namespace VTC.Classifier
 
         public YoloClassifier()
         {
-            ManagementObjectSearcher searcher
-                = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
-
-            string graphicsCard = string.Empty;
-            bool nvidiaPresent = false;
-            foreach (ManagementObject mo in searcher.Get())
+            var gpuDetector = new GPUDetector();
+            if(gpuDetector.HasGPU && gpuDetector.MB_VRAM > 3000)
             {
-                foreach (PropertyData property in mo.Properties)
-                {
-                    if (property.Name == "Description")
-                    {
-                        graphicsCard = property.Value.ToString();
-                        if (graphicsCard.ToLower().Contains("nvidia"))
-                        {
-                            nvidiaPresent = true;
-                        }
-                    }
-                }
-            }
-
-            try
-            {
-                if (nvidiaPresent)
-                {
-                    NvAPIWrapper.NVIDIA.Initialize();
-                    var gpu = NvAPIWrapper.GPU.PhysicalGPU.GetPhysicalGPUs()[0];
-                    var gpu0_kb = gpu.PhysicalFrameBufferSize;
-                    var gpu0_gb = gpu0_kb / 1000000.0;
-                    if (gpu0_gb > 3.0)
-                    {
-                        cpuMode = false;
-                    }
-                }
-            }
-            catch (NvAPIWrapper.Native.Exceptions.NVIDIAApiException ex)
-            {
-                Logger.Log(LogLevel.Error, ex.Message);
-                cpuMode = true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(LogLevel.Error, ex.Message);
-                cpuMode = true;
+                cpuMode = false;
             }
 
             try

@@ -82,6 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classifier.cs" />
+    <Compile Include="GPU.cs" />
+    <Compile Include="GPUDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -118,7 +120,11 @@ cp $(SolutionDir)\ThirdParty\Darknet\transport.names $(TargetDir)\DetectionNetwo
 cp $(SolutionDir)\ThirdParty\Darknet\yolo_cpp_dll.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\Darknet\yolo_cpp_dll_no_gpu.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\Darknet\pthreadGC2.dll $(TargetDir)
-cp $(SolutionDir)\ThirdParty\Darknet\pthreadVC2.dll $(TargetDir)</PostBuildEvent>
+cp $(SolutionDir)\ThirdParty\Darknet\pthreadVC2.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA9.1\deviceQuery.exe $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA9.1\cublas64_91.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA9.1\cudart64_91.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA9.1\curand64_91.dll $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\EMGU.CV.3.4.1.2976\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.3.4.1.2976\build\EMGU.CV.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
