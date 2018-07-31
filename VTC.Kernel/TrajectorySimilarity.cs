@@ -18,10 +18,19 @@ namespace VTC.Kernel
 
     public class TrajectorySimilarity
     {
-        private const double START_POSITION_MULTIPLIER = 0.1;
+        private const double START_POSITION_MULTIPLIER = 1.0;
         private const double END_POSITION_MULTIPLIER = 1.0;
-        private const double START_ANGLE_MULTIPLIER = 100.0;
-        private const double END_ANGLE_MULTIPLIER = 50.0;
+        private const double START_ANGLE_MULTIPLIER = 0.5;
+        private const double END_ANGLE_MULTIPLIER = 0.5;
+
+        public static Movement MatchNearestTrajectory(TrackedObject d, string classType, int minPathLength, List<Movement> trajectoryPrototypes)
+        {
+            var distance = d.DistanceTravelled();
+            if (distance < minPathLength) return null;
+
+            var matchedTrajectoryName = BestMatchTrajectory(d.StateHistory, trajectoryPrototypes, classType);
+            return matchedTrajectoryName;
+        }
 
         public static double EndpointCost(List<StateEstimate> trajectory1, List<StateEstimate> trajectory2)
         {
@@ -52,10 +61,6 @@ namespace VTC.Kernel
             var t1_last = trajectory1.Last();
             var t2_nearest_to_t1_first = NearestPointOnTrajectory(t1_first, trajectory2);
             var t2_nearest_to_t1_last = NearestPointOnTrajectory(t1_last, trajectory2);
-            Console.WriteLine("t1_first.X:" + t1_first.X + " t1_first.Y:" + t1_first.Y);
-            Console.WriteLine("t1_last.X:" + t1_last.X + " t1_last.Y:" + t1_last.Y);
-            Console.WriteLine("t2_nearest_to_t1_first.X:" + t2_nearest_to_t1_first.X + " t2_nearest_to_t1_first.Y:" + t2_nearest_to_t1_first.Y);
-            Console.WriteLine("t2_nearest_to_t1_last.X:" + t2_nearest_to_t1_last.X + " t2_nearest_to_t1_last.Y:" + t2_nearest_to_t1_last.Y);
             //1. Start position cost
             double startPositionCost = Distance(t1_first.X, t1_first.Y, t2_nearest_to_t1_first.X, t2_nearest_to_t1_first.Y);
             //2. End position cost
@@ -82,24 +87,77 @@ namespace VTC.Kernel
             return totalCost;
         }
 
+        public static string CostExplanation(List<StateEstimate> trajectory1, List<StateEstimate> trajectory2)
+        {
+            var explanation = "";
+
+            //Calculate position costs
+            var t1_first = trajectory1.First();
+            var t1_last = trajectory1.Last();
+            var t2_nearest_to_t1_first = NearestPointOnTrajectory(t1_first, trajectory2);
+            var t2_nearest_to_t1_last = NearestPointOnTrajectory(t1_last, trajectory2);
+            //1. Start position cost
+            double startPositionCost = Distance(t1_first.X, t1_first.Y, t2_nearest_to_t1_first.X, t2_nearest_to_t1_first.Y);
+            explanation += "Start-position cost: " + START_POSITION_MULTIPLIER*startPositionCost;
+            //2. End position cost
+            double endPositionCost = Distance(t1_last.X, t1_last.Y, t2_nearest_to_t1_last.X, t2_nearest_to_t1_last.Y);
+            explanation += ", End-position cost: " + END_POSITION_MULTIPLIER*endPositionCost;
+
+            var t2snipStart = trajectory2.IndexOf(t2_nearest_to_t1_first);
+            var t2snipEnd = trajectory2.IndexOf(t2_nearest_to_t1_last);
+            var t2snipIndex = (t2snipStart < t2snipEnd) ? t2snipStart : t2snipEnd;
+            var t2snip = trajectory2.GetRange(t2snipIndex,Math.Abs(t2snipEnd - t2snipStart));
+
+            var initialAngleCost = 2*Math.PI; //Assume worst-case (maximum angular difference) when snipped t2 is zero-length
+            var finalAngleCost = 2 * Math.PI;
+
+            if (t2snip.Count > 0)
+            {
+                //Calculate angle costs
+                //3. Start angle cost
+                initialAngleCost = CompareInitialTrajectoryAngles(trajectory1, t2snip);
+                //4. End angle cost
+                finalAngleCost = CompareFinalTrajectoryAngles(trajectory1, t2snip);
+            }
+
+            explanation += ", Initial-angle cost: " + START_ANGLE_MULTIPLIER*initialAngleCost;
+            explanation += ", Final-angle cost: " + END_ANGLE_MULTIPLIER*finalAngleCost;
+            
+            return explanation;
+        }
+
         private static TrajectoryVector InitialVector(List<StateEstimate> trajectory)
         {
             int sampleIndex = trajectory.Count / 5;
+            double distance_magnitude = 0.0;
             TrajectoryVector v = new TrajectoryVector();
             var s1 = trajectory.First();
-            var s2 = trajectory[sampleIndex];
-            v.x = s2.X - s1.X;
-            v.y = s2.Y - s1.Y;
-            var magnitude = Math.Sqrt((v.x * v.x) + (v.y * v.y));
-            if (magnitude < 0.0001)
+
+            while(distance_magnitude < 25)
+            {
+                var s2 = trajectory[sampleIndex];
+                v.x = s2.X - s1.X;
+                v.y = s2.Y - s1.Y;
+                distance_magnitude = Math.Sqrt(Math.Pow(Math.Abs(v.x),2) + Math.Pow(Math.Abs(v.y),2));
+                if(sampleIndex < trajectory.Count)
+                {
+                    sampleIndex++; 
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (distance_magnitude < 25)
             {
                 v.x = 0.0;
                 v.y = 0.0;
             }
             else
             {
-                v.x = v.x / magnitude;
-                v.y = v.y / magnitude;    
+                v.x = v.x / distance_magnitude;
+                v.y = v.y / distance_magnitude;    
             }
             return v;
         }
@@ -181,36 +239,15 @@ namespace VTC.Kernel
             foreach (var tp in trajectoryPrototypes)
             {
                 var mt = new MatchTrajectory(tp.Approach, tp.Exit, tp.TrafficObjectType, tp.TurnType,tp.StateEstimates);
-                //mt.StateEstimates = tp.StateEstimates;
-                //mt.Approach = tp.Approach;
-                //mt.Exit = tp.Exit;
-                //mt.TrafficObjectType = tp.TrafficObjectType;
-                //mt.TurnType = tp.TurnType;
-                //mt.matchCost = DWTCost(matchTrajectory, mt.StateHistory);
-                //mt.matchCost = EndpointCost(matchTrajectory, mt.StateEstimates);
                 bool isValidPersonMatch = classType.ToLower() == "person" && tp.TrafficObjectType == ObjectType.Person;
                 bool isValidVehicleMatch = classType.ToLower() != "person" && tp.TrafficObjectType != ObjectType.Person;
                 if(isValidPersonMatch || isValidVehicleMatch)
                 {
+                    //mt.matchCost = DWTCost(matchTrajectory, mt.StateHistory);
+                    //mt.matchCost = EndpointCost(matchTrajectory, mt.StateEstimates);
                     mt.matchCost = NearestPointsCost(matchTrajectory, mt.StateEstimates); 
                     matchedTrajectories.Add(mt);
                 }
-                //else
-                //{
-                //    mt.matchCost = double.PositiveInfinity;
-                //}
-
-                //If we're comparing a person against a Car-type synthetic trajectory, treat this as an impossible match.
-                //if (classType.ToLower().Contains("person") && tp.TrafficObjectType == ObjectType.Car)
-                //{
-                //    mt.matchCost = double.PositiveInfinity;
-                //}
-
-                //If we're comparing a non-person (possibly a Car, a Motorcycle, etc) against a Person-type synthetic trajectory, treat this as an impossible match.
-                //if (!classType.ToLower().Contains("person") && tp.TrafficObjectType == ObjectType.Person)
-                //{
-                //    mt.matchCost = double.PositiveInfinity;
-                //}    
             }
 
             matchedTrajectories.Sort(new MatchTrajectoryComparer());
@@ -238,8 +275,6 @@ namespace VTC.Kernel
         { 
         }
     }
-
-
 
     class MatchTrajectoryComparer : IComparer<MatchTrajectory>
     {

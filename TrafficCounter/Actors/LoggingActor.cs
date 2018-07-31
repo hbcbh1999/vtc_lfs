@@ -534,7 +534,7 @@ namespace VTC.Actors
                     var mostLikelyClassType =
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
                             _yoloNameMapping.IntegerToObjectName);
-                    var movement = MatchNearestTrajectory(d,mostLikelyClassType);
+                    var movement = TrajectorySimilarity.MatchNearestTrajectory(d, mostLikelyClassType, _regionConfig.MinPathLength, mts.TrajectoryPrototypes);
                     if (movement == null) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
                     var edited_movement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, _videoTime);
@@ -556,15 +556,6 @@ namespace VTC.Actors
             }
 
             
-        }
-
-        private Movement MatchNearestTrajectory(TrackedObject d, string classType)
-        {
-            var distance = d.DistanceTravelled();
-            if (distance < _regionConfig.MinPathLength) return null;
-
-            var matchedTrajectoryName = TrajectorySimilarity.BestMatchTrajectory(d.StateHistory, mts.TrajectoryPrototypes, classType);
-            return matchedTrajectoryName;
         }
 
         private void IncrementTurnStatistics(Movement tp)

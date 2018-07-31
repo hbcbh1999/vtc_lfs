@@ -1,0 +1,53 @@
+﻿<Window x:Class="TrajectoryAnalyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrajectoryAnalyzer"
+        mc:Ignorable="d"
+        Title="Roadometry Trajectory Analyzer" Height="979" Width="930.314" WindowState="Maximized" Drop="Window_Drop" AllowDrop="True">
+    <StackPanel HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="920">
+        <Canvas Width="497" Margin="0,10">
+            <TextBox x:Name="TrajectoryFilenameBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="345" IsEnabled="False" Canvas.Left="35" Canvas.Top="64"/>
+            <ListView x:Name="trajectoryListView" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="345" SelectionChanged="trajectoryListView_SelectionChanged" SelectionMode="Single" Canvas.Left="35" Canvas.Top="161">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <TextBox x:Name="movementTextBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="282" IsEnabled="False" Canvas.Left="35" Canvas.Top="92"/>
+            <Label Content="Movement" HorizontalAlignment="Left" VerticalAlignment="Top" Width="86" Height="26" Canvas.Left="322" Canvas.Top="92" RenderTransformOrigin="1.663,1.154"/>
+            <ComboBox x:Name="approachComboBox" Canvas.Left="35" Canvas.Top="10" Width="89" SelectionChanged="approachComboBox_SelectionChanged"/>
+            <Label Content="Approach" HorizontalAlignment="Left" VerticalAlignment="Top" Width="86" Height="26" Canvas.Left="129" Canvas.Top="6"/>
+            <ComboBox x:Name="exitComboxBox" Canvas.Left="35" Canvas.Top="37" Width="120" SelectionChanged="exitComboxBox_SelectionChanged"/>
+            <Label Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="86" Height="26" Canvas.Left="160" Canvas.Top="33"/>
+            <CheckBox x:Name="showAllCheckbox" Content="Show all" Canvas.Left="35" Canvas.Top="120" Checked="CheckBox_Checked"/>
+            <CheckBox x:Name="showEndpointsCheckbox" Content="Show endpoints" Canvas.Left="35" Canvas.Top="140"/>
+            <CheckBox x:Name="extrapolateCheckbox" Content="Extrapolate" Canvas.Left="145" Canvas.Top="141"/>
+            <ListView x:Name="trajectoryMatchListView" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="345" SelectionChanged="trajectoryListView_SelectionChanged" SelectionMode="Single" Canvas.Left="35" Canvas.Top="493">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Label Content="Trajectory Matches" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="26" Canvas.Left="35" Canvas.Top="467" RenderTransformOrigin="1.663,1.154"/>
+        </Canvas>
+        <Image x:Name="trajectoryRenderingImage" Margin="50,50,100,50" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill" Height="500"/>
+    </StackPanel>
+</Window>
