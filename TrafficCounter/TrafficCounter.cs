@@ -24,6 +24,8 @@ using Akka.Configuration;
 using VTC.Actors;
 using VTC.Messages;
 using VTC.UI;
+using SharpRaven;
+using SharpRaven.Data;
 
 namespace VTC
 {
@@ -59,6 +61,8 @@ namespace VTC
         // unit tests has own settings, so need to store "pairs" (capture, settings)
        private CaptureContext[] _testCaptureContexts;
 
+       RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
+
        /// <summary>
        /// Constructor.
        /// </summary>
@@ -73,9 +77,21 @@ namespace VTC
 
             var tempLogger = LogManager.GetLogger("userlog"); // special logger for user messages
             if (_isLicensed)
-               tempLogger.Log(LogLevel.Info, "License: Active");
+               {
+                 tempLogger.Log(LogLevel.Info, "License: Active"); 
+                 var ev = new SentryEvent("Launch");
+                 ev.Level = ErrorLevel.Info;
+                 ev.Tags.Add("License", "Active");
+                 ravenClient.Capture(ev);
+                }
             else
-               tempLogger.Log(LogLevel.Info, "License: Unactivated");
+               {
+                 tempLogger.Log(LogLevel.Info, "License: Unactivated"); 
+                 var ev = new SentryEvent("Launch");
+                 ev.Level = ErrorLevel.Info;
+                 ev.Tags.Add("License", "Unactivated");
+                 ravenClient.Capture(ev);
+               }
 
             // check if app should run in unit test visualization mode
             _unitTestsMode = false;

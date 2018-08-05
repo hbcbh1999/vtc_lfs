@@ -145,7 +145,7 @@ namespace VTC.Kernel
                 }
                 else
                 {
-                    break;
+                    break; 
                 }
             }
 

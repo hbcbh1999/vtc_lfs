@@ -12,6 +12,8 @@ using Akka.Actor;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using NLog;
+using SharpRaven;
+using SharpRaven.Data;
 using VTC.Classifier;
 using VTC.Common;
 using VTC.Common.RegionConfig;
@@ -63,6 +65,8 @@ namespace VTC.Actors
         private UpdateInfoUIDelegate _updateInfoUiDelegate;
 
         private YoloIntegerNameMapping _yoloNameMapping = new YoloIntegerNameMapping();
+
+        RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
 
         public LoggingActor()
         {
@@ -211,6 +215,7 @@ namespace VTC.Actors
             catch(NullReferenceException ex)
             {
                 Logger.Log(LogLevel.Error, ex.Message);
+                ravenClient.Capture(new SentryEvent(ex));
             }
             
         }
@@ -292,6 +297,9 @@ namespace VTC.Actors
             _5MinTurnStats.Clear();
             _15MinTurnStats.Clear();
             _60MinTurnStats.Clear();
+
+            var filepath = Path.Combine(folderPath, "Movements.json");
+            File.Create(filepath);        
         }
 
         private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp, ObjectType objectType)
@@ -325,6 +333,7 @@ namespace VTC.Actors
             catch(System.ArgumentException ex)
             {
                 Logger.Log(LogLevel.Error, ex.Message);
+                ravenClient.Capture(new SentryEvent(ex));
             }
 
             
@@ -358,6 +367,7 @@ namespace VTC.Actors
             catch (FileNotFoundException ex)
             {
                 Logger.Log(LogLevel.Error, ex.Message);
+                ravenClient.Capture(new SentryEvent(ex));
             }
 
         }
@@ -376,6 +386,7 @@ namespace VTC.Actors
             catch (NullReferenceException e)
             {
                 Logger.Log(LogLevel.Error, e);
+                ravenClient.Capture(new SentryEvent(e));
             }
         }
 
@@ -393,6 +404,7 @@ namespace VTC.Actors
             catch (NullReferenceException e)
             {
                 Logger.Log(LogLevel.Error, e);
+                ravenClient.Capture(new SentryEvent(e));
             }
         }
 
@@ -465,6 +477,11 @@ namespace VTC.Actors
                 }
 
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
+
+                var ev = new SentryEvent("Report generated");
+                 ev.Level = ErrorLevel.Info;
+                 ev.Tags.Add("Path", folderPath);
+                 ravenClient.Capture(ev);
             }
             catch (NullReferenceException e)
             {
@@ -511,6 +528,11 @@ namespace VTC.Actors
         {
             _currentVideoName = message.CaptureSource.Name;
             CreateOrReplaceOutputFolderIfExists();
+
+            var ev = new SentryEvent("New video source");
+            ev.Level = ErrorLevel.Info;
+            ev.Tags.Add("Name", message.CaptureSource.Name);
+            ravenClient.Capture(ev);
         }
 
         private void UpdateConfig(RegionConfig config)
