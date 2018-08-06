@@ -45,10 +45,8 @@
       <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=2.6.1.30, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\MathNet.Numerics.2.6.2\lib\net40\MathNet.Numerics.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="MathNet.Numerics, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.5.1\lib\net40\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="NDtw, Version=0.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NDtw.0.2.3.0\lib\net40\NDtw.dll</HintPath>
@@ -69,6 +67,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
@@ -85,7 +84,6 @@
     <Compile Include="Extensions\LineSegment2DExtensions.cs" />
     <Compile Include="Extensions\PointExtensions.cs" />
     <Compile Include="HungarianAlgorithm.cs" />
-    <Compile Include="MixtureModel.cs" />
     <Compile Include="MultipleHypothesisTracker.cs" />
     <Compile Include="NodeClass.cs" />
     <Compile Include="OptAssign.cs" />

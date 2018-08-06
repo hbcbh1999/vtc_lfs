@@ -71,10 +71,10 @@ namespace VTC.Kernel
             var t2snipIndex = (t2snipStart < t2snipEnd) ? t2snipStart : t2snipEnd;
             var t2snip = trajectory2.GetRange(t2snipIndex,Math.Abs(t2snipEnd - t2snipStart));
 
-            var initialAngleCost = 2*Math.PI; //Assume worst-case (maximum angular difference) when snipped t2 is zero-length
-            var finalAngleCost = 2 * Math.PI;
+            var initialAngleCost = Math.PI/2; //Assume average cost (average angular difference) when snipped t2 is zero-length because we can't really compare angles in this scenario
+            var finalAngleCost = Math.PI/2;
 
-            if (t2snip.Count > 0)
+            if (t2snip.Count > 3)
             {
                 //Calculate angle costs
                 //3. Start angle cost
@@ -139,7 +139,7 @@ namespace VTC.Kernel
                 v.x = s2.X - s1.X;
                 v.y = s2.Y - s1.Y;
                 distance_magnitude = Math.Sqrt(Math.Pow(Math.Abs(v.x),2) + Math.Pow(Math.Abs(v.y),2));
-                if(sampleIndex < trajectory.Count)
+                if(sampleIndex < trajectory.Count - 1)
                 {
                     sampleIndex++; 
                 }
@@ -194,18 +194,57 @@ namespace VTC.Kernel
 
         private static double CompareInitialTrajectoryAngles(List<StateEstimate> trajectory1, List<StateEstimate> trajectory2)
         {
-            var iv1 = InitialVector(trajectory1);
-            var iv2 = InitialVector(trajectory2);
-            var angleDiff = CompareAngles(iv1, iv2);
-            return angleDiff;
+            TrajectoryVector iv1 = new TrajectoryVector();
+            TrajectoryVector iv2 = new TrajectoryVector();
+            double angleDiff;
+
+            try
+            {
+                iv1 = InitialVector(trajectory1);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            try
+            {
+                iv2 = InitialVector(trajectory2);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            try
+            {
+                angleDiff = CompareAngles(iv1, iv2);
+                return angleDiff;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            
+            return Math.PI/2;
         }
 
         private static double CompareFinalTrajectoryAngles(List<StateEstimate> trajectory1, List<StateEstimate> trajectory2)
         {
-            var iv1 = FinalVector(trajectory1);
-            var iv2 = FinalVector(trajectory2);
-            var angleDiff = CompareAngles(iv1, iv2);
-            return angleDiff;
+            try
+            {
+                var iv1 = FinalVector(trajectory1);
+                var iv2 = FinalVector(trajectory2);
+                var angleDiff = CompareAngles(iv1, iv2);
+                return angleDiff;
+            }
+            
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return Math.PI/2;
         }
 
         public static double Distance(double x1, double y1, double x2, double y2)

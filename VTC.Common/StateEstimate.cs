@@ -153,7 +153,7 @@ namespace VTC.Common
             var sInv = (DenseMatrix)s.Inverse();
             var k = pNext * hTranspose * sInv;
             var zPost = zNext + k * yResidual;
-            var pPost = (DenseMatrix.Identity(8) - k * H) * pNext;
+            var pPost = (DenseMatrix.CreateIdentity(8) - k * H) * pNext;
 
             //Move values from matrix form into object properties
             updatedState.CovX = pPost[0, 0];
