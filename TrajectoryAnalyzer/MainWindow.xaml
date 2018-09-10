@@ -47,6 +47,7 @@
                 </ListView.View>
             </ListView>
             <Label Content="Trajectory Matches" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="26" Canvas.Left="35" Canvas.Top="467" RenderTransformOrigin="1.663,1.154"/>
+            <Label x:Name="movementNameBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" Canvas.Left="246" Canvas.Top="10" FontSize="16" FontWeight="Bold"/>
         </Canvas>
         <Image x:Name="trajectoryRenderingImage" Margin="50,50,100,50" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill" Height="500"/>
     </StackPanel>

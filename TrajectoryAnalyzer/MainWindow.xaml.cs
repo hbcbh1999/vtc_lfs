@@ -274,6 +274,9 @@ namespace TrajectoryAnalyzer
 
                 movementTextBox.Text = turnSubstring;
 
+                var turnSubstringElements = turnSubstring.Split(',');
+                movementNameBox.Content = turnSubstringElements[1];
+
                 //Compare against all synthetic trajectories
                 var synthetics = SyntheticPrototypes();
                 var movement = JsonConvert.DeserializeObject<Movement>(trajectoryString);
