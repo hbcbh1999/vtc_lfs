@@ -84,8 +84,7 @@ namespace VTC.Reporting
             public long TotalRight;
             public long TotalStraight;
             public long TotalUTurn;
-            public long TotalCrossingLeft;
-            public long TotalCrossingRight;
+            public long TotalCrossing;
         }
 
         public static void GenerateSummaryReportHTML(string exportPath, string location, DateTime videoTime, string objectType)
@@ -256,8 +255,7 @@ namespace VTC.Reporting
                     .Replace("@peakflow", fmetrics.PeakFlow.ToString())
                     .Replace("@peaktime", fmetrics.PeakTime.ToString("hh:mm"));
             summaryReport = summaryReport.Replace("@total", fmetrics.TotalFlow.ToString())
-                .Replace("@crossingleft", fmetrics.TotalCrossingLeft.ToString())
-                .Replace("@crossingright", fmetrics.TotalCrossingRight.ToString());
+                .Replace("@crossingleft", fmetrics.TotalCrossing.ToString());
             summaryReport += "<br><br>";
             summaryReport += GenerateSparkline(approachCountRows, name);
             summaryReport += "</div>";
@@ -285,8 +283,7 @@ namespace VTC.Reporting
             metrics.TotalRight = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Right, approachName));
             metrics.TotalStraight = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Straight, approachName));
             metrics.TotalUTurn = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.UTurn, approachName));
-            metrics.TotalCrossingLeft =  countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.CrossingLeft, approachName));
-            metrics.TotalCrossingLeft =  countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.CrossingRight, approachName));
+            metrics.TotalCrossing =  countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Crossing, approachName));
             return metrics;
         }
 
@@ -439,8 +436,7 @@ namespace VTC.Reporting
             {
                 var tableRow = (string) Resources.tableCountRowSidewalk.Clone();
                 tableRow = tableRow.Replace("@time", mcr.Time.ToShortTimeString());
-                tableRow = tableRow.Replace("@crossingleft", mcr.MovementTypeApproachCount(Turn.CrossingLeft,approachName).ToString());
-                tableRow = tableRow.Replace("@crossingright", mcr.MovementTypeApproachCount(Turn.CrossingRight,approachName).ToString());
+                tableRow = tableRow.Replace("@crossing", mcr.MovementTypeApproachCount(Turn.Crossing,approachName).ToString());
                 rowsString += tableRow;
             }
             return rowsString;

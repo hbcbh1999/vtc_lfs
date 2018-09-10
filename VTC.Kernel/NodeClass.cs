@@ -340,8 +340,6 @@ namespace VTC.Kernel
                 [7, 7] = qSize
             }; //Process covariance
 
-
-
             R = new DenseMatrix(6, 6)
             {
                 [0, 0] = rPosition,

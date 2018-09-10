@@ -317,13 +317,13 @@ namespace VTC.Actors
                     { 
                         //3. Add the non-present keys 
                         //3a. Only pad with crossing-movements if we're looking at Person stats
-                        if((modified_prototype.TurnType == Turn.CrossingLeft || modified_prototype.TurnType == Turn.CrossingRight) && objectType == ObjectType.Person)
+                        if((modified_prototype.TurnType == Turn.Crossing) && objectType == ObjectType.Person)
                         { 
                             turnStats.Add(m,0);    
                         }
                         
                         //3a. Only pad with road movements if we're looking at vehicle (anything other than Person) stats
-                        if((modified_prototype.TurnType != Turn.CrossingLeft && modified_prototype.TurnType != Turn.CrossingRight) && objectType != ObjectType.Person)
+                        if((modified_prototype.TurnType != Turn.Crossing) && objectType != ObjectType.Person)
                         { 
                             turnStats.Add(m,0);    
                         }

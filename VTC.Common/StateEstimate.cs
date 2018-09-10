@@ -142,7 +142,6 @@ namespace VTC.Common
                 [7, 7] = CovSize
             };
 
-
             //DenseMatrix B = H * P_bar * H;
             var zNext = F * zEst;
             var fTranspose = (DenseMatrix)F.Transpose();

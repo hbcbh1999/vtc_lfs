@@ -124,7 +124,8 @@ cp $(SolutionDir)\ThirdParty\Darknet\pthreadVC2.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\CUDA9.1\deviceQuery.exe $(TargetDir)
 cp $(SolutionDir)\ThirdParty\CUDA9.1\cublas64_91.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\CUDA9.1\cudart64_91.dll $(TargetDir)
-cp $(SolutionDir)\ThirdParty\CUDA9.1\curand64_91.dll $(TargetDir)</PostBuildEvent>
+cp $(SolutionDir)\ThirdParty\CUDA9.1\curand64_91.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA9.1\cudnn64_7.dll $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\EMGU.CV.3.4.1.2976\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.3.4.1.2976\build\EMGU.CV.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

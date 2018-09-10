@@ -266,13 +266,13 @@ namespace VTC.Kernel
             if ((crossing12 != null) && (crossing21 != null))
             {
                 var crossing12Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk2, crossing12, crossing12);
-                var movementCrossing12Walk = new Movement("Sidewalk 1", "Sidewalk 2", Turn.CrossingRight, ObjectType.Person, crossing12Walk.StateHistory);
+                var movementCrossing12Walk = new Movement("Sidewalk 1", "Sidewalk 2", Turn.Crossing, ObjectType.Person, crossing12Walk.StateHistory);
                 TrajectoryPrototypes.Add(movementCrossing12Walk);
                 var t11 = new TrajectoryLogger(movementCrossing12Walk);
                 t11.Save(filepath);
 
                 var crossing21Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk1, crossing21, crossing21);
-                var movementCrossing21Walk = new Movement("Sidewalk 2", "Sidewalk 1", Turn.CrossingLeft, ObjectType.Person, crossing21Walk.StateHistory);
+                var movementCrossing21Walk = new Movement("Sidewalk 2", "Sidewalk 1", Turn.Crossing, ObjectType.Person, crossing21Walk.StateHistory);
                 TrajectoryPrototypes.Add(movementCrossing21Walk);
                 var t12 = new TrajectoryLogger(movementCrossing21Walk);
                 t12.Save(filepath);
@@ -281,13 +281,13 @@ namespace VTC.Kernel
             if ((crossing23 != null) && (crossing32 != null))
             {
                 var crossing23Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk3, crossing23, crossing23);
-                var movementCrossing23Walk = new Movement("Sidewalk 2", "Sidewalk 3", Turn.CrossingRight, ObjectType.Person, crossing23Walk.StateHistory);
+                var movementCrossing23Walk = new Movement("Sidewalk 2", "Sidewalk 3", Turn.Crossing, ObjectType.Person, crossing23Walk.StateHistory);
                 TrajectoryPrototypes.Add(movementCrossing23Walk);
                 var t11 = new TrajectoryLogger(movementCrossing23Walk);
                 t11.Save(filepath);
 
                 var crossing32Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk2, crossing32, crossing32);
-                var movementCrossing32Walk = new Movement("Sidewalk 3", "Sidewalk 2", Turn.CrossingLeft, ObjectType.Person, crossing32Walk.StateHistory);
+                var movementCrossing32Walk = new Movement("Sidewalk 3", "Sidewalk 2", Turn.Crossing, ObjectType.Person, crossing32Walk.StateHistory);
                 TrajectoryPrototypes.Add(movementCrossing32Walk);
                 var t12 = new TrajectoryLogger(movementCrossing32Walk);
                 t12.Save(filepath);
@@ -296,13 +296,13 @@ namespace VTC.Kernel
             if ((crossing34 != null) && (crossing43 != null))
             {
                 var crossing34Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk4, crossing34, crossing34);
-                var movementCrossing34Walk = new Movement("Sidewalk 3", "Sidewalk 4", Turn.CrossingRight, ObjectType.Person, crossing34Walk.StateHistory);
+                var movementCrossing34Walk = new Movement("Sidewalk 3", "Sidewalk 4", Turn.Crossing, ObjectType.Person, crossing34Walk.StateHistory);
                 TrajectoryPrototypes.Add(movementCrossing34Walk);
                 var t11 = new TrajectoryLogger(movementCrossing34Walk);
                 t11.Save(filepath);
 
                 var crossing43Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk3, crossing43, crossing43);
-                var movementCrossing43Walk = new Movement("Sidewalk 4", "Sidewalk 3", Turn.CrossingLeft, ObjectType.Person, crossing43Walk.StateHistory);
+                var movementCrossing43Walk = new Movement("Sidewalk 4", "Sidewalk 3", Turn.Crossing, ObjectType.Person, crossing43Walk.StateHistory);
                 TrajectoryPrototypes.Add(movementCrossing43Walk);
                 var t43 = new TrajectoryLogger(movementCrossing43Walk);
                 t43.Save(filepath);
@@ -311,13 +311,13 @@ namespace VTC.Kernel
             if ((crossing41 != null) && (crossing14 != null))
             {
                 var crossing41Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk1, crossing41, crossing41);
-                var movementCrossing41Walk = new Movement("Sidewalk 4", "Sidewalk 1", Turn.CrossingRight, ObjectType.Person, crossing41Walk.StateHistory);
+                var movementCrossing41Walk = new Movement("Sidewalk 4", "Sidewalk 1", Turn.Crossing, ObjectType.Person, crossing41Walk.StateHistory);
                 TrajectoryPrototypes.Add(movementCrossing41Walk);
                 var t11 = new TrajectoryLogger(movementCrossing41Walk);
                 t11.Save(filepath);
 
                 var crossing14Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk4, crossing14, crossing14);
-                var movementCrossing14Walk = new Movement("Sidewalk 1", "Sidewalk 4", Turn.CrossingLeft, ObjectType.Person, crossing14Walk.StateHistory);
+                var movementCrossing14Walk = new Movement("Sidewalk 1", "Sidewalk 4", Turn.Crossing, ObjectType.Person, crossing14Walk.StateHistory);
                 TrajectoryPrototypes.Add(movementCrossing14Walk);
                 var t12 = new TrajectoryLogger(movementCrossing14Walk);
                 t12.Save(filepath);

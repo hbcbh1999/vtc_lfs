@@ -181,8 +181,8 @@
 	Peak time: &lt;span class="summarystats"&gt;@peaktime&lt;/span&gt;&lt;br&gt;
 	Peak flow: &lt;span class="summarystats"&gt;@peakflow people/5min&lt;/span&gt;&lt;br&gt;
 	Total flow: &lt;span class="summarystats"&gt;@total people&lt;/span&gt; &lt;br&gt;
-	CrossingLeft: &amp;nbsp; &lt;span class="summarystats"&gt;@crossingleft&lt;/span&gt; &lt;br&gt;
-	CrossingRight: &lt;span class="summarystats"&gt;@crossingright&lt;/span&gt; &lt;br&gt;</value>
+	Crossing: &amp;nbsp; &lt;span class="summarystats"&gt;@crossing&lt;/span&gt; &lt;br&gt;
+	</value>
   </data>
   <data name="tableCountRow" xml:space="preserve">
     <value>&lt;tr&gt;

@@ -176,8 +176,8 @@ namespace VTC.Reporting.Properties {
         ///	Peak time: &lt;span class=&quot;summarystats&quot;&gt;@peaktime&lt;/span&gt;&lt;br&gt;
         ///	Peak flow: &lt;span class=&quot;summarystats&quot;&gt;@peakflow people/5min&lt;/span&gt;&lt;br&gt;
         ///	Total flow: &lt;span class=&quot;summarystats&quot;&gt;@total people&lt;/span&gt; &lt;br&gt;
-        ///	CrossingLeft: &amp;nbsp; &lt;span class=&quot;summarystats&quot;&gt;@crossingleft&lt;/span&gt; &lt;br&gt;
-        ///	CrossingRight: &lt;span class=&quot;summarystats&quot;&gt;@crossingright&lt;/span&gt; &lt;br&gt;.
+        ///	Crossing: &amp;nbsp; &lt;span class=&quot;summarystats&quot;&gt;@crossing&lt;/span&gt; &lt;br&gt;
+        ///	.
         /// </summary>
         internal static string summaryStatisticsSidewalk {
             get {
