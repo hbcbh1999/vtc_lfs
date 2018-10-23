@@ -169,14 +169,14 @@ namespace VTC.Kernel
             if (road1Line != null && road2Line != null)
             {
                 var road1Left = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach1, exit2, road1Line, road2Line);
-                var movementRoad1Left = new Movement("Approach 1", "Exit 2", Turn.Left, ObjectType.Car, road1Left.StateHistory);
+                var movementRoad1Left = new Movement("Approach 1", "Exit 2", Turn.Left, ObjectType.Car, road1Left.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad1Left);
                 var t2 = new TrajectoryLogger(movementRoad1Left);
                 t2.Save(filepath);
 
                 var road2Right = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach2, exit1, road2Line, road1Line);
                 var movementRoad2Right = new Movement("Approach 2", "Exit 1", Turn.Right, ObjectType.Car,
-                    road2Right.StateHistory);
+                    road2Right.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad2Right);
                 var t6 = new TrajectoryLogger(movementRoad2Right);
                 t6.Save(filepath);
@@ -185,13 +185,13 @@ namespace VTC.Kernel
             if (road1Line != null && road4Line != null)
             {
                 var road1Right = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach1, exit4, road1Line, road4Line);
-                var movementRoad1Right = new Movement("Approach 1", "Exit 4", Turn.Right, ObjectType.Car, road1Right.StateHistory);
+                var movementRoad1Right = new Movement("Approach 1", "Exit 4", Turn.Right, ObjectType.Car, road1Right.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad1Right);
                 var t3 = new TrajectoryLogger(movementRoad1Right);
                 t3.Save(filepath);
 
                 var road4Left = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit1, road4Line, road1Line);
-                var movementRoad4Left = new Movement("Approach 4", "Exit 1", Turn.Left, ObjectType.Car, road4Left.StateHistory);
+                var movementRoad4Left = new Movement("Approach 4", "Exit 1", Turn.Left, ObjectType.Car, road4Left.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad4Left);
                 var t11 = new TrajectoryLogger(movementRoad4Left);
                 t11.Save(filepath);
@@ -199,8 +199,9 @@ namespace VTC.Kernel
 
             if (road1Line != null)
             {
-                var road1Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach1, exit1, road1Line, road1Line);
-                var movementRoad2Straight = new Movement("Approach 1", "Exit 1", Turn.Straight, ObjectType.Car, road1Straight.StateHistory);
+                //var road1Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach1, exit1, road1Line, road1Line);
+                var road1Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach1, exit1, road1Line);
+                var movementRoad2Straight = new Movement("Approach 1", "Exit 1", Turn.Straight, ObjectType.Car, road1Straight.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad2Straight);
                 var tl = new TrajectoryLogger(movementRoad2Straight);
                 tl.Save(filepath);
@@ -209,13 +210,13 @@ namespace VTC.Kernel
             if (road2Line != null && road3Line != null)
             {
                 var road2Left = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach2, exit3, road2Line, road3Line);
-                var movementRoad2Left = new Movement("Approach 2", "Exit 3", Turn.Left, ObjectType.Car, road2Left.StateHistory);
+                var movementRoad2Left = new Movement("Approach 2", "Exit 3", Turn.Left, ObjectType.Car, road2Left.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad2Left);
                 var t5 = new TrajectoryLogger(movementRoad2Left);
                 t5.Save(filepath);
 
                 var road3Right = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach3, exit2, road3Line, road2Line);
-                var movementRoad3Right = new Movement("Approach 3", "Exit 2", Turn.Right, ObjectType.Car, road3Right.StateHistory);
+                var movementRoad3Right = new Movement("Approach 3", "Exit 2", Turn.Right, ObjectType.Car, road3Right.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad3Right);
                 var t9 = new TrajectoryLogger(movementRoad3Right);
                 t9.Save(filepath);
@@ -223,8 +224,9 @@ namespace VTC.Kernel
 
             if (road2Line != null)
             {
-                var road2Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach2, exit2, road2Line, road2Line);
-                var movementRoad2Straight = new Movement("Approach 2", "Exit 2", Turn.Straight, ObjectType.Car, road2Straight.StateHistory);
+                //var road2Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach2, exit2, road2Line, road2Line);
+                var road2Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach2, exit2, road2Line);
+                var movementRoad2Straight = new Movement("Approach 2", "Exit 2", Turn.Straight, ObjectType.Car, road2Straight.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad2Straight);
                 var t4 = new TrajectoryLogger(movementRoad2Straight);
                 t4.Save(filepath);
@@ -233,13 +235,13 @@ namespace VTC.Kernel
             if (road3Line != null && road4Line != null)
             {
                 var road3Left = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach3, exit4, road3Line, road4Line);
-                var movementRoad3Left = new Movement("Approach 3", "Exit 4", Turn.Left, ObjectType.Car, road3Left.StateHistory);
+                var movementRoad3Left = new Movement("Approach 3", "Exit 4", Turn.Left, ObjectType.Car, road3Left.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad3Left);
                 var t8 = new TrajectoryLogger(movementRoad3Left);
                 t8.Save(filepath);
 
                 var road4Right = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit3, road4Line, road3Line);
-                var movementRoad4Right = new Movement("Approach 4", "Exit 3", Turn.Right, ObjectType.Car, road4Right.StateHistory);
+                var movementRoad4Right = new Movement("Approach 4", "Exit 3", Turn.Right, ObjectType.Car, road4Right.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad4Right);
                 var t12 = new TrajectoryLogger(movementRoad4Right);
                 t12.Save(filepath);
@@ -247,8 +249,9 @@ namespace VTC.Kernel
 
             if (road3Line != null)
             {
-                var road3Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach3, exit3, road3Line, road3Line);
-                var movementRoad3Straight = new Movement("Approach 3", "Exit 3", Turn.Straight, ObjectType.Car, road3Straight.StateHistory);
+                //var road3Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach3, exit3, road3Line, road3Line);
+                var road3Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach3, exit3, road3Line);
+                var movementRoad3Straight = new Movement("Approach 3", "Exit 3", Turn.Straight, ObjectType.Car, road3Straight.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad3Straight);
                 var t7 = new TrajectoryLogger(movementRoad3Straight);
                 t7.Save(filepath);
@@ -256,8 +259,9 @@ namespace VTC.Kernel
 
             if (road4Line != null)
             {
-                var road4Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit4, road4Line, road4Line);
-                var movementRoad4Straight = new Movement("Approach 4", "Exit 4", Turn.Straight, ObjectType.Car, road4Straight.StateHistory);
+                //var road4Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit4, road4Line, road4Line);
+                var road4Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit4, road4Line);
+                var movementRoad4Straight = new Movement("Approach 4", "Exit 4", Turn.Straight, ObjectType.Car, road4Straight.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad4Straight);
                 var t10 = new TrajectoryLogger(movementRoad4Straight);
                 t10.Save(filepath);
@@ -265,14 +269,16 @@ namespace VTC.Kernel
 
             if ((crossing12 != null) && (crossing21 != null))
             {
-                var crossing12Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk2, crossing12, crossing12);
-                var movementCrossing12Walk = new Movement("Sidewalk 1", "Sidewalk 2", Turn.Crossing, ObjectType.Person, crossing12Walk.StateHistory);
+                //var crossing12Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk2, crossing12, crossing12);
+                var crossing12Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk2, crossing12);
+                var movementCrossing12Walk = new Movement("Sidewalk 1", "Sidewalk 2", Turn.Crossing, ObjectType.Person, crossing12Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing12Walk);
                 var t11 = new TrajectoryLogger(movementCrossing12Walk);
                 t11.Save(filepath);
 
-                var crossing21Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk1, crossing21, crossing21);
-                var movementCrossing21Walk = new Movement("Sidewalk 2", "Sidewalk 1", Turn.Crossing, ObjectType.Person, crossing21Walk.StateHistory);
+                //var crossing21Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk1, crossing21, crossing21);
+                var crossing21Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk1, crossing21);
+                var movementCrossing21Walk = new Movement("Sidewalk 2", "Sidewalk 1", Turn.Crossing, ObjectType.Person, crossing21Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing21Walk);
                 var t12 = new TrajectoryLogger(movementCrossing21Walk);
                 t12.Save(filepath);
@@ -280,14 +286,16 @@ namespace VTC.Kernel
 
             if ((crossing23 != null) && (crossing32 != null))
             {
-                var crossing23Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk3, crossing23, crossing23);
-                var movementCrossing23Walk = new Movement("Sidewalk 2", "Sidewalk 3", Turn.Crossing, ObjectType.Person, crossing23Walk.StateHistory);
+                //var crossing23Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk3, crossing23, crossing23);
+                var crossing23Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk3, crossing23);
+                var movementCrossing23Walk = new Movement("Sidewalk 2", "Sidewalk 3", Turn.Crossing, ObjectType.Person, crossing23Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing23Walk);
                 var t11 = new TrajectoryLogger(movementCrossing23Walk);
                 t11.Save(filepath);
 
-                var crossing32Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk2, crossing32, crossing32);
-                var movementCrossing32Walk = new Movement("Sidewalk 3", "Sidewalk 2", Turn.Crossing, ObjectType.Person, crossing32Walk.StateHistory);
+                //var crossing32Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk2, crossing32, crossing32);
+                var crossing32Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk2, crossing32);
+                var movementCrossing32Walk = new Movement("Sidewalk 3", "Sidewalk 2", Turn.Crossing, ObjectType.Person, crossing32Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing32Walk);
                 var t12 = new TrajectoryLogger(movementCrossing32Walk);
                 t12.Save(filepath);
@@ -295,14 +303,16 @@ namespace VTC.Kernel
 
             if ((crossing34 != null) && (crossing43 != null))
             {
-                var crossing34Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk4, crossing34, crossing34);
-                var movementCrossing34Walk = new Movement("Sidewalk 3", "Sidewalk 4", Turn.Crossing, ObjectType.Person, crossing34Walk.StateHistory);
+                //var crossing34Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk4, crossing34, crossing34);
+                var crossing34Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk4, crossing34);
+                var movementCrossing34Walk = new Movement("Sidewalk 3", "Sidewalk 4", Turn.Crossing, ObjectType.Person, crossing34Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing34Walk);
                 var t11 = new TrajectoryLogger(movementCrossing34Walk);
                 t11.Save(filepath);
 
-                var crossing43Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk3, crossing43, crossing43);
-                var movementCrossing43Walk = new Movement("Sidewalk 4", "Sidewalk 3", Turn.Crossing, ObjectType.Person, crossing43Walk.StateHistory);
+                //var crossing43Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk3, crossing43, crossing43);
+                var crossing43Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk3, crossing43);
+                var movementCrossing43Walk = new Movement("Sidewalk 4", "Sidewalk 3", Turn.Crossing, ObjectType.Person, crossing43Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing43Walk);
                 var t43 = new TrajectoryLogger(movementCrossing43Walk);
                 t43.Save(filepath);
@@ -310,14 +320,16 @@ namespace VTC.Kernel
 
             if ((crossing41 != null) && (crossing14 != null))
             {
-                var crossing41Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk1, crossing41, crossing41);
-                var movementCrossing41Walk = new Movement("Sidewalk 4", "Sidewalk 1", Turn.Crossing, ObjectType.Person, crossing41Walk.StateHistory);
+                //var crossing41Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk1, crossing41, crossing41);
+                var crossing41Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk1, crossing41);
+                var movementCrossing41Walk = new Movement("Sidewalk 4", "Sidewalk 1", Turn.Crossing, ObjectType.Person, crossing41Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing41Walk);
                 var t11 = new TrajectoryLogger(movementCrossing41Walk);
                 t11.Save(filepath);
 
-                var crossing14Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk4, crossing14, crossing14);
-                var movementCrossing14Walk = new Movement("Sidewalk 1", "Sidewalk 4", Turn.Crossing, ObjectType.Person, crossing14Walk.StateHistory);
+                //var crossing14Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk4, crossing14, crossing14);
+                var crossing14Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk4, crossing14);
+                var movementCrossing14Walk = new Movement("Sidewalk 1", "Sidewalk 4", Turn.Crossing, ObjectType.Person, crossing14Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing14Walk);
                 var t12 = new TrajectoryLogger(movementCrossing14Walk);
                 t12.Save(filepath);

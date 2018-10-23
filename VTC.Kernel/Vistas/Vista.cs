@@ -215,7 +215,7 @@ namespace VTC.Kernel.Vistas
 
             vehicles.ForEach(delegate(TrackedObject vehicle)
             {
-                if (vehicle.DistanceTravelled() < 10.0)
+                if (vehicle.NetMovement() < 10.0)
                 {
                     return;
                 }

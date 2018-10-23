@@ -311,7 +311,7 @@ namespace VTC.Actors
                 foreach(var m in mts.TrajectoryPrototypes)
                 {   
                     //var modified_prototype = m;
-                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, objectType, m.StateEstimates);
+                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, objectType, m.StateEstimates, 0);
                     //2. Check which keys are not present
                     if(!turnStats.Keys.Contains(modified_prototype))
                     { 
@@ -559,7 +559,7 @@ namespace VTC.Actors
                     var movement = TrajectorySimilarity.MatchNearestTrajectory(d, mostLikelyClassType, _regionConfig.MinPathLength, mts.TrajectoryPrototypes);
                     if (movement == null) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
-                    var edited_movement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, _videoTime);
+                    var edited_movement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, d.FirstDetectionFrame);
                     IncrementTurnStatistics(edited_movement);
                     var tl = new TrajectoryLogger(edited_movement);
                     var folderPath = VTCPaths.FolderPath(_currentVideoName);

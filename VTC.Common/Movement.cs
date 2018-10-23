@@ -37,16 +37,19 @@ namespace VTC.Common
 
         [DataMember] public readonly DateTime Timestamp;
 
-        public Movement(string approach, string exit, Turn turn, ObjectType objectType, List<StateEstimate> stateEstimates)
+        [DataMember] public int FirstDetectionFrame;
+
+        public Movement(string approach, string exit, Turn turn, ObjectType objectType, List<StateEstimate> stateEstimates, int frame)
         {
             Approach = approach;
             Exit = exit;
             TurnType = turn;
             TrafficObjectType = objectType;
             StateEstimates = stateEstimates;
+            FirstDetectionFrame = frame;
         }
 
-        public Movement(string approach, string exit, Turn turn, ObjectType objectType, List<StateEstimate> stateEstimates, DateTime timeStamp)
+        public Movement(string approach, string exit, Turn turn, ObjectType objectType, List<StateEstimate> stateEstimates, DateTime timeStamp, int frame)
         {
             Approach = approach;
             Exit = exit;
@@ -54,6 +57,7 @@ namespace VTC.Common
             TrafficObjectType = objectType;
             StateEstimates = stateEstimates;
             Timestamp = timeStamp;
+            FirstDetectionFrame = frame;
         }
 
         public Movement()

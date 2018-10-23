@@ -246,7 +246,8 @@ namespace VTC.Kernel
                             _regionConfig.VehicleInitialCovG,
                             _regionConfig.VehicleInitialCovB,
                             _regionConfig.VehicleInitialCovSize,
-                            coords[j].ObjectClass
+                            coords[j].ObjectClass,
+                            _numProcessedFrames
                             );
 
                     }

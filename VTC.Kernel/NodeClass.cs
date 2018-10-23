@@ -236,7 +236,7 @@ namespace VTC.Kernel
             return newVehicleStateEstimates;
         }
 
-        public void AddVehicle(int x, int y, double vx, double vy, int red, int green, int blue, int size, double covx, double covy, double covVx, double covVy, double covR, double covG, double covB, double covSize, int classId)
+        public void AddVehicle(int x, int y, double vx, double vy, int red, int green, int blue, int size, double covx, double covy, double covVx, double covVy, double covR, double covG, double covB, double covSize, int classId, int frame)
         {
             Dictionary<int, int> classDetectionCounts = new Dictionary<int, int>();
             classDetectionCounts.Add(classId, 1);
@@ -262,7 +262,7 @@ namespace VTC.Kernel
                 ClassDetectionCounts = classDetectionCounts
             };
 
-            var newVehicle = new TrackedObject(initialState);
+            var newVehicle = new TrackedObject(initialState,frame);
             Vehicles.Add(newVehicle);
             NewVehicles.Add(newVehicle);
         }
@@ -373,7 +373,7 @@ namespace VTC.Kernel
         {
             var parentHypothesis = Parent.NodeData;
             var lastFrameVehicle = parentHypothesis.Vehicles[address];
-            var updatedVehicle = new TrackedObject(lastFrameVehicle.StateHistory, currentState);
+            var updatedVehicle = new TrackedObject(lastFrameVehicle.StateHistory, currentState, lastFrameVehicle.FirstDetectionFrame);
             if (withMeasurement)
                 currentState.MissedDetections = 0;
 

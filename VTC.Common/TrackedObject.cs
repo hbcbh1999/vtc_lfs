@@ -8,20 +8,23 @@ namespace VTC.Common
     {
         public string ObjectType;
         public List<StateEstimate> StateHistory;
+        public int FirstDetectionFrame;
 
-        public TrackedObject(StateEstimate initialState)
+        public TrackedObject(StateEstimate initialState, int frame)
         {
             StateHistory = new List<StateEstimate> {initialState};
             ObjectType = "unknown";
+            FirstDetectionFrame = frame;
         }
 
-        public TrackedObject(IEnumerable<StateEstimate> stateHistoryOld, StateEstimate currentState)
+        public TrackedObject(IEnumerable<StateEstimate> stateHistoryOld, StateEstimate currentState, int frame)
         {
             StateHistory = new List<StateEstimate>(stateHistoryOld) {currentState};
             ObjectType = "unknown";
+            FirstDetectionFrame = frame;
         }
 
-        public double DistanceTravelled()
+        public double PathLengthIntegral()
         {
             double distance_integral = 0;
             StateEstimate current_position = StateHistory.First();
@@ -35,12 +38,27 @@ namespace VTC.Common
                 current_position = next_position;
             }
 
-            //StateEstimate initialPosition = StateHistory.First();
-            //StateEstimate finalPosition = StateHistory.Last();
-            //var distance = Math.Sqrt(Math.Pow(finalPosition.X - initialPosition.X,  2) + Math.Pow(finalPosition.Y - initialPosition.Y,2));
-            //return distance;
-
             return distance_integral;
+        }
+
+        public double NetMovement()
+        {
+            StateEstimate initialPosition = StateHistory.First();
+            StateEstimate finalPosition = StateHistory.Last();
+            var distance = Math.Sqrt(Math.Pow(finalPosition.X - initialPosition.X,  2) + Math.Pow(finalPosition.Y - initialPosition.Y,2));
+            return distance;
+        }
+
+        public double MissRatio()
+        {
+            return StateHistory.Sum(se => se.MissedDetections) / StateHistory.Count();
+        }
+
+        public double FinalPositionCovariance()
+        {
+            var finalStateEstimate = StateHistory.Last();
+            var covariance = Math.Sqrt( Math.Pow(finalStateEstimate.CovX,2) + Math.Pow(finalStateEstimate.CovX,2));
+            return covariance;
         }
     }
 }

@@ -41,7 +41,7 @@ namespace VTC.Kernel
                 p1 = Intersection(approachRoadLine, exitRoadLine);
             }
 
-            TrackedObject syntheticTrajectory = new TrackedObject(initialState);
+            TrackedObject syntheticTrajectory = new TrackedObject(initialState,0);
             syntheticTrajectory.StateHistory.Add(initialState);
 
             for (int i = 0; i < NumberOfInterpolatedStepsSyntheticTrajectory; i++)
@@ -51,6 +51,44 @@ namespace VTC.Kernel
                 var se = new StateEstimate();
                 se.X = p.X;
                 se.Y = p.Y;
+                se.Vx = se.X - syntheticTrajectory.StateHistory.Last().X;
+                se.Vy = se.Y - syntheticTrajectory.StateHistory.Last().Y;
+                syntheticTrajectory.StateHistory.Add(se);
+            }
+
+            syntheticTrajectory.StateHistory.Add(finalState);
+            return syntheticTrajectory;
+        }
+
+        public static TrackedObject SyntheticTrajectory(Polygon approach, Polygon exit, RoadLine approachRoadLine)
+        {
+            var initialState = new StateEstimate();
+            initialState.X = approach.Centroid.X;
+            initialState.Y = approach.Centroid.Y;
+            var p0 = new Point(Convert.ToInt32(initialState.X),Convert.ToInt32(initialState.Y));
+
+            var finalState = new StateEstimate();
+            finalState.X = exit.Centroid.X;
+            finalState.Y = exit.Centroid.Y;
+            var p2 = new Point(Convert.ToInt32(finalState.X), Convert.ToInt32(finalState.Y));
+
+            var p1 = new Point();
+
+            //Use a straight-line approximation
+            
+            p1.X = Convert.ToInt32((approachRoadLine.ApproachCentroidX + approachRoadLine.ExitCentroidX) / 2);
+            p1.Y = Convert.ToInt32((approachRoadLine.ApproachCentroidY + approachRoadLine.ExitCentroidY) / 2);
+
+            TrackedObject syntheticTrajectory = new TrackedObject(initialState,0);
+            syntheticTrajectory.StateHistory.Add(initialState);
+
+            for (int i = 0; i < NumberOfInterpolatedStepsSyntheticTrajectory; i++)
+            {
+                var se = new StateEstimate();
+                se.X = initialState.X + ((double)i/(NumberOfInterpolatedStepsSyntheticTrajectory-1)) * (finalState.X - initialState.X);
+                se.Y = initialState.Y + ((double)i/(NumberOfInterpolatedStepsSyntheticTrajectory-1)) * (finalState.Y - initialState.Y);
+                se.Vx = se.X - syntheticTrajectory.StateHistory.Last().X;
+                se.Vy = se.Y - syntheticTrajectory.StateHistory.Last().Y;
                 syntheticTrajectory.StateHistory.Add(se);
             }
 

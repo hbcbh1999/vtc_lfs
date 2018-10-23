@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Roadometry Trajectory Analyzer" Height="979" Width="930.314" WindowState="Maximized" Drop="Window_Drop" AllowDrop="True">
     <StackPanel HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="920">
-        <Canvas Width="497" Margin="0,10">
+        <Canvas Width="707" Margin="0,10">
             <TextBox x:Name="TrajectoryFilenameBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="345" IsEnabled="False" Canvas.Left="35" Canvas.Top="64"/>
             <ListView x:Name="trajectoryListView" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="345" SelectionChanged="trajectoryListView_SelectionChanged" SelectionMode="Single" Canvas.Left="35" Canvas.Top="161">
                 <ListView.ItemTemplate>
@@ -32,7 +32,7 @@
             <CheckBox x:Name="showAllCheckbox" Content="Show all" Canvas.Left="35" Canvas.Top="120" Checked="CheckBox_Checked"/>
             <CheckBox x:Name="showEndpointsCheckbox" Content="Show endpoints" Canvas.Left="35" Canvas.Top="140"/>
             <CheckBox x:Name="extrapolateCheckbox" Content="Extrapolate" Canvas.Left="145" Canvas.Top="141"/>
-            <ListView x:Name="trajectoryMatchListView" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="345" SelectionChanged="trajectoryListView_SelectionChanged" SelectionMode="Single" Canvas.Left="35" Canvas.Top="493">
+            <ListView x:Name="trajectoryMatchListView" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="345" SelectionMode="Single" Canvas.Left="35" Canvas.Top="493">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -48,6 +48,20 @@
             </ListView>
             <Label Content="Trajectory Matches" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="26" Canvas.Left="35" Canvas.Top="467" RenderTransformOrigin="1.663,1.154"/>
             <Label x:Name="movementNameBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" Canvas.Left="246" Canvas.Top="10" FontSize="16" FontWeight="Bold"/>
+            <StackPanel Canvas.Left="433" Orientation="Vertical" Canvas.Top="44" Width="209">
+                <Label Content="Number of samples:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="numSamplesBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Missed detections:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="missedDetectionsBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Miss ratio:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="143" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="missRatioBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Final position covariance:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="143" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="finalPositionCovarianceBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Net movement:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="143" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="netMovementBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Path length:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="143" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="pathLengthBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+            </StackPanel>
         </Canvas>
         <Image x:Name="trajectoryRenderingImage" Margin="50,50,100,50" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill" Height="500"/>
     </StackPanel>

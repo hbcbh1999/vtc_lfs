@@ -234,7 +234,8 @@ namespace TrajectoryAnalyzer
             { 
                 drawingContext.DrawText(new FormattedText("Start", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 18, Brushes.Red), new Point(firstMeasurement.X, firstMeasurement.Y));
                 drawingContext.DrawText(new FormattedText("End", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 18, Brushes.Red), new Point(lastMeasurement.X, lastMeasurement.Y));
-            }            
+            }
+           
         }
 
         private List<Movement> SyntheticPrototypes()
@@ -297,7 +298,15 @@ namespace TrajectoryAnalyzer
                     trajectoryMatchListView.Items.Add(description);
                 }
                 //var matched_movement = TrajectorySimilarity.MatchNearestTrajectory(tracked_object, mostLikelyClassType, 0, synthetics);
+
                 
+                netMovementBox.Content = tracked_object.NetMovement();
+                numSamplesBox.Content = movement.StateEstimates.Count();
+                missedDetectionsBox.Content = movement.StateEstimates.Sum(se => se.MissedDetections);
+                var lastStateEstimate = movement.StateEstimates.Last();
+                finalPositionCovarianceBox.Content = Math.Sqrt(Math.Pow(lastStateEstimate.CovX,2) + Math.Pow(lastStateEstimate.CovX,2));
+                pathLengthBox.Content = tracked_object.PathLengthIntegral();
+                missRatioBox.Content = Math.Round((double) movement.StateEstimates.Sum(se => se.MissedDetections) / movement.StateEstimates.Count(), 2);
             }
         }
 

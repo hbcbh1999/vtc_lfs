@@ -209,7 +209,7 @@ namespace VTC
             // licenseCheckTimer
             // 
             this.licenseCheckTimer.Enabled = true;
-            this.licenseCheckTimer.Interval = 1800000;
+            this.licenseCheckTimer.Interval = 3600000;
             this.licenseCheckTimer.Tick += new System.EventHandler(this.licenseCheckTimer_Tick);
             // 
             // label1
