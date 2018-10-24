@@ -51,7 +51,8 @@ namespace VTC.Common
 
         public double MissRatio()
         {
-            return StateHistory.Sum(se => se.MissedDetections) / StateHistory.Count();
+            var missRatio = (double) StateHistory.Sum(se => se.MissedDetections) / StateHistory.Count();
+            return missRatio;
         }
 
         public double FinalPositionCovariance()

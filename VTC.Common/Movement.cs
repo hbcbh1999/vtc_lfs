@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VTC.Common;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace VTC.Common
 {
@@ -92,6 +94,12 @@ namespace VTC.Common
         public int CompareTo(Movement that)
         {
             return ToString().CompareTo(that.ToString());
+        }
+
+        public double MissRatio()
+        {
+            var missRatio = (double) StateEstimates.Sum(se => se.MissedDetections) / StateEstimates.Count();
+            return missRatio;
         }
     }
 }

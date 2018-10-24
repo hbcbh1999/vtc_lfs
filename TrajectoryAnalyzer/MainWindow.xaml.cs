@@ -306,7 +306,7 @@ namespace TrajectoryAnalyzer
                 var lastStateEstimate = movement.StateEstimates.Last();
                 finalPositionCovarianceBox.Content = Math.Sqrt(Math.Pow(lastStateEstimate.CovX,2) + Math.Pow(lastStateEstimate.CovX,2));
                 pathLengthBox.Content = tracked_object.PathLengthIntegral();
-                missRatioBox.Content = Math.Round((double) movement.StateEstimates.Sum(se => se.MissedDetections) / movement.StateEstimates.Count(), 2);
+                missRatioBox.Content = Math.Round( movement.MissRatio(),2);
             }
         }
 

@@ -24,17 +24,29 @@ namespace VTC.Kernel
         private const double END_ANGLE_MULTIPLIER = 0.5;
 
         private const double POSITION_MULTIPLIER = 0.1;
-        private const double ANGLE_MULTIPLIER = 1.0;
+        private const double ANGLE_MULTIPLIER = 10.0;
 
         public static Movement MatchNearestTrajectory(TrackedObject d, string classType, int minPathLength, List<Movement> trajectoryPrototypes)
         {
             //Heuristics for discarding garbage trajectories
             var distance = d.NetMovement();
-            if (distance < minPathLength) return null;
+            if (distance < minPathLength)
+            {
+                Console.WriteLine("Trajectory rejected: path too short (" + Math.Round(distance) + ")");
+                return null; 
+            }
 
-            if (d.MissRatio() > 2.0) return null;
+            if (d.MissRatio() > 2.5)
+            {
+                Console.WriteLine("Trajectory rejected: miss ratio too high.");
+                return null; 
+            }
 
-            if (d.FinalPositionCovariance() > 300.0) return null;
+            if (d.FinalPositionCovariance() > 300.0)
+            { 
+                Console.WriteLine("Trajectory rejected: final position covariance too high.");
+                return null; 
+            }
 
             var matchedTrajectoryName = BestMatchTrajectory(d.StateHistory, trajectoryPrototypes, classType);
             return matchedTrajectoryName;
