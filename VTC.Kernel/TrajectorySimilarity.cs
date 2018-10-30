@@ -10,10 +10,15 @@ using VTC.Common;
 
 namespace VTC.Kernel
 {
-    class TrajectoryVector
+    public class TrajectoryVector
     {
         public double x;
         public double y;
+
+        public double AngleRad()
+        {
+            return Math.Atan2(-y, x);
+        }
     }
 
     public class TrajectorySimilarity
@@ -24,7 +29,7 @@ namespace VTC.Kernel
         private const double END_ANGLE_MULTIPLIER = 0.5;
 
         private const double POSITION_MULTIPLIER = 0.1;
-        private const double ANGLE_MULTIPLIER = 10.0;
+        private const double ANGLE_MULTIPLIER = 1.0;
 
         public static Movement MatchNearestTrajectory(TrackedObject d, string classType, int minPathLength, List<Movement> trajectoryPrototypes)
         {
@@ -96,27 +101,6 @@ namespace VTC.Kernel
 
         public static double PathIntegralCost(List<StateEstimate> trajectory1, List<StateEstimate> trajectory2)
         {
-            //Trim trajectories:
-            //Trim T2 from the start of T1, and trim T1 from the end of T2.
-            //var t1_first = trajectory1.First();
-            //var t2_last = trajectory2.Last();
-            //var t2_nearest_to_t1_first = NearestPointOnTrajectory(t1_first, trajectory2);
-            //var t1_nearest_to_t2_last = NearestPointOnTrajectory(t2_last, trajectory1);
-
-            //var t2snipStart = trajectory2.IndexOf(t2_nearest_to_t1_first);
-            //if(t2snipStart >= trajectory2.Count() - 1)
-            //{ 
-            //    t2snipStart = trajectory2.Count() - 2; 
-            //}
-            //var t2snip = trajectory2.GetRange(t2snipStart,trajectory2.Count - t2snipStart);
-
-            //var t1snipEnd = trajectory1.IndexOf(t1_nearest_to_t2_last);
-            //if(t1snipEnd == 0)
-            //{
-            //    t1snipEnd = 1;
-            //}
-            //var t1snip = trajectory1.GetRange(0,t1snipEnd);
-
             var cost = 0.0;
 
             for(int i=0;i<trajectory1.Count;i++)
@@ -138,10 +122,14 @@ namespace VTC.Kernel
                 iv2.y = trajectory2NearestStateEstimate.Vy;
 
                 var angleDiff = CompareAngles(iv1, iv2);
-                
-                cost += POSITION_MULTIPLIER*positionCost + ANGLE_MULTIPLIER*angleDiff;                
+
+                var velocityMagnitude = Math.Sqrt(Math.Pow(iv1.x,2) + Math.Pow(iv1.y,2));
+                var thisPointCost = POSITION_MULTIPLIER*positionCost + ANGLE_MULTIPLIER*angleDiff*velocityMagnitude;  
+                //Console.WriteLine("TotalCost," + thisPointCost + ",PositionCost," + positionCost + ",AngleCost," + angleDiff + ",Angle1," + iv1.AngleRad() + ",Angle2," + iv2.AngleRad() + ",Vx1," + iv1.x + ",Vy1," + iv1.y + ",Vx2," + iv2.x + ",Vy2," + iv2.y);
+                cost += thisPointCost;
             }
             
+            //Console.WriteLine("Final cost: " + cost);
             return cost;
         }
 
@@ -275,11 +263,11 @@ namespace VTC.Kernel
             return v;
         }
 
-        private static double CompareAngles(TrajectoryVector v1, TrajectoryVector v2)
+        public static double CompareAngles(TrajectoryVector v1, TrajectoryVector v2)
         {
-            var angle1 = Math.Atan2(v1.y, v1.x);
-            var angle2 = Math.Atan2(v2.y, v2.x);
-            var angle_diff = Math.Abs(angle1 - angle2);
+            var angle1 = Math.Atan2(-v1.y, v1.x);
+            var angle2 = Math.Atan2(-v2.y, v2.x);
+            var angle_diff = Math.Abs(MathHelper.WrapAngle(angle1 - angle2));
             return angle_diff;
         }
 
@@ -366,6 +354,7 @@ namespace VTC.Kernel
         {
             var match = trajectoryPrototypes.First();
             var matchedTrajectories = new List<MatchTrajectory>();
+            
             foreach (var tp in trajectoryPrototypes)
             {
                 var mt = new MatchTrajectory(tp.Approach, tp.Exit, tp.TrafficObjectType, tp.TurnType,tp.StateEstimates, 0);
@@ -376,6 +365,7 @@ namespace VTC.Kernel
                     //mt.matchCost = DWTCost(matchTrajectory, mt.StateHistory);
                     //mt.matchCost = EndpointCost(matchTrajectory, mt.StateEstimates, START_POSITION_MULTIPLIER, END_POSITION_MULTIPLIER, START_ANGLE_MULTIPLIER, END_ANGLE_MULTIPLIER);
                     //mt.matchCost = NearestPointsCost(matchTrajectory, mt.StateEstimates);
+                    //Console.WriteLine("Comparing " + mt.Approach + " to " + mt.Exit);
                     mt.matchCost = PathIntegralCost(matchTrajectory,mt.StateEstimates);
                     matchedTrajectories.Add(mt);
                 }
@@ -391,10 +381,32 @@ namespace VTC.Kernel
             return trajectory.OrderBy(se => StateEstimatesDistance(point, se)).First();
         }
 
+        static StateEstimate MostSimilarPointOnTrajectory(StateEstimate point, List<StateEstimate> trajectory)
+        {
+            return trajectory.OrderBy(se => InertialDistance(point, se)).First();
+        }
+
         static double StateEstimatesDistance(StateEstimate point1, StateEstimate point2)
         {
             var distance = Math.Sqrt(Math.Pow(point1.X - point2.X,2) + Math.Pow(point1.Y - point2.Y,2));
             return distance;
+        }
+
+        static double InertialDistance(StateEstimate point1, StateEstimate point2)
+        {
+            var positionDistance = Math.Sqrt(Math.Pow(point1.X - point2.X,2) + Math.Pow(point1.Y - point2.Y,2));
+            
+            TrajectoryVector iv1 = new TrajectoryVector();
+            TrajectoryVector iv2 = new TrajectoryVector();
+            iv1.x = point1.Vx;
+            iv1.y = point1.Vy;
+            iv2.x = point2.Vx;
+            iv2.y = point2.Vy;
+
+            var angleDiff = CompareAngles(iv1, iv2);
+            var velocityMagnitude = Math.Sqrt(Math.Pow(iv1.x,2) + Math.Pow(iv1.y,2));
+            var thisPointCost = POSITION_MULTIPLIER*positionDistance + ANGLE_MULTIPLIER*angleDiff*velocityMagnitude;  
+            return thisPointCost;
         }
     }
 

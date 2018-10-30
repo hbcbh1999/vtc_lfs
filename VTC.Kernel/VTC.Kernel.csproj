@@ -84,6 +84,7 @@
     <Compile Include="Extensions\LineSegment2DExtensions.cs" />
     <Compile Include="Extensions\PointExtensions.cs" />
     <Compile Include="HungarianAlgorithm.cs" />
+    <Compile Include="MathHelper.cs" />
     <Compile Include="MultipleHypothesisTracker.cs" />
     <Compile Include="NodeClass.cs" />
     <Compile Include="OptAssign.cs" />
