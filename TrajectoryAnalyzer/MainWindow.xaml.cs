@@ -293,7 +293,7 @@ namespace TrajectoryAnalyzer
                 //Populate trajectory-comparison list box with comparison statistics for each synthetic trajectory
                 foreach(var synth in synthetics)
                 {
-                    var matchCost = TrajectorySimilarity.NearestPointsCost(tracked_object.StateHistory, synth.StateEstimates);
+                    var matchCost = TrajectorySimilarity.PathIntegralCost(tracked_object.StateHistory, synth.StateEstimates);
                     var description = synth.ToString() + " match-cost: " + matchCost + "," + TrajectorySimilarity.CostExplanation(tracked_object.StateHistory, synth.StateEstimates);
                     trajectoryMatchListView.Items.Add(description);
                 }

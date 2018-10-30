@@ -170,37 +170,41 @@ namespace VTC.Kernel
         {
             var explanation = "";
 
-            //Calculate position costs
-            var t1_first = trajectory1.First();
-            var t1_last = trajectory1.Last();
-            var t2_nearest_to_t1_first = NearestPointOnTrajectory(t1_first, trajectory2);
-            var t2_nearest_to_t1_last = NearestPointOnTrajectory(t1_last, trajectory2);
-            //1. Start position cost
-            double startPositionCost = Distance(t1_first.X, t1_first.Y, t2_nearest_to_t1_first.X, t2_nearest_to_t1_first.Y);
-            explanation += "Start-position cost: " + START_POSITION_MULTIPLIER*startPositionCost;
-            //2. End position cost
-            double endPositionCost = Distance(t1_last.X, t1_last.Y, t2_nearest_to_t1_last.X, t2_nearest_to_t1_last.Y);
-            explanation += ", End-position cost: " + END_POSITION_MULTIPLIER*endPositionCost;
+            var cost = 0.0;
+            var totalAngleCost = 0.0;
+            var totalPositionCost = 0.0;
 
-            var t2snipStart = trajectory2.IndexOf(t2_nearest_to_t1_first);
-            var t2snipEnd = trajectory2.IndexOf(t2_nearest_to_t1_last);
-            var t2snipIndex = (t2snipStart < t2snipEnd) ? t2snipStart : t2snipEnd;
-            var t2snip = trajectory2.GetRange(t2snipIndex,Math.Abs(t2snipEnd - t2snipStart));
-
-            var initialAngleCost = 2*Math.PI; //Assume worst-case (maximum angular difference) when snipped t2 is zero-length
-            var finalAngleCost = 2 * Math.PI;
-
-            if (t2snip.Count > 0)
+            for(int i=0;i<trajectory1.Count;i++)
             {
-                //Calculate angle costs
-                //3. Start angle cost
-                initialAngleCost = CompareInitialTrajectoryAngles(trajectory1, t2snip);
-                //4. End angle cost
-                finalAngleCost = CompareFinalTrajectoryAngles(trajectory1, t2snip);
-            }
+                var trajectory1StateEstimate = trajectory1[i];
+                //Get nearest index in t2
+                //var j = trajectory2.Count * ((double)i/trajectory1.Count);
+                var trajectory2NearestStateEstimate = NearestPointOnTrajectory(trajectory1StateEstimate, trajectory2);
 
-            explanation += ", Initial-angle cost: " + START_ANGLE_MULTIPLIER*initialAngleCost;
-            explanation += ", Final-angle cost: " + END_ANGLE_MULTIPLIER*finalAngleCost;
+                var positionCost = Math.Sqrt(Math.Pow(trajectory1StateEstimate.X - trajectory2NearestStateEstimate.X,2) + Math.Pow(trajectory1StateEstimate.Y - trajectory2NearestStateEstimate.Y,2));
+                totalPositionCost += positionCost;
+
+                TrajectoryVector iv1 = new TrajectoryVector();
+                TrajectoryVector iv2 = new TrajectoryVector();
+
+                iv1.x = trajectory1StateEstimate.Vx;
+                iv1.y = trajectory1StateEstimate.Vy;
+
+                iv2.x = trajectory2NearestStateEstimate.Vx;
+                iv2.y = trajectory2NearestStateEstimate.Vy;
+
+                var angleDiff = CompareAngles(iv1, iv2);
+                var velocityMagnitude = Math.Sqrt(Math.Pow(iv1.x,2) + Math.Pow(iv1.y,2));
+                totalAngleCost += angleDiff * velocityMagnitude;
+                var thisPointCost = POSITION_MULTIPLIER*positionCost + ANGLE_MULTIPLIER*angleDiff*velocityMagnitude;  
+                //Console.WriteLine("TotalCost," + thisPointCost + ",PositionCost," + positionCost + ",AngleCost," + angleDiff + ",Angle1," + iv1.AngleRad() + ",Angle2," + iv2.AngleRad() + ",Vx1," + iv1.x + ",Vy1," + iv1.y + ",Vx2," + iv2.x + ",Vy2," + iv2.y);
+                cost += thisPointCost;
+            }
+            
+            explanation += "Angle-cost: " + totalAngleCost + ", Position-cost: " + totalPositionCost;
+            var weightedAngleCost = totalAngleCost*ANGLE_MULTIPLIER;
+            var weightedPositionCost = totalPositionCost*POSITION_MULTIPLIER;
+            explanation += "Weighted-angle-cost: " + weightedAngleCost + ", Weighted-position-cost: " + weightedPositionCost;
             
             return explanation;
         }
