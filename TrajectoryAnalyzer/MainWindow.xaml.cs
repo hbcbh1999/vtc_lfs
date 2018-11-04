@@ -290,15 +290,24 @@ namespace TrajectoryAnalyzer
                 var tracked_object = new VTC.Common.TrackedObject();
                 tracked_object.ObjectType = mostLikelyClassType;
                 tracked_object.StateHistory = movement.StateEstimates;
-                //Populate trajectory-comparison list box with comparison statistics for each synthetic trajectory
+                //Populate trajectory-comparison list box with comparison statistics for each synthetic trajectory 
+                List<MatchWithExplanation> matchExplanations = new List<MatchWithExplanation>();
                 foreach(var synth in synthetics)
                 {
                     var matchCost = TrajectorySimilarity.PathIntegralCost(tracked_object.StateHistory, synth.StateEstimates);
-                    var description = synth.ToString() + " match-cost: " + matchCost + "," + TrajectorySimilarity.CostExplanation(tracked_object.StateHistory, synth.StateEstimates);
-                    trajectoryMatchListView.Items.Add(description);
+                    var description = synth.ToString() + " match-cost: " + Math.Round(matchCost,1) + "," + TrajectorySimilarity.CostExplanation(tracked_object.StateHistory, synth.StateEstimates);
+                    var matchExplanation = new MatchWithExplanation();
+                    matchExplanation.matchCost = matchCost;
+                    matchExplanation.explanation = description;
+                    matchExplanations.Add(matchExplanation);
+                }
+
+                var sortedMatches = matchExplanations.OrderBy(me => me.matchCost);
+                foreach(var me in sortedMatches)
+                {
+                    trajectoryMatchListView.Items.Add(me.explanation);
                 }
                 //var matched_movement = TrajectorySimilarity.MatchNearestTrajectory(tracked_object, mostLikelyClassType, 0, synthetics);
-
                 
                 netMovementBox.Content = tracked_object.NetMovement();
                 numSamplesBox.Content = movement.StateEstimates.Count();

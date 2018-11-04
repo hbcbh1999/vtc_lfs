@@ -36,7 +36,6 @@ namespace VTC
         //private VideoDisplay _movementDisplay;
         //private VideoDisplay _backgroundDisplay;
         //private VideoDisplay _velocityFieldDisplay;
-        private VideoDisplay _mixtureDisplay;
         private VideoDisplay _mixtureMovementDisplay;
         private VideoDisplay _3DPointsDisplay;
         private VideoMux _videoMux;

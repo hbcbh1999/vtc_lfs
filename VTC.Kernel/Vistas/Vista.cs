@@ -30,8 +30,6 @@ namespace VTC.Kernel.Vistas
         private static readonly Bgr WhiteColor = new Bgr(Color.White);
         private static readonly Bgr StateColorGreen = new Bgr(0.0, 255.0, 0.0);
         private static readonly Bgr StateColorRed = new Bgr(0.0, 0.0, 255.0);
-        private Gray _thresholdColor;
-        private static readonly Gray CeilingColor = new Gray(255);
 
         #endregion
 

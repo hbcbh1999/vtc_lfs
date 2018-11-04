@@ -190,7 +190,7 @@ namespace VTC.Kernel
                 var t3 = new TrajectoryLogger(movementRoad1Right);
                 t3.Save(filepath);
 
-                var road4Left = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit1, road4Line, road1Line);
+                var road4Left = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit1, road4Line, road1Line);  
                 var movementRoad4Left = new Movement("Approach 4", "Exit 1", Turn.Left, ObjectType.Car, road4Left.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad4Left);
                 var t11 = new TrajectoryLogger(movementRoad4Left);
@@ -199,7 +199,6 @@ namespace VTC.Kernel
 
             if (road1Line != null)
             {
-                //var road1Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach1, exit1, road1Line, road1Line);
                 var road1Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach1, exit1, road1Line);
                 var movementRoad2Straight = new Movement("Approach 1", "Exit 1", Turn.Straight, ObjectType.Car, road1Straight.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad2Straight);
@@ -224,7 +223,6 @@ namespace VTC.Kernel
 
             if (road2Line != null)
             {
-                //var road2Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach2, exit2, road2Line, road2Line);
                 var road2Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach2, exit2, road2Line);
                 var movementRoad2Straight = new Movement("Approach 2", "Exit 2", Turn.Straight, ObjectType.Car, road2Straight.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad2Straight);
@@ -249,7 +247,6 @@ namespace VTC.Kernel
 
             if (road3Line != null)
             {
-                //var road3Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach3, exit3, road3Line, road3Line);
                 var road3Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach3, exit3, road3Line);
                 var movementRoad3Straight = new Movement("Approach 3", "Exit 3", Turn.Straight, ObjectType.Car, road3Straight.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad3Straight);
@@ -259,7 +256,6 @@ namespace VTC.Kernel
 
             if (road4Line != null)
             {
-                //var road4Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit4, road4Line, road4Line);
                 var road4Straight = PolygonTrajectorySynthesizer.SyntheticTrajectory(approach4, exit4, road4Line);
                 var movementRoad4Straight = new Movement("Approach 4", "Exit 4", Turn.Straight, ObjectType.Car, road4Straight.StateHistory,0);
                 TrajectoryPrototypes.Add(movementRoad4Straight);
@@ -269,14 +265,12 @@ namespace VTC.Kernel
 
             if ((crossing12 != null) && (crossing21 != null))
             {
-                //var crossing12Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk2, crossing12, crossing12);
                 var crossing12Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk2, crossing12);
                 var movementCrossing12Walk = new Movement("Sidewalk 1", "Sidewalk 2", Turn.Crossing, ObjectType.Person, crossing12Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing12Walk);
                 var t11 = new TrajectoryLogger(movementCrossing12Walk);
                 t11.Save(filepath);
 
-                //var crossing21Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk1, crossing21, crossing21);
                 var crossing21Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk1, crossing21);
                 var movementCrossing21Walk = new Movement("Sidewalk 2", "Sidewalk 1", Turn.Crossing, ObjectType.Person, crossing21Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing21Walk);
@@ -286,14 +280,12 @@ namespace VTC.Kernel
 
             if ((crossing23 != null) && (crossing32 != null))
             {
-                //var crossing23Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk3, crossing23, crossing23);
                 var crossing23Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk2, sidewalk3, crossing23);
                 var movementCrossing23Walk = new Movement("Sidewalk 2", "Sidewalk 3", Turn.Crossing, ObjectType.Person, crossing23Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing23Walk);
                 var t11 = new TrajectoryLogger(movementCrossing23Walk);
                 t11.Save(filepath);
 
-                //var crossing32Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk2, crossing32, crossing32);
                 var crossing32Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk2, crossing32);
                 var movementCrossing32Walk = new Movement("Sidewalk 3", "Sidewalk 2", Turn.Crossing, ObjectType.Person, crossing32Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing32Walk);
@@ -303,14 +295,12 @@ namespace VTC.Kernel
 
             if ((crossing34 != null) && (crossing43 != null))
             {
-                //var crossing34Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk4, crossing34, crossing34);
                 var crossing34Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk3, sidewalk4, crossing34);
                 var movementCrossing34Walk = new Movement("Sidewalk 3", "Sidewalk 4", Turn.Crossing, ObjectType.Person, crossing34Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing34Walk);
                 var t11 = new TrajectoryLogger(movementCrossing34Walk);
                 t11.Save(filepath);
 
-                //var crossing43Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk3, crossing43, crossing43);
                 var crossing43Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk3, crossing43);
                 var movementCrossing43Walk = new Movement("Sidewalk 4", "Sidewalk 3", Turn.Crossing, ObjectType.Person, crossing43Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing43Walk);
@@ -320,20 +310,136 @@ namespace VTC.Kernel
 
             if ((crossing41 != null) && (crossing14 != null))
             {
-                //var crossing41Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk1, crossing41, crossing41);
                 var crossing41Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk4, sidewalk1, crossing41);
                 var movementCrossing41Walk = new Movement("Sidewalk 4", "Sidewalk 1", Turn.Crossing, ObjectType.Person, crossing41Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing41Walk);
                 var t11 = new TrajectoryLogger(movementCrossing41Walk);
                 t11.Save(filepath);
 
-                //var crossing14Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk4, crossing14, crossing14);
                 var crossing14Walk = PolygonTrajectorySynthesizer.SyntheticTrajectory(sidewalk1, sidewalk4, crossing14);
                 var movementCrossing14Walk = new Movement("Sidewalk 1", "Sidewalk 4", Turn.Crossing, ObjectType.Person, crossing14Walk.StateHistory,0);
                 TrajectoryPrototypes.Add(movementCrossing14Walk);
                 var t12 = new TrajectoryLogger(movementCrossing14Walk);
                 t12.Save(filepath);
             }
+        }
+
+        List<Movement> ApproachExitPairToMovements(Polygon approach, Polygon exit, Turn turnType)
+        {
+            var movements = new List<Movement>();
+
+            //Build list of possible approach points
+            var approachVertexList = approach.ToList();
+            var approachCentroid = new System.Drawing.Point();
+            approachCentroid.X = approach.Centroid.X;
+            approachCentroid.Y = approach.Centroid.Y;
+            approachVertexList.Add(approachCentroid);
+
+            //Build list of possible exit points
+            var exitVertexList = exit.ToList();
+            var exitCentroid = new System.Drawing.Point();
+            exitCentroid.X = exit.Centroid.X;
+            exitCentroid.Y = exit.Centroid.Y;
+            exitVertexList.Add(exitCentroid);
+
+            foreach(var approachVertex in approachVertexList)
+            { 
+                foreach(var exitVertex in exitVertexList)
+                {
+                    var roadline = new RoadLine();
+                    roadline.ApproachCentroidX = approachVertex.X;
+                    roadline.ApproachCentroidY = approachVertex.Y;
+                    roadline.ExitCentroidX = exitVertex.X;
+                    roadline.ExitCentroidY = exitVertex.Y;
+
+                    var trackedObject = PolygonTrajectorySynthesizer.SyntheticTrajectory(approachVertex, exitVertex, roadline);
+                    var movement = new Movement(approach.DisplayName, exit.DisplayName, turnType, ObjectType.Car, trackedObject.StateHistory,0);
+                    movements.Add(movement);
+                }
+            }
+
+            return movements;
+        }
+
+        List<Movement> RoadPairToTurnMovements(Polygon approach1, Polygon exit1, Polygon approach2, Polygon exit2, Turn turnType)
+        { 
+             var movements = new List<Movement>();
+
+            //Build lists of possible approach points
+            var approach1VertexList = approach1.ToList();
+            var approach1Centroid = new System.Drawing.Point();
+            approach1Centroid.X = approach1.Centroid.X;
+            approach1Centroid.Y = approach1.Centroid.Y;
+            approach1VertexList.Add(approach1Centroid);
+
+            var approach2VertexList = approach2.ToList();
+            var approach2Centroid = new System.Drawing.Point();
+            approach2Centroid.X = approach2.Centroid.X;
+            approach2Centroid.Y = approach2.Centroid.Y;
+            approach2VertexList.Add(approach2Centroid);
+
+            //Build list of possible exit points
+            var exit1VertexList = exit1.ToList();
+            var exit1Centroid = new System.Drawing.Point();
+            exit1Centroid.X = exit1.Centroid.X;
+            exit1Centroid.Y = exit1.Centroid.Y;
+            exit1VertexList.Add(exit1Centroid);
+
+            var exit2VertexList = exit2.ToList();
+            var exit2Centroid = new System.Drawing.Point();
+            exit2Centroid.X = exit2.Centroid.X;
+            exit2Centroid.Y = exit2.Centroid.Y;
+            exit2VertexList.Add(exit2Centroid);
+
+            foreach(var approachVertex in approach1VertexList)
+            { 
+                foreach(var exitVertex in exit2VertexList)
+                {
+                    var approachRoadlines = GenerateRoadlinesFromVertex(approachVertex,exit2VertexList);
+                    var exitRoadlines = GenerateRoadlinesToVertex(approach1VertexList, exitVertex);
+                    foreach(var approachRoadline in approachRoadlines)
+                    { 
+                        foreach(var exitRoadline in exitRoadlines)
+                        { 
+                            var trackedObject = PolygonTrajectorySynthesizer.SyntheticTrajectory(approachVertex, exitVertex, approachRoadline, exitRoadline);
+                            var movement = new Movement(approach1.DisplayName, exit2.DisplayName, turnType, ObjectType.Car, trackedObject.StateHistory,0);
+                            movements.Add(movement);
+                        }
+                    }
+                }
+            }
+
+            return movements;
+        }
+
+        List<RoadLine> GenerateRoadlinesFromVertex(System.Drawing.Point vertex, List<System.Drawing.Point> matchVertices)
+        {
+            var roadlines = new List<RoadLine>();
+            foreach(var mv in matchVertices)
+            {
+                var roadline = new RoadLine();
+                roadline.ApproachCentroidX = vertex.X;
+                roadline.ApproachCentroidY = vertex.Y;
+                roadline.ExitCentroidX = mv.X;
+                roadline.ExitCentroidY = mv.Y;
+                roadlines.Add(roadline);
+            }
+            return roadlines;
+        }
+
+        List<RoadLine> GenerateRoadlinesToVertex(List<System.Drawing.Point> matchVertices, System.Drawing.Point vertex)
+        {
+            var roadlines = new List<RoadLine>();
+            foreach(var mv in matchVertices)
+            {
+                var roadline = new RoadLine();
+                roadline.ApproachCentroidX = mv.X;
+                roadline.ApproachCentroidY = mv.Y;
+                roadline.ExitCentroidX = vertex.X;
+                roadline.ExitCentroidY = vertex.Y;
+                roadlines.Add(roadline);
+            }
+            return roadlines;
         }
     }
 }

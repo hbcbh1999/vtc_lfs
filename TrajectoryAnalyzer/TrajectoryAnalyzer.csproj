@@ -72,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MatchWithExplanation.cs" />
     <Compile Include="TrackedObject.cs" />
     <Compile Include="TrajectoryExtrapolator.cs" />
     <Page Include="MainWindow.xaml">

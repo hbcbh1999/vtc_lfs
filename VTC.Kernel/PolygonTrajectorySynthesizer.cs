@@ -36,14 +36,13 @@ namespace VTC.Kernel
                 var lastPoint = syntheticTrajectory.StateHistory.Last();
                 var u = Convert.ToDouble(i) / NumberOfInterpolatedStepsSyntheticTrajectory;
                 var p = QuadInterpolated(p0, p1, p2, u);
+                var derivative = QuadInterpolatedDerivative(p0,p1,p2,u);
                 var se = new StateEstimate();
                 se.X = p.X;
                 se.Y = p.Y;
-                se.Vx = se.X - syntheticTrajectory.StateHistory.Last().X;
-                se.Vy = se.Y - syntheticTrajectory.StateHistory.Last().Y;
+                se.Vx = derivative.X;
+                se.Vy = derivative.Y;
                 syntheticTrajectory.StateHistory.Add(se); 
-                //Console.WriteLine("Last: lastPoint.X," + lastPoint.X + ",lastPoint.Y," + lastPoint.Y);
-                //Console.WriteLine("Added: se.X," + se.X + ",se.Y," + se.Y + ",se.Vx," + se.Vx + ",se.Vy" + se.Vy);
             }
 
             syntheticTrajectory.StateHistory.Add(finalState);
@@ -54,21 +53,49 @@ namespace VTC.Kernel
             syntheticTrajectory.StateHistory.Last().Vx = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vx;
             syntheticTrajectory.StateHistory.Last().Vy = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vy;
 
-            //for(int i=0;i<syntheticTrajectory.StateHistory.Count;i++)
-            //{
-            //    var thisPoint = syntheticTrajectory.StateHistory[i];
-            //    var angle = Math.Atan2(-thisPoint.Vy,thisPoint.Vx);
-                //Console.WriteLine("X," + thisPoint.X + ",Y," + thisPoint.Y + ",Vx," + thisPoint.Vx + ",Vy," + thisPoint.Vy + ",Angle," + angle);
-            //}
+            return syntheticTrajectory;
+        }
 
-            //var smoothedVelocityTrajectory = PopulateTrajectoryVelocities(syntheticTrajectory, 1);
-            //for(int i=0;i<smoothedVelocityTrajectory.StateHistory.Count;i++)
-            //{
-            //    var thisPoint = smoothedVelocityTrajectory.StateHistory[i];
-            //    var angle = Math.Atan2(-thisPoint.Vy, thisPoint.Vx);
-            //    Console.WriteLine("X," + thisPoint.X + ",Y," + thisPoint.Y + ",Vx," + thisPoint.Vx + ",Vy," + thisPoint.Vy + ",Angle," + angle);
-            //}
-            //return smoothedVelocityTrajectory;
+        public static TrackedObject SyntheticTrajectory(System.Drawing.Point approachVertex, System.Drawing.Point exitVertex, RoadLine approachRoadLine, RoadLine exitRoadLine)
+        {
+            var initialState = new StateEstimate();
+            initialState.X = approachVertex.X;
+            initialState.Y = approachVertex.Y;
+            var p0 = new Point(Convert.ToInt32(initialState.X),Convert.ToInt32(initialState.Y));
+
+            var finalState = new StateEstimate();
+            finalState.X = exitVertex.X;
+            finalState.Y = exitVertex.Y;
+            var p2 = new Point(Convert.ToInt32(finalState.X), Convert.ToInt32(finalState.Y));
+
+            var p1 = new Point();
+
+            p1 = Intersection(approachRoadLine, exitRoadLine);            
+
+            TrackedObject syntheticTrajectory = new TrackedObject(initialState,0);
+
+            for (int i = 1; i < NumberOfInterpolatedStepsSyntheticTrajectory -1; i++)
+            {
+                var lastPoint = syntheticTrajectory.StateHistory.Last();
+                var u = Convert.ToDouble(i) / NumberOfInterpolatedStepsSyntheticTrajectory;
+                var p = QuadInterpolated(p0, p1, p2, u);
+                var derivative = QuadInterpolatedDerivative(p0,p1,p2,u);
+                var se = new StateEstimate();
+                se.X = p.X;
+                se.Y = p.Y;
+                se.Vx = derivative.X;
+                se.Vy = derivative.Y;
+                syntheticTrajectory.StateHistory.Add(se); 
+            }
+
+            syntheticTrajectory.StateHistory.Add(finalState);
+
+            syntheticTrajectory.StateHistory[0].Vx = syntheticTrajectory.StateHistory[1].Vx;
+            syntheticTrajectory.StateHistory[0].Vy = syntheticTrajectory.StateHistory[1].Vy;
+
+            syntheticTrajectory.StateHistory.Last().Vx = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vx;
+            syntheticTrajectory.StateHistory.Last().Vy = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vy;
+
             return syntheticTrajectory;
         }
 
@@ -87,7 +114,46 @@ namespace VTC.Kernel
             var p1 = new Point();
 
             //Use a straight-line approximation
-            
+            p1.X = Convert.ToInt32((approachRoadLine.ApproachCentroidX + approachRoadLine.ExitCentroidX) / 2);
+            p1.Y = Convert.ToInt32((approachRoadLine.ApproachCentroidY + approachRoadLine.ExitCentroidY) / 2);
+
+            TrackedObject syntheticTrajectory = new TrackedObject(initialState,0);
+
+            for (int i = 1; i < NumberOfInterpolatedStepsSyntheticTrajectory - 1; i++)
+            {
+                var se = new StateEstimate();
+                se.X = initialState.X + ((double)i/(NumberOfInterpolatedStepsSyntheticTrajectory-1)) * (finalState.X - initialState.X);
+                se.Y = initialState.Y + ((double)i/(NumberOfInterpolatedStepsSyntheticTrajectory-1)) * (finalState.Y - initialState.Y);
+                se.Vx = se.X - syntheticTrajectory.StateHistory.Last().X;
+                se.Vy = se.Y - syntheticTrajectory.StateHistory.Last().Y;
+                syntheticTrajectory.StateHistory.Add(se);
+            }
+
+            syntheticTrajectory.StateHistory.Add(finalState);
+
+            syntheticTrajectory.StateHistory[0].Vx = syntheticTrajectory.StateHistory[1].Vx;
+            syntheticTrajectory.StateHistory[0].Vy = syntheticTrajectory.StateHistory[1].Vy;
+            syntheticTrajectory.StateHistory.Last().Vx = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vx;
+            syntheticTrajectory.StateHistory.Last().Vy = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vy;
+
+            return syntheticTrajectory;
+        }
+
+        public static TrackedObject SyntheticTrajectory(System.Drawing.Point approachVertex, System.Drawing.Point exitVertex, RoadLine approachRoadLine)
+        {
+            var initialState = new StateEstimate();
+            initialState.X = approachVertex.X;
+            initialState.Y = approachVertex.Y;
+            var p0 = new Point(Convert.ToInt32(initialState.X),Convert.ToInt32(initialState.Y));
+
+            var finalState = new StateEstimate();
+            finalState.X = exitVertex.X;
+            finalState.Y = exitVertex.Y;
+            var p2 = new Point(Convert.ToInt32(finalState.X), Convert.ToInt32(finalState.Y));
+
+            var p1 = new Point();
+
+            //Use a straight-line approximation
             p1.X = Convert.ToInt32((approachRoadLine.ApproachCentroidX + approachRoadLine.ExitCentroidX) / 2);
             p1.Y = Convert.ToInt32((approachRoadLine.ApproachCentroidY + approachRoadLine.ExitCentroidY) / 2);
 
@@ -258,16 +324,9 @@ namespace VTC.Kernel
         /// <returns></returns>
         public static Point QuadInterpolated(Point p0, Point p1, Point p2, double u)
         {
-            var b01 = new Point();
-            var b11 = new Point();
             var b02 = new Point();
 
             double b01_X, b01_Y, b11_X, b11_Y;
-
-            //b01.X = Convert.ToInt32((1 - u) * p0.X + u * p1.X);
-            //b01.Y = Convert.ToInt32((1 - u) * p0.Y + u * p0.Y);
-            //b11.X = Convert.ToInt32((1 - u) * p1.X + u * p2.X);
-            //b11.Y = Convert.ToInt32((1 - u) * p1.Y + u * p2.Y);
 
             b01_X = (1 - u) * p0.X + u * p1.X;
             b01_Y = (1 - u) * p0.Y + u * p0.Y;
@@ -276,6 +335,31 @@ namespace VTC.Kernel
 
             b02.X = Convert.ToInt32((1 - u) * b01_X + u * b11_X);
             b02.Y = Convert.ToInt32((1 - u) * b01_Y + u * b11_Y);
+
+            return b02;
+        }
+
+        /// <summary>
+        /// 2nd-order (quadratic) Bezier interpolation of two lines
+        /// </summary>
+        /// <param name="p0"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <param name="u"></param>
+        /// <returns></returns>
+        public static Point QuadInterpolatedDerivative(Point p0, Point p1, Point p2, double u)
+        {
+            var b02 = new Point();
+
+            double b01_X, b01_Y, b11_X, b11_Y;
+
+            b01_X = (1 - u) * p0.X + u * p1.X;
+            b01_Y = (1 - u) * p0.Y + u * p0.Y;
+            b11_X = (1 - u) * p1.X + u * p2.X;
+            b11_Y = (1 - u) * p1.Y + u * p2.Y;
+
+            b02.X = Convert.ToInt32(b11_X - b01_X);
+            b02.Y = Convert.ToInt32(b11_Y - b01_Y);
 
             return b02;
         }

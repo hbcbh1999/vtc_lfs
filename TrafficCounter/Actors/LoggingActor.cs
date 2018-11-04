@@ -48,8 +48,6 @@ namespace VTC.Actors
         private RegionConfig _regionConfig;
         private EventConfig _eventConfig;
         private string _currentVideoName = "Unknown video";
-        private int _width = 640;
-        private int _height = 480;
 
         private MultipleTrajectorySynthesizer mts;
 
