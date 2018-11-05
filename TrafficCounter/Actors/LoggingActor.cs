@@ -317,13 +317,13 @@ namespace VTC.Actors
                         //3a. Only pad with crossing-movements if we're looking at Person stats
                         if((modified_prototype.TurnType == Turn.Crossing) && objectType == ObjectType.Person)
                         { 
-                            turnStats.Add(m,0);    
+                            turnStats.Add(modified_prototype,0);    
                         }
                         
                         //3a. Only pad with road movements if we're looking at vehicle (anything other than Person) stats
                         if((modified_prototype.TurnType != Turn.Crossing) && objectType != ObjectType.Person)
                         { 
-                            turnStats.Add(m,0);    
+                            turnStats.Add(modified_prototype,0);    
                         }
                     }
                 }
@@ -520,6 +520,7 @@ namespace VTC.Actors
             catch (Exception ex)
             {
                 //TODO: Deal with exception
+                Logger.Log(LogLevel.Error, ex);
             }
         }
 
@@ -703,14 +704,22 @@ namespace VTC.Actors
 
         private void CopyGroundTruth(string groundTruthPath)
         {
-            if (groundTruthPath == null)
+            try
             {
-                Log("Logging actor: Ground truth file path is null.", LogLevel.Info);
-                return;
+                if (groundTruthPath == null)
+                {
+                    Log("Logging actor: Ground truth file path is null.", LogLevel.Info);
+                    return;
+                }
+                var folderPath = VTCPaths.FolderPath(_currentVideoName);
+                var filepath = Path.Combine(folderPath, "Manual counts.json");
+                    File.Copy(groundTruthPath, filepath, true);
             }
-            var folderPath = VTCPaths.FolderPath(_currentVideoName);
-            var filepath = Path.Combine(folderPath, "Manual counts.json");
-                File.Copy(groundTruthPath, filepath, true);
+            catch(Exception ex)
+            {
+                Logger.Log(LogLevel.Error, ex);
+            }
+            
         }
 
         private void LogVideoMetadata(VideoMetadata vm)

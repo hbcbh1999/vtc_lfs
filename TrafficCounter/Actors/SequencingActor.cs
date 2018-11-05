@@ -92,14 +92,7 @@ namespace VTC.Actors
                 _loggingActor.Tell(new LogMessage("SequencingActor thinks a non-existant job has completed. This can happen with unreliable IP-camera streams.", LogLevel.Error));
                 return;
             }
-
-            var vprm = new VideoProcessingCompleteNotificationMessage();
-            vprm.JobGuid = _currentJob.JobGuid;
-            vprm.ConfigurationName = _currentJob.RegionConfiguration.Title;
-            vprm.VideoFilePath = _currentJob.VideoPath;
-            vprm.OutputFolderPath = VTC.Common.VTCPaths.FolderPath(_currentVideoName);
-            vprm.ManualCountsPath = _currentJob.GroundTruthPath;
-            _automationProcessingCompleteMessageQueue.Send(vprm);
+            
             DequeueVideo();
         }
 
@@ -137,8 +130,8 @@ namespace VTC.Actors
             }
             else
             {
-                UserLog("Batch complete.");
-                UserLog("Movement counts saved to desktop.");
+                //UserLog("Batch complete.");
+                //UserLog("Movement counts saved to desktop.");
             }
         }
 
