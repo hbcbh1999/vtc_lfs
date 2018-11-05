@@ -28,10 +28,15 @@ namespace VTC.Reporting
 
                 string filepathWithExtension = filePath + ".json";
                 if (!File.Exists(filepathWithExtension))
-                    File.Create(filepathWithExtension);
+                {
+                    var fs = File.Create(filepathWithExtension); 
+                    fs.Close();
+                }
 
                 using (var sw = new StreamWriter(filepathWithExtension, true))
+                { 
                     sw.WriteLine(logString);
+                }
             }
             catch (Exception e)
             {

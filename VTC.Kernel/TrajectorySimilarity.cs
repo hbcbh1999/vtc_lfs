@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,7 +84,7 @@ namespace VTC.Kernel
                 var angleDiff = CompareAngles(iv1, iv2);
                 var velocityMagnitude = Math.Sqrt(Math.Pow(iv1.x,2) + Math.Pow(iv1.y,2));
                 var thisPointCost = POSITION_MULTIPLIER*positionCost + ANGLE_MULTIPLIER*angleDiff*velocityMagnitude;
-                Console.WriteLine("TotalCost," + thisPointCost + ",PositionCost," + positionCost + ",AngleCost," + angleDiff + ",Angle1," + iv1.AngleRad() + ",Angle2," + iv2.AngleRad() + ",Vx1," + iv1.x + ",Vy1," + iv1.y + ",Vx2," + iv2.x + ",Vy2," + iv2.y);
+                //Console.WriteLine("TotalCost," + thisPointCost + ",PositionCost," + positionCost + ",AngleCost," + angleDiff + ",Angle1," + iv1.AngleRad() + ",Angle2," + iv2.AngleRad() + ",Vx1," + iv1.x + ",Vy1," + iv1.y + ",Vx2," + iv2.x + ",Vy2," + iv2.y);
                 cost += thisPointCost;
             }
 
@@ -92,7 +93,7 @@ namespace VTC.Kernel
             var curvatureDifference = Math.Abs(curvature1 - curvature2);
             cost += curvatureDifference*CURVATURE_MULTIPLIER;
             
-            Console.WriteLine("Final cost: " + cost);
+            //Console.WriteLine("Final cost: " + cost);
             return cost;
         }
 
@@ -197,23 +198,24 @@ namespace VTC.Kernel
             List<Movement> trajectoryPrototypes, string classType)
         {
             var match = trajectoryPrototypes.First();
-            var matchedTrajectories = new List<MatchTrajectory>();
-            
-            foreach (var tp in trajectoryPrototypes)
+            var matchedTrajectories = new ConcurrentBag<MatchTrajectory>();
+           
+            Parallel.ForEach(trajectoryPrototypes, (tp) =>
             {
                 var mt = new MatchTrajectory(tp.Approach, tp.Exit, tp.TrafficObjectType, tp.TurnType,tp.StateEstimates, 0);
                 bool isValidPersonMatch = classType.ToLower() == "person" && tp.TrafficObjectType == ObjectType.Person;
                 bool isValidVehicleMatch = classType.ToLower() != "person" && tp.TrafficObjectType != ObjectType.Person;
                 if(isValidPersonMatch || isValidVehicleMatch)
                 {
-                    Console.WriteLine("Comparing " + mt.Approach + " to " + mt.Exit);
+                    //Console.WriteLine("Comparing " + mt.Approach + " to " + mt.Exit);
                     mt.matchCost = PathIntegralCost(matchTrajectory,mt.StateEstimates);
                     matchedTrajectories.Add(mt);
                 }
-            }
+            });
 
-            matchedTrajectories.Sort(new MatchTrajectoryComparer());
-            match = matchedTrajectories.FirstOrDefault();
+            var sortedMatchTrajectores = matchedTrajectories.ToList<MatchTrajectory>();
+            sortedMatchTrajectores.Sort(new MatchTrajectoryComparer());
+            match = sortedMatchTrajectores.FirstOrDefault();
             return match;
         }
 

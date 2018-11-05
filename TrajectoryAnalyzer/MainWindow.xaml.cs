@@ -159,6 +159,27 @@ namespace TrajectoryAnalyzer
 
             var m = ParseAsMovement(trajectoryString);
 
+            if(filterSyntheticCheckbox.IsChecked.Value)
+            { 
+                if(approachComboBox.SelectedItem != null)
+                {
+                    selectedApproach = approachComboBox.SelectedItem.ToString();
+                    if(m.Approach != selectedApproach && selectedApproach != "Any")
+                    {
+                        return;
+                    }        
+                }
+
+                if(exitComboxBox.SelectedItem != null)
+                { 
+                    selectedExit = exitComboxBox.SelectedItem.ToString();
+                    if(m.Exit != selectedExit && selectedExit != "Any")
+                    {
+                        return;
+                    }
+                }
+            }
+
             if(extrapolateCheckbox.IsChecked.Value)
             {
                 var extrap = TrajectoryExtrapolator.ExtrapolatedTrajectory(m.StateEstimates, width, height);
@@ -232,8 +253,11 @@ namespace TrajectoryAnalyzer
 
             if(showEndpointsCheckbox.IsChecked.Value)
             { 
-                drawingContext.DrawText(new FormattedText("Start", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 18, Brushes.Red), new Point(firstMeasurement.X, firstMeasurement.Y));
-                drawingContext.DrawText(new FormattedText("End", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 18, Brushes.Red), new Point(lastMeasurement.X, lastMeasurement.Y));
+                //drawingContext.DrawText(new FormattedText("Start", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 18, Brushes.Red), new Point(firstMeasurement.X, firstMeasurement.Y));
+                //drawingContext.DrawText(new FormattedText("End", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 18, Brushes.Red), new Point(lastMeasurement.X, lastMeasurement.Y));
+
+                drawingContext.DrawEllipse(Brushes.Yellow, new  System.Windows.Media.Pen(Brushes.Yellow,1), new Point(firstMeasurement.X, firstMeasurement.Y), 3, 3);
+                drawingContext.DrawEllipse(Brushes.Purple, new  System.Windows.Media.Pen(Brushes.Purple,1), new Point(lastMeasurement.X, lastMeasurement.Y), 3, 3);
             }
            
         }
@@ -261,12 +285,13 @@ namespace TrajectoryAnalyzer
                 {
 
                     RenderBackground(drawingContext);
-                    RenderTrajectory(trajectoryString, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Red, 0.5);
 
                     foreach (var proto in prototypeTrajectoriesList)
                     {
-                        RenderTrajectory(proto, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Blue, 4);
+                        RenderTrajectory(proto, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Blue, 0.5);
                     }
+
+                    RenderTrajectory(trajectoryString, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Red, 0.5);
                 }
                 var image = new DrawingImage(visual.Drawing);
                 trajectoryRenderingImage.Source = image;
@@ -307,7 +332,6 @@ namespace TrajectoryAnalyzer
                 {
                     trajectoryMatchListView.Items.Add(me.explanation);
                 }
-                //var matched_movement = TrajectorySimilarity.MatchNearestTrajectory(tracked_object, mostLikelyClassType, 0, synthetics);
                 
                 netMovementBox.Content = tracked_object.NetMovement();
                 numSamplesBox.Content = movement.StateEstimates.Count();
@@ -389,7 +413,7 @@ namespace TrajectoryAnalyzer
 
                 foreach (var proto in prototypeTrajectoriesList)
                 {
-                    RenderTrajectory(proto, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Blue, 4);
+                    RenderTrajectory(proto, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Blue, .5);
                 }
 
                 foreach (var t in selectedTrajectoriesList)

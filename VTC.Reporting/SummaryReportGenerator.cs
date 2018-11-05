@@ -320,7 +320,6 @@ namespace VTC.Reporting
                         var exit = strings[1];
 
                         var movement = new Movement(approach, exit, turnType, objectType, null,0);
-                        Console.WriteLine("Adding movement:" + movement.ToString());
                         mcr.MovementCt.Add(movement,movementCount);
                     }
 

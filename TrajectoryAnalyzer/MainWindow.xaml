@@ -62,6 +62,7 @@
                 <Label Content="Path length:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="143" Height="26" RenderTransformOrigin="1.663,1.154"/>
                 <Label x:Name="pathLengthBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
             </StackPanel>
+            <CheckBox x:Name="filterSyntheticCheckbox" Content="Filter Synthetic Trajectories" Canvas.Left="246" Canvas.Top="140"/>
         </Canvas>
         <Image x:Name="trajectoryRenderingImage" Margin="50,50,100,50" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill" Height="500"/>
     </StackPanel>

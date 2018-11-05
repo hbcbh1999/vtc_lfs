@@ -370,6 +370,7 @@ namespace VTC.Actors
 
         }
 
+
         private void LogDetections(List<Measurement> detections)
         {
             try

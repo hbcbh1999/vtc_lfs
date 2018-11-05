@@ -11,50 +11,7 @@ namespace VTC.Kernel
 {
     public static class PolygonTrajectorySynthesizer
     {
-        private const int NumberOfInterpolatedStepsSyntheticTrajectory = 50;
-
-        public static TrackedObject SyntheticTrajectory(Polygon approach, Polygon exit, RoadLine approachRoadLine, RoadLine exitRoadLine)
-        {
-            var initialState = new StateEstimate();
-            initialState.X = approach.Centroid.X;
-            initialState.Y = approach.Centroid.Y;
-            var p0 = new Point(Convert.ToInt32(initialState.X),Convert.ToInt32(initialState.Y));
-
-            var finalState = new StateEstimate();
-            finalState.X = exit.Centroid.X;
-            finalState.Y = exit.Centroid.Y;
-            var p2 = new Point(Convert.ToInt32(finalState.X), Convert.ToInt32(finalState.Y));
-
-            var p1 = new Point();
-
-            p1 = Intersection(approachRoadLine, exitRoadLine);            
-
-            TrackedObject syntheticTrajectory = new TrackedObject(initialState,0);
-
-            for (int i = 1; i < NumberOfInterpolatedStepsSyntheticTrajectory -1; i++)
-            {
-                var lastPoint = syntheticTrajectory.StateHistory.Last();
-                var u = Convert.ToDouble(i) / NumberOfInterpolatedStepsSyntheticTrajectory;
-                var p = QuadInterpolated(p0, p1, p2, u);
-                var derivative = QuadInterpolatedDerivative(p0,p1,p2,u);
-                var se = new StateEstimate();
-                se.X = p.X;
-                se.Y = p.Y;
-                se.Vx = derivative.X;
-                se.Vy = derivative.Y;
-                syntheticTrajectory.StateHistory.Add(se); 
-            }
-
-            syntheticTrajectory.StateHistory.Add(finalState);
-
-            syntheticTrajectory.StateHistory[0].Vx = syntheticTrajectory.StateHistory[1].Vx;
-            syntheticTrajectory.StateHistory[0].Vy = syntheticTrajectory.StateHistory[1].Vy;
-
-            syntheticTrajectory.StateHistory.Last().Vx = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vx;
-            syntheticTrajectory.StateHistory.Last().Vy = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vy;
-
-            return syntheticTrajectory;
-        }
+        private const int NumberOfInterpolatedStepsSyntheticTrajectory = 6;
 
         public static TrackedObject SyntheticTrajectory(System.Drawing.Point approachVertex, System.Drawing.Point exitVertex, RoadLine approachRoadLine, RoadLine exitRoadLine)
         {
@@ -93,46 +50,6 @@ namespace VTC.Kernel
             syntheticTrajectory.StateHistory[0].Vx = syntheticTrajectory.StateHistory[1].Vx;
             syntheticTrajectory.StateHistory[0].Vy = syntheticTrajectory.StateHistory[1].Vy;
 
-            syntheticTrajectory.StateHistory.Last().Vx = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vx;
-            syntheticTrajectory.StateHistory.Last().Vy = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vy;
-
-            return syntheticTrajectory;
-        }
-
-        public static TrackedObject SyntheticTrajectory(Polygon approach, Polygon exit, RoadLine approachRoadLine)
-        {
-            var initialState = new StateEstimate();
-            initialState.X = approach.Centroid.X;
-            initialState.Y = approach.Centroid.Y;
-            var p0 = new Point(Convert.ToInt32(initialState.X),Convert.ToInt32(initialState.Y));
-
-            var finalState = new StateEstimate();
-            finalState.X = exit.Centroid.X;
-            finalState.Y = exit.Centroid.Y;
-            var p2 = new Point(Convert.ToInt32(finalState.X), Convert.ToInt32(finalState.Y));
-
-            var p1 = new Point();
-
-            //Use a straight-line approximation
-            p1.X = Convert.ToInt32((approachRoadLine.ApproachCentroidX + approachRoadLine.ExitCentroidX) / 2);
-            p1.Y = Convert.ToInt32((approachRoadLine.ApproachCentroidY + approachRoadLine.ExitCentroidY) / 2);
-
-            TrackedObject syntheticTrajectory = new TrackedObject(initialState,0);
-
-            for (int i = 1; i < NumberOfInterpolatedStepsSyntheticTrajectory - 1; i++)
-            {
-                var se = new StateEstimate();
-                se.X = initialState.X + ((double)i/(NumberOfInterpolatedStepsSyntheticTrajectory-1)) * (finalState.X - initialState.X);
-                se.Y = initialState.Y + ((double)i/(NumberOfInterpolatedStepsSyntheticTrajectory-1)) * (finalState.Y - initialState.Y);
-                se.Vx = se.X - syntheticTrajectory.StateHistory.Last().X;
-                se.Vy = se.Y - syntheticTrajectory.StateHistory.Last().Y;
-                syntheticTrajectory.StateHistory.Add(se);
-            }
-
-            syntheticTrajectory.StateHistory.Add(finalState);
-
-            syntheticTrajectory.StateHistory[0].Vx = syntheticTrajectory.StateHistory[1].Vx;
-            syntheticTrajectory.StateHistory[0].Vy = syntheticTrajectory.StateHistory[1].Vy;
             syntheticTrajectory.StateHistory.Last().Vx = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vx;
             syntheticTrajectory.StateHistory.Last().Vy = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vy;
 
@@ -217,12 +134,9 @@ namespace VTC.Kernel
         {
             TrajectoryVector derivativeEstimate = new TrajectoryVector();
             var centerDerivative = CenterDerivative(trackedObject, index);
-            //var neighborsVelocity = NeighborsVelocity(trackedObject, index);
 
             derivativeEstimate.x = centerDerivative.x;
             derivativeEstimate.y = centerDerivative.y;
-            //derivativeEstimate.x = (centerDerivative.x + neighborsVelocity.x) / 2;
-            //derivativeEstimate.y = (centerDerivative.x + neighborsVelocity.y) / 2;
 
             return derivativeEstimate;
         }
