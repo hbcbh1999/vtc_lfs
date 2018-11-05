@@ -130,8 +130,8 @@ namespace VTC.Actors
             }
             else
             {
-                //UserLog("Batch complete.");
-                //UserLog("Movement counts saved to desktop.");
+                UserLog("Batch complete.");
+                UserLog("Movement counts saved to desktop.");
             }
         }
 
