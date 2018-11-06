@@ -187,10 +187,10 @@ namespace VTC.Actors
             {
                 _videoTime += TimeSpan.FromSeconds(timestep);
 
-                if (_videoTime - _lastLogVideoTime > TimeSpan.FromMilliseconds(_regionConfig.StateUploadIntervalMs))
-                {
-                    _lastLogVideoTime = _videoTime;
-                }
+                //if (_videoTime - _lastLogVideoTime > TimeSpan.FromMilliseconds(_regionConfig.StateUploadIntervalMs))
+                //{
+                //    _lastLogVideoTime = _videoTime;
+                //}
 
                 if (_videoTime - _last5MinbinTime > TimeSpan.FromMinutes(5))
                 {

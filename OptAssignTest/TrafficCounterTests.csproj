@@ -97,7 +97,6 @@
     <Compile Include="Framework\SectionPath.cs" />
     <Compile Include="SizeChangeTests.cs" />
     <Compile Include="TurnsTests.cs" />
-    <Compile Include="ConnectivityTest.cs" />
     <Compile Include="VisibilityLossTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="TrajectoryDetectionTest.cs" />

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using VTC.Common.RegionConfig;
@@ -373,6 +374,12 @@ namespace VTC.RegionConfiguration
             int x_offset = 20;
             panel1.Controls.Clear();
 
+            ToolTip tp = new ToolTip();
+            tp.AutoPopDelay = 10000;
+            tp.InitialDelay = 500;
+            tp.ReshowDelay = 0;
+            tp.ShowAlways = true;
+
             foreach (var p in typeof(RegionConfig).GetProperties())
             {
                 if (p.PropertyType.Name == "Boolean")
@@ -382,6 +389,11 @@ namespace VTC.RegionConfiguration
                     newCheckbox.Text = p.Name;
                     currentHeight += newCheckbox.Height + 5;
                     newCheckbox.Name = p.Name + "checkBox";
+                    var description = p.GetCustomAttribute<DescriptionAttribute>().Description;
+                    if(description != null)
+                    {
+                        tp.SetToolTip(newCheckbox,description); 
+                    }
                     panel1.Controls.Add(newCheckbox);
                     newCheckbox.DataBindings.Add("Checked", _regionConfigurationsBindingSource, p.Name, true, DataSourceUpdateMode.OnPropertyChanged);
                 }
@@ -394,6 +406,12 @@ namespace VTC.RegionConfiguration
                     newLabel.Text = p.Name;
                     currentHeight += newControl.Height + 5;
                     newControl.Name = p.Name + "textBox";
+                    var description = p.GetCustomAttribute<DescriptionAttribute>().Description;
+                    if(description != null)
+                    {
+                        tp.SetToolTip(newControl,description); 
+                        tp.SetToolTip(newLabel,description); 
+                    }
                     panel1.Controls.Add(newControl);
                     panel1.Controls.Add(newLabel);
                     newControl.DataBindings.Add("Text", _regionConfigurationsBindingSource, p.Name, true, DataSourceUpdateMode.OnPropertyChanged);

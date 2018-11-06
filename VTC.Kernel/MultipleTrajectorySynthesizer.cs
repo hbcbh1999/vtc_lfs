@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using VTC.Common;
 using VTC.Common.RegionConfig;
 using VTC.Reporting;
+using System.Threading;
 
 namespace VTC.Kernel
 {
@@ -78,24 +79,24 @@ namespace VTC.Kernel
             //Generate turn movements
             var turnMovements = new List<Movement>();
 
-            var road12Movements = RoadPairToTurnMovements(approach1, exit1, approach2, exit2,Turn.Left, ObjectType.Car, 10);
+            var road12Movements = RoadPairToTurnMovements(approach1, exit1, approach2, exit2,Turn.Left, ObjectType.Car, 12);
             turnMovements.AddRange(road12Movements);
-            var road21Movements = RoadPairToTurnMovements(approach2, exit2, approach1, exit1,Turn.Right, ObjectType.Car, 10);
+            var road21Movements = RoadPairToTurnMovements(approach2, exit2, approach1, exit1,Turn.Right, ObjectType.Car, 12);
             turnMovements.AddRange(road21Movements);
 
-            var road23Movements = RoadPairToTurnMovements(approach2, exit2, approach3, exit3,Turn.Left, ObjectType.Car, 10);
+            var road23Movements = RoadPairToTurnMovements(approach2, exit2, approach3, exit3,Turn.Left, ObjectType.Car, 12);
             turnMovements.AddRange(road23Movements);
-            var road32Movements = RoadPairToTurnMovements(approach3, exit3, approach2, exit2,Turn.Right, ObjectType.Car, 10);
+            var road32Movements = RoadPairToTurnMovements(approach3, exit3, approach2, exit2,Turn.Right, ObjectType.Car, 12);
             turnMovements.AddRange(road32Movements);
 
-            var road34Movements = RoadPairToTurnMovements(approach3, exit3, approach4, exit4,Turn.Left, ObjectType.Car, 10);
+            var road34Movements = RoadPairToTurnMovements(approach3, exit3, approach4, exit4,Turn.Left, ObjectType.Car, 12);
             turnMovements.AddRange(road34Movements);
-            var road43Movements = RoadPairToTurnMovements(approach4, exit4, approach3, exit3,Turn.Right, ObjectType.Car, 10);
+            var road43Movements = RoadPairToTurnMovements(approach4, exit4, approach3, exit3,Turn.Right, ObjectType.Car, 12);
             turnMovements.AddRange(road43Movements);
 
-            var road41Movements = RoadPairToTurnMovements(approach4, exit4, approach1, exit1,Turn.Left, ObjectType.Car, 10);
+            var road41Movements = RoadPairToTurnMovements(approach4, exit4, approach1, exit1,Turn.Left, ObjectType.Car, 12);
             turnMovements.AddRange(road41Movements);
-            var road14Movements = RoadPairToTurnMovements(approach1, exit1, approach4, exit4,Turn.Right, ObjectType.Car, 10);
+            var road14Movements = RoadPairToTurnMovements(approach1, exit1, approach4, exit4,Turn.Right, ObjectType.Car, 12);
             turnMovements.AddRange(road14Movements);
 
             foreach(var m in turnMovements)
@@ -192,53 +193,53 @@ namespace VTC.Kernel
             return movementsList;
         }
 
-        List<Movement> RoadPairToTurnMovements(Polygon approach1, Polygon exit1, Polygon approach2, Polygon exit2, Turn turnType, ObjectType objectType, int max)
+        List<Movement> RoadPairToTurnMovements(Polygon approachA, Polygon exitA, Polygon approachB, Polygon exitB, Turn turnType, ObjectType objectType, int max)
         { 
              var movements = new ConcurrentBag<Movement>();
 
-            if(approach1.Count < 1 || exit1.Count < 1 || approach2.Count < 1 || exit2.Count < 1)
+            if(approachA.Count < 1 || exitA.Count < 1 || approachB.Count < 1 || exitB.Count < 1)
             {
                 return movements.ToList();
             }
 
             //Build lists of possible approach points
-            var approach1VertexList = approach1.ToList();
-            var approach1Centroid = new System.Drawing.Point();
-            approach1Centroid.X = approach1.Centroid.X;
-            approach1Centroid.Y = approach1.Centroid.Y;
-            approach1VertexList.Add(approach1Centroid);
+            var approachAVertexList = approachA.ToList();
+            var approachACentroid = new System.Drawing.Point();
+            approachACentroid.X = approachA.Centroid.X;
+            approachACentroid.Y = approachA.Centroid.Y;
+            approachAVertexList.Add(approachACentroid);
 
-            var approach2VertexList = approach2.ToList();
-            var approach2Centroid = new System.Drawing.Point();
-            approach2Centroid.X = approach2.Centroid.X;
-            approach2Centroid.Y = approach2.Centroid.Y;
-            approach2VertexList.Add(approach2Centroid);
+            var approachBVertexList = approachB.ToList();
+            var approachBCentroid = new System.Drawing.Point();
+            approachBCentroid.X = approachB.Centroid.X;
+            approachBCentroid.Y = approachB.Centroid.Y;
+            approachBVertexList.Add(approachBCentroid);
 
             //Build list of possible exit points
-            var exit1VertexList = exit1.ToList();
-            var exit1Centroid = new System.Drawing.Point();
-            exit1Centroid.X = exit1.Centroid.X;
-            exit1Centroid.Y = exit1.Centroid.Y;
-            exit1VertexList.Add(exit1Centroid);
+            var exitAVertexList = exitA.ToList();
+            var exitACentroid = new System.Drawing.Point();
+            exitACentroid.X = exitA.Centroid.X;
+            exitACentroid.Y = exitA.Centroid.Y;
+            exitAVertexList.Add(exitACentroid);
 
-            var exit2VertexList = exit2.ToList();
-            var exit2Centroid = new System.Drawing.Point();
-            exit2Centroid.X = exit2.Centroid.X;
-            exit2Centroid.Y = exit2.Centroid.Y;
-            exit2VertexList.Add(exit2Centroid);
+            var exitBVertexList = exitB.ToList();
+            var exitBCentroid = new System.Drawing.Point();
+            exitBCentroid.X = exitB.Centroid.X;
+            exitBCentroid.Y = exitB.Centroid.Y;
+            exitBVertexList.Add(exitBCentroid);
 
-            Parallel.ForEach(approach1VertexList, approachVertex => 
+            Parallel.ForEach(approachAVertexList, approachVertex => 
             { 
-                foreach(var exitVertex in exit2VertexList)
+                foreach(var exitVertex in exitBVertexList)
                 {
-                    var approachRoadlines = GenerateRoadlinesFromVertex(approachVertex,exit1VertexList);
-                    var exitRoadlines = GenerateRoadlinesToVertex(approach2VertexList, exitVertex);
+                    var approachRoadlines = GenerateRoadlinesFromVertex(approachVertex,exitAVertexList);
+                    var exitRoadlines = GenerateRoadlinesToVertex(approachBVertexList, exitVertex);
                     foreach(var approachRoadline in approachRoadlines)
                     { 
                         foreach(var exitRoadline in exitRoadlines)
                         { 
                             var trackedObject = PolygonTrajectorySynthesizer.SyntheticTrajectory(approachVertex, exitVertex, approachRoadline, exitRoadline);
-                            var movement = new Movement(approach1.DisplayName, exit2.DisplayName, turnType, objectType, trackedObject.StateHistory,0);
+                            var movement = new Movement(approachA.DisplayName, exitB.DisplayName, turnType, objectType, trackedObject.StateHistory,0);
                             movements.Add(movement);
                         }
                     }
@@ -247,9 +248,11 @@ namespace VTC.Kernel
             
             var movementsList = movements.ToList();
 
-            //Enforce max number of elements to be returned; downsample by 10 while we have too many elements.
+            MyExtensions.Shuffle(movementsList);
+
+            //Enforce max number of elements to be returned; downsample by 2 while we have too many elements.
             while(movementsList.Count > max)
-            { 
+            {   
                 movementsList = movementsList.Where( (x,i) => i % 2 == 0).ToList();
             }
 
@@ -286,4 +289,32 @@ namespace VTC.Kernel
             return roadlines;
         }
     }
+
+  public static class ThreadSafeRandom
+  {
+      [ThreadStatic] private static Random Local;
+
+      public static Random ThisThreadsRandom
+      {
+        //Note: We explicitly do not want a random seed here. We want a pseudo-random shuffle of the list so that count results are the same
+        //from one run to the next, one PC to the next, etc.
+          get { return Local ?? (Local = new Random(0)); }
+      }
+  }
+
+  static class MyExtensions
+  {
+    public static void Shuffle<T>(this IList<T> list)
+    {
+      int n = list.Count;
+      while (n > 1)
+      {
+        n--;
+        int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
+        T value = list[k];
+        list[k] = list[n];
+        list[n] = value;
+      }
+    }
+  }
 }
