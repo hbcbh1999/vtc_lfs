@@ -87,6 +87,163 @@ namespace VTC.Reporting
             public long TotalCrossing;
         }
 
+        public static MovementCountRowList Add(MovementCountRowList mcrl1, MovementCountRowList mcrl2)
+        {
+            if(mcrl1.Count != mcrl2.Count)
+            {
+                throw new ArgumentException("Movement-count row lists must contain the same number of elements to be added.");
+            }
+
+            var mcrl_sum = new MovementCountRowList();
+            for(int i=0;i<mcrl1.Count;i++)
+            {
+                var mcr_new = new MovementCountRow();
+                mcr_new.Time = mcrl1[i].Time;
+                foreach(var k in mcrl1[i].MovementCt.Keys)
+                {
+                    foreach(var v in mcrl2[i].MovementCt.Keys)
+                    {
+                        if(k.Approach == v.Approach && k.Exit == v.Exit)
+                        {
+                            var movement_new = new Movement(k.Approach, k.Exit, k.TurnType, ObjectType.Unknown, new List<StateEstimate>(), 0);
+                            mcr_new.MovementCt[movement_new] = mcrl1[i].MovementCt[k] + mcrl2[i].MovementCt[v];
+                            break;
+                        }
+                    }
+                }
+                mcrl_sum.Add(mcr_new);
+            }
+            return mcrl_sum;
+        }
+
+        public static void GenerateAllVehiclesSummaryReportHTML(string exportPath, string location, DateTime videoTime)
+        { 
+            try
+            {
+                //parse CSV files
+                var filename5minCar = "5-minute binned counts [car].csv";
+                var filename5minTruck = "5-minute binned counts [truck].csv";
+                var filename5minBus = "5-minute binned counts [bus].csv";
+                var filename5minMotorcycle = "5-minute binned counts [motorcycle].csv";
+                var filepath5MinCar = Path.Combine(exportPath, filename5minCar);
+                var filepath5MinTruck = Path.Combine(exportPath, filename5minTruck);
+                var filepath5MinBus = Path.Combine(exportPath, filename5minBus);
+                var filepath5MinMotorcycle = Path.Combine(exportPath, filename5minMotorcycle);
+
+                var filename15minCar = "15-minute binned counts [car].csv";
+                var filename15minTruck = "15-minute binned counts [truck].csv";
+                var filename15minBus = "15-minute binned counts [bus].csv";
+                var filename15minMotorcycle = "15-minute binned counts [motorcycle].csv";
+                var filepath15MinCar = Path.Combine(exportPath, filename15minCar);
+                var filepath15MinTruck = Path.Combine(exportPath, filename15minTruck);
+                var filepath15MinBus = Path.Combine(exportPath, filename15minBus);
+                var filepath15MinMotorcycle = Path.Combine(exportPath, filename15minMotorcycle);
+
+                var filename60minCar = "60-minute binned counts [car].csv";
+                var filename60minTruck = "60-minute binned counts [truck].csv";
+                var filename60minBus = "60-minute binned counts [bus].csv";
+                var filename60minMotorcycle = "60-minute binned counts [motorcycle].csv";
+                var filepath60MinCar = Path.Combine(exportPath, filename60minCar);
+                var filepath60MinTruck = Path.Combine(exportPath, filename60minTruck);
+                var filepath60MinBus = Path.Combine(exportPath, filename60minBus);
+                var filepath60MinMotorcycle = Path.Combine(exportPath, filename60minMotorcycle);                
+
+                var mcrl5minCar = ParseCSVToListCounts(filepath5MinCar);
+                var mcrl15minCar = ParseCSVToListCounts(filepath15MinCar);
+                var mcrl60minCar = ParseCSVToListCounts(filepath60MinCar);
+
+                var mcrl5minTruck = ParseCSVToListCounts(filepath5MinTruck);
+                var mcrl15minTruck = ParseCSVToListCounts(filepath15MinTruck);
+                var mcrl60minTruck = ParseCSVToListCounts(filepath60MinTruck);
+
+                var mcrl5minBus = ParseCSVToListCounts(filepath5MinBus);
+                var mcrl15minBus = ParseCSVToListCounts(filepath15MinBus);
+                var mcrl60minBus = ParseCSVToListCounts(filepath60MinBus);
+
+                var mcrl5minMotorcycle = ParseCSVToListCounts(filepath5MinMotorcycle);
+                var mcrl15minMotorcycle = ParseCSVToListCounts(filepath15MinMotorcycle);
+                var mcrl60minMotorcycle = ParseCSVToListCounts(filepath60MinMotorcycle);
+
+                var mcrl5minTotal = Add(Add(Add(mcrl5minCar, mcrl5minBus), mcrl5minTruck), mcrl5minMotorcycle);
+                var mcrl15minTotal = Add(Add(Add(mcrl15minCar, mcrl15minBus), mcrl15minTruck), mcrl15minMotorcycle);
+                var mcrl60minTotal = Add(Add(Add(mcrl60minCar, mcrl60minBus), mcrl60minTruck), mcrl60minMotorcycle);
+
+                //Populate tables
+                //Write summary statistics
+                //Generate HTML footer
+
+                var reportPath = Path.Combine(exportPath, "report [All vehicles].html");
+                string summaryReport = "";
+                summaryReport += "<!DOCTYPE html>";
+                summaryReport += "<html>";
+                summaryReport += "<head>";
+                summaryReport += Resources.headerString;
+                summaryReport += "</head>";
+                summaryReport += "<body>";
+
+                summaryReport += Resources.containerDivOpenTag;
+
+                summaryReport += Resources.docHeader.Replace("@date", videoTime.Date.ToString("yyyy'-'MM'-'dd")).Replace("@location", location); 
+                summaryReport += Resources.legendDiv;
+
+                summaryReport += Resources.rowTopBufferDivOpenTag; //summary statistics
+                summaryReport += "<h3>Summary statistics</h3>";
+
+                var a1Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 1");
+                var a2Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 2");
+                var a3Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 3");
+                var a4Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 4");
+                var summaryReportA1 = SummaryReportForApproach(a1Metrics, "Approach 1", mcrl5minTotal);
+                var summaryReportA2 = SummaryReportForApproach(a2Metrics, "Approach 2", mcrl5minTotal);
+                var summaryReportA3 = SummaryReportForApproach(a3Metrics, "Approach 3", mcrl5minTotal);
+                var summaryReportA4 = SummaryReportForApproach(a4Metrics, "Approach 4", mcrl5minTotal);
+
+                if (a1Metrics != null)
+                    summaryReport += summaryReportA1;
+
+                if (a2Metrics != null)
+                    summaryReport += summaryReportA2;
+
+                if (a3Metrics != null)
+                    summaryReport += summaryReportA3;
+
+                if (a4Metrics != null)
+                    summaryReport += summaryReportA4;
+
+                summaryReport += "</div>"; //summary statistics row close
+
+                if (mcrl60minTotal.Count > 0)
+                {
+                    summaryReport += AddRowOfApproachTables(mcrl60minTotal, "60");
+                }
+
+                if (mcrl15minTotal.Count > 0)
+                {
+                    summaryReport += AddRowOfApproachTables(mcrl15minTotal, "15");
+                }
+
+                if (mcrl5minTotal.Count > 0)
+                {
+                    summaryReport += AddRowOfApproachTables(mcrl5minTotal, "5");
+                }
+                
+                summaryReport += "</div>"; //Container close
+                summaryReport += Resources.footer.Replace("@date", DateTime.Now.Date.ToString("yyyy'-'MM'-'dd"));
+
+                summaryReport += "</body>";
+                summaryReport += "</html>";
+
+                File.WriteAllText(reportPath, summaryReport); //Save 
+            }
+            catch (IOException e)
+            {
+                Logger.Log(LogLevel.Error, e, e.Message);
+#if DEBUG
+                throw;
+#endif          
+            }
+        }
+
         public static void GenerateSummaryReportHTML(string exportPath, string location, DateTime videoTime, string objectType)
         {
             try
@@ -255,7 +412,7 @@ namespace VTC.Reporting
                     .Replace("@peakflow", fmetrics.PeakFlow.ToString())
                     .Replace("@peaktime", fmetrics.PeakTime.ToString("hh:mm"));
             summaryReport = summaryReport.Replace("@total", fmetrics.TotalFlow.ToString())
-                .Replace("@crossingleft", fmetrics.TotalCrossing.ToString());
+                .Replace("@crossing", fmetrics.TotalCrossing.ToString());
             summaryReport += "<br><br>";
             summaryReport += GenerateSparkline(approachCountRows, name);
             summaryReport += "</div>";

@@ -472,8 +472,13 @@ namespace VTC.Actors
                 SummaryReportGenerator.CopyAssetsToExportFolder(folderPath);
                 foreach(var type in Enum.GetValues(typeof(ObjectType)).Cast<ObjectType>())
                 {
-                    SummaryReportGenerator.GenerateSummaryReportHTML(folderPath, _currentVideoName, _videoTime, type.ToString().ToLower()); 
+                    if(type != ObjectType.Unknown)
+                    {
+                        SummaryReportGenerator.GenerateSummaryReportHTML(folderPath, _currentVideoName, _videoTime, type.ToString().ToLower());
+                    }
                 }
+
+                SummaryReportGenerator.GenerateAllVehiclesSummaryReportHTML(folderPath, _currentVideoName, _videoTime);
 
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
 

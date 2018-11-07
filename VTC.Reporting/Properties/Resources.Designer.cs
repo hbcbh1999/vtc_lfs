@@ -203,8 +203,7 @@ namespace VTC.Reporting.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;tr&gt;
         ///    &lt;td  class=&quot;time&quot;&gt;@time&lt;/td&gt;
-        ///    &lt;td&gt;@crossingleft&lt;/td&gt; 
-        ///	&lt;td&gt;@crossingright&lt;/td&gt;&lt;/tr&gt;.
+        ///    &lt;td&gt;@crossing&lt;/td&gt;&lt;/tr&gt;.
         /// </summary>
         internal static string tableCountRowSidewalk {
             get {
@@ -230,8 +229,7 @@ namespace VTC.Reporting.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;tr&gt;
         ///    &lt;td&gt;&lt;/td&gt;
-        ///    &lt;td class=&quot;turnlabel&quot;&gt;CrossingLeft&lt;/td&gt; 
-        ///	&lt;td class=&quot;turnlabel&quot;&gt;CrossingRight&lt;/td&gt;&lt;/tr&gt;.
+        ///    &lt;td class=&quot;turnlabel&quot;&gt;Crossing&lt;/td&gt;&lt;/tr&gt;.
         /// </summary>
         internal static string tableHeaderRowSidewalk {
             get {

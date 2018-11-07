@@ -196,8 +196,7 @@
   <data name="tableCountRowSidewalk" xml:space="preserve">
     <value>&lt;tr&gt;
     &lt;td  class="time"&gt;@time&lt;/td&gt;
-    &lt;td&gt;@crossingleft&lt;/td&gt; 
-	&lt;td&gt;@crossingright&lt;/td&gt;&lt;/tr&gt;</value>
+    &lt;td&gt;@crossing&lt;/td&gt;&lt;/tr&gt;</value>
   </data>
   <data name="tableHeaderRow" xml:space="preserve">
     <value>&lt;tr&gt;
@@ -211,7 +210,6 @@
   <data name="tableHeaderRowSidewalk" xml:space="preserve">
     <value>&lt;tr&gt;
     &lt;td&gt;&lt;/td&gt;
-    &lt;td class="turnlabel"&gt;CrossingLeft&lt;/td&gt; 
-	&lt;td class="turnlabel"&gt;CrossingRight&lt;/td&gt;&lt;/tr&gt;</value>
+    &lt;td class="turnlabel"&gt;Crossing&lt;/td&gt;&lt;/tr&gt;</value>
   </data>
 </root>
