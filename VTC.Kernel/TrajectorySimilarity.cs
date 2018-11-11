@@ -245,7 +245,7 @@ namespace VTC.Kernel
             return match;
         }
 
-        static StateEstimate NearestPointOnTrajectory(StateEstimate point, List<StateEstimate> trajectory)
+        public static StateEstimate NearestPointOnTrajectory(StateEstimate point, List<StateEstimate> trajectory)
         {
             return trajectory.OrderBy(se => StateEstimatesDistance(point, se)).First();
         }

@@ -264,6 +264,22 @@ namespace TrajectoryAnalyzer
             }
         }
 
+        private void RenderJoins(List<StateEstimate> trajectory1, List<StateEstimate> trajectory2, DrawingContext drawingContext, System.Windows.Media.Brush lineColor, double lineThickness)
+        {
+            //For each point on t1, find the nearest corresponding point on t2 while ensuring we only move forwards on t2.
+            var indexT2 = 0;
+            for(int i=0;i<trajectory1.Count;i++)
+            {
+                //Draw a line connecting these points.
+                var trajectory1StateEstimate = trajectory1[i];
+                var trajectory2NearestStateEstimate = TrajectorySimilarity.NearestPointOnTrajectory(trajectory1StateEstimate, trajectory2.GetRange(indexT2,trajectory2.Count()-indexT2));
+                indexT2 = trajectory2.IndexOf(trajectory2NearestStateEstimate);
+                drawingContext.DrawLine(new System.Windows.Media.Pen(lineColor, lineThickness),
+                        new Point(trajectory1StateEstimate.X, trajectory1StateEstimate.Y), new Point(trajectory2NearestStateEstimate.X, trajectory2NearestStateEstimate.Y));
+            }
+            
+        }
+
         private List<Movement> SyntheticPrototypes()
         {
             return prototypeTrajectoriesList.ToList();
@@ -419,6 +435,11 @@ namespace TrajectoryAnalyzer
                     if(selectedTrajectoriesList.Count == 1)
                     {
                         RenderTrajectory(t, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Red, 2.0); 
+
+                        foreach(var mwe in selectedPrototypeTrajectoriesList)
+                        {
+                            RenderJoins(t.StateEstimates,mwe.movement.StateEstimates, drawingContext, Brushes.Yellow, 0.5);    
+                        }
                     }
                     else
                     {
