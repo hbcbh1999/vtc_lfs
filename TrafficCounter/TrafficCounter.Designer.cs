@@ -47,7 +47,6 @@ namespace VTC
             this.timer5minute = new System.Windows.Forms.Timer(this.components);
             this.timer15minute = new System.Windows.Forms.Timer(this.components);
             this.timer60minute = new System.Windows.Forms.Timer(this.components);
-            this.fpsTextLabel = new System.Windows.Forms.Label();
             this.trackedObjectsTextbox = new System.Windows.Forms.TextBox();
             this.licenseCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
@@ -64,6 +63,9 @@ namespace VTC
             this.label6 = new System.Windows.Forms.Label();
             this.frameTextbox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.fpsTextbox = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.debugTextbox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // pushStateTimer
@@ -75,17 +77,17 @@ namespace VTC
             // timeActiveTextBox
             // 
             this.timeActiveTextBox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.timeActiveTextBox.Location = new System.Drawing.Point(12, 650);
+            this.timeActiveTextBox.Location = new System.Drawing.Point(362, 557);
             this.timeActiveTextBox.Name = "timeActiveTextBox";
             this.timeActiveTextBox.ReadOnly = true;
-            this.timeActiveTextBox.Size = new System.Drawing.Size(100, 21);
+            this.timeActiveTextBox.Size = new System.Drawing.Size(96, 21);
             this.timeActiveTextBox.TabIndex = 8;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(118, 650);
+            this.label11.Location = new System.Drawing.Point(287, 560);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(69, 15);
             this.label11.TabIndex = 64;
@@ -94,11 +96,11 @@ namespace VTC
             // tbVistaStats
             // 
             this.tbVistaStats.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbVistaStats.Location = new System.Drawing.Point(12, 199);
+            this.tbVistaStats.Location = new System.Drawing.Point(11, 177);
             this.tbVistaStats.Multiline = true;
             this.tbVistaStats.Name = "tbVistaStats";
             this.tbVistaStats.ReadOnly = true;
-            this.tbVistaStats.Size = new System.Drawing.Size(400, 320);
+            this.tbVistaStats.Size = new System.Drawing.Size(447, 320);
             this.tbVistaStats.TabIndex = 6;
             // 
             // CameraComboBox
@@ -115,7 +117,7 @@ namespace VTC
             // btnConfigureRegions
             // 
             this.btnConfigureRegions.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConfigureRegions.Location = new System.Drawing.Point(12, 171);
+            this.btnConfigureRegions.Location = new System.Drawing.Point(12, 123);
             this.btnConfigureRegions.Name = "btnConfigureRegions";
             this.btnConfigureRegions.Size = new System.Drawing.Size(115, 22);
             this.btnConfigureRegions.TabIndex = 4;
@@ -153,17 +155,17 @@ namespace VTC
             // infoBox
             // 
             this.infoBox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoBox.Location = new System.Drawing.Point(12, 569);
+            this.infoBox.Location = new System.Drawing.Point(12, 547);
             this.infoBox.Multiline = true;
             this.infoBox.Name = "infoBox";
             this.infoBox.ReadOnly = true;
-            this.infoBox.Size = new System.Drawing.Size(240, 76);
+            this.infoBox.Size = new System.Drawing.Size(240, 58);
             this.infoBox.TabIndex = 7;
             // 
             // generateReportButton
             // 
             this.generateReportButton.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.generateReportButton.Location = new System.Drawing.Point(137, 171);
+            this.generateReportButton.Location = new System.Drawing.Point(133, 123);
             this.generateReportButton.Name = "generateReportButton";
             this.generateReportButton.Size = new System.Drawing.Size(115, 22);
             this.generateReportButton.TabIndex = 65;
@@ -186,20 +188,10 @@ namespace VTC
             this.timer60minute.Interval = 3600000;
             this.timer60minute.Tick += new System.EventHandler(this.timer60minute_Tick);
             // 
-            // fpsTextLabel
-            // 
-            this.fpsTextLabel.AutoSize = true;
-            this.fpsTextLabel.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpsTextLabel.Location = new System.Drawing.Point(212, 650);
-            this.fpsTextLabel.Name = "fpsTextLabel";
-            this.fpsTextLabel.Size = new System.Drawing.Size(40, 15);
-            this.fpsTextLabel.TabIndex = 66;
-            this.fpsTextLabel.Text = "0 FPS";
-            // 
             // trackedObjectsTextbox
             // 
             this.trackedObjectsTextbox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.trackedObjectsTextbox.Location = new System.Drawing.Point(12, 525);
+            this.trackedObjectsTextbox.Location = new System.Drawing.Point(11, 503);
             this.trackedObjectsTextbox.Multiline = true;
             this.trackedObjectsTextbox.Name = "trackedObjectsTextbox";
             this.trackedObjectsTextbox.ReadOnly = true;
@@ -310,17 +302,17 @@ namespace VTC
             // remainingTimeBox
             // 
             this.remainingTimeBox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.remainingTimeBox.Location = new System.Drawing.Point(312, 650);
+            this.remainingTimeBox.Location = new System.Drawing.Point(362, 530);
             this.remainingTimeBox.Name = "remainingTimeBox";
             this.remainingTimeBox.ReadOnly = true;
-            this.remainingTimeBox.Size = new System.Drawing.Size(100, 21);
+            this.remainingTimeBox.Size = new System.Drawing.Size(96, 21);
             this.remainingTimeBox.TabIndex = 85;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(313, 632);
+            this.label6.Location = new System.Drawing.Point(257, 533);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(99, 15);
             this.label6.TabIndex = 86;
@@ -329,28 +321,60 @@ namespace VTC
             // frameTextbox
             // 
             this.frameTextbox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.frameTextbox.Location = new System.Drawing.Point(312, 595);
+            this.frameTextbox.Location = new System.Drawing.Point(362, 503);
             this.frameTextbox.Name = "frameTextbox";
             this.frameTextbox.ReadOnly = true;
-            this.frameTextbox.Size = new System.Drawing.Size(100, 21);
+            this.frameTextbox.Size = new System.Drawing.Size(96, 21);
             this.frameTextbox.TabIndex = 87;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(313, 577);
+            this.label7.Location = new System.Drawing.Point(313, 506);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(43, 15);
             this.label7.TabIndex = 88;
             this.label7.Text = "Frame";
+            // 
+            // fpsTextbox
+            // 
+            this.fpsTextbox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fpsTextbox.Location = new System.Drawing.Point(362, 584);
+            this.fpsTextbox.Name = "fpsTextbox";
+            this.fpsTextbox.ReadOnly = true;
+            this.fpsTextbox.Size = new System.Drawing.Size(96, 21);
+            this.fpsTextbox.TabIndex = 89;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(326, 587);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(30, 15);
+            this.label8.TabIndex = 90;
+            this.label8.Text = "FPS";
+            // 
+            // debugTextbox
+            // 
+            this.debugTextbox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.debugTextbox.Location = new System.Drawing.Point(12, 611);
+            this.debugTextbox.Multiline = true;
+            this.debugTextbox.Name = "debugTextbox";
+            this.debugTextbox.ReadOnly = true;
+            this.debugTextbox.Size = new System.Drawing.Size(446, 58);
+            this.debugTextbox.TabIndex = 91;
             // 
             // TrafficCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(423, 676);
+            this.ClientSize = new System.Drawing.Size(468, 676);
+            this.Controls.Add(this.debugTextbox);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.fpsTextbox);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.frameTextbox);
             this.Controls.Add(this.remainingTimeBox);
@@ -366,7 +390,6 @@ namespace VTC
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.trackedObjectsTextbox);
-            this.Controls.Add(this.fpsTextLabel);
             this.Controls.Add(this.generateReportButton);
             this.Controls.Add(this.infoBox);
             this.Controls.Add(this.SelectVideosButton);
@@ -403,7 +426,6 @@ namespace VTC
         private Timer timer5minute;
         private Timer timer15minute;
         private Timer timer60minute;
-        private Label fpsTextLabel;
         private TextBox trackedObjectsTextbox;
         private Timer licenseCheckTimer;
         private Label label1;
@@ -420,5 +442,8 @@ namespace VTC
         private Label label6;
         private TextBox frameTextbox;
         private Label label7;
+        private TextBox fpsTextbox;
+        private Label label8;
+        private TextBox debugTextbox;
     }
 }

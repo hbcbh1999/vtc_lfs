@@ -119,7 +119,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("MHT maximum hypothesis tree-depth: how many frames of tracker history are retained. Increase for better quality; decrease for faster processing.")]
         [DataMember]
-        public int MaxHypTreeDepth { get; set; } = 5;
+        public int MaxHypTreeDepth { get; set; } = 2;
 
         [Description("Maximum number of tracked objects.")]
         [DataMember]
@@ -127,15 +127,11 @@ namespace VTC.Common.RegionConfig
 
         [Description("K-hypotheses (MHT branch factor): how many association-hypotheses are generated per timestep. Increase for better quality; decrease for faster processing.")]
         [DataMember]
-        public int KHypotheses { get; set; } = 4;
+        public int KHypotheses { get; set; } = 1;
 
         [Description("Validation-region deviation: The number of Mahalanobis-distance deviations allowable from the predicted detection location, used in association-gating. Reduce if trackers are swapping. Increase if trackers are falling behind objects.")]
         [DataMember]
         public int ValRegDeviation { get; set; } = 4;
-
-        [Description("Maximum object count: The number of objects which may be detected in a single frame. This value should be the same as MaxTargets.")]
-        [DataMember]
-        public int MaxObjectCount { get; set; } = 6;
 
         public RegionConfig()
         {

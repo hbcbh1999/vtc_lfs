@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 using Brushes = System.Windows.Media.Brushes;
 using Image = System.Windows.Controls.Image;
@@ -33,9 +34,11 @@ namespace TrajectoryAnalyzer
     public partial class MainWindow : Window
     {
 
-        public ObservableCollection<string> trajectoriesList { get; private set; }
-        public ObservableCollection<string> prototypeTrajectoriesList { get; private set; }
-        public ObservableCollection<string> selectedTrajectoriesList { get; private set; }
+        public ObservableCollection<Movement> trajectoriesList { get; private set; }
+        public ObservableCollection<Movement> prototypeTrajectoriesList { get; private set; }
+        public ObservableCollection<MatchWithExplanation> selectedPrototypeTrajectoriesList { get; private set; }
+        public ObservableCollection<Movement> selectedTrajectoriesList { get; private set; }
+        public ObservableCollection<Movement> selectableTrajectoriesList { get; private set; }
 
         private List<string> approaches;
         private List<string> exits;
@@ -52,19 +55,21 @@ namespace TrajectoryAnalyzer
         public MainWindow()
         {
             InitializeComponent();
-            trajectoriesList = new ObservableCollection<string>();
-            selectedTrajectoriesList = new ObservableCollection<string>();
-            prototypeTrajectoriesList = new ObservableCollection<string>();
-            trajectoryListView.ItemsSource = selectedTrajectoriesList;
+            trajectoriesList = new ObservableCollection<Movement>();
+            selectedTrajectoriesList = new ObservableCollection<Movement>();
+            selectableTrajectoriesList = new ObservableCollection<Movement>();
+            prototypeTrajectoriesList = new ObservableCollection<Movement>();
+            selectedPrototypeTrajectoriesList = new ObservableCollection<MatchWithExplanation>();
+            trajectoryListView.ItemsSource = selectableTrajectoriesList;
             approaches = new List<string>();
             exits = new List<string>();
         }
 
-        private void Window_Drop(object sender, DragEventArgs e)
+        private void Window_Drop(object sender, System.Windows.DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
+            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop, true))
             {
-                string[] droppedFilePaths = e.Data.GetData(DataFormats.FileDrop, true) as string[];
+                string[] droppedFilePaths = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
                 foreach (var path in droppedFilePaths)
                 {   
                     FileInfo fi = new FileInfo(path);
@@ -93,10 +98,10 @@ namespace TrajectoryAnalyzer
 
                 foreach (var line in lines)
                 {
+                    var m = ParseAsMovement(line);
                     if (fi.Name.Contains("Movements"))
                     {
-                        trajectoriesList.Add(line);
-                        var m = ParseAsMovement(line);
+                        trajectoriesList.Add(m);
                                 
                         if (!approaches.Contains(m.Approach))
                         {
@@ -110,7 +115,7 @@ namespace TrajectoryAnalyzer
                     }
                     else if (fi.Name.Contains("Synthetic"))
                     {
-                        prototypeTrajectoriesList.Add(line);
+                        prototypeTrajectoriesList.Add(m);
                     }
                 }
 
@@ -153,11 +158,9 @@ namespace TrajectoryAnalyzer
             }
         }
 
-        private void RenderTrajectory(string trajectoryString, int width, int height, double dpi, byte[] pixelData, DrawingContext drawingContext, System.Windows.Media.Brush lineColor, double lineThickness)
+        private void RenderTrajectory(Movement m, int width, int height, double dpi, byte[] pixelData, DrawingContext drawingContext, System.Windows.Media.Brush lineColor, double lineThickness)
         {
             Regex rgx = new Regex(@"[^\d\.]");
-
-            var m = ParseAsMovement(trajectoryString);
 
             if(filterSyntheticCheckbox.IsChecked.Value)
             { 
@@ -259,12 +262,11 @@ namespace TrajectoryAnalyzer
                 drawingContext.DrawEllipse(Brushes.Yellow, new  System.Windows.Media.Pen(Brushes.Yellow,1), new Point(firstMeasurement.X, firstMeasurement.Y), 3, 3);
                 drawingContext.DrawEllipse(Brushes.Purple, new  System.Windows.Media.Pen(Brushes.Purple,1), new Point(lastMeasurement.X, lastMeasurement.Y), 3, 3);
             }
-           
         }
 
         private List<Movement> SyntheticPrototypes()
         {
-            return prototypeTrajectoriesList.Select(str => JsonLogger<Movement>.FromJsonString(str)).ToList();
+            return prototypeTrajectoriesList.ToList();
         }
 
         private void trajectoryListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -276,36 +278,23 @@ namespace TrajectoryAnalyzer
             Regex rgx = new Regex(@"[^\d\.]");
 
             trajectoryMatchListView.Items.Clear();
+            selectedTrajectoriesList.Clear();
 
             foreach (var item in e.AddedItems)
-            {
-                var trajectoryString = item.ToString();
-                var visual = new DrawingVisual();
-                using (DrawingContext drawingContext = visual.RenderOpen())
-                {
+            {   
+                var movement = (Movement) item;
+                selectedTrajectoriesList.Add(movement);
+            }
 
-                    RenderBackground(drawingContext);
+            DrawSelectedTrajectories();
 
-                    foreach (var proto in prototypeTrajectoriesList)
-                    {
-                        RenderTrajectory(proto, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Blue, 0.5);
-                    }
-
-                    RenderTrajectory(trajectoryString, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Red, 0.5);
-                }
-                var image = new DrawingImage(visual.Drawing);
-                trajectoryRenderingImage.Source = image;
-
-                var turnSubstring = ExtractTurnSubstring(trajectoryString);
-
-                movementTextBox.Text = turnSubstring;
-
-                var turnSubstringElements = turnSubstring.Split(',');
-                movementNameBox.Content = turnSubstringElements[1];
+            foreach (var item in e.AddedItems)
+            {   
+                var movement = (Movement) item;
+                movementNameBox.Content = movement.TurnType.ToString();
 
                 //Compare against all synthetic trajectories
                 var synthetics = SyntheticPrototypes();
-                var movement = JsonConvert.DeserializeObject<Movement>(trajectoryString);
                 
                 var mostLikelyClassType =
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(movement.StateEstimates.Last().MostFrequentClassId(),
@@ -324,13 +313,17 @@ namespace TrajectoryAnalyzer
                     var matchExplanation = new MatchWithExplanation();
                     matchExplanation.matchCost = matchCost;
                     matchExplanation.explanation = description;
+                    matchExplanation.movement = synth;
                     matchExplanations.Add(matchExplanation);
                 }
 
                 var sortedMatches = matchExplanations.OrderBy(me => me.matchCost);
                 foreach(var me in sortedMatches)
                 {
-                    trajectoryMatchListView.Items.Add(me.explanation);
+                    System.Windows.Forms.ListViewItem lvi = new System.Windows.Forms.ListViewItem();
+                    lvi.Text = me.explanation;
+                    lvi.Tag = me;
+                    trajectoryMatchListView.Items.Add(lvi);
                 }
                 
                 netMovementBox.Content = tracked_object.NetMovement();
@@ -377,21 +370,21 @@ namespace TrajectoryAnalyzer
         private void UpdateSelectedTrajectories()
         {
             selectedTrajectoriesList.Clear();
+            selectableTrajectoriesList.Clear();
             foreach (var t in trajectoriesList)
             {
-                var m = ParseAsMovement(t);
-
-                if (m.Approach != selectedApproach && selectedApproach != "Any")
+                if (t.Approach != selectedApproach && selectedApproach != "Any")
                 {
                     continue;
                 }
                 
-                if (m.Exit != selectedExit && selectedExit != "Any")
+                if (t.Exit != selectedExit && selectedExit != "Any")
                 {
                     continue;
                 }
 
                 selectedTrajectoriesList.Add(t);
+                selectableTrajectoriesList.Add(t);
             }
         }
 
@@ -411,20 +404,47 @@ namespace TrajectoryAnalyzer
             {
                 RenderBackground(drawingContext);
 
-                foreach (var proto in prototypeTrajectoriesList)
+                foreach (var prototypeMovement in prototypeTrajectoriesList)
                 {
-                    RenderTrajectory(proto, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Blue, .5);
+                    RenderTrajectory(prototypeMovement, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Blue, .5);
+                }
+
+                foreach (var mwe in selectedPrototypeTrajectoriesList)
+                {
+                    RenderTrajectory(mwe.movement, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Aquamarine, .8);
                 }
 
                 foreach (var t in selectedTrajectoriesList)
                 {
-                    RenderTrajectory(t, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Red, 0.5);
+                    if(selectedTrajectoriesList.Count == 1)
+                    {
+                        RenderTrajectory(t, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Red, 2.0); 
+                    }
+                    else
+                    {
+                        RenderTrajectory(t, width, height, dpi, pixelData, drawingContext, System.Windows.Media.Brushes.Red, 0.5);
+                    }
                 }
+
+
             }
             var image = new DrawingImage(visual.Drawing);
             trajectoryRenderingImage.Source = image;
         }
-    }    
+
+        private void trajectoryMatchListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedPrototypeTrajectoriesList.Clear();
+            foreach (var item in e.AddedItems)
+            {
+                var lvi = (System.Windows.Forms.ListViewItem) item;
+                MatchWithExplanation mwe = (MatchWithExplanation) lvi.Tag;
+                
+                selectedPrototypeTrajectoriesList.Add(mwe);
+            }
+            DrawSelectedTrajectories();
+        }
+    }
 
     public class Measurement
     {

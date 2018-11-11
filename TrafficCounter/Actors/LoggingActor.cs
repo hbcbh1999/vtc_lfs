@@ -62,6 +62,9 @@ namespace VTC.Actors
         public delegate void UpdateInfoUIDelegate(string infoString);
         private UpdateInfoUIDelegate _updateInfoUiDelegate;
 
+        public delegate void UpdateDebugDelegate(string debugString);
+        private UpdateDebugDelegate _updateDebugDelegate;
+
         private YoloIntegerNameMapping _yoloNameMapping = new YoloIntegerNameMapping();
 
         RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
@@ -130,6 +133,10 @@ namespace VTC.Actors
 
             Receive<UpdateInfoUiHandlerMessage>(message =>
                 UpdateInfoUiHandler(message.InfoUiDelegate)
+            );
+
+            Receive<UpdateDebugHandlerMessage>(message =>
+                UpdateDebugHandler(message.DebugDelegate)
             );
 
             Receive<ActorHeartbeatMessage>(message =>
@@ -561,6 +568,12 @@ namespace VTC.Actors
                     var mostLikelyClassType =
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
                             _yoloNameMapping.IntegerToObjectName);
+                    var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength);
+                    if(validity.valid == false)
+                    {
+                        _updateDebugDelegate?.Invoke(validity.description);
+                        continue;
+                    }
                     var movement = TrajectorySimilarity.MatchNearestTrajectory(d, mostLikelyClassType, _regionConfig.MinPathLength, mts.TrajectoryPrototypes);
                     if (movement == null) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
@@ -681,6 +694,18 @@ namespace VTC.Actors
             catch (Exception ex)
             {
                 MessageBox.Show("Exception in UpdateInfoUiHandler:" + ex.Message);
+            }
+        }
+
+        private void UpdateDebugHandler(UpdateDebugDelegate handler)
+        {
+            try
+            {
+                _updateDebugDelegate = handler;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception in UpdateDebugDelegate:" + ex.Message);
             }
         }
 

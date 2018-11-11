@@ -22,6 +22,12 @@ namespace VTC.Kernel
         }
     }
 
+    public class TrajectoryValidity
+    {
+        public bool valid = true;
+        public string description = "";
+    }
+
     public class TrajectorySimilarity
     {
         private const double POSITION_MULTIPLIER = 0.012;
@@ -30,28 +36,37 @@ namespace VTC.Kernel
 
         public static Movement MatchNearestTrajectory(TrackedObject d, string classType, int minPathLength, List<Movement> trajectoryPrototypes)
         {
-            //Heuristics for discarding garbage trajectories
+            var matchedTrajectoryName = BestMatchTrajectory(d.StateHistory, trajectoryPrototypes, classType);
+            return matchedTrajectoryName;
+        }
+
+        public static TrajectoryValidity ValidateTrajectory(TrackedObject d,  int minPathLength)
+        {
+            var tv = new TrajectoryValidity();
+            tv.valid = true;
+
             var distance = d.NetMovement();
             if (distance < minPathLength)
             {
-                Console.WriteLine("Trajectory rejected: path too short (" + Math.Round(distance) + ")");
-                return null; 
+                tv.description = "Trajectory rejected: path too short (" + Math.Round(distance) + ")";
+                tv.valid = false;
             }
 
-            if (d.MissRatio() > 2.5)
+            var missRatio = d.MissRatio();
+            if (missRatio > 2.5)
             {
-                Console.WriteLine("Trajectory rejected: miss ratio too high.");
-                return null; 
+                tv.description = "Trajectory rejected: miss ratio too high (" + Math.Round(missRatio,1) + ")";
+                tv.valid = false;
             }
 
-            if (d.FinalPositionCovariance() > 300.0)
+            var fpc = d.FinalPositionCovariance();
+            if (fpc > 300.0)
             { 
-                Console.WriteLine("Trajectory rejected: final position covariance too high.");
-                return null; 
+                tv.description = "Trajectory rejected: final position covariance too high (" + Math.Round(fpc) + ")"; 
+                tv.valid = false;
             }
 
-            var matchedTrajectoryName = BestMatchTrajectory(d.StateHistory, trajectoryPrototypes, classType);
-            return matchedTrajectoryName;
+            return tv;
         }
 
         public static double PathIntegralCost(List<StateEstimate> trajectory1, List<StateEstimate> trajectory2)
@@ -62,10 +77,15 @@ namespace VTC.Kernel
             trajectory1.First().Vx = trajectory1[1].Vx;
             trajectory1.First().Vy = trajectory1[1].Vy;
 
+            //This index is used to force the comparison to proceed in the 'forwards' direction; we do not
+            //want to accidentally iterate backwards on t2.
+            var indexT2 = 0;
+
             for(int i=0;i<trajectory1.Count;i++)
             {
                 var trajectory1StateEstimate = trajectory1[i];
-                var trajectory2NearestStateEstimate = NearestPointOnTrajectory(trajectory1StateEstimate, trajectory2);
+                var trajectory2NearestStateEstimate = NearestPointOnTrajectory(trajectory1StateEstimate, trajectory2.GetRange(indexT2,trajectory2.Count()-indexT2));
+                indexT2 = trajectory2.IndexOf(trajectory2NearestStateEstimate);
 
                 var positionCost = Math.Sqrt(Math.Pow(trajectory1StateEstimate.X - trajectory2NearestStateEstimate.X,2) + Math.Pow(trajectory1StateEstimate.Y - trajectory2NearestStateEstimate.Y,2));
 
@@ -108,10 +128,15 @@ namespace VTC.Kernel
             trajectory1.First().Vx = trajectory1[1].Vx;
             trajectory1.First().Vy = trajectory1[1].Vy;
 
+            //This index is used to force the comparison to proceed in the 'forwards' direction; we do not
+            //want to accidentally iterate backwards on t2.
+            var indexT2 = 0;
+
             for(int i=0;i<trajectory1.Count;i++)
             {
                 var trajectory1StateEstimate = trajectory1[i];
-                var trajectory2NearestStateEstimate = NearestPointOnTrajectory(trajectory1StateEstimate, trajectory2);
+                var trajectory2NearestStateEstimate = NearestPointOnTrajectory(trajectory1StateEstimate, trajectory2.GetRange(indexT2,trajectory2.Count()-indexT2));
+                indexT2 = trajectory2.IndexOf(trajectory2NearestStateEstimate);
 
                 var positionCost = Math.Sqrt(Math.Pow(trajectory1StateEstimate.X - trajectory2NearestStateEstimate.X,2) + Math.Pow(trajectory1StateEstimate.Y - trajectory2NearestStateEstimate.Y,2));
                 totalPositionCost += positionCost;
@@ -133,6 +158,7 @@ namespace VTC.Kernel
                 totalAngleCost += angleDiff * velocityMagnitude;
                 var thisPointCost = POSITION_MULTIPLIER*positionCost + ANGLE_MULTIPLIER*angleDiff*velocityMagnitude;  
                 cost += thisPointCost;
+                //Console.WriteLine("TotalCost," + thisPointCost + ",PositionCost," + positionCost + ",AngleCost," + angleDiff + ",Angle1," + iv1.AngleRad() + ",Angle2," + iv2.AngleRad() + ",Vx1," + iv1.x + ",Vy1," + iv1.y + ",Vx2," + iv2.x + ",Vy2," + iv2.y,"indexT2",indexT2);
             }
             
             var curvature1 = Curvature(trajectory1);

@@ -45,7 +45,7 @@ namespace VTC.Actors
             );
 
             Receive<CreateAllActorsMessage>(message =>
-                CreateAllActors(message.UpdateUiDelegate, message.UpdateStatsUiDelegate, message.UpdateInfoUiDelegate, message.UpdateFrameGrabUiDelegate)
+                CreateAllActors(message.UpdateUiDelegate, message.UpdateStatsUiDelegate, message.UpdateInfoUiDelegate, message.UpdateFrameGrabUiDelegate, message.UpdateDebugDelegate)
             );
 
             Receive<UpdateActorStatusHandlerMessage>(message =>
@@ -115,7 +115,7 @@ namespace VTC.Actors
             _loggingActor.Tell(new SequencingActorMessage(_sequencingActor));
         }
 
-        void CreateAllActors(ProcessingActor.UpdateUIDelegate updateUiDelegate, LoggingActor.UpdateStatsUIDelegate statsUiDelegate, LoggingActor.UpdateInfoUIDelegate infoUiDelegate, FrameGrabActor.UpdateUIDelegate frameGrabUiDelegate)
+        void CreateAllActors(ProcessingActor.UpdateUIDelegate updateUiDelegate, LoggingActor.UpdateStatsUIDelegate statsUiDelegate, LoggingActor.UpdateInfoUIDelegate infoUiDelegate, FrameGrabActor.UpdateUIDelegate frameGrabUiDelegate, LoggingActor.UpdateDebugDelegate debugDelegate)
         {
             _processingActor = Context.ActorOf(Props.Create(typeof(ProcessingActor)).WithMailbox("processing-bounded-mailbox"), "ProcessingActor");
             _processingActor.Tell(new UpdateUiHandlerMessage(updateUiDelegate));
@@ -124,6 +124,7 @@ namespace VTC.Actors
             _loggingActor = Context.ActorOf<LoggingActor>("LoggingActor");
             _loggingActor.Tell(new UpdateStatsUiHandlerMessage(statsUiDelegate));
             _loggingActor.Tell(new UpdateInfoUiHandlerMessage(infoUiDelegate));
+            _loggingActor.Tell(new UpdateDebugHandlerMessage(debugDelegate));
             _sequencingActor = Context.ActorOf<SequencingActor>("SequencingActor");
             //_configurationActor = Context.ActorOf<ConfigurationActor>("ConfigurationActor");
             _configurationActor = Context.System.ActorOf(Props.Create(() => new

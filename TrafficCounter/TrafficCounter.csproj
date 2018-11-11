@@ -175,6 +175,7 @@
     <Compile Include="ExportTrainingSet\ExportTrainingSet.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Messages\ActorHeartbeatMessage.cs" />
+    <Compile Include="Messages\UpdateDebugHandlerMessage.cs" />
     <Compile Include="Messages\VideoMetadataMessage.cs" />
     <Compile Include="Messages\CopyGroundtruthMessage.cs" />
     <Compile Include="Messages\ActorMessage.cs" />

@@ -130,7 +130,7 @@ namespace VTC
 
             _actorSystem = ActorSystem.Create("VTCActorSystem", config);
             _supervisorActor = _actorSystem.ActorOf(Props.Create(typeof(SupervisorActor)).WithDispatcher("synchronized-dispatcher"), "SupervisorActor");
-            _supervisorActor.Tell(new CreateAllActorsMessage(UpdateUI, UpdateStatsUI, UpdateInfoBox, UpdateUIAccessoryInfo));
+            _supervisorActor.Tell(new CreateAllActorsMessage(UpdateUI, UpdateStatsUI, UpdateInfoBox, UpdateUIAccessoryInfo, UpdateDebugInfo));
             _supervisorActor.Tell(new UpdateActorStatusHandlerMessage(UpdateActorStatusIndicators));
 
        }
@@ -160,13 +160,13 @@ namespace VTC
                timeActiveTextBox.Text = activeTime.ToString(@"dd\.hh\:mm\:ss");
            });
 
-           if (!fpsTextLabel.IsHandleCreated)
+           if (!fpsTextbox.IsHandleCreated)
            {
                return;
            }
-            fpsTextLabel.Invoke((MethodInvoker) delegate
+            fpsTextbox.Invoke((MethodInvoker) delegate
                {
-                   fpsTextLabel.Text = $"{Math.Round(updateInfo.Fps,1)} FPS";
+                   fpsTextbox.Text = $"{Math.Round(updateInfo.Fps,1)} FPS";
                }
            );
        }
@@ -195,6 +195,19 @@ namespace VTC
            tbVistaStats.Invoke((MethodInvoker)delegate
            {
                tbVistaStats.Text = statString;
+           });
+        }
+
+       private void UpdateDebugInfo(string debugString)
+       {
+           // Update statistics
+           if (!debugTextbox.IsHandleCreated)
+           {
+               return;
+           }
+           debugTextbox.Invoke((MethodInvoker)delegate
+           {
+               debugTextbox.Text = debugString;
            });
         }
 

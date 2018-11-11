@@ -183,14 +183,9 @@ namespace VTC.Kernel
             });
 
             var movementsList = movements.ToList();
-
-            //Enforce max number of elements to be returned; downsample by 10 while we have too many elements.
-            while(movementsList.Count > max)
-            { 
-                movementsList = movementsList.Where( (x,i) => i % 2 == 0).ToList();
-            }
-
-            return movementsList;
+            MyExtensions.Shuffle(movementsList);
+            var movementsListReduced = movementsList.Take(max).ToList();
+            return movementsListReduced;
         }
 
         List<Movement> RoadPairToTurnMovements(Polygon approachA, Polygon exitA, Polygon approachB, Polygon exitB, Turn turnType, ObjectType objectType, int max)
@@ -247,16 +242,9 @@ namespace VTC.Kernel
             });
             
             var movementsList = movements.ToList();
-
             MyExtensions.Shuffle(movementsList);
-
-            //Enforce max number of elements to be returned; downsample by 2 while we have too many elements.
-            while(movementsList.Count > max)
-            {   
-                movementsList = movementsList.Where( (x,i) => i % 2 == 0).ToList();
-            }
-
-            return movementsList;
+            var movementsListReduced = movementsList.Take(max).ToList();
+            return movementsListReduced;
         }
 
         List<RoadLine> GenerateRoadlinesFromVertex(System.Drawing.Point vertex, List<System.Drawing.Point> matchVertices)

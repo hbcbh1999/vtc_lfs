@@ -32,7 +32,7 @@
             <CheckBox x:Name="showAllCheckbox" Content="Show all" Canvas.Left="35" Canvas.Top="120" Checked="CheckBox_Checked"/>
             <CheckBox x:Name="showEndpointsCheckbox" Content="Show endpoints" Canvas.Left="35" Canvas.Top="140"/>
             <CheckBox x:Name="extrapolateCheckbox" Content="Extrapolate" Canvas.Left="145" Canvas.Top="141"/>
-            <ListView x:Name="trajectoryMatchListView" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="345" SelectionMode="Single" Canvas.Left="35" Canvas.Top="493">
+            <ListView x:Name="trajectoryMatchListView" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="345" SelectionMode="Single" Canvas.Left="35" Canvas.Top="493" SelectionChanged="trajectoryMatchListView_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
