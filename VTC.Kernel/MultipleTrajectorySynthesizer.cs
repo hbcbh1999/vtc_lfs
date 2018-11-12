@@ -57,16 +57,16 @@ namespace VTC.Kernel
             //Generate Straight movements
             var straightMovements = new List<Movement>();
 
-            var road1StraightMovements = ApproachExitPairToMovements(approach1, exit1, Turn.Straight, ObjectType.Car, 50);
+            var road1StraightMovements = ApproachExitPairToMovements(approach1, exit1, Turn.Straight, ObjectType.Car, 40);
             straightMovements.AddRange(road1StraightMovements);
 
-            var road2StraightMovements = ApproachExitPairToMovements(approach2, exit2, Turn.Straight, ObjectType.Car, 50);
+            var road2StraightMovements = ApproachExitPairToMovements(approach2, exit2, Turn.Straight, ObjectType.Car, 40);
             straightMovements.AddRange(road2StraightMovements);
 
-            var road3StraightMovements = ApproachExitPairToMovements(approach3, exit3, Turn.Straight, ObjectType.Car, 50);
+            var road3StraightMovements = ApproachExitPairToMovements(approach3, exit3, Turn.Straight, ObjectType.Car, 40);
             straightMovements.AddRange(road3StraightMovements);
 
-            var road4StraightMovements = ApproachExitPairToMovements(approach4, exit4, Turn.Straight, ObjectType.Car, 50);
+            var road4StraightMovements = ApproachExitPairToMovements(approach4, exit4, Turn.Straight, ObjectType.Car, 40);
             straightMovements.AddRange(road4StraightMovements);
             
             foreach(var m in straightMovements)
@@ -79,24 +79,24 @@ namespace VTC.Kernel
             //Generate turn movements
             var turnMovements = new List<Movement>();
 
-            var road12Movements = RoadPairToTurnMovements(approach1, exit1, approach2, exit2,Turn.Left, ObjectType.Car, 12);
+            var road12Movements = RoadPairToTurnMovements(approach1, exit1, approach2, exit2,Turn.Left, ObjectType.Car, 20);
             turnMovements.AddRange(road12Movements);
-            var road21Movements = RoadPairToTurnMovements(approach2, exit2, approach1, exit1,Turn.Right, ObjectType.Car, 12);
+            var road21Movements = RoadPairToTurnMovements(approach2, exit2, approach1, exit1,Turn.Right, ObjectType.Car, 20);
             turnMovements.AddRange(road21Movements);
 
-            var road23Movements = RoadPairToTurnMovements(approach2, exit2, approach3, exit3,Turn.Left, ObjectType.Car, 12);
+            var road23Movements = RoadPairToTurnMovements(approach2, exit2, approach3, exit3,Turn.Left, ObjectType.Car, 20);
             turnMovements.AddRange(road23Movements);
-            var road32Movements = RoadPairToTurnMovements(approach3, exit3, approach2, exit2,Turn.Right, ObjectType.Car, 12);
+            var road32Movements = RoadPairToTurnMovements(approach3, exit3, approach2, exit2,Turn.Right, ObjectType.Car, 20);
             turnMovements.AddRange(road32Movements);
 
-            var road34Movements = RoadPairToTurnMovements(approach3, exit3, approach4, exit4,Turn.Left, ObjectType.Car, 12);
+            var road34Movements = RoadPairToTurnMovements(approach3, exit3, approach4, exit4,Turn.Left, ObjectType.Car, 20);
             turnMovements.AddRange(road34Movements);
-            var road43Movements = RoadPairToTurnMovements(approach4, exit4, approach3, exit3,Turn.Right, ObjectType.Car, 12);
+            var road43Movements = RoadPairToTurnMovements(approach4, exit4, approach3, exit3,Turn.Right, ObjectType.Car, 20);
             turnMovements.AddRange(road43Movements);
 
-            var road41Movements = RoadPairToTurnMovements(approach4, exit4, approach1, exit1,Turn.Left, ObjectType.Car, 12);
+            var road41Movements = RoadPairToTurnMovements(approach4, exit4, approach1, exit1,Turn.Left, ObjectType.Car, 20);
             turnMovements.AddRange(road41Movements);
-            var road14Movements = RoadPairToTurnMovements(approach1, exit1, approach4, exit4,Turn.Right, ObjectType.Car, 12);
+            var road14Movements = RoadPairToTurnMovements(approach1, exit1, approach4, exit4,Turn.Right, ObjectType.Car, 20);
             turnMovements.AddRange(road14Movements);
 
             foreach(var m in turnMovements)

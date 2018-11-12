@@ -11,7 +11,7 @@ namespace VTC.Kernel
 {
     public static class PolygonTrajectorySynthesizer
     {
-        private const int NumberOfInterpolatedStepsSyntheticTrajectory = 6;
+        private const int NumberOfInterpolatedStepsSyntheticTrajectory = 20;
 
         public static TrackedObject SyntheticTrajectory(System.Drawing.Point approachVertex, System.Drawing.Point exitVertex, RoadLine approachRoadLine, RoadLine exitRoadLine)
         {

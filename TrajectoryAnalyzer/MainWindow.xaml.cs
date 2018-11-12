@@ -96,13 +96,14 @@ namespace TrajectoryAnalyzer
             {
                 var lines = File.ReadAllLines(filepath);
 
-                foreach (var line in lines)
+                if (fi.Name.Contains("Movements"))
                 {
-                    var m = ParseAsMovement(line);
-                    if (fi.Name.Contains("Movements"))
+                    Console.WriteLine("Processing " + filepath + " as movements.");
+
+                    foreach (var line in lines)
                     {
+                        var m = ParseAsMovement(line);
                         trajectoriesList.Add(m);
-                                
                         if (!approaches.Contains(m.Approach))
                         {
                             approaches.Add(m.Approach);
@@ -113,17 +114,22 @@ namespace TrajectoryAnalyzer
                             exits.Add(m.Exit);
                         }
                     }
-                    else if (fi.Name.Contains("Synthetic"))
+                }
+                else if (fi.Name.Contains("Synthetic"))
+                { 
+                    Console.WriteLine("Processing " + filepath + " as synthetic movements.");
+                    foreach (var line in lines)
                     {
+                        var m = ParseAsMovement(line);
                         prototypeTrajectoriesList.Add(m);
                     }
                 }
 
                 PopulateApproachAndExitsBoxes();
             }
-
-            if (fi.Extension == ".png")
+            else if (fi.Extension == ".png")
             {
+                Console.WriteLine("Processing " + filepath + " as background image.");
                 backgroundImage = (Bitmap) System.Drawing.Image.FromFile(filepath);
             }
         }
