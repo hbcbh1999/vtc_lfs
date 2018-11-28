@@ -49,6 +49,7 @@ namespace VTC.Actors
         private EventConfig _eventConfig;
         private string _currentVideoName = "Unknown video";
         private DateTime _videoStartTime = DateTime.Now;
+        private string _currentOutputFolder;
 
         private MultipleTrajectorySynthesizer mts;
 
@@ -128,6 +129,10 @@ namespace VTC.Actors
                 GenerateReport()
             );
 
+            Receive<CaptureSourceCompleteMessage>(message =>
+                GenerateDailyReport()
+            );
+
             Receive<UpdateStatsUiHandlerMessage>(message =>
                 UpdateStatsUiHandler(message.StatsUiDelegate)
             );
@@ -173,6 +178,8 @@ namespace VTC.Actors
             //);
 
             Self.Tell(new ActorHeartbeatMessage());
+
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(24,0,0),new TimeSpan(24,0,0),Self, new GenerateDailyReportMessage(), Self);
         }
 
         private void UpdateFileCreationTime(DateTime dt)
@@ -230,7 +237,7 @@ namespace VTC.Actors
         {
             string filename = $"{minutes}-minute binned counts [{className.ToString().ToLower()}].csv";
             //TODO: Figure out how to access video name here
-            string folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+            string folderPath = _currentOutputFolder;
             string filepath = Path.Combine(folderPath, filename);
             return filepath;
         }
@@ -305,7 +312,8 @@ namespace VTC.Actors
             _60MinTurnStats.Clear();
 
             var filepath = Path.Combine(folderPath, "Movements.json");
-            File.Create(filepath);        
+            File.Create(filepath);     
+            _currentOutputFolder = folderPath;
         }
 
         private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp, ObjectType objectType)
@@ -385,7 +393,7 @@ namespace VTC.Actors
             {
                 var filename = "Detections";
                 filename = filename.Replace("file-", "");
-                var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+                var folderPath = _currentOutputFolder;
                 var filepath = Path.Combine(folderPath, filename);
                 var dl = new DetectionLogger(detections);
                 dl.LogToJsonfile(filepath);
@@ -403,7 +411,7 @@ namespace VTC.Actors
             {
                 var filename = "Associations";
                 filename = filename.Replace("file-", "");
-                var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+                var folderPath = _currentOutputFolder;
                 var filepath = Path.Combine(folderPath, filename);
                 var al = new AssociationLogger(_regionConfig, associations);
                 al.LogToTextfile(filepath);
@@ -448,7 +456,7 @@ namespace VTC.Actors
         {
             try
             {
-                var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+                var folderPath = _currentOutputFolder;
                 GenerateRegionsLegendImage(folderPath);
 
                 if(_5MinTurnStats.TotalCount() > 0)
@@ -488,6 +496,8 @@ namespace VTC.Actors
 
                 SummaryReportGenerator.GenerateAllVehiclesSummaryReportHTML(folderPath, _currentVideoName, _videoTime);
 
+
+
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
 
                 var ev = new SentryEvent("Report generated");
@@ -500,6 +510,19 @@ namespace VTC.Actors
                 Logger.Log(LogLevel.Error, e);
             }
 
+        }
+
+        private void GenerateDailyReport()
+        {
+            if(_batchMode)
+            {
+                return;
+            }
+
+            GenerateReport();
+
+            _videoStartTime = DateTime.Now;
+            CreateOrReplaceOutputFolderIfExists();
         }
 
         private void GenerateRegionsLegendImage(string folderPath)
@@ -554,7 +577,7 @@ namespace VTC.Actors
             _regionConfig = config;
 
             const string filename = "Synthetic Trajectories";
-            var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+            var folderPath = _currentOutputFolder;
             var filepath = Path.Combine(folderPath, filename);
 
             mts.GenerateSyntheticTrajectories(_regionConfig, filepath);
@@ -582,7 +605,7 @@ namespace VTC.Actors
                     var edited_movement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, d.FirstDetectionFrame);
                     IncrementTurnStatistics(edited_movement);
                     var tl = new TrajectoryLogger(edited_movement);
-                    var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+                    var folderPath = _currentOutputFolder;
                     const string filename = "Movements";
                     var filepath = Path.Combine(folderPath, filename);
                     tl.Save(filepath);
@@ -751,7 +774,7 @@ namespace VTC.Actors
                     Log("Logging actor: Ground truth file path is null.", LogLevel.Info);
                     return;
                 }
-                var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+                var folderPath = _currentOutputFolder;
                 var filepath = Path.Combine(folderPath, "Manual counts.json");
                     File.Copy(groundTruthPath, filepath, true);
             }
@@ -764,7 +787,7 @@ namespace VTC.Actors
 
         private void LogVideoMetadata(VideoMetadata vm)
         {
-            var folderPath = VTC.Common.VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+            var folderPath = _currentOutputFolder;
             if (!Directory.Exists(folderPath)) return;
 
             using (var outputFile = new StreamWriter(folderPath + @"\video_metadata.json", false))

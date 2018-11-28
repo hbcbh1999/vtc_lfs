@@ -175,6 +175,7 @@
     <Compile Include="ExportTrainingSet\ExportTrainingSet.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Messages\ActorHeartbeatMessage.cs" />
+    <Compile Include="Messages\GenerateDailyReportMessage.cs" />
     <Compile Include="Messages\UpdateDebugHandlerMessage.cs" />
     <Compile Include="Messages\VideoMetadataMessage.cs" />
     <Compile Include="Messages\CopyGroundtruthMessage.cs" />
@@ -373,12 +374,12 @@
   <ItemGroup>
     <PublishFile Include="config\regionConfig.xml">
       <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
