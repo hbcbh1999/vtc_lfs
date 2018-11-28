@@ -133,6 +133,14 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public int ValRegDeviation { get; set; } = 4;
 
+        [Description("Position-covariance threshold: if the tracked object's final position-covariance is above this value, it is not counted. Increase this value for scenes with fast-moving vehicles.")]
+        [DataMember]
+        public double PositionCovarianceThreshold { get; set; } = 300.0;
+
+        [Description("Missed-ratio threshold: the miss-ratio is the number of non-detections divided by the total number of time-steps that an object is tracked for. Increase this value for fast-moving vehicles or scenes with heavy occlusion.")]
+        [DataMember]
+        public double MissRatioThreshold { get; set; } = 2.5;
+
         public RegionConfig()
         {
             RoiMask = new Polygon();

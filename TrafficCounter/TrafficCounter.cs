@@ -477,10 +477,15 @@ namespace VTC
             frameGrabActor.Tell(new GetNextFrameMessage());
 
             //Tell the configuration actor about this camera
-            //var selected_camera_list = new List<ICaptureSource>();
-            //selected_camera_list.Add(_selectedCaptureSource);
-            //configurationActor.Tell(new CamerasMessage(selected_camera_list));
-            //configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
+            var selected_camera_list = new List<ICaptureSource>();
+            selected_camera_list.Add(_selectedCaptureSource);
+            configurationActor.Tell(new CamerasMessage(selected_camera_list));
+            configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
+                
+            //configurationActor.Tell(new VideoJobsMessage(videoJobs));
+            //configurationActor.Tell(new CamerasMessage(_cameras));
+            //configurationActor.Tell(new CurrentJobMessage(videoJobs.First()));
+            //btnConfigureRegions_Click(null, null);
         }
 
         private void btnConfigureRegions_Click(object sender, EventArgs e)

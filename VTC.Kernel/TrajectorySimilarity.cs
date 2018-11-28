@@ -40,7 +40,7 @@ namespace VTC.Kernel
             return matchedTrajectoryName;
         }
 
-        public static TrajectoryValidity ValidateTrajectory(TrackedObject d,  int minPathLength)
+        public static TrajectoryValidity ValidateTrajectory(TrackedObject d,  int minPathLength, double missRatioThreshold, double covarianceThreshold)
         {
             var tv = new TrajectoryValidity();
             tv.valid = true;
@@ -53,14 +53,14 @@ namespace VTC.Kernel
             }
 
             var missRatio = d.MissRatio();
-            if (missRatio > 2.5)
+            if (missRatio > missRatioThreshold)
             {
                 tv.description = "Trajectory rejected: miss ratio too high (" + Math.Round(missRatio,1) + ")";
                 tv.valid = false;
             }
 
             var fpc = d.FinalPositionCovariance();
-            if (fpc > 300.0)
+            if (fpc > covarianceThreshold)
             { 
                 tv.description = "Trajectory rejected: final position covariance too high (" + Math.Round(fpc) + ")"; 
                 tv.valid = false;

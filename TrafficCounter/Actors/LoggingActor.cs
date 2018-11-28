@@ -48,6 +48,7 @@ namespace VTC.Actors
         private RegionConfig _regionConfig;
         private EventConfig _eventConfig;
         private string _currentVideoName = "Unknown video";
+        private DateTime _videoStartTime = DateTime.Now;
 
         private MultipleTrajectorySynthesizer mts;
 
@@ -229,7 +230,7 @@ namespace VTC.Actors
         {
             string filename = $"{minutes}-minute binned counts [{className.ToString().ToLower()}].csv";
             //TODO: Figure out how to access video name here
-            string folderPath = VTCPaths.FolderPath(_currentVideoName);
+            string folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
             string filepath = Path.Combine(folderPath, filename);
             return filepath;
         }
@@ -291,7 +292,7 @@ namespace VTC.Actors
         {
             //Create output folder
             //TODO: Figure out how to get _selectedCamera.Name value here
-            var folderPath = VTC.Common.VTCPaths.FolderPath(_currentVideoName);
+            var folderPath = VTC.Common.VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
             if (Directory.Exists(folderPath))
             {
                 Directory.Delete(folderPath, true);
@@ -384,7 +385,7 @@ namespace VTC.Actors
             {
                 var filename = "Detections";
                 filename = filename.Replace("file-", "");
-                var folderPath = VTCPaths.FolderPath(_currentVideoName);
+                var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
                 var filepath = Path.Combine(folderPath, filename);
                 var dl = new DetectionLogger(detections);
                 dl.LogToJsonfile(filepath);
@@ -402,7 +403,7 @@ namespace VTC.Actors
             {
                 var filename = "Associations";
                 filename = filename.Replace("file-", "");
-                var folderPath = VTCPaths.FolderPath(_currentVideoName);
+                var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
                 var filepath = Path.Combine(folderPath, filename);
                 var al = new AssociationLogger(_regionConfig, associations);
                 al.LogToTextfile(filepath);
@@ -447,7 +448,7 @@ namespace VTC.Actors
         {
             try
             {
-                var folderPath = VTCPaths.FolderPath(_currentVideoName);
+                var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
                 GenerateRegionsLegendImage(folderPath);
 
                 if(_5MinTurnStats.TotalCount() > 0)
@@ -545,6 +546,7 @@ namespace VTC.Actors
             ev.Level = ErrorLevel.Info;
             ev.Tags.Add("Name", message.CaptureSource.Name);
             ravenClient.Capture(ev);
+            _videoStartTime = DateTime.Now;
         }
 
         private void UpdateConfig(RegionConfig config)
@@ -552,7 +554,7 @@ namespace VTC.Actors
             _regionConfig = config;
 
             const string filename = "Synthetic Trajectories";
-            var folderPath = VTCPaths.FolderPath(_currentVideoName);
+            var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
             var filepath = Path.Combine(folderPath, filename);
 
             mts.GenerateSyntheticTrajectories(_regionConfig, filepath);
@@ -568,7 +570,7 @@ namespace VTC.Actors
                     var mostLikelyClassType =
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
                             _yoloNameMapping.IntegerToObjectName);
-                    var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength);
+                    var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength, _regionConfig.MissRatioThreshold, _regionConfig.PositionCovarianceThreshold);
                     if(validity.valid == false)
                     {
                         _updateDebugDelegate?.Invoke(validity.description);
@@ -580,7 +582,7 @@ namespace VTC.Actors
                     var edited_movement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, d.FirstDetectionFrame);
                     IncrementTurnStatistics(edited_movement);
                     var tl = new TrajectoryLogger(edited_movement);
-                    var folderPath = VTCPaths.FolderPath(_currentVideoName);
+                    var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
                     const string filename = "Movements";
                     var filepath = Path.Combine(folderPath, filename);
                     tl.Save(filepath);
@@ -715,6 +717,14 @@ namespace VTC.Actors
             Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
         }
 
+        private void GenerateReportIfLive()
+        {
+            if(!_batchMode)
+            {
+                GenerateReport();
+            }
+        }
+
         private void UpdateSequencingActor(IActorRef actorRef)
         {
             try
@@ -741,7 +751,7 @@ namespace VTC.Actors
                     Log("Logging actor: Ground truth file path is null.", LogLevel.Info);
                     return;
                 }
-                var folderPath = VTCPaths.FolderPath(_currentVideoName);
+                var folderPath = VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
                 var filepath = Path.Combine(folderPath, "Manual counts.json");
                     File.Copy(groundTruthPath, filepath, true);
             }
@@ -754,7 +764,7 @@ namespace VTC.Actors
 
         private void LogVideoMetadata(VideoMetadata vm)
         {
-            var folderPath = VTC.Common.VTCPaths.FolderPath(_currentVideoName);
+            var folderPath = VTC.Common.VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
             if (!Directory.Exists(folderPath)) return;
 
             using (var outputFile = new StreamWriter(folderPath + @"\video_metadata.json", false))

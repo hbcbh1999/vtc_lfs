@@ -6,7 +6,7 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="AI_FINDEXE_TITLE" Value="Select the installation package for [|ProductName]" ValueLocId="AI.Property.FindExeTitle"/>
-    <ROW Property="AI_PREDEF_LCONDS_PROPS" Value="AI_DETECTED_DOTNET_VERSION;AI_DETECTED_INTERNET_CONNECTION"/>
+    <ROW Property="AI_PREDEF_LCONDS_PROPS" Value="AI_DETECTED_DOTNET_VERSION"/>
     <ROW Property="AI_REQUIRED_DOTNET_DISPLAY" MultiBuildValue="DefaultBuild:4.5.2" ValueLocId="-"/>
     <ROW Property="AI_REQUIRED_DOTNET_VERSION" MultiBuildValue="DefaultBuild:4.5.2" ValueLocId="-"/>
     <ROW Property="AI_ThemeStyle" Value="aero" MsiKey="AI_ThemeStyle"/>
@@ -65,42 +65,42 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="AI_ExePath" ComponentId="{E6BF0315-A771-49D1-9659-0745CA91654E}" Directory_="APPDIR" Attributes="4" KeyPath="AI_ExePath"/>
-    <ROW Component="Akka.dll" ComponentId="{5F604EE6-7934-4183-BFC3-16D203230694}" Directory_="APPDIR" Attributes="0" KeyPath="Akka.dll"/>
+    <ROW Component="Akka.dll" ComponentId="{2D95BB0B-EF20-4240-8E5C-89A7A9EE3082}" Directory_="APPDIR" Attributes="0" KeyPath="Akka.dll"/>
     <ROW Component="BigLogo.png" ComponentId="{BC6EEEB5-59FF-409D-ACC9-7331FDADF514}" Directory_="ReportAssets_Dir" Attributes="0" KeyPath="BigLogo.png" Type="0"/>
-    <ROW Component="DirectShowLib2005.dll" ComponentId="{7A43EDE1-294F-4603-AEA5-5E3EF6232783}" Directory_="APPDIR" Attributes="0" KeyPath="DirectShowLib2005.dll"/>
-    <ROW Component="Emgu.CV.UI.dll" ComponentId="{AE06F1B9-FC3E-482D-BC7B-62F6149532C9}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.UI.dll"/>
-    <ROW Component="Emgu.CV.World.dll" ComponentId="{A8957DF1-F422-4A32-94F4-A220FD88040C}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.World.dll"/>
-    <ROW Component="GeoAPI.dll" ComponentId="{5164049B-2D95-4AB3-AD18-E47D6DC80EC7}" Directory_="APPDIR" Attributes="0" KeyPath="GeoAPI.dll"/>
-    <ROW Component="IPManager.dll" ComponentId="{7CDB90E2-8BAA-496D-82C7-DE5F0E5D1D16}" Directory_="APPDIR" Attributes="0" KeyPath="IPManager.dll"/>
-    <ROW Component="Indicators.dll" ComponentId="{91B370AD-8295-4D74-9BDB-38B0DA555EC8}" Directory_="APPDIR" Attributes="0" KeyPath="Indicators.dll"/>
-    <ROW Component="LicenseManager.exe" ComponentId="{C2BAC06C-632F-49BF-A9DC-51FD4A92F36E}" Directory_="APPDIR" Attributes="0" KeyPath="LicenseManager.exe"/>
-    <ROW Component="LicenseSpot.Framework.dll" ComponentId="{D9BAC227-6C68-4F5D-AF2D-97325E50060E}" Directory_="APPDIR" Attributes="0" KeyPath="LicenseSpot.Framework.dll"/>
-    <ROW Component="Logo.ico" ComponentId="{B4D70057-6FCF-42F5-A01E-03446CAF8735}" Directory_="APPDIR" Attributes="0" KeyPath="Logo.ico" Type="0"/>
-    <ROW Component="MathNet.Numerics.IO.dll" ComponentId="{CFF2F2B8-5718-43F1-873F-44CAE7D0FF23}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Numerics.IO.dll"/>
-    <ROW Component="MathNet.Numerics.dll" ComponentId="{739E42A2-62AE-421A-82D0-84D06847F8C6}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Numerics.dll"/>
-    <ROW Component="MathNet.Spatial.dll" ComponentId="{2F824710-08E1-4453-A11E-4155B91DB8EB}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Spatial.dll"/>
-    <ROW Component="Microsoft.CSharp.dll" ComponentId="{7482EF8D-7D49-423B-99A2-B72DCEC14426}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.CSharp.dll"/>
-    <ROW Component="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" ComponentId="{98E8EE60-0615-40CE-9A06-26E935EF5A3D}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"/>
-    <ROW Component="NDtw.dll" ComponentId="{7DC14226-6433-427E-B127-4F91DC4C3218}" Directory_="APPDIR" Attributes="0" KeyPath="NDtw.dll"/>
-    <ROW Component="NLog.dll" ComponentId="{C46F2847-D060-4385-99D2-B350C58BC300}" Directory_="APPDIR" Attributes="0" KeyPath="NLog.dll"/>
-    <ROW Component="NetTopologySuite.dll" ComponentId="{4BC4384D-7421-44F0-8248-56EF7B87EEFE}" Directory_="APPDIR" Attributes="0" KeyPath="NetTopologySuite.dll"/>
-    <ROW Component="Newtonsoft.Json.dll" ComponentId="{3F35C09F-A4AB-4CFE-829D-B7C0EAF58504}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
-    <ROW Component="NvAPIWrapper.Net.dll" ComponentId="{F69A9B2E-B5D0-452C-B983-1E5B264AC3FE}" Directory_="APPDIR" Attributes="0" KeyPath="NvAPIWrapper.Net.dll"/>
-    <ROW Component="OptAssignTest.dll" ComponentId="{89CE0A96-6094-4621-A3F9-3C69BF71AD5E}" Directory_="APPDIR" Attributes="0" KeyPath="OptAssignTest.dll"/>
-    <ROW Component="PowerCollections.dll" ComponentId="{53CF1754-C943-4C29-A434-DFDF15C06B22}" Directory_="APPDIR" Attributes="0" KeyPath="PowerCollections.dll"/>
+    <ROW Component="DirectShowLib2005.dll" ComponentId="{DF0BB30A-AB00-4DDC-806F-27FD9B0D5091}" Directory_="APPDIR" Attributes="0" KeyPath="DirectShowLib2005.dll"/>
+    <ROW Component="Emgu.CV.UI.dll" ComponentId="{90164A11-811A-455A-90FE-3ED94E3151E5}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.UI.dll"/>
+    <ROW Component="Emgu.CV.World.dll" ComponentId="{06396228-DD99-40DB-905A-AD33BB164382}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.World.dll"/>
+    <ROW Component="GeoAPI.dll" ComponentId="{C9578AB4-29E1-4EA0-A4F8-822AD0BC925D}" Directory_="APPDIR" Attributes="0" KeyPath="GeoAPI.dll"/>
+    <ROW Component="IPManager.dll" ComponentId="{82CA1A36-F7AA-497A-BCC7-29D61E9AE77F}" Directory_="APPDIR" Attributes="0" KeyPath="IPManager.dll"/>
+    <ROW Component="Indicators.dll" ComponentId="{E7DC9744-B613-4230-A560-534B16C74403}" Directory_="APPDIR" Attributes="0" KeyPath="Indicators.dll"/>
+    <ROW Component="LicenseManager.exe" ComponentId="{ADC06D5F-BDCC-4A03-A2AE-C153FF1B1565}" Directory_="APPDIR" Attributes="0" KeyPath="LicenseManager.exe"/>
+    <ROW Component="LicenseSpot.Framework.dll" ComponentId="{275978C9-E88D-46CF-AC65-47CDA2295C20}" Directory_="APPDIR" Attributes="0" KeyPath="LicenseSpot.Framework.dll"/>
+    <ROW Component="Logo.ico" ComponentId="{209085F6-0D94-4EB2-BA9C-9EFCFFF0733E}" Directory_="APPDIR" Attributes="0" KeyPath="Logo.ico" Type="0"/>
+    <ROW Component="MathNet.Numerics.IO.dll" ComponentId="{E6A33276-77CB-4ED6-BC6B-DBC638DB221F}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Numerics.IO.dll"/>
+    <ROW Component="MathNet.Numerics.dll" ComponentId="{67CCA534-8381-4DDA-BEA7-81BE43B386C4}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Numerics.dll"/>
+    <ROW Component="MathNet.Spatial.dll" ComponentId="{6D980480-EA64-4EAF-AE33-E2A42B48EC08}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Spatial.dll"/>
+    <ROW Component="Microsoft.CSharp.dll" ComponentId="{8D11C3D5-D0BD-4522-9CB9-39BFBCADC278}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.CSharp.dll"/>
+    <ROW Component="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" ComponentId="{EC7841C9-BD79-4CE2-AA45-1E085DAFAE2F}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"/>
+    <ROW Component="NDtw.dll" ComponentId="{D90669D5-9217-4B33-A143-D63CF9713CE5}" Directory_="APPDIR" Attributes="0" KeyPath="NDtw.dll"/>
+    <ROW Component="NLog.dll" ComponentId="{14A9D9F9-D380-43F4-A1F3-439F559A3556}" Directory_="APPDIR" Attributes="0" KeyPath="NLog.dll"/>
+    <ROW Component="NetTopologySuite.dll" ComponentId="{022DD5CC-26E4-4EAF-A2ED-57CDB3269F7A}" Directory_="APPDIR" Attributes="0" KeyPath="NetTopologySuite.dll"/>
+    <ROW Component="Newtonsoft.Json.dll" ComponentId="{7709F7A5-AEA2-4C84-87DD-7E7771BC05AB}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
+    <ROW Component="NvAPIWrapper.Net.dll" ComponentId="{0105C25B-4B84-4AE8-B81F-BFD17FC907DA}" Directory_="APPDIR" Attributes="0" KeyPath="NvAPIWrapper.Net.dll"/>
+    <ROW Component="OptAssignTest.dll" ComponentId="{C6E91EE6-5BBB-4DF5-97AB-ED5605FF2091}" Directory_="APPDIR" Attributes="0" KeyPath="OptAssignTest.dll"/>
+    <ROW Component="PowerCollections.dll" ComponentId="{AB27337F-F39E-4B0C-9676-4092190FB54C}" Directory_="APPDIR" Attributes="0" KeyPath="PowerCollections.dll"/>
     <ROW Component="ProductInformation" ComponentId="{D084E5D9-16AD-46DB-B135-D8D9AB1FC552}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
     <ROW Component="Roadometry" ComponentId="{D3FC62D0-0B9E-4DBD-B484-260A99633893}" Directory_="Roadometry_Dir" Attributes="0"/>
-    <ROW Component="SharpRaven.dll" ComponentId="{D2B0F631-5CB1-45A2-8B06-185A576D0896}" Directory_="APPDIR" Attributes="0" KeyPath="SharpRaven.dll"/>
-    <ROW Component="System.Collections.Immutable.dll" ComponentId="{BD43C556-4812-46BD-934D-7091C1E09A61}" Directory_="APPDIR" Attributes="0" KeyPath="System.Collections.Immutable.dll"/>
-    <ROW Component="System.Runtime.InteropServices.RuntimeInformation.dll" ComponentId="{84EAE973-E28E-4936-9F91-8C9B7E259A89}" Directory_="APPDIR" Attributes="0" KeyPath="System.Runtime.InteropServices.RuntimeInformation.dll"/>
-    <ROW Component="TrajectoryAnalyzer.exe" ComponentId="{7913E4E5-23C9-4685-BE0A-20258383CFFD}" Directory_="APPDIR" Attributes="0" KeyPath="TrajectoryAnalyzer.exe"/>
-    <ROW Component="VTC.Classifier.dll" ComponentId="{320BD5E5-C151-46D1-84D9-C80C2866DD80}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Classifier.dll"/>
-    <ROW Component="VTC.Common.dll" ComponentId="{FF87F0F7-C0E6-4935-9974-55DE14944013}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Common.dll"/>
-    <ROW Component="VTC.Kernel.dll" ComponentId="{E153E972-7839-4D34-B57E-B3587BA484A5}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Kernel.dll"/>
-    <ROW Component="VTC.KernelTests.dll" ComponentId="{AFA9EBA4-7054-4619-B18C-A30D93721D8B}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.KernelTests.dll"/>
-    <ROW Component="VTC.Reporting.dll" ComponentId="{4D79680E-06EC-4192-9381-369DA3D4BAAA}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Reporting.dll"/>
-    <ROW Component="VTC.exe" ComponentId="{9AD748F8-E575-434F-A6DD-8C232ABC6716}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.exe"/>
-    <ROW Component="ZedGraph.dll" ComponentId="{73BA3DF4-48B2-4D9B-A51F-7CA659D41B4A}" Directory_="APPDIR" Attributes="0" KeyPath="ZedGraph.dll"/>
+    <ROW Component="SharpRaven.dll" ComponentId="{DE53BC95-D5E6-4B58-BDEE-6FC3141CE630}" Directory_="APPDIR" Attributes="0" KeyPath="SharpRaven.dll"/>
+    <ROW Component="System.Collections.Immutable.dll" ComponentId="{75633288-A27C-42A5-8EAB-8B401202A662}" Directory_="APPDIR" Attributes="0" KeyPath="System.Collections.Immutable.dll"/>
+    <ROW Component="System.Runtime.InteropServices.RuntimeInformation.dll" ComponentId="{BDD2E1A1-96C5-461D-95B6-658862A2ADA0}" Directory_="APPDIR" Attributes="0" KeyPath="System.Runtime.InteropServices.RuntimeInformation.dll"/>
+    <ROW Component="TrajectoryAnalyzer.exe" ComponentId="{AC3410BD-BD40-4607-BAB2-B313C13ECC3B}" Directory_="APPDIR" Attributes="0" KeyPath="TrajectoryAnalyzer.exe"/>
+    <ROW Component="VTC.Classifier.dll" ComponentId="{28E527E0-7BEB-47AC-8467-FF3D53535439}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Classifier.dll"/>
+    <ROW Component="VTC.Common.dll" ComponentId="{8291F524-C080-419A-A78F-814812C9B8F4}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Common.dll"/>
+    <ROW Component="VTC.Kernel.dll" ComponentId="{BB58C69D-33E2-4698-B9FE-FEC3ACCAA783}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Kernel.dll"/>
+    <ROW Component="VTC.KernelTests.dll" ComponentId="{EEE5CC84-2A3D-4E50-80FE-2C789826A147}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.KernelTests.dll"/>
+    <ROW Component="VTC.Reporting.dll" ComponentId="{CC65F582-CB11-442F-8886-3C76398BFAAB}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Reporting.dll"/>
+    <ROW Component="VTC.exe" ComponentId="{676F877F-DD71-40DB-9875-845932711D7C}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.exe"/>
+    <ROW Component="ZedGraph.dll" ComponentId="{F7584CA9-464A-4725-BFD3-74FADCA8492B}" Directory_="APPDIR" Attributes="0" KeyPath="ZedGraph.dll"/>
     <ROW Component="ZedGraph.resources.dll" ComponentId="{DC684852-9A50-42EF-9CF3-5A609118EB77}" Directory_="de_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll"/>
     <ROW Component="ZedGraph.resources.dll_1" ComponentId="{330AA52D-2C6F-491C-8567-F15F8E4188FB}" Directory_="es_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_1"/>
     <ROW Component="ZedGraph.resources.dll_10" ComponentId="{003BF723-25A2-424F-8B1F-CE2F3768191E}" Directory_="tr_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_10"/>
@@ -114,34 +114,34 @@
     <ROW Component="ZedGraph.resources.dll_7" ComponentId="{B5828490-484E-4380-AEBD-319EDFCFC3C7}" Directory_="ru_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_7"/>
     <ROW Component="ZedGraph.resources.dll_8" ComponentId="{8393B748-AC01-4D71-825E-EFE7CD0CEAE4}" Directory_="sk_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_8"/>
     <ROW Component="ZedGraph.resources.dll_9" ComponentId="{A2FC45F6-A3D8-4680-966D-85735D50B328}" Directory_="sv_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_9"/>
-    <ROW Component="ZeroMQ.dll" ComponentId="{A754E031-F575-46A0-B52A-58C2CC58D814}" Directory_="APPDIR" Attributes="0" KeyPath="ZeroMQ.dll"/>
+    <ROW Component="ZeroMQ.dll" ComponentId="{6CBBE2E6-972C-408E-8099-DA80B60D0B40}" Directory_="APPDIR" Attributes="0" KeyPath="ZeroMQ.dll"/>
     <ROW Component="concrt140.dll" ComponentId="{D8D8C160-47D6-4B16-BC7F-E3DC52C35B5B}" Directory_="x64_Dir" Attributes="256" KeyPath="concrt140.dll"/>
     <ROW Component="concrt140.dll_1" ComponentId="{D8F093B4-5E53-494A-AC7C-4CA569D01E99}" Directory_="x86_Dir" Attributes="0" KeyPath="concrt140.dll_1"/>
-    <ROW Component="cublas64_91.dll" ComponentId="{B16C8600-0713-4645-A940-817A465FF6F8}" Directory_="APPDIR" Attributes="256" KeyPath="cublas64_91.dll"/>
-    <ROW Component="cudart64_91.dll" ComponentId="{858CC7FA-4A1A-4ED2-B1B1-9D83361FFF2D}" Directory_="APPDIR" Attributes="256" KeyPath="cudart64_91.dll"/>
-    <ROW Component="cudnn64_7.dll" ComponentId="{AB5CB39F-CFCC-4727-8114-F097B28F670F}" Directory_="APPDIR" Attributes="256" KeyPath="cudnn64_7.dll"/>
-    <ROW Component="curand64_91.dll" ComponentId="{E9671130-7341-4D0B-9949-48AC9A846050}" Directory_="APPDIR" Attributes="256" KeyPath="curand64_91.dll"/>
+    <ROW Component="cublas64_91.dll" ComponentId="{44321F08-4324-44D6-A123-0D6AEA1B36DF}" Directory_="APPDIR" Attributes="256" KeyPath="cublas64_91.dll"/>
+    <ROW Component="cudart64_91.dll" ComponentId="{79D7AB59-33FE-43BF-B062-24950D56A5AE}" Directory_="APPDIR" Attributes="256" KeyPath="cudart64_91.dll"/>
+    <ROW Component="cudnn64_7.dll" ComponentId="{532459D8-01A1-43C0-AA2F-D0D529EACCBE}" Directory_="APPDIR" Attributes="256" KeyPath="cudnn64_7.dll"/>
+    <ROW Component="curand64_91.dll" ComponentId="{56917387-5A98-4E82-B1EA-A2236ECD0AFD}" Directory_="APPDIR" Attributes="256" KeyPath="curand64_91.dll"/>
     <ROW Component="cvextern.dll" ComponentId="{0BBDBD17-7826-40F8-9A79-55CEE2655192}" Directory_="x64_Dir" Attributes="256" KeyPath="cvextern.dll"/>
     <ROW Component="cvextern.dll_1" ComponentId="{356246F1-F884-46DB-9FE1-78011B729F17}" Directory_="x86_Dir" Attributes="0" KeyPath="cvextern.dll_1"/>
-    <ROW Component="deviceQuery.exe" ComponentId="{1B70D1CB-6EE8-4791-93A8-FBBE454E35F8}" Directory_="APPDIR" Attributes="256" KeyPath="deviceQuery.exe"/>
+    <ROW Component="deviceQuery.exe" ComponentId="{59236BA1-48FF-40CD-A536-D87E3930945B}" Directory_="APPDIR" Attributes="256" KeyPath="deviceQuery.exe"/>
     <ROW Component="eventConfig.xml" ComponentId="{639105E7-43BA-49C8-AE4D-6EBED690684E}" Directory_="config_Dir" Attributes="0" KeyPath="eventConfig.xml" Type="0"/>
-    <ROW Component="libsodium.dll" ComponentId="{76F41E75-319C-42C1-9DE2-BD6DE563428F}" Directory_="amd64_Dir" Attributes="256" KeyPath="libsodium.dll"/>
-    <ROW Component="libsodium.dll_1" ComponentId="{3382DD0B-ADC8-4C2D-BD6E-E82023A7B5DC}" Directory_="i386_Dir" Attributes="0" KeyPath="libsodium.dll_1"/>
-    <ROW Component="libsodium.so" ComponentId="{E37B7E2C-B20E-46F9-A0AE-AEC8592280CB}" Directory_="amd64_Dir" Attributes="0" KeyPath="libsodium.so" Type="0"/>
-    <ROW Component="libsodium.so_1" ComponentId="{ECE52B56-0045-4F72-AD22-77E4592CCCFB}" Directory_="i386_Dir" Attributes="0" KeyPath="libsodium.so_1" Type="0"/>
-    <ROW Component="libzmq.dll" ComponentId="{F7224436-C53C-467A-9327-EAF9B3E95DA5}" Directory_="amd64_Dir" Attributes="256" KeyPath="libzmq.dll"/>
-    <ROW Component="libzmq.dll_1" ComponentId="{06CCF6F2-8E82-448A-A432-131DDAF2F29A}" Directory_="i386_Dir" Attributes="0" KeyPath="libzmq.dll_1"/>
+    <ROW Component="libsodium.dll" ComponentId="{30D84DFB-C05C-40F2-B2AD-F8ADFCDEB152}" Directory_="amd64_Dir" Attributes="256" KeyPath="libsodium.dll"/>
+    <ROW Component="libsodium.dll_1" ComponentId="{2E5B2B38-8281-4782-87F7-BDDEED4A8737}" Directory_="i386_Dir" Attributes="0" KeyPath="libsodium.dll_1"/>
+    <ROW Component="libsodium.so" ComponentId="{E45B3F77-C401-48CD-8B7A-AD9AC5B076F2}" Directory_="amd64_Dir" Attributes="0" KeyPath="libsodium.so" Type="0"/>
+    <ROW Component="libsodium.so_1" ComponentId="{A76F4520-20C3-415F-9894-CC54153101C2}" Directory_="i386_Dir" Attributes="0" KeyPath="libsodium.so_1" Type="0"/>
+    <ROW Component="libzmq.dll" ComponentId="{D48C11E1-3FFB-4456-9335-D38A6E7B5F2E}" Directory_="amd64_Dir" Attributes="256" KeyPath="libzmq.dll"/>
+    <ROW Component="libzmq.dll_1" ComponentId="{04A700C2-F22E-4567-BEFD-584EC3302312}" Directory_="i386_Dir" Attributes="0" KeyPath="libzmq.dll_1"/>
     <ROW Component="msvcp140.dll" ComponentId="{E26B38D1-0D33-4F90-8E7B-45AC018A2271}" Directory_="x64_Dir" Attributes="256" KeyPath="msvcp140.dll"/>
     <ROW Component="msvcp140.dll_1" ComponentId="{52844C7D-9224-4901-8F15-0E632181D54C}" Directory_="x86_Dir" Attributes="0" KeyPath="msvcp140.dll_1"/>
     <ROW Component="opencv_ffmpeg341.dll" ComponentId="{AE0F2218-00BA-4273-AB8E-7894BC48B2E2}" Directory_="x86_Dir" Attributes="0" KeyPath="opencv_ffmpeg341.dll"/>
     <ROW Component="opencv_ffmpeg341_64.dll" ComponentId="{286048A9-7931-4153-97CB-F7821AC86FA8}" Directory_="x64_Dir" Attributes="256" KeyPath="opencv_ffmpeg341_64.dll"/>
-    <ROW Component="pthreadGC2.dll" ComponentId="{F0E9C419-22AE-41C9-A171-A397725BC790}" Directory_="APPDIR" Attributes="256" KeyPath="pthreadGC2.dll"/>
-    <ROW Component="pthreadVC2.dll" ComponentId="{A9429DF0-AF6A-4B9E-8E99-C3C668CD6E3C}" Directory_="APPDIR" Attributes="256" KeyPath="pthreadVC2.dll"/>
+    <ROW Component="pthreadGC2.dll" ComponentId="{E7E01405-D10B-4174-95D4-D8D460B12147}" Directory_="APPDIR" Attributes="256" KeyPath="pthreadGC2.dll"/>
+    <ROW Component="pthreadVC2.dll" ComponentId="{19EC3391-32F7-4398-880E-DD9229B66C8F}" Directory_="APPDIR" Attributes="256" KeyPath="pthreadVC2.dll"/>
     <ROW Component="transport.names" ComponentId="{C8702646-E6C8-4895-9BA1-B91618AD56C2}" Directory_="DetectionNetwork_Dir" Attributes="0" KeyPath="transport.names" Type="0"/>
     <ROW Component="vcruntime140.dll" ComponentId="{9FBAA0EF-0C77-4C83-8A4F-D532A867F6CA}" Directory_="x64_Dir" Attributes="256" KeyPath="vcruntime140.dll"/>
     <ROW Component="vcruntime140.dll_1" ComponentId="{31F22723-DFBE-4C23-90FE-779E55ED2463}" Directory_="x86_Dir" Attributes="0" KeyPath="vcruntime140.dll_1"/>
-    <ROW Component="yolo_cpp_dll.dll" ComponentId="{887709B5-DE03-40FD-88B7-93A2879D9228}" Directory_="APPDIR" Attributes="256" KeyPath="yolo_cpp_dll.dll"/>
-    <ROW Component="yolo_cpp_dll_no_gpu.dll" ComponentId="{2F20D556-A17F-417C-97CF-5395207514E3}" Directory_="APPDIR" Attributes="256" KeyPath="yolo_cpp_dll_no_gpu.dll"/>
+    <ROW Component="yolo_cpp_dll.dll" ComponentId="{DC254ADC-2138-4154-8E60-1133AA180CE4}" Directory_="APPDIR" Attributes="256" KeyPath="yolo_cpp_dll.dll"/>
+    <ROW Component="yolo_cpp_dll_no_gpu.dll" ComponentId="{79253625-8DA0-48C7-9DE9-11C262F6B6CD}" Directory_="APPDIR" Attributes="256" KeyPath="yolo_cpp_dll_no_gpu.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="A9B3CC_B8E4_4F03_B719_D9E76675954E" Title="Visual C++ 2010 x64 (MFC Security Update)" Description="Visual C++ 2010 x64 (MFC Security Update)" Display="3" Level="1" Attributes="0" Components="AI_ExePath"/>
@@ -237,7 +237,7 @@
     <ROW File="ZedGraph.resources.dll_9" Component_="ZedGraph.resources.dll_9" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\sv\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_10"/>
     <ROW File="ZedGraph.xml" Component_="Logo.ico" FileName="ZedGraph.xml" Attributes="0" SourcePath="..\bin\ZedGraph.xml" SelfReg="false" NextFile="ZeroMQ.xml"/>
     <ROW File="ZeroMQ.dll" Component_="ZeroMQ.dll" FileName="ZeroMQ.dll" Attributes="0" SourcePath="..\bin\ZeroMQ.dll" SelfReg="false" NextFile="Logo.ico"/>
-    <ROW File="ZeroMQ.xml" Component_="Logo.ico" FileName="ZeroMQ.xml" Attributes="0" SourcePath="..\bin\ZeroMQ.xml" SelfReg="false"/>
+    <ROW File="ZeroMQ.xml" Component_="Logo.ico" FileName="ZeroMQ.xml" Attributes="0" SourcePath="..\bin\ZeroMQ.xml" SelfReg="false" NextFile="libsodium.dll"/>
     <ROW File="concrt140.dll" Component_="concrt140.dll" FileName="CONCRT~1.DLL|concrt140.dll" Attributes="0" SourcePath="..\bin\x64\concrt140.dll" SelfReg="false" NextFile="cvextern.dll"/>
     <ROW File="concrt140.dll_1" Component_="concrt140.dll_1" FileName="CONCRT~1.DLL|concrt140.dll" Attributes="0" SourcePath="..\bin\x86\concrt140.dll" SelfReg="false" NextFile="cvextern.dll_1"/>
     <ROW File="cublas64_91.dll" Component_="cublas64_91.dll" FileName="CUBLAS~1.DLL|cublas64_91.dll" Attributes="0" SourcePath="..\bin\cublas64_91.dll" SelfReg="false" NextFile="cudart64_91.dll"/>
@@ -257,7 +257,7 @@
     <ROW File="libzmq.dll" Component_="libzmq.dll" FileName="libzmq.dll" Attributes="0" SourcePath="..\bin\amd64\libzmq.dll" SelfReg="false" NextFile="libzmq.so"/>
     <ROW File="libzmq.dll_1" Component_="libzmq.dll_1" FileName="libzmq.dll" Attributes="0" SourcePath="..\bin\i386\libzmq.dll" SelfReg="false" NextFile="libzmq.so_1"/>
     <ROW File="libzmq.so" Component_="libsodium.so" FileName="libzmq.so" Attributes="0" SourcePath="..\bin\amd64\libzmq.so" SelfReg="false" NextFile="libsodium.dll_1"/>
-    <ROW File="libzmq.so_1" Component_="libsodium.so_1" FileName="libzmq.so" Attributes="0" SourcePath="..\bin\i386\libzmq.so" SelfReg="false" NextFile="deviceQuery.exe"/>
+    <ROW File="libzmq.so_1" Component_="libsodium.so_1" FileName="libzmq.so" Attributes="0" SourcePath="..\bin\i386\libzmq.so" SelfReg="false"/>
     <ROW File="msvcp140.dll" Component_="msvcp140.dll" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x64\msvcp140.dll" SelfReg="false" NextFile="opencv_ffmpeg341_64.dll"/>
     <ROW File="msvcp140.dll_1" Component_="msvcp140.dll_1" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x86\msvcp140.dll" SelfReg="false" NextFile="opencv_ffmpeg341.dll"/>
     <ROW File="opencv_ffmpeg341.dll" Component_="opencv_ffmpeg341.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg341.dll" Attributes="0" SourcePath="..\bin\x86\opencv_ffmpeg341.dll" SelfReg="false" NextFile="vcruntime140.dll_1"/>
@@ -266,7 +266,7 @@
     <ROW File="pthreadVC2.dll" Component_="pthreadVC2.dll" FileName="PTHREA~2.DLL|pthreadVC2.dll" Attributes="0" SourcePath="..\bin\pthreadVC2.dll" SelfReg="false" NextFile="SharpRaven.dll"/>
     <ROW File="regionConfig.xml" Component_="eventConfig.xml" FileName="REGION~1.XML|regionConfig.xml" Attributes="0" SourcePath="..\bin\config\regionConfig.xml" SelfReg="false" NextFile="ZedGraph.resources.dll"/>
     <ROW File="report.css" Component_="BigLogo.png" FileName="report.css" Attributes="0" SourcePath="..\bin\ReportAssets\report.css" SelfReg="false" NextFile="report.js"/>
-    <ROW File="report.js" Component_="BigLogo.png" FileName="report.js" Attributes="0" SourcePath="..\bin\ReportAssets\report.js" SelfReg="false" NextFile="libsodium.dll"/>
+    <ROW File="report.js" Component_="BigLogo.png" FileName="report.js" Attributes="0" SourcePath="..\bin\ReportAssets\report.js" SelfReg="false" NextFile="deviceQuery.exe"/>
     <ROW File="transport.names" Component_="transport.names" FileName="TRANSP~1.NAM|transport.names" Attributes="0" SourcePath="..\bin\DetectionNetwork\transport.names" SelfReg="false" NextFile="transport_v3_d1.cfg"/>
     <ROW File="transport_v3_d1.cfg" Component_="transport.names" FileName="TRANSP~1.CFG|transport_v3_d1.cfg" Attributes="0" SourcePath="..\bin\DetectionNetwork\transport_v3_d1.cfg" SelfReg="false" NextFile="transport_v3_d1.weights"/>
     <ROW File="transport_v3_d1.weights" Component_="transport.names" FileName="TRANSP~1.WEI|transport_v3_d1.weights" Attributes="0" SourcePath="..\bin\DetectionNetwork\transport_v3_d1.weights" SelfReg="false" NextFile="ZedGraph.resources.dll_1"/>
@@ -424,7 +424,6 @@
     <ROW Condition="(VersionNT &lt;&gt; 500)" Description="[ProductName] cannot be installed on [WindowsTypeNT50Display]." DescriptionLocId="AI.LaunchCondition.NoNT50" IsPredefined="true" Builds="DefaultBuild"/>
     <ROW Condition="(VersionNT64 OR ((VersionNT &lt;&gt; 501) OR (ServicePackLevel = 3))) AND ((VersionNT &lt;&gt; 502) OR (ServicePackLevel = 2))" Description="[ProductName] cannot be installed on [WindowsTypeNT5XDisplay]." DescriptionLocId="AI.LaunchCondition.NoNT5X" IsPredefined="true" Builds="DefaultBuild"/>
     <ROW Condition="AI_DETECTED_DOTNET_VERSION &gt;= AI_REQUIRED_DOTNET_VERSION" Description="[ProductName] cannot be installed on systems with .NET Framework version lower than [AI_REQUIRED_DOTNET_DISPLAY]." DescriptionLocId="AI.LaunchCondition.DotNET" IsPredefined="true" Builds="DefaultBuild"/>
-    <ROW Condition="AI_DETECTED_INTERNET_CONNECTION" Description="[ProductName] requires an active Internet connection for installation. Please check your network configuration and proxy settings." DescriptionLocId="AI.LaunchCondition.Internet" IsPredefined="true" Builds="DefaultBuild"/>
     <ROW Condition="SETUPEXEDIR OR (REMOVE=&quot;ALL&quot;)" Description="This package can only be run from a bootstrapper." DescriptionLocId="AI.LaunchCondition.RequireBootstrapper" IsPredefined="true" Builds="DefaultBuild"/>
     <ROW Condition="VersionNT" Description="[ProductName] cannot be installed on [WindowsType9XDisplay]." DescriptionLocId="AI.LaunchCondition.No9X" IsPredefined="true" Builds="DefaultBuild"/>
   </COMPONENT>

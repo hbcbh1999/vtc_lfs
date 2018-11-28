@@ -150,7 +150,6 @@ namespace VTC.Actors
                         regionEditor = new RegionEditor(_cameras, _regionConfigDataAccessLayer, _currentJob.RegionConfiguration);
                     }
 
-
                     if (regionEditor.ShowDialog() == DialogResult.OK)
                     {
                         _processingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
