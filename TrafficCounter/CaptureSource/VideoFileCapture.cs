@@ -27,5 +27,10 @@ namespace VTC.CaptureSource
             FrameRate = capture.GetCaptureProperty(CapProp.Fps);      
             return capture;
         }
+
+       public override bool IsLiveCapture()
+       {
+            return false;
+       }
     }
 }

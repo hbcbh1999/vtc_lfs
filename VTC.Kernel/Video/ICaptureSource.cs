@@ -44,5 +44,7 @@ namespace VTC.Kernel.Video
         /// Destroy underlying camera.
         /// </summary>
         bool CaptureComplete();
+
+        bool IsLiveCapture();
     }
 }

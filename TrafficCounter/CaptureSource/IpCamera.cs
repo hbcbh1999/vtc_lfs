@@ -15,5 +15,10 @@ namespace VTC.CaptureSource
         {
             return new VideoCapture(_connectionString);
         }
+
+       public override bool IsLiveCapture()
+       {
+            return true;
+       }
     }
 }

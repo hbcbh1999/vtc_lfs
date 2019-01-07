@@ -99,6 +99,16 @@ namespace VTC.Kernel
             var road14Movements = RoadPairToTurnMovements(approach1, exit1, approach4, exit4,Turn.Right, ObjectType.Car, 20);
             turnMovements.AddRange(road14Movements);
 
+            //U-Turns
+            var road13Movements = RoadPairToTurnMovements(approach1,exit1,approach3,exit3,Turn.UTurn, ObjectType.Car, 20);
+            turnMovements.AddRange(road13Movements);
+            var road24Movements = RoadPairToTurnMovements(approach2,exit2,approach4,exit4,Turn.UTurn, ObjectType.Car, 20);
+            turnMovements.AddRange(road24Movements);
+            var road31Movements = RoadPairToTurnMovements(approach3,exit3,approach1,exit1,Turn.UTurn, ObjectType.Car, 20);
+            turnMovements.AddRange(road31Movements);
+            var road42Movements = RoadPairToTurnMovements(approach4,exit4,approach2,exit2,Turn.UTurn, ObjectType.Car, 20);
+            turnMovements.AddRange(road42Movements);
+
             foreach(var m in turnMovements)
             { 
                 TrajectoryPrototypes.Add(m);
@@ -166,7 +176,8 @@ namespace VTC.Kernel
             exitCentroid.Y = exit.Centroid.Y;
             exitVertexList.Add(exitCentroid);
 
-            Parallel.ForEach(approachVertexList, approachVertex => 
+            //Parallel.ForEach(approachVertexList, approachVertex => 
+            foreach(var approachVertex in approachVertexList)
             { 
                 foreach(var exitVertex in exitVertexList)
                 {
@@ -180,7 +191,7 @@ namespace VTC.Kernel
                     var movement = new Movement(approach.DisplayName, exit.DisplayName, turnType, objectType, trackedObject.StateHistory,0);
                     movements.Add(movement);
                 }
-            });
+            }
 
             var movementsList = movements.ToList();
             MyExtensions.Shuffle(movementsList);
@@ -223,7 +234,8 @@ namespace VTC.Kernel
             exitBCentroid.Y = exitB.Centroid.Y;
             exitBVertexList.Add(exitBCentroid);
 
-            Parallel.ForEach(approachAVertexList, approachVertex => 
+            //Parallel.ForEach(approachAVertexList, approachVertex => 
+            foreach(var approachVertex in approachAVertexList)
             { 
                 foreach(var exitVertex in exitBVertexList)
                 {
@@ -239,7 +251,7 @@ namespace VTC.Kernel
                         }
                     }
                 }
-            });
+            }
             
             var movementsList = movements.ToList();
             MyExtensions.Shuffle(movementsList);

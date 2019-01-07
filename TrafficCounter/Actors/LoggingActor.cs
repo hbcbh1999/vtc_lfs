@@ -129,7 +129,7 @@ namespace VTC.Actors
                 GenerateReport()
             );
 
-            Receive<CaptureSourceCompleteMessage>(message =>
+            Receive<GenerateDailyReportMessage>(message =>
                 GenerateDailyReport()
             );
 
@@ -179,7 +179,7 @@ namespace VTC.Actors
 
             Self.Tell(new ActorHeartbeatMessage());
 
-            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(24,0,0),new TimeSpan(24,0,0),Self, new GenerateDailyReportMessage(), Self);
+            //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(1,0,0),new TimeSpan(1,0,0),Self, new GenerateDailyReportMessage(), Self);
         }
 
         private void UpdateFileCreationTime(DateTime dt)
@@ -514,6 +514,8 @@ namespace VTC.Actors
 
         private void GenerateDailyReport()
         {
+            Logger.Log(LogLevel.Info, "Generating daily report...");
+
             if(_batchMode)
             {
                 return;
@@ -523,6 +525,8 @@ namespace VTC.Actors
 
             _videoStartTime = DateTime.Now;
             CreateOrReplaceOutputFolderIfExists();
+
+            Logger.Log(LogLevel.Info, "Daily report generated. Starting new day.");
         }
 
         private void GenerateRegionsLegendImage(string folderPath)
@@ -570,6 +574,8 @@ namespace VTC.Actors
             ev.Tags.Add("Name", message.CaptureSource.Name);
             ravenClient.Capture(ev);
             _videoStartTime = DateTime.Now;
+
+            _batchMode = message.CaptureSource.IsLiveCapture();
         }
 
         private void UpdateConfig(RegionConfig config)

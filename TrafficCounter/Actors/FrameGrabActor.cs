@@ -25,6 +25,7 @@ namespace VTC.Actors
         private int FramesProcessed = 0;
         private double TotalFramesInVideo = 0;
         private DateTime ProcessingStartTime;
+        private bool LiveCapture = false;
 
         public delegate void UpdateUIDelegate(TrafficCounterUIAccessoryInfo accessoryInfo);
         private UpdateUIDelegate _updateUiDelegate;
@@ -102,16 +103,23 @@ namespace VTC.Actors
                 { ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned)); }
                 if(FramesProcessed < 10)
                 { 
+                    var clone2 = frame.Clone();
                     var configurationActor = Context.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
-                    configurationActor.Tell(new FrameMessage(cloned));
+                    configurationActor.Tell(new FrameMessage(clone2));
                 }
                 FramesProcessed++;
                 Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
             }
 
             var completed = CaptureSource?.CaptureComplete();
+            var isLive = CaptureSource?.IsLiveCapture();
             if (completed.HasValue && completed.Value)
             {
+                if(isLive.HasValue && isLive.Value)
+                {
+                    return; //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
+                }
+
                 ProcessingActor?.Tell(new RequestBackgroundFrameMessage());
                 ProcessingActor?.Tell(new CaptureSourceCompleteMessage());
                 LoggingActor?.Tell(new LogUserMessage("Video complete", LogLevel.Info));

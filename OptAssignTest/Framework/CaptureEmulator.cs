@@ -86,5 +86,10 @@ namespace OptAssignTest.Framework
         {
             return false;
         }
+
+        public bool IsLiveCapture()
+        {
+            return false;
+        }
     }
 }

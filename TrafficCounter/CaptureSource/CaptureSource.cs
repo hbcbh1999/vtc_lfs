@@ -124,5 +124,7 @@ namespace VTC.CaptureSource
         {
             return Name;
         }
+
+        public abstract bool IsLiveCapture();
     }
 }
