@@ -25,9 +25,18 @@ namespace VTC.Kernel
             finalState.Y = exitVertex.Y;
             var p2 = new Point(Convert.ToInt32(finalState.X), Convert.ToInt32(finalState.Y));
 
-            var p1 = new Point();
+            var pApproachRoadlineMidpoint = new Point();
+            pApproachRoadlineMidpoint.X = Convert.ToInt32((approachRoadLine.ApproachCentroidX + approachRoadLine.ExitCentroidX)/2);
+            pApproachRoadlineMidpoint.Y = Convert.ToInt32((approachRoadLine.ApproachCentroidY + approachRoadLine.ExitCentroidY)/2);
 
-            p1 = Intersection(approachRoadLine, exitRoadLine);            
+            var pExitRoadlineMidpoint = new Point();
+            pExitRoadlineMidpoint.X = Convert.ToInt32((exitRoadLine.ApproachCentroidX + exitRoadLine.ExitCentroidX)/2);
+            pExitRoadlineMidpoint.Y = Convert.ToInt32((exitRoadLine.ApproachCentroidY + exitRoadLine.ExitCentroidY)/2);
+
+            var p1 = new Point();
+            p1.X = Convert.ToInt32((pApproachRoadlineMidpoint.X + pExitRoadlineMidpoint.X)/2);
+            p1.Y = Convert.ToInt32((pApproachRoadlineMidpoint.Y + pExitRoadlineMidpoint.Y)/2);
+            //p1 = Intersection(approachRoadLine, exitRoadLine);            
 
             TrackedObject syntheticTrajectory = new TrackedObject(initialState,0);
 
@@ -43,6 +52,60 @@ namespace VTC.Kernel
                 se.Vx = derivative.X;
                 se.Vy = derivative.Y;
                 syntheticTrajectory.StateHistory.Add(se); 
+            }
+
+            syntheticTrajectory.StateHistory.Add(finalState);
+
+            syntheticTrajectory.StateHistory[0].Vx = syntheticTrajectory.StateHistory[1].Vx;
+            syntheticTrajectory.StateHistory[0].Vy = syntheticTrajectory.StateHistory[1].Vy;
+
+            syntheticTrajectory.StateHistory.Last().Vx = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vx;
+            syntheticTrajectory.StateHistory.Last().Vy = syntheticTrajectory.StateHistory[syntheticTrajectory.StateHistory.Count - 2].Vy;
+
+            return syntheticTrajectory;
+        }
+
+        public static TrackedObject SyntheticTrajectoryCircleSegment(System.Drawing.Point approachVertex, System.Drawing.Point exitVertex, RoadLine approachRoadLine, RoadLine exitRoadLine)
+        {
+            Console.WriteLine("--SyntheticTrajectory--");
+            Console.WriteLine("ApproachVertex:("+approachVertex.X+","+approachVertex.Y+")");
+            Console.WriteLine("ExitVertex:("+exitVertex.X+","+exitVertex.Y+")");
+            Console.WriteLine("ApproachRoadline:("+approachRoadLine.ApproachCentroidX+","+approachRoadLine.ApproachCentroidY+") to ("+approachRoadLine.ExitCentroidX+","+approachRoadLine.ExitCentroidY+")");
+            Console.WriteLine("ExitRoadLine:("+exitRoadLine.ApproachCentroidX+","+exitRoadLine.ApproachCentroidY+") to ("+exitRoadLine.ExitCentroidX+","+exitRoadLine.ExitCentroidY+")");
+
+
+            var initialState = new StateEstimate();
+            initialState.X = approachVertex.X;
+            initialState.Y = approachVertex.Y;
+            var p0 = new Point(Convert.ToInt32(initialState.X),Convert.ToInt32(initialState.Y));
+
+            var finalState = new StateEstimate();
+            finalState.X = exitVertex.X;
+            finalState.Y = exitVertex.Y;
+            var p2 = new Point(Convert.ToInt32(finalState.X), Convert.ToInt32(finalState.Y));
+
+            var dx = (approachRoadLine.ExitCentroidX - approachRoadLine.ApproachCentroidX)*0.1;
+            var dy = (approachRoadLine.ExitCentroidY - approachRoadLine.ApproachCentroidY)*0.1;
+            var p1 = new Point();
+            p1.X = Convert.ToInt32(approachVertex.X + dx);
+            p1.Y = Convert.ToInt32(approachVertex.Y + dy);
+
+            TrackedObject syntheticTrajectory = new TrackedObject(initialState,0);
+
+            var c = new Circle(p0,p1,p2);
+            var a1 = c.AngleFromPoint(p1);
+            var a2 = c.AngleFromPoint(p2);
+            var d = c.TurnDirection(p0,p1);
+
+            var angleDelta = 0.0;
+
+            if(d == Circle.Direction.Clockwise)
+            {
+                
+            }
+            else if (d == Circle.Direction.Counterclockwise)
+            {
+
             }
 
             syntheticTrajectory.StateHistory.Add(finalState);
@@ -297,5 +360,154 @@ namespace VTC.Kernel
 
             return p;
         }
+    }
+
+    public class Circle
+    {
+        public double Xc;
+        public double Yc;
+        public double R;
+
+        public enum Direction
+        {
+            Clockwise,
+            Counterclockwise,
+            None
+        };
+
+        // Taken from:
+        // http://csharphelper.com/blog/2016/09/draw-a-circle-through-three-points-in-c/
+        public Circle(Point a, Point b, Point c)
+        {
+            // Get the perpendicular bisector of (x1, y1) and (x2, y2).
+            float x1 = (b.X + a.X) / 2;
+            float y1 = (b.Y + a.Y) / 2;
+            float dy1 = b.X - a.X;
+            float dx1 = -(b.Y - a.Y);
+
+            // Get the perpendicular bisector of (x2, y2) and (x3, y3).
+            float x2 = (c.X + b.X) / 2;
+            float y2 = (c.Y + b.Y) / 2;
+            float dy2 = c.X - b.X;
+            float dx2 = -(c.Y - b.Y);
+
+            // See where the lines intersect.
+            bool lines_intersect, segments_intersect;
+            PointF intersection, close1, close2;
+            FindIntersection(
+                new PointF(x1, y1), new PointF(x1 + dx1, y1 + dy1),
+                new PointF(x2, y2), new PointF(x2 + dx2, y2 + dy2),
+                out lines_intersect, out segments_intersect,
+                out intersection, out close1, out close2);
+            if (!lines_intersect)
+            {
+                Xc = 0;
+                Yc = 0;
+                R = 0;
+            }
+            else
+            {
+                Xc = intersection.X;
+                Yc = intersection.Y;
+                float dx = (float) Xc - a.X;
+                float dy = (float) Yc- a.Y;
+                R = (float)Math.Sqrt(dx * dx + dy * dy);
+            }
+        }
+
+        public double AngleFromPoint(Point p)
+        {
+            double angle = Math.Atan2(p.Y - Yc, p.X - Xc);
+            return angle;
+        }
+
+        public Direction TurnDirection(Point p1, Point p2)
+        {
+            Direction d = Direction.None;
+
+            var a1 = AngleFromPoint(p1);
+            var a2 = AngleFromPoint(p2);
+
+            if(a2>a1)
+            {
+                d = Direction.Clockwise;
+            }
+            else if (a1 < a2)
+            {
+                d = Direction.Counterclockwise;
+            }
+
+            return d;
+        }
+
+        // Find the point of intersection between
+        // the lines p1 --> p2 and p3 --> p4.
+        // Taken from:
+        // http://csharphelper.com/blog/2014/08/determine-where-two-lines-intersect-in-c/
+        private static void FindIntersection(
+        PointF p1, PointF p2, PointF p3, PointF p4,
+        out bool lines_intersect, out bool segments_intersect,
+        out PointF intersection,
+        out PointF close_p1, out PointF close_p2)
+        {
+            // Get the segments' parameters.
+            float dx12 = p2.X - p1.X;
+            float dy12 = p2.Y - p1.Y;
+            float dx34 = p4.X - p3.X;
+            float dy34 = p4.Y - p3.Y;
+
+            // Solve for t1 and t2
+            float denominator = (dy12 * dx34 - dx12 * dy34);
+
+            float t1 =
+                ((p1.X - p3.X) * dy34 + (p3.Y - p1.Y) * dx34)
+                    / denominator;
+            if (float.IsInfinity(t1))
+            {
+                // The lines are parallel (or close enough to it).
+                lines_intersect = false;
+                segments_intersect = false;
+                intersection = new PointF(float.NaN, float.NaN);
+                close_p1 = new PointF(float.NaN, float.NaN);
+                close_p2 = new PointF(float.NaN, float.NaN);
+                return;
+            }
+            lines_intersect = true;
+
+            float t2 =
+                ((p3.X - p1.X) * dy12 + (p1.Y - p3.Y) * dx12)
+                    / -denominator;
+
+            // Find the point of intersection.
+            intersection = new PointF(p1.X + dx12 * t1, p1.Y + dy12 * t1);
+
+            // The segments intersect if t1 and t2 are between 0 and 1.
+            segments_intersect =
+                ((t1 >= 0) && (t1 <= 1) &&
+                 (t2 >= 0) && (t2 <= 1));
+
+            // Find the closest points on the segments.
+            if (t1 < 0)
+            {
+                t1 = 0;
+            }
+            else if (t1 > 1)
+            {
+                t1 = 1;
+            }
+
+            if (t2 < 0)
+            {
+                t2 = 0;
+            }
+            else if (t2 > 1)
+            {
+                t2 = 1;
+            }
+
+            close_p1 = new PointF(p1.X + dx12 * t1, p1.Y + dy12 * t1);
+            close_p2 = new PointF(p3.X + dx34 * t2, p3.Y + dy34 * t2);
+        }
+
     }
 }
