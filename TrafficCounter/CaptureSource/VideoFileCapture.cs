@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
+using MediaInfo.DotNetWrapper;
+
 
 namespace VTC.CaptureSource
 {
@@ -28,9 +31,19 @@ namespace VTC.CaptureSource
             return capture;
         }
 
-       public override bool IsLiveCapture()
-       {
+        public override bool IsLiveCapture()
+        {
             return false;
-       }
+        }
+
+        public override double FPS()
+        {
+            var mi = new MediaInfo.DotNetWrapper.MediaInfo();
+            mi.Open(_path);
+            //mi.Option("Info_Parameters");
+            var fpsString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video,0,"FPS");
+            var fps = Double.Parse(fpsString);
+            return fps;
+        }
     }
 }

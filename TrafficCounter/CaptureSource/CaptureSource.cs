@@ -83,6 +83,10 @@ namespace VTC.CaptureSource
                             return null;
                         }
 
+                        var tnow = DateTime.Now;
+                        _calculatedFPS = 1/((_lastFrameTime - tnow).Milliseconds/1000.0);
+                        _lastFrameTime = tnow;
+
                         return frame.ToImage<Bgr, byte>().Resize(640, 480, Inter.Cubic);
                     }
                 }
@@ -126,5 +130,10 @@ namespace VTC.CaptureSource
         }
 
         public abstract bool IsLiveCapture();
+
+        private DateTime _lastFrameTime = DateTime.Now; //Only used by live and IP camera, not video-files.
+        public double _calculatedFPS = 0.0; //Only used by live and IP camera, not video-files.
+
+        public abstract double FPS();
     }
 }

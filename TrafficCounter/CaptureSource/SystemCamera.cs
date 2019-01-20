@@ -16,9 +16,14 @@ namespace VTC.CaptureSource
             return new VideoCapture(_systemDeviceIndex);
         }
 
-       public override bool IsLiveCapture()
-       {
+        public override bool IsLiveCapture()
+        {
             return true;
-       }
+        }
+
+        public override double FPS()
+        {
+            return _calculatedFPS;
+        }
     }
 }
