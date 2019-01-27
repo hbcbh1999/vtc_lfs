@@ -46,7 +46,7 @@ namespace VTC.KernelTests
                 var watch = Stopwatch.StartNew();
                 try
                 {
-                    var mhtTask = Task.Run(() => mht.Update(measurements, ct), ct);
+                    var mhtTask = Task.Run(() => mht.Update(measurements, ct, 0.1), ct);
                     if (mhtTask.Wait(TimeSpan.FromMilliseconds(100)))
                     {
                     }

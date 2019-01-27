@@ -108,7 +108,7 @@ namespace VTC.Actors
                     var captureSource = LoadCameraFromFilename(_currentJob.VideoPath);
                     _frameGrabActor.Tell(new NewVideoSourceMessage(captureSource));
                     _currentVideoName = captureSource.Name;
-                    _frameGrabActor.Tell(new UpdateVideoPropertiesMessage(captureSource.FrameRate, captureSource.FrameCount));
+                    _frameGrabActor.Tell(new UpdateVideoPropertiesMessage(captureSource.FPS(), captureSource.FrameCount));
                     _loggingActor.Tell(new NewVideoSourceMessage(captureSource));
                     DateTime videoTime = File.GetCreationTime(_currentJob.VideoPath);
                     _loggingActor.Tell(new FileCreationTimeMessage(videoTime));

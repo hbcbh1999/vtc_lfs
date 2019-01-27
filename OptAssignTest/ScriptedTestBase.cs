@@ -30,7 +30,7 @@ namespace OptAssignTest
 
             // initialize background
             var background = new Image<Bgr, byte>((int) 640, (int) 480, new Bgr(Color.Black));
-            vista.Update(background);
+            vista.Update(background,0.1);
 
             // run the script
             for (uint frame = 0; ! script.IsDone(frame); frame++)
@@ -38,7 +38,7 @@ namespace OptAssignTest
                 var image = background.Clone();
 
                 script.Draw(frame, image);
-                vista.Update(image);
+                vista.Update(image, 0.1);
 
                 // run validation for the current frame
                 testAction(vista, frame);

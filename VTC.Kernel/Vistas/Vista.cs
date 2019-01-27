@@ -116,7 +116,7 @@ namespace VTC.Kernel.Vistas
         }
 
         public Measurement[] MeasurementsArray;
-        public void Update(Image<Bgr, byte> newFrame)
+        public void Update(Image<Bgr, byte> newFrame, double timestep)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace VTC.Kernel.Vistas
 
                 var cts = new CancellationTokenSource();
                 var ct = cts.Token;
-                var mhtTask = Task.Run(() => _mht.Update(MeasurementsArray, ct));
+                var mhtTask = Task.Run(() => _mht.Update(MeasurementsArray, ct, timestep));
                 if (!_debugMode)
                 {
                     if (mhtTask.Wait(TimeSpan.FromMilliseconds(MHTMaxUpdateTimeMs)))

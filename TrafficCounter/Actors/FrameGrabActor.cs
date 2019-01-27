@@ -97,10 +97,13 @@ namespace VTC.Actors
         private void GetNewFrame()
         {
             var frame = CaptureSource?.QueryFrame();
-            if (frame != null)
+            var fps = CaptureSource?.FPS();
+
+            if (frame != null && fps != null)
             {
+                var timestep = (fps.Value == 0.0) ? 0.1 : 1.0/fps.Value;
                 var cloned = frame.Clone();
-                { ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned)); }
+                { ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned,timestep)); }
                 if(FramesProcessed < 10)
                 { 
                     var clone2 = frame.Clone();

@@ -25,7 +25,8 @@ namespace VTC.Actors
 {
     public class LoggingActor : ReceiveActor
     {
-        private DateTime _videoTime;
+        private UInt64 _nFramesProcessed = 0;
+        private double _fps = 24.0;
         private DateTime _lastLogVideoTime;
         private DateTime _last5MinbinTime;
         private DateTime _last15MinbinTime;
@@ -35,7 +36,7 @@ namespace VTC.Actors
         private bool _15minSampleBinWritten = false;
         private bool _60minSampleBinWritten = false;
 
-        private bool _batchMode = true;
+        private bool _liveMode = true;
 
         private readonly MovementCount _turnStats = new MovementCount();
         private readonly MovementCount _5MinTurnStats = new MovementCount();
@@ -109,10 +110,6 @@ namespace VTC.Actors
                 UpdateVideoSourceInfo(message)
             );
 
-            Receive<WriteAllBinnedCountsMessage>(message =>
-                WriteBinnedCounts(message.Timestep)
-            );
-
             Receive<TrackingEventMessage>(message =>
                 TrajectoryListHandler(message.EventArgs)
             );
@@ -173,6 +170,10 @@ namespace VTC.Actors
                 LogVideoMetadata(message.VM)
             );
 
+            Receive<FrameCountMessage>(message => 
+                UpdateFrameCount(message.Count)
+            );
+
             //Receive<LogPerformanceMessage>(message =>
             //    Heartbeat()
             //);
@@ -184,14 +185,14 @@ namespace VTC.Actors
 
         private void UpdateFileCreationTime(DateTime dt)
         {
-            _videoTime = dt;
+            _videoStartTime = dt;
             _lastLogVideoTime = dt;
             _last5MinbinTime = dt;
             _last15MinbinTime = dt;
             _last60MinbinTime = dt;
         }
 
-        private void WriteBinnedCounts(double timestep)
+        private void WriteBinnedCounts()
         {
             if(_regionConfig == null)
             {
@@ -200,29 +201,29 @@ namespace VTC.Actors
 
             try
             {
-                _videoTime += TimeSpan.FromSeconds(timestep);
+                var tnow = VideoTime();
 
                 //if (_videoTime - _lastLogVideoTime > TimeSpan.FromMilliseconds(_regionConfig.StateUploadIntervalMs))
                 //{
                 //    _lastLogVideoTime = _videoTime;
                 //}
 
-                if (_videoTime - _last5MinbinTime > TimeSpan.FromMinutes(5))
+                if (tnow - _last5MinbinTime > TimeSpan.FromMinutes(5))
                 {
-                    WriteBinnedMovements5Min(_videoTime, _5MinTurnStats);
-                    _last5MinbinTime = _videoTime;
+                    WriteBinnedMovements5Min(tnow, _5MinTurnStats);
+                    _last5MinbinTime = tnow;
                 }
 
-                if (_videoTime - _last15MinbinTime > TimeSpan.FromMinutes(15))
+                if (tnow - _last15MinbinTime > TimeSpan.FromMinutes(15))
                 {
-                    WriteBinnedMovements15Min(_videoTime, _15MinTurnStats);
-                    _last15MinbinTime = _videoTime;
+                    WriteBinnedMovements15Min(tnow, _15MinTurnStats);
+                    _last15MinbinTime = tnow;
                 }
 
-                if (_videoTime - _last60MinbinTime > TimeSpan.FromMinutes(60))
+                if (tnow - _last60MinbinTime > TimeSpan.FromMinutes(60))
                 {
-                    WriteBinnedMovements60Min(_videoTime, _60MinTurnStats);
-                    _last60MinbinTime = _videoTime;
+                    WriteBinnedMovements60Min(tnow, _60MinTurnStats);
+                    _last60MinbinTime = tnow;
                 }
             }
             catch(NullReferenceException ex)
@@ -436,19 +437,19 @@ namespace VTC.Actors
 
         private void Log5MinBinCounts()
         {
-            if (!_batchMode)
+            if (_liveMode)
                 WriteBinnedMovements5Min(DateTime.Now, _5MinTurnStats);
         }
 
         private void Log15MinBinCounts()
         {
-            if (!_batchMode)
+            if (_liveMode)
                 WriteBinnedMovements15Min(DateTime.Now, _15MinTurnStats);
         }
 
         private void Log60MinBinCounts()
         {
-            if (!_batchMode)
+            if (_liveMode)
                 WriteBinnedMovements60Min(DateTime.Now, _60MinTurnStats);
         }
 
@@ -459,19 +460,21 @@ namespace VTC.Actors
                 var folderPath = _currentOutputFolder;
                 GenerateRegionsLegendImage(folderPath);
 
+                var tnow = VideoTime();
+
                 if(_5MinTurnStats.TotalCount() > 0)
                 {
-                    WriteBinnedMovements5Min(_videoTime, _5MinTurnStats); 
+                    WriteBinnedMovements5Min(tnow, _5MinTurnStats); 
                 }
 
                 if(_15MinTurnStats.TotalCount() > 0)
                 {
-                    WriteBinnedMovements15Min(_videoTime, _15MinTurnStats);
+                    WriteBinnedMovements15Min(tnow, _15MinTurnStats);
                 }
                 
                 if(_60MinTurnStats.TotalCount() > 0)
                 {
-                    WriteBinnedMovements60Min(_videoTime, _60MinTurnStats);     
+                    WriteBinnedMovements60Min(tnow, _60MinTurnStats);     
                 }
 
                 //Check that accumulated totals from different sources make sense
@@ -490,13 +493,11 @@ namespace VTC.Actors
                 {
                     if(type != ObjectType.Unknown)
                     {
-                        SummaryReportGenerator.GenerateSummaryReportHTML(folderPath, _currentVideoName, _videoTime, type.ToString().ToLower());
+                        SummaryReportGenerator.GenerateSummaryReportHTML(folderPath, _currentVideoName, tnow, type.ToString().ToLower());
                     }
                 }
 
-                SummaryReportGenerator.GenerateAllVehiclesSummaryReportHTML(folderPath, _currentVideoName, _videoTime);
-
-
+                SummaryReportGenerator.GenerateAllVehiclesSummaryReportHTML(folderPath, _currentVideoName, tnow);
 
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
 
@@ -514,12 +515,12 @@ namespace VTC.Actors
 
         private void GenerateDailyReport()
         {
-            Logger.Log(LogLevel.Info, "Generating daily report...");
-
-            if(_batchMode)
+            if(!_liveMode)
             {
                 return;
             }
+
+            Logger.Log(LogLevel.Info, "Generating daily report...");
 
             GenerateReport();
 
@@ -575,7 +576,8 @@ namespace VTC.Actors
             ravenClient.Capture(ev);
             _videoStartTime = DateTime.Now;
 
-            _batchMode = message.CaptureSource.IsLiveCapture();
+            _liveMode = message.CaptureSource.IsLiveCapture();
+            _fps = message.CaptureSource.FPS();
         }
 
         private void UpdateConfig(RegionConfig config)
@@ -642,6 +644,17 @@ namespace VTC.Actors
 
             if (!_60MinTurnStats.ContainsKey(tp)) _60MinTurnStats[tp] = 0;
             _60MinTurnStats[tp]++;
+        }
+
+        private DateTime VideoTime()
+        { 
+            if(_liveMode)
+            {
+                return DateTime.Now;
+            }
+
+            DateTime videoTime = _videoStartTime.AddSeconds(_nFramesProcessed/_fps);
+            return videoTime;
         }
 
         private void InitializeEventConfig()
@@ -746,14 +759,6 @@ namespace VTC.Actors
             Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
         }
 
-        private void GenerateReportIfLive()
-        {
-            if(!_batchMode)
-            {
-                GenerateReport();
-            }
-        }
-
         private void UpdateSequencingActor(IActorRef actorRef)
         {
             try
@@ -801,6 +806,11 @@ namespace VTC.Actors
                 var ser = new DataContractJsonSerializer(typeof(VideoMetadata));  
                 ser.WriteObject(outputFile.BaseStream, vm);  
             }
+        }
+
+        private void UpdateFrameCount(UInt64 count)
+        { 
+            _nFramesProcessed = count;    
         }
     }
 }

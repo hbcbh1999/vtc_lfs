@@ -11,8 +11,10 @@ namespace VTC.Messages
 {
     class ProcessNextFrameMessage : FrameMessage
     {
-        public ProcessNextFrameMessage(Image<Bgr, byte> frame) : base(frame)
+        public Double Timestep;
+        public ProcessNextFrameMessage(Image<Bgr, byte> frame, double timestep) : base(frame)
         {
+            Timestep = timestep;
         }
     }
 }

@@ -178,6 +178,7 @@
     <Compile Include="ExportTrainingSet\ExportTrainingSet.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Messages\ActorHeartbeatMessage.cs" />
+    <Compile Include="Messages\FrameCountMessage.cs" />
     <Compile Include="Messages\GenerateDailyReportMessage.cs" />
     <Compile Include="Messages\UpdateDebugHandlerMessage.cs" />
     <Compile Include="Messages\VideoMetadataMessage.cs" />
@@ -230,7 +231,6 @@
     <Compile Include="Messages\Write15MinuteBinCountsMessage.cs" />
     <Compile Include="Messages\Write5MinuteBinCountsMessage.cs" />
     <Compile Include="Messages\Write60MinuteBinCountsMessage.cs" />
-    <Compile Include="Messages\WriteAllBinnedCountsMessage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

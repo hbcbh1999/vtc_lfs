@@ -91,5 +91,10 @@ namespace OptAssignTest.Framework
         {
             return false;
         }
+
+        public double FPS()
+        {
+            return 10.0;
+        }
     }
 }

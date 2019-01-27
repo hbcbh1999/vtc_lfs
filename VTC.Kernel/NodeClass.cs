@@ -273,19 +273,19 @@ namespace VTC.Kernel
     /// </summary>
     public class HypothesisTree : Node<StateHypothesis> 
     {
-
         public DenseMatrix H; //Measurement equation
         public DenseMatrix P; //
-        public DenseMatrix F; //Motion equation
-        public DenseMatrix Q; //Covariance
         public DenseMatrix R; //
+
+        private double _qPosition;
+        private double _qColor;
+        private double _qSize;
 
         public double CompensationGain; //Gain applied to process noise when a measurement is missed
 
         public HypothesisTree(StateHypothesis value) : base(value)
         {
         }
-
 
         // ************************************************ //
         // *************** System Dynamics: *************** //
@@ -298,8 +298,12 @@ namespace VTC.Kernel
         //  G_new = G_old
         //  B_new = B_old
         // ************************************************ //
-        public void PopulateSystemDynamicsMatrices(double qPosition, double qColor, double qSize, double rPosition, double rColor, double rSize, double dt, double compensationGain)
+        public void PopulateSystemDynamicsMatrices(double qPosition, double qColor, double qSize, double rPosition, double rColor, double rSize, double compensationGain)
         {
+            _qPosition = qPosition;
+            _qColor = qColor;
+            _qSize = qSize;
+
             H = new DenseMatrix(6, 8)
             {
                 [0, 0] = 1,
@@ -310,7 +314,22 @@ namespace VTC.Kernel
                 [5, 7] = 1
             }; // Measurement equation: x,y,R,G,B,Size are observed (not velocities)
 
-            F = new DenseMatrix(8, 8)
+            R = new DenseMatrix(6, 6)
+            {
+                [0, 0] = rPosition,
+                [1, 1] = rPosition,
+                [2, 2] = rColor,
+                [3, 3] = rColor,
+                [4, 4] = rColor,
+                [5, 5] = rSize
+            }; //Measurement covariance
+
+            CompensationGain = compensationGain;
+        }
+
+        public DenseMatrix F(double dt)
+        {
+            DenseMatrix m = new DenseMatrix(8, 8)
             {
                 [0, 0] = 1,
                 [0, 1] = dt,
@@ -324,33 +343,28 @@ namespace VTC.Kernel
                 [7, 7] = 1
             }; //Motion equation
 
-            Q = new DenseMatrix(8, 8)
+            return m;
+        }
+
+        public DenseMatrix Q(double dt)
+        { 
+            var m = new DenseMatrix(8, 8)
             {
-                [0, 0] = (dt*dt*dt*dt/4)*qPosition,
-                [0, 1] = (dt*dt*dt/3)*qPosition,
-                [1, 0] = (dt*dt*dt/3)*qPosition,
-                [1, 1] = (dt*dt/2)*qPosition,
-                [2, 2] = (dt*dt*dt*dt/4)*qPosition,
-                [2, 3] = (dt*dt*dt/3)*qPosition,
-                [3, 2] = (dt*dt*dt/3)*qPosition,
-                [3, 3] = (dt*dt/2)*qPosition,
-                [4, 4] = qColor,
-                [5, 5] = qColor,
-                [6, 6] = qColor,
-                [7, 7] = qSize
+                [0, 0] = (dt*dt*dt*dt/4)*_qPosition,
+                [0, 1] = (dt*dt*dt/3)*_qPosition,
+                [1, 0] = (dt*dt*dt/3)*_qPosition,
+                [1, 1] = (dt*dt/2)*_qPosition,
+                [2, 2] = (dt*dt*dt*dt/4)*_qPosition,
+                [2, 3] = (dt*dt*dt/3)*_qPosition,
+                [3, 2] = (dt*dt*dt/3)*_qPosition,
+                [3, 3] = (dt*dt/2)*_qPosition,
+                [4, 4] = _qColor,
+                [5, 5] = _qColor,
+                [6, 6] = _qColor,
+                [7, 7] = _qSize
             }; //Process covariance
 
-            R = new DenseMatrix(6, 6)
-            {
-                [0, 0] = rPosition,
-                [1, 1] = rPosition,
-                [2, 2] = rColor,
-                [3, 3] = rColor,
-                [4, 4] = rColor,
-                [5, 5] = rSize
-            }; //Measurement covariance
-
-            CompensationGain = compensationGain;
+            return m;
         }
 
         /// <summary>
@@ -433,11 +447,9 @@ namespace VTC.Kernel
         public HypothesisTree GetChild(int index)
         {
             var child = (HypothesisTree) Children[index];
-            child.Q = Q;
             child.R = R;
             child.P = P;
             child.H = H;
-            child.F = F;
             
             foreach (var thisChild in Children)
             thisChild.Parent = null;

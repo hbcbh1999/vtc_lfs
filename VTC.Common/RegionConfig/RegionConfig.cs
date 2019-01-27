@@ -73,10 +73,6 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public double CompensationGain { get; set; } = 200;
 
-        [Description("Timestep: the assumed change in time between frames (i.e. 1/framerate).")]
-        [DataMember]
-        public double Timestep { get; set; } = 0.1;
-
         [Description("MinObjectSize: objects with less than this many pixels will be ignored.")]
         [DataMember]
         public int MinObjectSize { get; set; } = 200;

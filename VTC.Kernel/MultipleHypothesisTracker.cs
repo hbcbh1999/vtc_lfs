@@ -38,7 +38,7 @@ namespace VTC.Kernel
 
             StateHypothesis initialHypothesis = new StateHypothesis(_regionConfig.MissThreshold);
             _hypothesisTree = new HypothesisTree(initialHypothesis);
-            _hypothesisTree.PopulateSystemDynamicsMatrices(_regionConfig.Q_position, _regionConfig.Q_color, _regionConfig.Q_size, _regionConfig.R_position, _regionConfig.R_color, _regionConfig.R_size, _regionConfig.Timestep, _regionConfig.CompensationGain);
+            _hypothesisTree.PopulateSystemDynamicsMatrices(_regionConfig.Q_position, _regionConfig.Q_color, _regionConfig.Q_size, _regionConfig.R_position, _regionConfig.R_color, _regionConfig.R_size, _regionConfig.CompensationGain);
 
             VelocityField = velocityField;
             Trajectories = new List<TrajectoryFade>();   
@@ -50,7 +50,7 @@ namespace VTC.Kernel
         /// <param name="detections">Information about each detected item present in the latest readings.  This 
         /// list is assumed to be complete.</param>
         /// <param name="ct">Token for breaking out of execution</param>
-        public void Update(Measurement[] detections, CancellationToken ct)
+        public void Update(Measurement[] detections, CancellationToken ct, double timestep)
         {
             int numDetections = detections.Length;
 
@@ -73,7 +73,7 @@ namespace VTC.Kernel
                 // Update child node
                 if (numDetections > 0)
                 {
-                    GenerateChildNodes(detections, childNode, ct);
+                    GenerateChildNodes(detections, childNode, ct, timestep);
                 }
                 else
                 {
@@ -84,7 +84,7 @@ namespace VTC.Kernel
                     {
                         Parent = childNode
                     };
-                    childHypothesisTree.PopulateSystemDynamicsMatrices(_regionConfig.Q_position, _regionConfig.Q_color, _regionConfig.Q_size, _regionConfig.R_position, _regionConfig.R_color, _regionConfig.R_size, _regionConfig.Timestep, _regionConfig.CompensationGain);
+                    childHypothesisTree.PopulateSystemDynamicsMatrices(_regionConfig.Q_position, _regionConfig.Q_color, _regionConfig.Q_size, _regionConfig.R_position, _regionConfig.R_color, _regionConfig.R_size, _regionConfig.CompensationGain);
 
                     childHypothesis.Probability = Math.Pow((1 - _regionConfig.Pd), numExistingTargets);
                     //Update states for vehicles without Measurement
@@ -92,7 +92,7 @@ namespace VTC.Kernel
                     {
                         //Updating state for missed measurement
                         StateEstimate lastState = childNode.NodeData.Vehicles[j].StateHistory.Last();
-                        StateEstimate noMeasurementUpdate = lastState.PropagateStateNoMeasurement(_regionConfig.Timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F, _hypothesisTree.Q, _hypothesisTree.CompensationGain);
+                        StateEstimate noMeasurementUpdate = lastState.PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep), _hypothesisTree.CompensationGain);
                         childHypothesisTree.UpdateVehicleFromPrevious(j, noMeasurementUpdate, false);
                     }
                 }
@@ -119,7 +119,7 @@ namespace VTC.Kernel
         public void UpdateRegionConfig(RegionConfig newRegionConfig)
         {
             _regionConfig = newRegionConfig;
-            _hypothesisTree.PopulateSystemDynamicsMatrices(_regionConfig.Q_position, _regionConfig.Q_color, _regionConfig.Q_size, _regionConfig.R_position, _regionConfig.R_color, _regionConfig.R_size, _regionConfig.Timestep, _regionConfig.CompensationGain);
+            _hypothesisTree.PopulateSystemDynamicsMatrices(_regionConfig.Q_position, _regionConfig.Q_color, _regionConfig.Q_size, _regionConfig.R_position, _regionConfig.R_color, _regionConfig.R_size, _regionConfig.CompensationGain);
         }
 
         public StateHypothesis MostLikelyStateHypothesis()
@@ -135,7 +135,7 @@ namespace VTC.Kernel
         /// list is assumed to be complete.</param>
         /// <param name="hypothesisNode">The node to build the new hypotheses from</param>
         /// <param name="ct">Token for breaking out of execution</param>
-        private void GenerateChildNodes(Measurement[] detections, Node<StateHypothesis> hypothesisNode, CancellationToken ct)
+        private void GenerateChildNodes(Measurement[] detections, Node<StateHypothesis> hypothesisNode, CancellationToken ct, double timestep)
         {
             //Allocate matrix one column for each existing vehicle plus one column for new vehicles and one for false positives, one row for each object detection event
             int numExistingTargets = hypothesisNode.NodeData.Vehicles.Count;
@@ -154,7 +154,7 @@ namespace VTC.Kernel
 
             //Generate a matrix where each row signifies a detection and each column signifies an existing target
             //The value in each cell is the probability of the row's measurement occuring for the column's object
-            DenseMatrix ambiguityMatrix = GenerateAmbiguityMatrix(detections, numExistingTargets, targetStateEstimates);
+            DenseMatrix ambiguityMatrix = GenerateAmbiguityMatrix(detections, numExistingTargets, targetStateEstimates, timestep);
 
             //Generating expanded hypothesis
             //Hypothesis matrix needs to have a unique column for each detection being treated as a false positive or new object
@@ -166,7 +166,7 @@ namespace VTC.Kernel
                 newTargetMatrix
                 );
 
-            GenerateChildHypotheses(detections, numDetections, hypothesisNode, numExistingTargets, hypothesisExpanded, ct);
+            GenerateChildHypotheses(detections, numDetections, hypothesisNode, numExistingTargets, hypothesisExpanded, ct, timestep);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace VTC.Kernel
         /// <param name="numExistingTargets">Number of currently detected targets</param>
         /// <param name="hypothesisExpanded">Hypothesis matrix</param>
         /// <param name="ct">Token for breaking out of execution</param>
-        private void GenerateChildHypotheses(Measurement[] coords, int numDetections, Node<StateHypothesis> hypothesisParent, int numExistingTargets, DenseMatrix hypothesisExpanded, CancellationToken ct)
+        private void GenerateChildHypotheses(Measurement[] coords, int numDetections, Node<StateHypothesis> hypothesisParent, int numExistingTargets, DenseMatrix hypothesisExpanded, CancellationToken ct, Double timestep)
         {
             //Calculate K-best assignment using Murty's algorithm
             double[,] costs = hypothesisExpanded.ToArray();
@@ -202,7 +202,7 @@ namespace VTC.Kernel
                 {
                     Parent = hypothesisParent
                 };
-                childHypothesisTree.PopulateSystemDynamicsMatrices(_regionConfig.Q_position, _regionConfig.Q_color, _regionConfig.Q_size, _regionConfig.R_position, _regionConfig.R_color, _regionConfig.R_size, _regionConfig.Timestep, _regionConfig.CompensationGain);
+                childHypothesisTree.PopulateSystemDynamicsMatrices(_regionConfig.Q_position, _regionConfig.Q_color, _regionConfig.Q_size, _regionConfig.R_position, _regionConfig.R_color, _regionConfig.R_size, _regionConfig.CompensationGain);
 
                 childHypothesis.Probability = OptAssign.AssignmentCost(costs, assignment);
                 //Update states for vehicles without measurements
@@ -213,7 +213,7 @@ namespace VTC.Kernel
                     {
                         //Updating state for missed measurement
                         StateEstimate lastState = hypothesisParent.NodeData.Vehicles[j].StateHistory.Last();
-                        StateEstimate noMeasurementUpdate = lastState.PropagateStateNoMeasurement(_regionConfig.Timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F, _hypothesisTree.Q, _hypothesisTree.CompensationGain);
+                        StateEstimate noMeasurementUpdate = lastState.PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep), _hypothesisTree.CompensationGain);
                         childHypothesisTree.UpdateVehicleFromPrevious(j, noMeasurementUpdate, false);
                     }
                 }
@@ -255,7 +255,7 @@ namespace VTC.Kernel
                     {
                         //Updating vehicle with measurement
                         StateEstimate lastState = hypothesisParent.NodeData.Vehicles[assignment[j] - numDetections].StateHistory.Last();
-                        StateEstimate estimatedState = lastState.PropagateState(_regionConfig.Timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F, _hypothesisTree.Q, coords[j]);
+                        StateEstimate estimatedState = lastState.PropagateState(timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep), coords[j]);
                         childHypothesisTree.UpdateVehicleFromPrevious(assignment[j] - numDetections, estimatedState, true);
                     }
 
@@ -302,7 +302,7 @@ namespace VTC.Kernel
         /// <param name="numExistingTargets">Number of currently detected targets</param>
         /// <param name="targetStateEstimates">Latest state estimates for each known target</param>
         /// <returns></returns>
-        private DenseMatrix GenerateAmbiguityMatrix(Measurement[] coordinates, int numExistingTargets, StateEstimate[] targetStateEstimates)
+        private DenseMatrix GenerateAmbiguityMatrix(Measurement[] coordinates, int numExistingTargets, StateEstimate[] targetStateEstimates, double timestep)
         {
             // TODO:  Can't we get numExistingTargets from target_state_estimates Length?
 
@@ -313,7 +313,7 @@ namespace VTC.Kernel
             for (int i = 0; i < numExistingTargets; i++)
             {
                 //Get this car's estimated next position using Kalman predictor
-                StateEstimate noMeasurementEstimate = targetStateEstimates[i].PropagateStateNoMeasurement(_regionConfig.Timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F, _hypothesisTree.Q, _hypothesisTree.CompensationGain);
+                StateEstimate noMeasurementEstimate = targetStateEstimates[i].PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep), _hypothesisTree.CompensationGain);
 
                 DenseMatrix pBar = new DenseMatrix(8, 8)
                 {

@@ -23,7 +23,7 @@ namespace VTC.CaptureSource
 
         public override double FPS()
         {
-            return _calculatedFPS;
+            return _fps;
         }
     }
 }

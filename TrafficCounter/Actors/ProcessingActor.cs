@@ -30,10 +30,10 @@ namespace VTC.Actors
 
         private IActorRef _loggingActor;
 
-        private int _processedFramesThisBin;
+        private UInt64 _processedFramesThisBin;
         private DateTime _processedFramesStartTime = DateTime.Now;
         private bool _gotFirstFrame; //Used to re-initialize _processedFramesStartTime
-        private int _processedFramesTotal;
+        private UInt64 _processedFramesTotal;
         private Image<Bgr, byte> _mostRecentFrame;
 
         private Timer _broadcastBackgroundTimer = new Timer();
@@ -46,7 +46,7 @@ namespace VTC.Actors
             {
                 //Subscribe to messages
                 Receive<ProcessNextFrameMessage>(newFrameMessage =>
-                    NewFrameHandler(newFrameMessage.Frame)
+                    NewFrameHandler(newFrameMessage.Frame, newFrameMessage.Timestep)
                 );
 
                 Receive<UpdateVideoDimensionsMessage>(message =>
@@ -101,10 +101,10 @@ namespace VTC.Actors
             }
         }
 
-        private void NewFrameHandler(Image<Bgr, byte> frame)
+        private void NewFrameHandler(Image<Bgr, byte> frame, double timestep)
         {
             _mostRecentFrame = frame.Clone();
-            _vista?.Update(frame);
+            _vista?.Update(frame,timestep);
             _processedFramesThisBin++;
             _processedFramesTotal++;
 
@@ -135,10 +135,7 @@ namespace VTC.Actors
                 tui.StateEstimates = _vista.CurrentVehicles.Select(v => v.StateHistory.Last()).ToArray();
                 _updateUiDelegate?.Invoke(tui); 
                 stateImage.Dispose();
-                if(_config != null)
-                { 
-                   _loggingActor?.Tell(new WriteAllBinnedCountsMessage(_config.Timestep));    
-                }
+                _loggingActor?.Tell(new FrameCountMessage(_processedFramesTotal));
                 _loggingActor?.Tell(new LogDetectionsMessage(_vista.MeasurementsArray.ToList()));
                 // Now update child class specific stats
                 var args = new TrackingEvents.TrajectoryListEventArgs { TrackedObjects = _vista.DeletedVehicles };

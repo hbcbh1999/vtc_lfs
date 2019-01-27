@@ -58,7 +58,7 @@ namespace OptAssignTest
             foreach (var frame in generator.Frames())
             {
 //                frame.Save(@"c:\temp\frame" + count + ".png");
-                vista.Update(frame);
+                vista.Update(frame, 0.1);
                 if (count++ > 2) // ignoring first iterations, since it saves background (first step) and accumulates statistics(?).
                 {
                     Assert.AreEqual(2, vista.CurrentVehicles.Count);
