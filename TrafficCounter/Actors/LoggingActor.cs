@@ -27,14 +27,18 @@ namespace VTC.Actors
     {
         private UInt64 _nFramesProcessed = 0;
         private double _fps = 24.0;
-        private DateTime _lastLogVideoTime;
-        private DateTime _last5MinbinTime;
-        private DateTime _last15MinbinTime;
-        private DateTime _last60MinbinTime;
+        //private DateTime _lastLogVideoTime;
+        //private DateTime _last5MinbinTime;
+        //private DateTime _last15MinbinTime;
+        //private DateTime _last60MinbinTime;
 
-        private bool _5minSampleBinWritten = false;
-        private bool _15minSampleBinWritten = false;
-        private bool _60minSampleBinWritten = false;
+        private DateTime _next5MinBinTime;
+        private DateTime _next15MinBinTime;
+        private DateTime _next60MinBinTime;
+
+        //private bool _5minSampleBinWritten = false;
+        //private bool _15minSampleBinWritten = false;
+        //private bool _60minSampleBinWritten = false;
 
         private bool _liveMode = true;
 
@@ -186,10 +190,40 @@ namespace VTC.Actors
         private void UpdateFileCreationTime(DateTime dt)
         {
             _videoStartTime = dt;
-            _lastLogVideoTime = dt;
-            _last5MinbinTime = dt;
-            _last15MinbinTime = dt;
-            _last60MinbinTime = dt;
+            //_lastLogVideoTime = dt;
+            //_last5MinbinTime = dt;
+            //_last15MinbinTime = dt;
+            //_last60MinbinTime = dt;
+            SetAllNextBinTime(dt);
+        }
+
+        private void SetNext5MinBinTime(DateTime tnow)
+        {
+            _next5MinBinTime = RoundUp(tnow, TimeSpan.FromMinutes(5));   
+        }
+
+        private void SetNext15MinBinTime(DateTime tnow)
+        { 
+            _next15MinBinTime = RoundUp(tnow, TimeSpan.FromMinutes(15));
+        }
+
+        private void SetNext60MinBinTime(DateTime tnow)
+        { 
+            _next60MinBinTime = RoundUp(tnow, TimeSpan.FromMinutes(60));
+        }
+
+        private void SetAllNextBinTime(DateTime tnow)
+        { 
+            SetNext5MinBinTime(tnow);
+            SetNext15MinBinTime(tnow);
+            SetNext60MinBinTime(tnow);
+        }
+
+        //This function taken from user 'dtb' on StackOverflow
+        //https://stackoverflow.com/questions/7029353/how-can-i-round-up-the-time-to-the-nearest-x-minutes
+        private DateTime RoundUp(DateTime dt, TimeSpan d)
+        {
+            return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
         }
 
         private void WriteBinnedCounts()
@@ -208,22 +242,25 @@ namespace VTC.Actors
                 //    _lastLogVideoTime = _videoTime;
                 //}
 
-                if (tnow - _last5MinbinTime > TimeSpan.FromMinutes(5))
+                if (tnow >= _next5MinBinTime)
                 {
                     WriteBinnedMovements5Min(tnow, _5MinTurnStats);
-                    _last5MinbinTime = tnow;
+                    //_last5MinbinTime = tnow;
+                    SetNext5MinBinTime(tnow);
                 }
 
-                if (tnow - _last15MinbinTime > TimeSpan.FromMinutes(15))
+                if (tnow >= _next15MinBinTime)
                 {
                     WriteBinnedMovements15Min(tnow, _15MinTurnStats);
-                    _last15MinbinTime = tnow;
+                    //_last15MinbinTime = tnow;
+                    SetNext15MinBinTime(tnow);
                 }
 
-                if (tnow - _last60MinbinTime > TimeSpan.FromMinutes(60))
+                if (tnow >= _next60MinBinTime)
                 {
                     WriteBinnedMovements60Min(tnow, _60MinTurnStats);
-                    _last60MinbinTime = tnow;
+                    //_last60MinbinTime = tnow;
+                    SetNext60MinBinTime(tnow);
                 }
             }
             catch(NullReferenceException ex)
@@ -260,7 +297,6 @@ namespace VTC.Actors
                 }
 
                 _5MinTurnStats.Clear();
-                _5minSampleBinWritten = true;
             }
         }
 
@@ -276,7 +312,6 @@ namespace VTC.Actors
                 }
                 
                 _15MinTurnStats.Clear();
-                _15minSampleBinWritten = true;
             }
         }
 
@@ -292,7 +327,6 @@ namespace VTC.Actors
                 }
                 
                 _60MinTurnStats.Clear();
-                _60minSampleBinWritten = true;
             }
         }
 
@@ -578,6 +612,11 @@ namespace VTC.Actors
 
             _liveMode = message.CaptureSource.IsLiveCapture();
             _fps = message.CaptureSource.FPS();
+
+            if(_liveMode)
+            {
+                UpdateFileCreationTime(DateTime.Now);
+            }
         }
 
         private void UpdateConfig(RegionConfig config)
@@ -622,6 +661,8 @@ namespace VTC.Actors
 
                 var stats = GetStatString();
                 _updateStatsUiDelegate?.Invoke(stats);
+
+                WriteBinnedCounts();
             }
             catch(Exception ex)
             { 
