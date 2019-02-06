@@ -66,6 +66,7 @@ namespace VTC
             this.fpsTextbox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.debugTextbox = new System.Windows.Forms.TextBox();
+            this.userSettingsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // pushStateTimer
@@ -366,12 +367,24 @@ namespace VTC
             this.debugTextbox.Size = new System.Drawing.Size(446, 58);
             this.debugTextbox.TabIndex = 91;
             // 
+            // userSettingsButton
+            // 
+            this.userSettingsButton.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.userSettingsButton.Location = new System.Drawing.Point(12, 97);
+            this.userSettingsButton.Name = "userSettingsButton";
+            this.userSettingsButton.Size = new System.Drawing.Size(115, 22);
+            this.userSettingsButton.TabIndex = 92;
+            this.userSettingsButton.Text = "User settings";
+            this.userSettingsButton.UseVisualStyleBackColor = true;
+            this.userSettingsButton.Click += new System.EventHandler(this.userSettingsButton_Click);
+            // 
             // TrafficCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(468, 676);
+            this.Controls.Add(this.userSettingsButton);
             this.Controls.Add(this.debugTextbox);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.fpsTextbox);
@@ -445,5 +458,6 @@ namespace VTC
         private TextBox fpsTextbox;
         private Label label8;
         private TextBox debugTextbox;
+        private Button userSettingsButton;
     }
 }

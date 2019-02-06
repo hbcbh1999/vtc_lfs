@@ -621,5 +621,11 @@ namespace VTC
                     configurationIndicator.On = false;
             });
         }
+
+        private void userSettingsButton_Click(object sender, EventArgs e)
+        {
+            var se = new SettingsEditor();
+            se.Show();
+        }
     }
 }
