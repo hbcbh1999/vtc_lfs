@@ -50,8 +50,6 @@ namespace VTC
         private readonly IActorRef _supervisorActor;
         private readonly ActorSystem _actorSystem;
 
-        private const string IpCamerasFilename = "ipCameras.txt";
-
         private readonly DateTime _applicationStartTime;
 
         private readonly List<ICaptureSource> _cameras = new List<ICaptureSource>(); //List of all video input devices. Index, file location, name
@@ -133,6 +131,8 @@ namespace VTC
             _supervisorActor.Tell(new CreateAllActorsMessage(UpdateUI, UpdateStatsUI, UpdateInfoBox, UpdateUIAccessoryInfo, UpdateDebugInfo));
             _supervisorActor.Tell(new UpdateActorStatusHandlerMessage(UpdateActorStatusIndicators));
 
+
+            UpdateUIClientInfo();
        }
 
         private void UpdateUI(TrafficCounterUIUpdateInfo updateInfo)
@@ -170,6 +170,23 @@ namespace VTC
                }
            );
        }
+
+        private void UpdateUIClientInfo()
+        { 
+            if(Properties.Settings.Default.Logopath.Length > 0)
+            {
+                try
+                {
+                    clientLogoPictureBox.Load(Properties.Settings.Default.Logopath);    
+                }
+                catch(Exception ex)
+                { 
+                    Log(LogLevel.Error, ex.ToString());
+                }
+            }
+
+            clientNameLabel.Text = Properties.Settings.Default.Organization;
+        }
 
        private void UpdateUIAccessoryInfo(TrafficCounterUIAccessoryInfo accessoryInfo)
        {
@@ -325,11 +342,18 @@ namespace VTC
                 deviceIndex++;
             }
 
-            if (File.Exists(IpCamerasFilename))
+            AddIPCameraIfValid(Properties.Settings.Default.Camera1Name,Properties.Settings.Default.Camera1URL);
+            AddIPCameraIfValid(Properties.Settings.Default.Camera2Name,Properties.Settings.Default.Camera2URL);
+            AddIPCameraIfValid(Properties.Settings.Default.Camera3Name,Properties.Settings.Default.Camera3URL);
+            AddIPCameraIfValid(Properties.Settings.Default.Camera4Name,Properties.Settings.Default.Camera4URL);
+            AddIPCameraIfValid(Properties.Settings.Default.Camera5Name,Properties.Settings.Default.Camera5URL);
+        }
+
+        private void AddIPCameraIfValid(string name, string url)
+        {
+            if(name.Length > 0 && url.Length > 0)
             {
-                var ipCameraStrings = File.ReadAllLines(IpCamerasFilename);
-                foreach (var split in ipCameraStrings.Select(str => str.Split(',')).Where(split => split.Length == 2))
-                    AddCamera(new IpCamera(split[0], split[1]));
+                AddCamera(new IpCamera(name, url));
             }
         }
 

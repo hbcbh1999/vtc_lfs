@@ -202,5 +202,17 @@ namespace VTC.Properties {
                 this["Camera5Name"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SimplifiedCountDisplay {
+            get {
+                return ((bool)(this["SimplifiedCountDisplay"]));
+            }
+            set {
+                this["SimplifiedCountDisplay"] = value;
+            }
+        }
     }
 }

@@ -67,6 +67,9 @@ namespace VTC
             this.label8 = new System.Windows.Forms.Label();
             this.debugTextbox = new System.Windows.Forms.TextBox();
             this.userSettingsButton = new System.Windows.Forms.Button();
+            this.clientLogoPictureBox = new System.Windows.Forms.PictureBox();
+            this.clientNameLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.clientLogoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // pushStateTimer
@@ -109,7 +112,7 @@ namespace VTC
             this.CameraComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CameraComboBox.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CameraComboBox.FormattingEnabled = true;
-            this.CameraComboBox.Location = new System.Drawing.Point(12, 12);
+            this.CameraComboBox.Location = new System.Drawing.Point(12, 35);
             this.CameraComboBox.Name = "CameraComboBox";
             this.CameraComboBox.Size = new System.Drawing.Size(240, 23);
             this.CameraComboBox.TabIndex = 1;
@@ -118,7 +121,7 @@ namespace VTC
             // btnConfigureRegions
             // 
             this.btnConfigureRegions.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConfigureRegions.Location = new System.Drawing.Point(12, 123);
+            this.btnConfigureRegions.Location = new System.Drawing.Point(12, 146);
             this.btnConfigureRegions.Name = "btnConfigureRegions";
             this.btnConfigureRegions.Size = new System.Drawing.Size(115, 22);
             this.btnConfigureRegions.TabIndex = 4;
@@ -138,7 +141,7 @@ namespace VTC
             this.SelectVideosButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SelectVideosButton.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SelectVideosButton.ForeColor = System.Drawing.Color.White;
-            this.SelectVideosButton.Location = new System.Drawing.Point(12, 40);
+            this.SelectVideosButton.Location = new System.Drawing.Point(12, 63);
             this.SelectVideosButton.Name = "SelectVideosButton";
             this.SelectVideosButton.Size = new System.Drawing.Size(240, 44);
             this.SelectVideosButton.TabIndex = 2;
@@ -166,7 +169,7 @@ namespace VTC
             // generateReportButton
             // 
             this.generateReportButton.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.generateReportButton.Location = new System.Drawing.Point(133, 123);
+            this.generateReportButton.Location = new System.Drawing.Point(133, 146);
             this.generateReportButton.Name = "generateReportButton";
             this.generateReportButton.Size = new System.Drawing.Size(115, 22);
             this.generateReportButton.TabIndex = 65;
@@ -370,7 +373,7 @@ namespace VTC
             // userSettingsButton
             // 
             this.userSettingsButton.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.userSettingsButton.Location = new System.Drawing.Point(12, 97);
+            this.userSettingsButton.Location = new System.Drawing.Point(12, 120);
             this.userSettingsButton.Name = "userSettingsButton";
             this.userSettingsButton.Size = new System.Drawing.Size(115, 22);
             this.userSettingsButton.TabIndex = 92;
@@ -378,12 +381,33 @@ namespace VTC
             this.userSettingsButton.UseVisualStyleBackColor = true;
             this.userSettingsButton.Click += new System.EventHandler(this.userSettingsButton_Click);
             // 
+            // clientLogoPictureBox
+            // 
+            this.clientLogoPictureBox.Location = new System.Drawing.Point(409, 8);
+            this.clientLogoPictureBox.Name = "clientLogoPictureBox";
+            this.clientLogoPictureBox.Size = new System.Drawing.Size(50, 50);
+            this.clientLogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.clientLogoPictureBox.TabIndex = 93;
+            this.clientLogoPictureBox.TabStop = false;
+            // 
+            // clientNameLabel
+            // 
+            this.clientNameLabel.AutoSize = true;
+            this.clientNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.clientNameLabel.Location = new System.Drawing.Point(12, 8);
+            this.clientNameLabel.Name = "clientNameLabel";
+            this.clientNameLabel.Size = new System.Drawing.Size(11, 16);
+            this.clientNameLabel.TabIndex = 94;
+            this.clientNameLabel.Text = " ";
+            // 
             // TrafficCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(468, 676);
+            this.Controls.Add(this.clientNameLabel);
+            this.Controls.Add(this.clientLogoPictureBox);
             this.Controls.Add(this.userSettingsButton);
             this.Controls.Add(this.debugTextbox);
             this.Controls.Add(this.label8);
@@ -418,6 +442,7 @@ namespace VTC
             this.Name = "TrafficCounter";
             this.Text = "VTC";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TrafficCounter_FormClosed);
+            ((System.ComponentModel.ISupportInitialize)(this.clientLogoPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -459,5 +484,7 @@ namespace VTC
         private Label label8;
         private TextBox debugTextbox;
         private Button userSettingsButton;
+        private PictureBox clientLogoPictureBox;
+        private Label clientNameLabel;
     }
 }
