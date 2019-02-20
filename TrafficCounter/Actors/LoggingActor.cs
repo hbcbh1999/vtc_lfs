@@ -744,16 +744,84 @@ namespace VTC.Actors
         public string GetStatString()
         {
             var sb = new StringBuilder();
-
             var totalObjects = 0;
-            foreach (var kvp in _turnStats)
+
+            if(Properties.Settings.Default.SimplifiedCountDisplay)
+            { 
+               sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 1"));
+               sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 2"));
+               sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 3"));
+               sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 4"));
+                foreach (var kvp in _turnStats)
+                {
+                    totalObjects += (int)kvp.Value;
+                }
+            }
+            else
             {
-                sb.AppendLine(kvp.Key + ":  " + kvp.Value);
-                totalObjects += (int)kvp.Value;
+                foreach (var kvp in _turnStats)
+                {
+                    sb.AppendLine(kvp.Key + ":  " + kvp.Value);
+                    totalObjects += (int)kvp.Value;
+                }
             }
 
             sb.AppendLine("");
             sb.AppendLine("Total objects counted: " + totalObjects);
+
+            return sb.ToString();
+        }
+
+        private string PerApproachClassCount(MovementCount count, string approachName)
+        { 
+            var sb = new StringBuilder();
+
+            long carCount = 0;
+            long busCount = 0;
+            long bicycleCount = 0;
+            long motorcycleCount = 0;
+            long truckCount = 0;
+            long personCount = 0;
+            long unknownCount = 0;
+
+            foreach (var kvp in _turnStats)
+            {
+                if(kvp.Key.Approach == approachName)
+                {
+                    switch(kvp.Key.TrafficObjectType)
+                    {
+                        case ObjectType.Car:
+                            carCount += kvp.Value;
+                            break;
+                        case ObjectType.Bus:
+                            busCount += kvp.Value;
+                            break;
+                        case ObjectType.Bicycle:
+                            bicycleCount += kvp.Value;
+                            break;
+                        case ObjectType.Motorcycle:
+                            motorcycleCount += kvp.Value;
+                            break;
+                        case ObjectType.Truck:
+                            truckCount += kvp.Value;
+                            break;
+                        case ObjectType.Person:
+                            personCount += kvp.Value;
+                            break;
+                        case ObjectType.Unknown:
+                            unknownCount += kvp.Value;
+                            break;
+                    }
+                }
+            }
+
+            sb.AppendLine(approachName + "\tCar: " + carCount + Environment.NewLine
+                 + "\t\tTruck: " + truckCount + Environment.NewLine 
+                 + "\t\tBus: " + busCount + Environment.NewLine 
+                 + "\t\tBicycle: " + bicycleCount + Environment.NewLine 
+                 + "\t\tMotorcycle: " + motorcycleCount + Environment.NewLine 
+                 + "\t\tPerson: " + personCount + Environment.NewLine
+                );
 
             return sb.ToString();
         }

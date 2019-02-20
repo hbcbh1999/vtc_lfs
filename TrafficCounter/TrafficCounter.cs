@@ -204,7 +204,7 @@ namespace VTC
 
         private void UpdateStatsUI(string statString)
        {
-           // Update statistics
+           // Update statistics 
            if (!tbVistaStats.IsHandleCreated)
            {
                return;
