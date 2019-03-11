@@ -131,8 +131,6 @@ namespace VTC
             _supervisorActor.Tell(new CreateAllActorsMessage(UpdateUI, UpdateStatsUI, UpdateInfoBox, UpdateUIAccessoryInfo, UpdateDebugInfo));
             _supervisorActor.Tell(new UpdateActorStatusHandlerMessage(UpdateActorStatusIndicators));
 
-
-            UpdateUIClientInfo();
        }
 
         private void UpdateUI(TrafficCounterUIUpdateInfo updateInfo)
@@ -170,23 +168,6 @@ namespace VTC
                }
            );
        }
-
-        private void UpdateUIClientInfo()
-        { 
-            if(Properties.Settings.Default.Logopath.Length > 0)
-            {
-                try
-                {
-                    clientLogoPictureBox.Load(Properties.Settings.Default.Logopath);    
-                }
-                catch(Exception ex)
-                { 
-                    Log(LogLevel.Error, ex.ToString());
-                }
-            }
-
-            clientNameLabel.Text = Properties.Settings.Default.Organization;
-        }
 
        private void UpdateUIAccessoryInfo(TrafficCounterUIAccessoryInfo accessoryInfo)
        {

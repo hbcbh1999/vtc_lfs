@@ -18,6 +18,9 @@ namespace VTC
         {
             InitializeComponent();
 
+            AddLogo(Properties.Settings.Default.Logopath);
+            AddUserText(Properties.Settings.Default.Organization);
+
             _updateDebounceTimer = new Timer {Interval = 1500};
             _updateDebounceTimer.Tick += UpdateDebounceTimer_Tick;
 
@@ -113,6 +116,36 @@ namespace VTC
                 {
                     //TODO: Fix this - try/catch is a bandaid.
                 }
+            }
+        }
+
+        public void AddLogo(string logoPath)
+        { 
+            if(System.IO.File.Exists(logoPath))
+            {
+                var pictureBox = new PictureBox();
+                pictureBox.Image = Image.FromFile(logoPath);
+                pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox.Size = new Size(50,50);
+                pictureBox.Margin = new Padding(20);
+
+                tableLayoutPanel1.RowCount += 1;
+                tableLayoutPanel1.Controls.Add(pictureBox);        
+            }
+        }
+
+        public void AddUserText(string userText)
+        { 
+            if(userText.Count() > 0)
+            {
+                var userTextLabel = new Label();
+                userTextLabel.AutoSize = true;
+                userTextLabel.Text = userText;
+                userTextLabel.Font = new Font(FontFamily.GenericSansSerif, (float) 20.0, FontStyle.Regular);
+                userTextLabel.Margin = new Padding(20);
+
+                tableLayoutPanel1.RowCount += 1;
+                tableLayoutPanel1.Controls.Add(userTextLabel);        
             }
         }
 

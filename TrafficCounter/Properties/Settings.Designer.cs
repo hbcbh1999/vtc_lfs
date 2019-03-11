@@ -214,5 +214,29 @@ namespace VTC.Properties {
                 this["SimplifiedCountDisplay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Password {
+            get {
+                return ((string)(this["Password"]));
+            }
+            set {
+                this["Password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://dashboard.roadometry.com")]
+        public string ServerURL {
+            get {
+                return ((string)(this["ServerURL"]));
+            }
+            set {
+                this["ServerURL"] = value;
+            }
+        }
     }
 }

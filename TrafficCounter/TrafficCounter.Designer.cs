@@ -67,9 +67,6 @@ namespace VTC
             this.label8 = new System.Windows.Forms.Label();
             this.debugTextbox = new System.Windows.Forms.TextBox();
             this.userSettingsButton = new System.Windows.Forms.Button();
-            this.clientLogoPictureBox = new System.Windows.Forms.PictureBox();
-            this.clientNameLabel = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.clientLogoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // pushStateTimer
@@ -381,33 +378,12 @@ namespace VTC
             this.userSettingsButton.UseVisualStyleBackColor = true;
             this.userSettingsButton.Click += new System.EventHandler(this.userSettingsButton_Click);
             // 
-            // clientLogoPictureBox
-            // 
-            this.clientLogoPictureBox.Location = new System.Drawing.Point(409, 8);
-            this.clientLogoPictureBox.Name = "clientLogoPictureBox";
-            this.clientLogoPictureBox.Size = new System.Drawing.Size(50, 50);
-            this.clientLogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.clientLogoPictureBox.TabIndex = 93;
-            this.clientLogoPictureBox.TabStop = false;
-            // 
-            // clientNameLabel
-            // 
-            this.clientNameLabel.AutoSize = true;
-            this.clientNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.clientNameLabel.Location = new System.Drawing.Point(12, 8);
-            this.clientNameLabel.Name = "clientNameLabel";
-            this.clientNameLabel.Size = new System.Drawing.Size(11, 16);
-            this.clientNameLabel.TabIndex = 94;
-            this.clientNameLabel.Text = " ";
-            // 
             // TrafficCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(468, 676);
-            this.Controls.Add(this.clientNameLabel);
-            this.Controls.Add(this.clientLogoPictureBox);
             this.Controls.Add(this.userSettingsButton);
             this.Controls.Add(this.debugTextbox);
             this.Controls.Add(this.label8);
@@ -442,7 +418,6 @@ namespace VTC
             this.Name = "TrafficCounter";
             this.Text = "VTC";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TrafficCounter_FormClosed);
-            ((System.ComponentModel.ISupportInitialize)(this.clientLogoPictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -484,7 +459,5 @@ namespace VTC
         private Label label8;
         private TextBox debugTextbox;
         private Button userSettingsButton;
-        private PictureBox clientLogoPictureBox;
-        private Label clientNameLabel;
     }
 }

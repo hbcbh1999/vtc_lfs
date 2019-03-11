@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Indicators.LEDIndicator
@@ -63,8 +57,6 @@ namespace Indicators.LEDIndicator
                     case LEDColorOptions.Red:
                         pictureBox1.Image = Properties.Resources.redledon;
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
             }
             else
@@ -77,8 +69,6 @@ namespace Indicators.LEDIndicator
                     case LEDColorOptions.Red:
                         pictureBox1.Image = Properties.Resources.redledoff;
                         break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
