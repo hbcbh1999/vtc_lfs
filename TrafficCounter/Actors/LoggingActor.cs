@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -19,6 +20,7 @@ using VTC.Common;
 using VTC.Common.RegionConfig;
 using VTC.Kernel;
 using VTC.Messages;
+using VTC.Remote;
 using VTC.Reporting;
 
 namespace VTC.Actors
@@ -190,10 +192,6 @@ namespace VTC.Actors
         private void UpdateFileCreationTime(DateTime dt)
         {
             _videoStartTime = dt;
-            //_lastLogVideoTime = dt;
-            //_last5MinbinTime = dt;
-            //_last15MinbinTime = dt;
-            //_last60MinbinTime = dt;
             SetAllNextBinTime(dt);
         }
 
@@ -237,29 +235,21 @@ namespace VTC.Actors
             {
                 var tnow = VideoTime();
 
-                //if (_videoTime - _lastLogVideoTime > TimeSpan.FromMilliseconds(_regionConfig.StateUploadIntervalMs))
-                //{
-                //    _lastLogVideoTime = _videoTime;
-                //}
-
                 if (tnow >= _next5MinBinTime)
                 {
                     WriteBinnedMovements5Min(tnow, _5MinTurnStats);
-                    //_last5MinbinTime = tnow;
                     SetNext5MinBinTime(tnow);
                 }
 
                 if (tnow >= _next15MinBinTime)
                 {
                     WriteBinnedMovements15Min(tnow, _15MinTurnStats);
-                    //_last15MinbinTime = tnow;
                     SetNext15MinBinTime(tnow);
                 }
 
                 if (tnow >= _next60MinBinTime)
                 {
                     WriteBinnedMovements60Min(tnow, _60MinTurnStats);
-                    //_last60MinbinTime = tnow;
                     SetNext60MinBinTime(tnow);
                 }
             }
@@ -571,7 +561,6 @@ namespace VTC.Actors
                 var maskedBackground = _background.Clone();
                 foreach (var p in _regionConfig.Regions)
                 {
-                    //if (!p.Key.Contains("Approach")) continue;
                     var mask = p.Value.GetMask(_background.Width, _background.Height, new Bgr(60, 60, 60)).Convert<Bgr, byte>();
                     maskedBackground = maskedBackground.Add(mask);
                 }
@@ -579,7 +568,6 @@ namespace VTC.Actors
                 var g = Graphics.FromImage(maskedBackground.Bitmap);
                 foreach (var p in _regionConfig.Regions)
                 {
-                    //if (!p.Key.Contains("Approach")) continue;
                     if (p.Value.Count <= 2) continue;
                     var x = p.Value.Centroid.X;
                     var y = p.Value.Centroid.Y;
@@ -656,6 +644,17 @@ namespace VTC.Actors
                     const string filename = "Movements";
                     var filepath = Path.Combine(folderPath, filename);
                     tl.Save(filepath);
+
+                    if(Properties.Settings.Default.RemoteServerUpload)
+                    {
+                        var rs = new RemoteServer();
+                        var rsr = rs.SendMovement(edited_movement, Properties.Settings.Default.SiteId, Properties.Settings.Default.ServerURL).Result;
+                        if (rsr != HttpStatusCode.OK)
+                        {
+                            Log("Movement POST failed:" + rsr, LogLevel.Error);
+                        }
+                    }
+
                     _totalTrajectoriesCounted++;
                 }
 
@@ -739,6 +738,17 @@ namespace VTC.Actors
         {
             _background = image.Clone();
             image.Dispose();
+
+            if (Properties.Settings.Default.RemoteServerUpload)
+            {
+                var rs = new RemoteServer();
+                var rsr = rs.SendImage(_background.Bitmap,Properties.Settings.Default.SiteId,Properties.Settings.Default.ServerURL).Result;
+
+                if (rsr != HttpStatusCode.Found)
+                { 
+                    Log("Image-upload failed:" + rsr, LogLevel.Error);
+                } 
+            }
         }
 
         public string GetStatString()

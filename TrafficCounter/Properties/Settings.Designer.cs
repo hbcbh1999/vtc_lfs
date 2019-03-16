@@ -238,5 +238,29 @@ namespace VTC.Properties {
                 this["ServerURL"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public string SiteId {
+            get {
+                return ((string)(this["SiteId"]));
+            }
+            set {
+                this["SiteId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RemoteServerUpload {
+            get {
+                return ((bool)(this["RemoteServerUpload"]));
+            }
+            set {
+                this["RemoteServerUpload"] = value;
+            }
+        }
     }
 }

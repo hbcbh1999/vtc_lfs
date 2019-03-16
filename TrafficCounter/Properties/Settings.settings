@@ -56,5 +56,11 @@
     <Setting Name="ServerURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://dashboard.roadometry.com</Value>
     </Setting>
+    <Setting Name="SiteId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="RemoteServerUpload" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

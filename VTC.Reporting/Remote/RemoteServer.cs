@@ -11,7 +11,7 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 
-namespace VTC
+namespace VTC.Remote
 {
     public class RemoteServer
     {
@@ -31,14 +31,14 @@ namespace VTC
             return response.StatusCode;
         }
 
-        public async Task<HttpStatusCode> SendImage(Image image, string site, string serverUrl)
+        public async Task<HttpStatusCode> SendImage(System.Drawing.Image image, string site, string serverUrl)
         { 
             //Get remote server
             var uploadImageUrl = serverUrl + SitesRoute + site;
             var mp = new MultipartFormDataContent();
 
             var stream = new MemoryStream();
-            image.Save(stream,image.RawFormat);
+            image.Save(stream,ImageFormat.Png);
             var imageBytes = stream.ToArray();
             var byteContent = new ByteArrayContent(imageBytes);
             //var streamContent = new StreamContent(stream);

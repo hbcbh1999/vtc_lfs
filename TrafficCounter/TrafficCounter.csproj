@@ -315,7 +315,6 @@
     <Compile Include="RegionConfiguration\RegionEditor.Designer.cs">
       <DependentUpon>RegionEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Remote\RemoteServer.cs" />
     <Compile Include="SettingsEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -437,12 +436,12 @@
   <ItemGroup>
     <PublishFile Include="config\regionConfig.xml">
       <Visible>False</Visible>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>

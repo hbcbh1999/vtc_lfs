@@ -9,12 +9,14 @@ using System.Threading;
 using System.Web;
 using VTC.Common;
 using VTC.Common.RegionConfig;
+using VTC.Remote;
 
 namespace VTC.Reporting
 {
     public class TrajectoryLogger
     {
         private readonly Movement _movement;
+        private RemoteServer _remoteServer;
 
         public TrajectoryLogger(Movement movement)
         {          
@@ -35,8 +37,7 @@ namespace VTC.Reporting
             catch (Exception e)
             {
                 Debug.WriteLine("LogToJsonfile:" + e.Message);
-            }
-            
+            }   
         }
 
         private Movement RoundForLogging(Movement m)
