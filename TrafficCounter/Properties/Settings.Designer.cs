@@ -241,13 +241,13 @@ namespace VTC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public string SiteId {
+        [global::System.Configuration.DefaultSettingValueAttribute("NBQAtcwp5CC2G1gYW9Te2AMS")]
+        public string SiteToken {
             get {
-                return ((string)(this["SiteId"]));
+                return ((string)(this["SiteToken"]));
             }
             set {
-                this["SiteId"] = value;
+                this["SiteToken"] = value;
             }
         }
         

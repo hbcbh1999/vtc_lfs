@@ -19,11 +19,11 @@ namespace VTC.Remote
         const string SitesRoute = "/sites/";
         private static readonly HttpClient Client = new HttpClient();
 
-        public async Task<HttpStatusCode> SendMovement(Movement movement, string site, string serverUrl)
+        public async Task<HttpStatusCode> SendMovement(Movement movement, string siteToken, string serverUrl)
         { 
             //Get remote server
-            var createMovementUrl = serverUrl + MovementsRoute;
-            var jsonString = "{ \"movement\": { \"site_id\": \"" + site + "\", \"approach\": \"" + movement.Approach + "\", \"exit\": \"" + movement.Exit + "\", \"turntype\": \"" + movement.TurnType + "\", \"objectclass\": \"" + movement.TrafficObjectType + "\"} }";
+            var createMovementUrl = serverUrl + MovementsRoute + "?site_token=" + siteToken;
+            var jsonString = "{ \"movement\": { \"approach\": \"" + movement.Approach + "\", \"exit\": \"" + movement.Exit + "\", \"turntype\": \"" + movement.TurnType + "\", \"objectclass\": \"" + movement.TrafficObjectType + "\"} }";
             var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             
             //Transmit
@@ -31,17 +31,16 @@ namespace VTC.Remote
             return response.StatusCode;
         }
 
-        public async Task<HttpStatusCode> SendImage(System.Drawing.Image image, string site, string serverUrl)
+        public async Task<HttpStatusCode> SendImage(System.Drawing.Image image, string siteToken, string serverUrl)
         { 
             //Get remote server
-            var uploadImageUrl = serverUrl + SitesRoute + site;
+            var uploadImageUrl = serverUrl + SitesRoute + "?site_token=" + siteToken;
             var mp = new MultipartFormDataContent();
 
             var stream = new MemoryStream();
             image.Save(stream,ImageFormat.Png);
             var imageBytes = stream.ToArray();
             var byteContent = new ByteArrayContent(imageBytes);
-            //var streamContent = new StreamContent(stream);
             mp.Add(byteContent, "site[image]", "image.png");
             
             //Transmit

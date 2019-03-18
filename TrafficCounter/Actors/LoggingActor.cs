@@ -648,7 +648,7 @@ namespace VTC.Actors
                     if(Properties.Settings.Default.RemoteServerUpload)
                     {
                         var rs = new RemoteServer();
-                        var rsr = rs.SendMovement(edited_movement, Properties.Settings.Default.SiteId, Properties.Settings.Default.ServerURL).Result;
+                        var rsr = rs.SendMovement(edited_movement, Properties.Settings.Default.SiteToken, Properties.Settings.Default.ServerURL).Result;
                         if (rsr != HttpStatusCode.OK)
                         {
                             Log("Movement POST failed:" + rsr, LogLevel.Error);
@@ -742,7 +742,7 @@ namespace VTC.Actors
             if (Properties.Settings.Default.RemoteServerUpload)
             {
                 var rs = new RemoteServer();
-                var rsr = rs.SendImage(_background.Bitmap,Properties.Settings.Default.SiteId,Properties.Settings.Default.ServerURL).Result;
+                var rsr = rs.SendImage(_background.Bitmap,Properties.Settings.Default.SiteToken,Properties.Settings.Default.ServerURL).Result;
 
                 if (rsr != HttpStatusCode.Found)
                 { 

@@ -26,7 +26,7 @@ namespace VTC
 
             try
             {
-                var rsr = rs.SendMovement(m, "1",TestServerUrl).Result;
+                var rsr = rs.SendMovement(m, "njwwirqmnwkJMPgtnsYXTGY4",TestServerUrl).Result;
 
                 if (rsr != HttpStatusCode.OK)
                 {
@@ -46,7 +46,7 @@ namespace VTC
 
             try
             {
-                var rsr = rs.SendImage(Image.FromFile(".\\TestFiles\\cars.png"),"1",TestServerUrl).Result;
+                var rsr = rs.SendImage(Image.FromFile(".\\TestFiles\\cars.png"),"njwwirqmnwkJMPgtnsYXTGY4",TestServerUrl).Result;
 
                 if (rsr != HttpStatusCode.Found)
                 {
@@ -66,7 +66,7 @@ namespace VTC
 
             try
             {
-                var rsr = rs.SendImage(Image.FromFile(".\\TestFiles\\placeholder.png"),"1",TestServerUrl).Result;
+                var rsr = rs.SendImage(Image.FromFile(".\\TestFiles\\placeholder.png"),"njwwirqmnwkJMPgtnsYXTGY4",TestServerUrl).Result;
 
                 if (rsr != HttpStatusCode.Found)
                 {
