@@ -16,7 +16,7 @@ namespace VTC.Remote
     public class RemoteServer
     {
         const string MovementsRoute = "/movements";
-        const string SitesRoute = "/sites/";
+        const string SitesRoute = "/sites_update_by_token";
         private static readonly HttpClient Client = new HttpClient();
 
         public async Task<HttpStatusCode> SendMovement(Movement movement, string siteToken, string serverUrl)

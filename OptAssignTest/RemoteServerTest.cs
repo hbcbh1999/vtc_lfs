@@ -48,14 +48,14 @@ namespace VTC
             {
                 var rsr = rs.SendImage(Image.FromFile(".\\TestFiles\\cars.png"),"njwwirqmnwkJMPgtnsYXTGY4",TestServerUrl).Result;
 
-                if (rsr != HttpStatusCode.Found)
+                if (rsr != HttpStatusCode.OK)
                 {
                     Assert.Fail("Not accepted by remote server.");
                 }
             }
             catch (Exception ex)
             {
-                Assert.Fail("Exception in SendMovement.");
+                Assert.Fail(ex.Message);
             }            
         }
 
@@ -68,7 +68,7 @@ namespace VTC
             {
                 var rsr = rs.SendImage(Image.FromFile(".\\TestFiles\\placeholder.png"),"njwwirqmnwkJMPgtnsYXTGY4",TestServerUrl).Result;
 
-                if (rsr != HttpStatusCode.Found)
+                if (rsr != HttpStatusCode.OK)
                 {
                     Assert.Fail("Not accepted by remote server.");
                 }
