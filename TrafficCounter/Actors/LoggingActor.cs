@@ -744,7 +744,7 @@ namespace VTC.Actors
                 var rs = new RemoteServer();
                 var rsr = rs.SendImage(_background.Bitmap,Properties.Settings.Default.SiteToken,Properties.Settings.Default.ServerURL).Result;
 
-                if (rsr != HttpStatusCode.Found)
+                if (rsr != HttpStatusCode.OK)
                 { 
                     Log("Image-upload failed:" + rsr, LogLevel.Error);
                 } 

@@ -139,5 +139,12 @@ namespace VTC.CaptureSource
         public double _fps = 0.0; 
 
         public abstract double FPS();
+
+        public void ErrorRecovery()
+        {
+            Destroy();
+            System.Threading.Thread.Sleep(5000);
+            Init();
+        }
     }
 }

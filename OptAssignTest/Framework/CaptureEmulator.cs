@@ -96,5 +96,9 @@ namespace OptAssignTest.Framework
         {
             return 10.0;
         }
+
+        public void ErrorRecovery()
+        {
+        }
     }
 }

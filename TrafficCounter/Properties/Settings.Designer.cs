@@ -241,7 +241,7 @@ namespace VTC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NBQAtcwp5CC2G1gYW9Te2AMS")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string SiteToken {
             get {
                 return ((string)(this["SiteToken"]));
@@ -253,7 +253,7 @@ namespace VTC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool RemoteServerUpload {
             get {
                 return ((bool)(this["RemoteServerUpload"]));

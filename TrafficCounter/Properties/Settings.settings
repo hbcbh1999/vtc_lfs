@@ -57,10 +57,10 @@
       <Value Profile="(Default)">https://dashboard.roadometry.com</Value>
     </Setting>
     <Setting Name="SiteToken" Type="System.String" Scope="User">
-      <Value Profile="(Default)">NBQAtcwp5CC2G1gYW9Te2AMS</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="RemoteServerUpload" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

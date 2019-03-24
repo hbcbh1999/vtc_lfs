@@ -26,6 +26,9 @@ namespace VTC.Actors
         private double TotalFramesInVideo = 0;
         private DateTime ProcessingStartTime;
         private bool LiveCapture = false;
+        private int LowFpsCount = 0;
+        private const double LowFpsThreshold = 0.5;
+        private const int LowFpsCountThreshold = 2;
 
         public delegate void UpdateUIDelegate(TrafficCounterUIAccessoryInfo accessoryInfo);
         private UpdateUIDelegate _updateUiDelegate;
@@ -112,6 +115,17 @@ namespace VTC.Actors
                 }
                 FramesProcessed++;
                 Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
+
+                if (fps < LowFpsThreshold)
+                {
+                    LowFpsCount++;
+                }
+
+                if (LowFpsCount > LowFpsCountThreshold)
+                {
+                    LoggingActor.Tell(new LogMessage("Frame-rate low, performing error-recovery.", LogLevel.Debug));
+                    CaptureSource.ErrorRecovery();
+                }
             }
 
             var completed = CaptureSource?.CaptureComplete();
@@ -120,6 +134,8 @@ namespace VTC.Actors
             {
                 if(isLive.HasValue && isLive.Value)
                 {
+                    LoggingActor.Tell(new LogMessage("Capture has stopped, performing error-recovery.", LogLevel.Debug));
+                    CaptureSource.ErrorRecovery();
                     return; //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
                 }
 

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Timers;
 using Akka.Actor;
 using Emgu.CV;
 using Emgu.CV.Structure;
@@ -35,8 +36,6 @@ namespace VTC.Actors
         private bool _gotFirstFrame; //Used to re-initialize _processedFramesStartTime
         private UInt64 _processedFramesTotal;
         private Image<Bgr, byte> _mostRecentFrame;
-
-        private Timer _broadcastBackgroundTimer = new Timer();
 
         private double _fps;
 
@@ -89,6 +88,8 @@ namespace VTC.Actors
 
                 Context.System.Scheduler.ScheduleTellRepeatedly(5000, 5000, Self, new CalculateFrameRateMessage(), Self);
 
+                Context.System.Scheduler.ScheduleTellRepeatedly(60000, 60000, Self, new RequestBackgroundFrameMessage(), Self);
+
                 _config = new RegionConfig();
                 _vista = new Vista(640, 480,
                     _config); //TODO: Investigate what resolution Vista should be initialized to
@@ -113,13 +114,6 @@ namespace VTC.Actors
                 _gotFirstFrame = true;
                 _processedFramesStartTime = DateTime.Now;
                 Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromMilliseconds(1), Self, new RequestBackgroundFrameMessage(), Self);
-                _broadcastBackgroundTimer.Interval = BROADCAST_BACKGROUND_TIMER_MS;
-                _broadcastBackgroundTimer.Tick += (o, i) =>
-                {
-                    Self.Tell(new RequestBackgroundFrameMessage());
-                    Self.Tell(new RequestUpdateClassIDMappingMessage());
-                };
-                _broadcastBackgroundTimer.Start();
             }
 
             if (_vista != null)
@@ -213,14 +207,7 @@ namespace VTC.Actors
 
         private void BroadcastBackgroundFrame()
         {
-            //Note: Background no longer exists since YoloV2 has replaced movement-based detection.
-            //This function remains in order to give the logging actor a picture of the intersection for report generation.
-            //Rather than the actual background, the most recent frame is transmitted.
-
-            //if (_vista?.ColorBackground != null)
-            {
-                _loggingActor?.Tell(new HandleUpdatedBackgroundFrameMessage(_mostRecentFrame.Clone()));
-            }
+            _loggingActor?.Tell(new HandleUpdatedBackgroundFrameMessage(_mostRecentFrame.Clone()));   
         }
 
         private void RetransmitCaptureComplete()
