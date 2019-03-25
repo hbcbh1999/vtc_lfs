@@ -127,6 +127,7 @@
     <Compile Include="StateEstimate.cs" />
     <Compile Include="TrackedObject.cs" />
     <Compile Include="Turn.cs" />
+    <Compile Include="UserConfig.cs" />
     <Compile Include="VideoMetadata.cs" />
     <Compile Include="VTCPaths.cs" />
   </ItemGroup>
