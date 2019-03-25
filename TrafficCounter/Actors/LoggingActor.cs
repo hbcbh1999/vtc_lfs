@@ -645,10 +645,10 @@ namespace VTC.Actors
                     var filepath = Path.Combine(folderPath, filename);
                     tl.Save(filepath);
 
-                    if(Properties.Settings.Default.RemoteServerUpload)
+                    if(_regionConfig.SendToServer)
                     {
                         var rs = new RemoteServer();
-                        var rsr = rs.SendMovement(edited_movement, Properties.Settings.Default.SiteToken, Properties.Settings.Default.ServerURL).Result;
+                        var rsr = rs.SendMovement(edited_movement, _regionConfig.SiteToken, Properties.Settings.Default.ServerURL).Result;
                         if (rsr != HttpStatusCode.OK)
                         {
                             Log("Movement POST failed:" + rsr, LogLevel.Error);
@@ -739,10 +739,10 @@ namespace VTC.Actors
             _background = image.Clone();
             image.Dispose();
 
-            if (Properties.Settings.Default.RemoteServerUpload)
+            if (_regionConfig.SendToServer)
             {
                 var rs = new RemoteServer();
-                var rsr = rs.SendImage(_background.Bitmap,Properties.Settings.Default.SiteToken,Properties.Settings.Default.ServerURL).Result;
+                var rsr = rs.SendImage(_background.Bitmap,_regionConfig.SiteToken,Properties.Settings.Default.ServerURL).Result;
 
                 if (rsr != HttpStatusCode.OK)
                 { 

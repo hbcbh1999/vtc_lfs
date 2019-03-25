@@ -137,6 +137,14 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public double MissRatioThreshold { get; set; } = 2.5;
 
+        [Description("Site token: copy this from the web dashboard for your site.")]
+        [DataMember]
+        public string SiteToken { get; set; } = "";
+
+        [Description("SendToServer: set this to transmit movements and images to a remote server.")]
+        [DataMember]
+        public bool SendToServer { get; set; } = false;
+
         public RegionConfig()
         {
             RoiMask = new Polygon();

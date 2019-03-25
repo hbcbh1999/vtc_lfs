@@ -217,18 +217,6 @@ namespace VTC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Password {
-            get {
-                return ((string)(this["Password"]));
-            }
-            set {
-                this["Password"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://dashboard.roadometry.com")]
         public string ServerURL {
             get {
@@ -236,30 +224,6 @@ namespace VTC.Properties {
             }
             set {
                 this["ServerURL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SiteToken {
-            get {
-                return ((string)(this["SiteToken"]));
-            }
-            set {
-                this["SiteToken"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool RemoteServerUpload {
-            get {
-                return ((bool)(this["RemoteServerUpload"]));
-            }
-            set {
-                this["RemoteServerUpload"] = value;
             }
         }
     }
