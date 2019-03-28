@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Akka;
 using Akka.Actor;
+using VTC.Common;
 using VTC.Messages;
+using VTC.UserConfiguration;
 
 namespace VTC.Actors
 {
@@ -21,6 +23,8 @@ namespace VTC.Actors
         private UpdateActorStatusDelegate _updateActorStatusDelegate;
 
         private Dictionary<string, DateTime> _actorStatuses = new Dictionary<string, DateTime>();
+
+        private VTC.Common.UserConfig _userConfig = new UserConfig();
 
         public SupervisorActor()
         {
@@ -55,6 +59,12 @@ namespace VTC.Actors
             Receive<ActorHeartbeatMessage>(message =>
                 HandleActorHeartbeatMessage()
             );
+
+            Receive<LoadUserConfigMessage>(message => 
+                LoadUserConfig()
+            );
+
+            Self.Tell(new LoadUserConfigMessage());
         }
 
         void UpdateFrameGrabActor(IActorRef actor)
@@ -136,6 +146,15 @@ namespace VTC.Actors
         void UpdateActorStatusIndicators()
         {
             _updateActorStatusDelegate?.Invoke(_actorStatuses);
+        }
+
+        private void LoadUserConfig()
+        {
+            string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                        "\\VTC\\userConfig.xml";
+            IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+
+            _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
         }
 
     }

@@ -14,6 +14,7 @@ using VTC.Messages;
 using VTC.RegionConfiguration;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using VTC.Common;
 
 namespace VTC.Actors
 {
@@ -34,6 +35,7 @@ namespace VTC.Actors
                                                               "\\VTC\\regionConfig.xml";
         private readonly IRegionConfigDataAccessLayer _regionConfigDataAccessLayer = new FileRegionConfigDal(RegionConfigSavePath);
         private List<RegionConfig> _regionConfigs;
+        private VTC.Common.UserConfig _userConfig = new UserConfig();
 
         public ConfigurationActor()
         {

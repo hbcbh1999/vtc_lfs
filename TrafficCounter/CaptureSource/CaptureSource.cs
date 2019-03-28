@@ -142,9 +142,13 @@ namespace VTC.CaptureSource
 
         public void ErrorRecovery()
         {
-            Destroy();
+            if (!IsLiveCapture())
+            {
+                return;
+            }
+            _cameraCapture.Stop();
             System.Threading.Thread.Sleep(5000);
-            Init();
+            _cameraCapture.Start();
         }
     }
 }

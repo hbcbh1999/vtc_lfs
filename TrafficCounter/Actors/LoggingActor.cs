@@ -22,6 +22,7 @@ using VTC.Kernel;
 using VTC.Messages;
 using VTC.Remote;
 using VTC.Reporting;
+using VTC.UserConfiguration;
 
 namespace VTC.Actors
 {
@@ -77,6 +78,8 @@ namespace VTC.Actors
         private YoloIntegerNameMapping _yoloNameMapping = new YoloIntegerNameMapping();
 
         RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
+
+        private VTC.Common.UserConfig _userConfig = new UserConfig();
 
         public LoggingActor()
         {
@@ -180,11 +183,17 @@ namespace VTC.Actors
                 UpdateFrameCount(message.Count)
             );
 
+            Receive<LoadUserConfigMessage>(message => 
+                LoadUserConfig()
+            );
+
             //Receive<LogPerformanceMessage>(message =>
             //    Heartbeat()
             //);
 
             Self.Tell(new ActorHeartbeatMessage());
+
+            Self.Tell(new LoadUserConfigMessage());
 
             //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(1,0,0),new TimeSpan(1,0,0),Self, new GenerateDailyReportMessage(), Self);
         }
@@ -648,7 +657,7 @@ namespace VTC.Actors
                     if(_regionConfig.SendToServer)
                     {
                         var rs = new RemoteServer();
-                        var rsr = rs.SendMovement(edited_movement, _regionConfig.SiteToken, Properties.Settings.Default.ServerURL).Result;
+                        var rsr = rs.SendMovement(edited_movement, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
                         if (rsr != HttpStatusCode.OK)
                         {
                             Log("Movement POST failed:" + rsr, LogLevel.Error);
@@ -742,7 +751,7 @@ namespace VTC.Actors
             if (_regionConfig.SendToServer)
             {
                 var rs = new RemoteServer();
-                var rsr = rs.SendImage(_background.Bitmap,_regionConfig.SiteToken,Properties.Settings.Default.ServerURL).Result;
+                var rsr = rs.SendImage(_background.Bitmap,_regionConfig.SiteToken,_userConfig.ServerUrl).Result;
 
                 if (rsr != HttpStatusCode.OK)
                 { 
@@ -756,7 +765,7 @@ namespace VTC.Actors
             var sb = new StringBuilder();
             var totalObjects = 0;
 
-            if(Properties.Settings.Default.SimplifiedCountDisplay)
+            if(_userConfig.SimplifiedCountDisplay)
             { 
                sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 1"));
                sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 2"));
@@ -930,6 +939,15 @@ namespace VTC.Actors
         private void UpdateFrameCount(UInt64 count)
         { 
             _nFramesProcessed = count;    
+        }
+
+        private void LoadUserConfig()
+        {
+            string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                        "\\VTC\\userConfig.xml";
+            IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+
+            _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
         }
     }
 }

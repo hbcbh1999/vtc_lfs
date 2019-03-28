@@ -7,26 +7,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VTC.RegionConfiguration;
+using VTC.UserConfiguration;
 
 namespace VTC
 {
     public partial class SettingsEditor : Form
     {
+        private static readonly string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                                            "\\VTC\\userConfig.xml";
+
+        private readonly IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+        
+
+        private VTC.Common.UserConfig _config;
+
+        
         public SettingsEditor()
         {
             InitializeComponent();
-            settingsPropertyGrid.SelectedObject = Properties.Settings.Default;
+            _config = _userConfigDataAccessLayer.LoadUserConfig();
+            settingsPropertyGrid.SelectedObject = _config;
         }
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Save();
+            _userConfigDataAccessLayer.SaveUserConfig(_config);
         }
 
         private void resetToDefaultButton_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Reset();
-            Properties.Settings.Default.Save();
+            _config = new VTC.Common.UserConfig();
+            _userConfigDataAccessLayer.SaveUserConfig(_config);
         }
     }
 }

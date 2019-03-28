@@ -26,6 +26,7 @@ using VTC.Messages;
 using VTC.UI;
 using SharpRaven;
 using SharpRaven.Data;
+using VTC.UserConfiguration;
 
 namespace VTC
 {
@@ -58,6 +59,8 @@ namespace VTC
         // unit tests has own settings, so need to store "pairs" (capture, settings)
        private CaptureContext[] _testCaptureContexts;
 
+       private UserConfig _userConfig = new UserConfig();
+
        RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
 
        /// <summary>
@@ -71,6 +74,8 @@ namespace VTC
             InitializeComponent();
 
             _isLicensed = isLicensed;
+
+           LoadUserConfig();
 
             var tempLogger = LogManager.GetLogger("userlog"); // special logger for user messages
             if (_isLicensed)
@@ -130,7 +135,6 @@ namespace VTC
             _supervisorActor = _actorSystem.ActorOf(Props.Create(typeof(SupervisorActor)).WithDispatcher("synchronized-dispatcher"), "SupervisorActor");
             _supervisorActor.Tell(new CreateAllActorsMessage(UpdateUI, UpdateStatsUI, UpdateInfoBox, UpdateUIAccessoryInfo, UpdateDebugInfo));
             _supervisorActor.Tell(new UpdateActorStatusHandlerMessage(UpdateActorStatusIndicators));
-
        }
 
         private void UpdateUI(TrafficCounterUIUpdateInfo updateInfo)
@@ -323,15 +327,18 @@ namespace VTC
                 deviceIndex++;
             }
 
-            AddIPCameraIfValid(Properties.Settings.Default.Camera1Name,Properties.Settings.Default.Camera1URL);
-            AddIPCameraIfValid(Properties.Settings.Default.Camera2Name,Properties.Settings.Default.Camera2URL);
-            AddIPCameraIfValid(Properties.Settings.Default.Camera3Name,Properties.Settings.Default.Camera3URL);
-            AddIPCameraIfValid(Properties.Settings.Default.Camera4Name,Properties.Settings.Default.Camera4URL);
-            AddIPCameraIfValid(Properties.Settings.Default.Camera5Name,Properties.Settings.Default.Camera5URL);
+            AddIPCameraIfValid(_userConfig.Camera1Name,_userConfig.Camera1Url);
+            AddIPCameraIfValid(_userConfig.Camera2Name,_userConfig.Camera2Url);
+            AddIPCameraIfValid(_userConfig.Camera3Name,_userConfig.Camera3Url);
         }
 
         private void AddIPCameraIfValid(string name, string url)
         {
+            if (name == null || url == null)
+            {
+                return;
+            }
+
             if(name.Length > 0 && url.Length > 0)
             {
                 AddCamera(new IpCamera(name, url));
@@ -632,5 +639,14 @@ namespace VTC
             var se = new SettingsEditor();
             se.Show();
         }
+
+       private void LoadUserConfig()
+       {
+           string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                       "\\VTC\\userConfig.xml";
+           IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+
+           _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
+       }
     }
 }

@@ -17,6 +17,7 @@ using VTC.Common;
 using VTC.Common.RegionConfig;
 using VTC.Kernel.Video;
 using VTC.Messages;
+using VTC.UserConfiguration;
 
 namespace VTC.Actors
 {
@@ -32,6 +33,8 @@ namespace VTC.Actors
         private Dictionary<VideoProcessingRequestMessage, BatchVideoJob> _automationRequestJobs;
         private MessageQueue _automationProcessingCompleteMessageQueue;
         private string _currentVideoName = "";
+
+        private VTC.Common.UserConfig _userConfig = new UserConfig();
 
         public SequencingActor()
         {
@@ -82,7 +85,13 @@ namespace VTC.Actors
                 AssociateJobWithConfiguration(message.Configuration, message.JobGuid)
             );
 
+            Receive<LoadUserConfigMessage>(message => 
+                LoadUserConfig()
+            );
+
             Self.Tell(new ActorHeartbeatMessage());
+
+            Self.Tell(new LoadUserConfigMessage());
         }
 
         private void SendNotificationForLastAndDequeue()
@@ -300,6 +309,15 @@ namespace VTC.Actors
             //When all videos have recieved their configuration callbacks, begin processing
             _cameras.Clear();
             DequeueVideo();
+        }
+
+        private void LoadUserConfig()
+        {
+            string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                        "\\VTC\\userConfig.xml";
+            IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+
+            _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
         }
     }
 

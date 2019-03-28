@@ -53,7 +53,7 @@ namespace VTC.Common
 
         [Description("Display counts only based on approaches in GUI.")]
         [DataMember]
-        public string SimplifiedCountDisplay { get; set; }        
+        public bool SimplifiedCountDisplay { get; set; }        
 
         [Description("URL of remote server for recieving measurements.")]
         [DataMember]

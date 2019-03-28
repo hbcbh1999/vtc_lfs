@@ -218,6 +218,7 @@
     <Compile Include="Messages\ActorHeartbeatMessage.cs" />
     <Compile Include="Messages\FrameCountMessage.cs" />
     <Compile Include="Messages\GenerateDailyReportMessage.cs" />
+    <Compile Include="Messages\LoadUserConfigMessage.cs" />
     <Compile Include="Messages\UpdateDebugHandlerMessage.cs" />
     <Compile Include="Messages\VideoMetadataMessage.cs" />
     <Compile Include="Messages\CopyGroundtruthMessage.cs" />

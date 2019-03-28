@@ -9,9 +9,12 @@ using VTC.Messages;
 using Akka;
 using Akka.Actor;
 using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
 using Timer = System.Threading.Timer;
 using NLog;
+using VTC.Common;
 using VTC.UI;
+using VTC.UserConfiguration;
 
 namespace VTC.Actors
 {
@@ -29,13 +32,18 @@ namespace VTC.Actors
         private int LowFpsCount = 0;
         private const double LowFpsThreshold = 0.5;
         private const int LowFpsCountThreshold = 2;
+        private const int NullFrameThreshold = 10;
+        private int NullFrameCount = 0;
 
         public delegate void UpdateUIDelegate(TrafficCounterUIAccessoryInfo accessoryInfo);
         private UpdateUIDelegate _updateUiDelegate;
 
         private const int FRAME_DELAY_MS = 1;
+        private const int FRAME_TIMEOUT_MS = 60000;
 
         private bool _loggingActorNeedsBackgroundUpdate = false;
+
+        private VTC.Common.UserConfig _userConfig = new UserConfig();
 
         public FrameGrabActor()
         {
@@ -71,7 +79,13 @@ namespace VTC.Actors
                 UpdateVideoProperties(message.Fps, message.TotalFrames)
             );
 
+            Receive<LoadUserConfigMessage>(message => 
+                LoadUserConfig()
+            );
+
             Self.Tell(new ActorHeartbeatMessage());
+
+            Self.Tell(new LoadUserConfigMessage());
         }
 
         private void HandleNewVideoSource(ICaptureSource captureSource)
@@ -88,7 +102,6 @@ namespace VTC.Actors
             CaptureSource = captureSource;
             CaptureSource.Init();
             
-            
             FramesProcessed = 0;
             ProcessingStartTime = DateTime.Now;
 
@@ -99,22 +112,43 @@ namespace VTC.Actors
 
         private void GetNewFrame()
         {
-            var frame = CaptureSource?.QueryFrame();
-            var fps = CaptureSource?.FPS();
 
-            if (frame != null && fps != null)
+            try
             {
-                var timestep = (fps.Value == 0.0) ? 0.1 : 1.0/fps.Value;
-                var cloned = frame.Clone();
-                { ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned,timestep)); }
-                if(FramesProcessed < 10)
-                { 
-                    var clone2 = frame.Clone();
-                    var configurationActor = Context.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
-                    configurationActor.Tell(new FrameMessage(clone2));
+                var frame = TimeoutFrameQuery();
+                var fps = CaptureSource?.FPS();
+
+                if (frame != null)
+                {
+                    NullFrameCount = 0;
+                    var timestep = (fps.Value == 0.0) ? 0.1 : 1.0 / fps.Value;
+                    var cloned = frame.Clone();
+                    {
+                        ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned, timestep));
+                    }
+                    if (FramesProcessed < 10)
+                    {
+                        var clone2 = frame.Clone();
+                        var configurationActor =
+                            Context.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+                        configurationActor.Tell(new FrameMessage(clone2));
+                    }
+
+                    FramesProcessed++;
+                    Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
                 }
-                FramesProcessed++;
-                Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
+                else
+                {
+                    NullFrameCount++;
+                }
+
+                if (NullFrameCount > NullFrameThreshold)
+                {
+                    LoggingActor.Tell(
+                        new LogMessage("Null-frame threshold, performing error-recovery.", LogLevel.Debug));
+                    CaptureSource.ErrorRecovery();
+                    NullFrameCount = 0;
+                }
 
                 if (fps < LowFpsThreshold)
                 {
@@ -124,24 +158,48 @@ namespace VTC.Actors
                 if (LowFpsCount > LowFpsCountThreshold)
                 {
                     LoggingActor.Tell(new LogMessage("Frame-rate low, performing error-recovery.", LogLevel.Debug));
-                    CaptureSource.ErrorRecovery();
+                    CaptureSource?.ErrorRecovery();
+                    LowFpsCount = 0;
+                }
+
+                var completed = CaptureSource?.CaptureComplete();
+                var isLive = CaptureSource?.IsLiveCapture();
+                if (completed.HasValue && completed.Value)
+                {
+                    if (isLive.Value)
+                    {
+                        LoggingActor.Tell(new LogMessage("Capture has stopped, performing error-recovery.",
+                            LogLevel.Debug));
+                        CaptureSource.ErrorRecovery();
+                        return; //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
+                    }
+
+                    ProcessingActor?.Tell(new RequestBackgroundFrameMessage());
+                    ProcessingActor?.Tell(new CaptureSourceCompleteMessage());
+                    LoggingActor?.Tell(new LogUserMessage("Video complete", LogLevel.Info));
                 }
             }
-
-            var completed = CaptureSource?.CaptureComplete();
-            var isLive = CaptureSource?.IsLiveCapture();
-            if (completed.HasValue && completed.Value)
+            catch (TimeoutException ex)
             {
-                if(isLive.HasValue && isLive.Value)
-                {
-                    LoggingActor.Tell(new LogMessage("Capture has stopped, performing error-recovery.", LogLevel.Debug));
-                    CaptureSource.ErrorRecovery();
-                    return; //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
-                }
+                LoggingActor.Tell(
+                    new LogMessage("Frame-query timeout, performing error-recovery.", LogLevel.Debug));
+                CaptureSource.ErrorRecovery();
+            }
 
-                ProcessingActor?.Tell(new RequestBackgroundFrameMessage());
-                ProcessingActor?.Tell(new CaptureSourceCompleteMessage());
-                LoggingActor?.Tell(new LogUserMessage("Video complete", LogLevel.Info));
+        }
+
+        private Emgu.CV.Image<Emgu.CV.Structure.Bgr,Byte> TimeoutFrameQuery()
+        {
+            Emgu.CV.Image<Bgr, byte> frame = new Emgu.CV.Image<Bgr, byte>(640,480);
+            var task = Task.Run(() => CaptureSource?.QueryFrame());
+            bool isCompletedSuccessfully = task.Wait(TimeSpan.FromMilliseconds(FRAME_TIMEOUT_MS));
+            if (isCompletedSuccessfully)
+            {
+                return task.Result;
+            }
+            else
+            {
+                throw new TimeoutException("Frame query timeout.");
             }
         }
 
@@ -226,6 +284,15 @@ namespace VTC.Actors
         private void UpdateVideoProperties(double fps, double totalFrames)
         {
             TotalFramesInVideo = totalFrames;
+        }
+
+        private void LoadUserConfig()
+        {
+            string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                        "\\VTC\\userConfig.xml";
+            IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+
+            _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
         }
     }
 }

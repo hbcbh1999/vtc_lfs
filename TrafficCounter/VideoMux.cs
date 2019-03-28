@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using VTC.Common;
+using VTC.UserConfiguration;
 
 namespace VTC
 {
@@ -14,12 +16,16 @@ namespace VTC
         private int _displayedRowCount;
         private int _displayedColCount;
 
+        private UserConfig _userConfig = new UserConfig();
+
         public VideoMux()
         {
             InitializeComponent();
 
-            AddLogo(Properties.Settings.Default.Logopath);
-            AddUserText(Properties.Settings.Default.Organization);
+            LoadUserConfig();
+
+            AddLogo(_userConfig.Logopath);
+            AddUserText(_userConfig.Organization);
 
             _updateDebounceTimer = new Timer {Interval = 1500};
             _updateDebounceTimer.Tick += UpdateDebounceTimer_Tick;
@@ -135,7 +141,12 @@ namespace VTC
         }
 
         public void AddUserText(string userText)
-        { 
+        {
+            if (userText == null)
+            {
+                return;
+            }
+
             if(userText.Count() > 0)
             {
                 var userTextLabel = new Label();
@@ -183,6 +194,15 @@ namespace VTC
         {
             _updateDebounceTimer.Stop();
             _updateDebounceTimer.Start();
+        }
+
+        private void LoadUserConfig()
+        {
+            string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                        "\\VTC\\userConfig.xml";
+            IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+
+            _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
         }
     }
 }

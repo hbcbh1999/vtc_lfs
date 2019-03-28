@@ -39,6 +39,8 @@ namespace VTC.Actors
 
         private double _fps;
 
+        private VTC.Common.UserConfig _userConfig = new UserConfig();
+
         public ProcessingActor()
         {
             try
@@ -207,6 +209,10 @@ namespace VTC.Actors
 
         private void BroadcastBackgroundFrame()
         {
+            if (_mostRecentFrame == null)
+            {
+                return;
+            }
             _loggingActor?.Tell(new HandleUpdatedBackgroundFrameMessage(_mostRecentFrame.Clone()));   
         }
 
