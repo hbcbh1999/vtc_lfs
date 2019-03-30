@@ -139,16 +139,5 @@ namespace VTC.CaptureSource
         public double _fps = 0.0; 
 
         public abstract double FPS();
-
-        public void ErrorRecovery()
-        {
-            if (!IsLiveCapture())
-            {
-                return;
-            }
-            _cameraCapture.Stop();
-            System.Threading.Thread.Sleep(5000);
-            _cameraCapture.Start();
-        }
     }
 }

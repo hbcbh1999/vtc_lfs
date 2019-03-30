@@ -12,6 +12,7 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Timer = System.Threading.Timer;
 using NLog;
+using VTC.CaptureSource;
 using VTC.Common;
 using VTC.UI;
 using VTC.UserConfiguration;
@@ -101,7 +102,7 @@ namespace VTC.Actors
             CaptureSource?.Destroy();
             CaptureSource = captureSource;
             CaptureSource.Init();
-            
+
             FramesProcessed = 0;
             ProcessingStartTime = DateTime.Now;
 
@@ -146,7 +147,7 @@ namespace VTC.Actors
                 {
                     LoggingActor.Tell(
                         new LogMessage("Null-frame threshold, performing error-recovery.", LogLevel.Debug));
-                    CaptureSource.ErrorRecovery();
+                    LiveCameraErrorRecovery();
                     NullFrameCount = 0;
                 }
 
@@ -158,7 +159,7 @@ namespace VTC.Actors
                 if (LowFpsCount > LowFpsCountThreshold)
                 {
                     LoggingActor.Tell(new LogMessage("Frame-rate low, performing error-recovery.", LogLevel.Debug));
-                    CaptureSource?.ErrorRecovery();
+                    LiveCameraErrorRecovery();
                     LowFpsCount = 0;
                 }
 
@@ -170,7 +171,7 @@ namespace VTC.Actors
                     {
                         LoggingActor.Tell(new LogMessage("Capture has stopped, performing error-recovery.",
                             LogLevel.Debug));
-                        CaptureSource.ErrorRecovery();
+                        LiveCameraErrorRecovery();
                         return; //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
                     }
 
@@ -183,7 +184,7 @@ namespace VTC.Actors
             {
                 LoggingActor.Tell(
                     new LogMessage("Frame-query timeout, performing error-recovery.", LogLevel.Debug));
-                CaptureSource.ErrorRecovery();
+                LiveCameraErrorRecovery();
             }
 
         }
@@ -293,6 +294,17 @@ namespace VTC.Actors
             IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
 
             _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
+        }
+
+        private void LiveCameraErrorRecovery()
+        {
+            if (CaptureSource is IpCamera oldCaptureSource)
+            {
+                var newCaptureSource = new IpCamera(oldCaptureSource.Name,oldCaptureSource.ConnectionString);
+                CaptureSource?.Destroy();
+                CaptureSource = newCaptureSource;
+                CaptureSource.Init();
+            }
         }
     }
 }

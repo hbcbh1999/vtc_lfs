@@ -47,16 +47,20 @@ namespace VTC
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel1);
+            this.splitContainer1.Panel1MinSize = 100;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tlpVideoDisplayTable);
+            this.splitContainer1.Panel2MinSize = 100;
             this.splitContainer1.Size = new System.Drawing.Size(634, 385);
-            this.splitContainer1.SplitterDistance = 111;
+            this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.AutoScroll = true;
+            this.tableLayoutPanel1.AutoScrollMinSize = new System.Drawing.Size(200, 200);
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -66,7 +70,7 @@ namespace VTC
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(18);
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(111, 385);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 385);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // tlpVideoDisplayTable
@@ -80,7 +84,7 @@ namespace VTC
             this.tlpVideoDisplayTable.RowCount = 2;
             this.tlpVideoDisplayTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpVideoDisplayTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpVideoDisplayTable.Size = new System.Drawing.Size(519, 385);
+            this.tlpVideoDisplayTable.Size = new System.Drawing.Size(430, 385);
             this.tlpVideoDisplayTable.TabIndex = 0;
             // 
             // VideoMux

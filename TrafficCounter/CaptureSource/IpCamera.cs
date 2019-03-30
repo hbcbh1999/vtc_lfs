@@ -4,16 +4,16 @@ namespace VTC.CaptureSource
 {
     public class IpCamera : CaptureSource
     {
-        private readonly string _connectionString;
+        public readonly string ConnectionString;
 
         public IpCamera(string name, string connectionString) : base(name)
         {
-            _connectionString = connectionString;
+            ConnectionString = connectionString;
         }
 
         protected override VideoCapture GetCapture()
         {
-            return new VideoCapture(_connectionString);
+            return new VideoCapture(ConnectionString);
         }
 
        public override bool IsLiveCapture()

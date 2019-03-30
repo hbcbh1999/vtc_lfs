@@ -48,7 +48,5 @@ namespace VTC.Kernel.Video
         bool IsLiveCapture();
 
         double FPS();
-
-        void ErrorRecovery();
     }
 }

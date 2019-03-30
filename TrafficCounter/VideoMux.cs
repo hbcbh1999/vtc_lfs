@@ -154,6 +154,7 @@ namespace VTC
                 userTextLabel.Text = userText;
                 userTextLabel.Font = new Font(FontFamily.GenericSansSerif, (float) 20.0, FontStyle.Regular);
                 userTextLabel.Margin = new Padding(20);
+                userTextLabel.MinimumSize = new Size(300, 20);
 
                 tableLayoutPanel1.RowCount += 1;
                 tableLayoutPanel1.Controls.Add(userTextLabel);        
@@ -173,6 +174,8 @@ namespace VTC
                 AutoSize = false,
                 Checked = true,
                 Anchor = AnchorStyles.Right | AnchorStyles.Left,
+                Width = 100,
+                MaximumSize = new Size(100,40),
             };
 
             radioButton.CheckedChanged += CameraSelectButton_CheckedChanged;
