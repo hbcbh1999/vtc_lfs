@@ -36,6 +36,7 @@ namespace VTC.Actors
         private readonly IRegionConfigDataAccessLayer _regionConfigDataAccessLayer = new FileRegionConfigDal(RegionConfigSavePath);
         private List<RegionConfig> _regionConfigs;
         private VTC.Common.UserConfig _userConfig = new UserConfig();
+        private RegionConfig _liveRegionConfig = new RegionConfig();
 
         public ConfigurationActor()
         {
@@ -79,6 +80,10 @@ namespace VTC.Actors
 
             Receive<RegionConfigNameLookupMessage>(message =>
                 LookupRegionConfig(message.RegionConfigName, message.JobGuid)
+            );
+
+            Receive<RequestConfigurationMessage>(message => 
+                SendConfigurationTo(message.ActorRef)
             );
 
             Receive<ActorHeartbeatMessage>(message =>
@@ -156,6 +161,7 @@ namespace VTC.Actors
                     {
                         _processingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
                         _loggingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
+                        _liveRegionConfig = regionEditor.SelectedRegionConfig;
                         if (_currentJob != null)
                         {
                             _currentJob.RegionConfiguration = regionEditor.SelectedRegionConfig;
@@ -227,6 +233,11 @@ namespace VTC.Actors
         private void ReceiveNewBackground(Image<Bgr,byte> image)
         { 
             _backgroundFrame = image.Clone();
+        }
+
+        private void SendConfigurationTo(IActorRef actor)
+        {
+            actor.Tell(new UpdateRegionConfigurationMessage(_liveRegionConfig));
         }
     }
 }

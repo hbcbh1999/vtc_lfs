@@ -35,6 +35,7 @@ namespace VTC.Actors
         private const int LowFpsCountThreshold = 2;
         private const int NullFrameThreshold = 10;
         private int NullFrameCount = 0;
+        private DateTime LastFrameTimestamp = DateTime.MinValue;
 
         public delegate void UpdateUIDelegate(TrafficCounterUIAccessoryInfo accessoryInfo);
         private UpdateUIDelegate _updateUiDelegate;
@@ -72,6 +73,10 @@ namespace VTC.Actors
                 Heartbeat()
             );
 
+            Receive<CheckConnectivityMessage>(message =>
+                CheckConnectivity()
+            );
+
             Receive<UpdateUiAccessoryHandlerMessage>(message =>
                 UpdateUiHandler(message.UiDelegate)
             );
@@ -87,6 +92,8 @@ namespace VTC.Actors
             Self.Tell(new ActorHeartbeatMessage());
 
             Self.Tell(new LoadUserConfigMessage());
+
+            Context.System.Scheduler.ScheduleTellRepeatedly(60000, 60000, Self, new CheckConnectivityMessage(), Self);
         }
 
         private void HandleNewVideoSource(ICaptureSource captureSource)
@@ -122,7 +129,9 @@ namespace VTC.Actors
                 if (frame != null)
                 {
                     NullFrameCount = 0;
-                    var timestep = (fps.Value == 0.0) ? 0.1 : 1.0 / fps.Value;
+                    var ts = DateTime.Now - LastFrameTimestamp;
+                    LastFrameTimestamp = DateTime.Now;
+                    var timestep = ts.TotalSeconds;
                     var cloned = frame.Clone();
                     {
                         ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned, timestep));
@@ -148,6 +157,8 @@ namespace VTC.Actors
                     LoggingActor.Tell(
                         new LogMessage("Null-frame threshold, performing error-recovery.", LogLevel.Debug));
                     LiveCameraErrorRecovery();
+                    LoggingActor.Tell(
+                        new LogMessage("Error-recovery complete.", LogLevel.Debug));
                     NullFrameCount = 0;
                 }
 
@@ -160,25 +171,28 @@ namespace VTC.Actors
                 {
                     LoggingActor.Tell(new LogMessage("Frame-rate low, performing error-recovery.", LogLevel.Debug));
                     LiveCameraErrorRecovery();
+                    LoggingActor.Tell(
+                        new LogMessage("Error-recovery complete.", LogLevel.Debug));
                     LowFpsCount = 0;
                 }
 
                 var completed = CaptureSource?.CaptureComplete();
                 var isLive = CaptureSource?.IsLiveCapture();
-                if (completed.HasValue && completed.Value)
-                {
-                    if (isLive.Value)
-                    {
-                        LoggingActor.Tell(new LogMessage("Capture has stopped, performing error-recovery.",
-                            LogLevel.Debug));
-                        LiveCameraErrorRecovery();
-                        return; //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
-                    }
+                if (!completed.HasValue || !completed.Value) return;
 
-                    ProcessingActor?.Tell(new RequestBackgroundFrameMessage());
-                    ProcessingActor?.Tell(new CaptureSourceCompleteMessage());
-                    LoggingActor?.Tell(new LogUserMessage("Video complete", LogLevel.Info));
+                if (isLive.Value)
+                {
+                    LoggingActor.Tell(new LogMessage("Capture returned null-frame. Pausing to allow camera recovery.",
+                        LogLevel.Debug));
+                    System.Threading.Thread.Sleep(10000);
+                    LoggingActor.Tell(new LogMessage("Pause complete.",
+                        LogLevel.Debug));
+                    return; //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
                 }
+
+                ProcessingActor?.Tell(new RequestBackgroundFrameMessage());
+                ProcessingActor?.Tell(new CaptureSourceCompleteMessage());
+                LoggingActor?.Tell(new LogUserMessage("Video complete", LogLevel.Info));
             }
             catch (TimeoutException ex)
             {
@@ -305,6 +319,30 @@ namespace VTC.Actors
                 CaptureSource = newCaptureSource;
                 CaptureSource.Init();
             }
+        }
+
+        private void CheckConnectivity()
+        {
+            if (!CaptureSource.IsLiveCapture())
+            {
+                return;
+            }
+
+            //Check time-stamp of last received frame
+            if (LastFrameTimestamp == DateTime.MinValue)
+            {
+                LoggingActor.Tell(
+                    new LogMessage("Frame timestamp is not initialized.", LogLevel.Debug));
+            }
+            else
+            {
+                var ts = DateTime.Now - LastFrameTimestamp;
+                LoggingActor.Tell(
+                    new LogMessage("Since last frame: " + ts.Milliseconds + " ms", LogLevel.Debug));
+            }
+
+            LoggingActor.Tell(
+                new LogMessage("Null frame count: " + NullFrameCount, LogLevel.Debug));
         }
     }
 }

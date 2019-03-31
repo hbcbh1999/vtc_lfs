@@ -452,28 +452,6 @@ namespace VTC
         /// </summary>
         private void CameraComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Create ROI mask for test-mode videos
-            if (_unitTestsMode)
-            {
-                var polygon = new Polygon();
-                polygon.AddRange(new[]
-                {
-                    new Point(0, 0),
-                    new Point(0, (int) 480),
-                    new Point((int) 640, (int) 480),
-                    new Point((int) 640, 0),
-                    new Point(0, 0)
-                });
-                var regionConfig = new RegionConfig
-                {
-                    RoiMask = polygon,
-                    MinObjectSize = 5
-                };
-
-                var processingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/ProcessingActor");
-                processingActor.Tell(new UpdateRegionConfigurationMessage(regionConfig));
-            }
-
             var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
             var frameGrabActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/FrameGrabActor");
             var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");

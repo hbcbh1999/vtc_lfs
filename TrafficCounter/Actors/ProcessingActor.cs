@@ -30,6 +30,7 @@ namespace VTC.Actors
         private RegionConfig _config;
 
         private IActorRef _loggingActor;
+        private IActorRef _configurationActor;
 
         private UInt64 _processedFramesThisBin;
         private DateTime _processedFramesStartTime = DateTime.Now;
@@ -70,6 +71,10 @@ namespace VTC.Actors
                     UpdateLoggingActor(message.ActorRef)
                 );
 
+                Receive<ConfigurationActorMessage>(message =>
+                    UpdateConfigurationActor(message.ActorRef)
+                );
+
                 Receive<RequestBackgroundFrameMessage>(message =>
                     BroadcastBackgroundFrame()
                 );
@@ -86,11 +91,16 @@ namespace VTC.Actors
                     CalculateFramerate()
                 );
 
+                Receive<ValidateConfigurationMessage>(message =>
+                    CheckConfiguration()
+                );
+
                 Self.Tell(new ActorHeartbeatMessage());
 
                 Context.System.Scheduler.ScheduleTellRepeatedly(5000, 5000, Self, new CalculateFrameRateMessage(), Self);
 
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 60000, Self, new RequestBackgroundFrameMessage(), Self);
+                Context.System.Scheduler.ScheduleTellRepeatedly(60000, 60000, Self, new ValidateConfigurationMessage(), Self);
 
                 _config = new RegionConfig();
                 _vista = new Vista(640, 480,
@@ -175,10 +185,7 @@ namespace VTC.Actors
             _processedFramesStartTime = DateTime.Now;
             _processedFramesThisBin = 0;
             _fps = fps;
-            if (fps > 0.001)
-            {
-                _loggingActor.Tell(new LogMessage($"FPS: {_fps}", LogLevel.Debug));
-            }
+            _loggingActor.Tell(new LogMessage($"FPS: {_fps}", LogLevel.Debug));
         }
 
         private void UpdateConfig(RegionConfig config)
@@ -204,6 +211,18 @@ namespace VTC.Actors
             catch (Exception ex)
             {
                 MessageBox.Show("Exception in UpdateLoggingActor:" + ex.Message);
+            }   
+        }
+
+        private void UpdateConfigurationActor(IActorRef actorRef)
+        {
+            try
+            {
+                _configurationActor = actorRef;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception in UpdateConfigurationActor:" + ex.Message);
             }   
         }
 
@@ -236,6 +255,29 @@ namespace VTC.Actors
         {
             {
                 _loggingActor?.Tell(new HandleClassIDMappingMessage(_vista._yoloNameMapping.IntegerToObjectName));
+            }
+        }
+
+        private void CheckConfiguration()
+        {
+            if (_config.RoiMask == null)
+            {
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is null.", LogLevel.Debug));
+                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+            }
+            else if (_config.RoiMask.Count < 3)
+            {
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask has" + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Debug));
+                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+            }
+            else if (!_config.RoiMask.PolygonClosed)
+            {
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is not a closed polygon.", LogLevel.Debug));
+                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+            }
+            else
+            {
+                _loggingActor.Tell(new LogMessage("ProcessingActor: configuration is OK.", LogLevel.Debug));
             }
         }
     }

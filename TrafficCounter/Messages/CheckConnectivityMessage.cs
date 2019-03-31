@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VTC.Messages
 {
-    class CheckConnectivityMessage
+    class CalculateFrameRateMessage
     {
     }
 }

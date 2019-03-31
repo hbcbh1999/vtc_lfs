@@ -41,7 +41,7 @@ namespace VTC.Kernel.Video
         void Destroy();
 
         /// <summary>
-        /// Destroy underlying camera.
+        /// Get connectivity status.
         /// </summary>
         bool CaptureComplete();
 

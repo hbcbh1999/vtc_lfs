@@ -136,7 +136,6 @@ namespace VTC.Actors
             _loggingActor.Tell(new UpdateInfoUiHandlerMessage(infoUiDelegate));
             _loggingActor.Tell(new UpdateDebugHandlerMessage(debugDelegate));
             _sequencingActor = Context.ActorOf<SequencingActor>("SequencingActor");
-            //_configurationActor = Context.ActorOf<ConfigurationActor>("ConfigurationActor");
             _configurationActor = Context.System.ActorOf(Props.Create(() => new
                 ConfigurationActor()).WithDispatcher("synchronized-dispatcher"), "ConfigurationActor");
 
