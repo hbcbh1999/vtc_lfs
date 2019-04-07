@@ -129,6 +129,7 @@
     <Compile Include="GPU.cs" />
     <Compile Include="GPUDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="YoloWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VTC.Common\VTC.Common.csproj">
@@ -153,8 +154,8 @@
 cp $(SolutionDir)\ThirdParty\Darknet\transport_v3_d1.cfg $(TargetDir)\DetectionNetwork
 cp $(SolutionDir)\ThirdParty\Darknet\transport_v3_d1.weights $(TargetDir)\DetectionNetwork
 cp $(SolutionDir)\ThirdParty\Darknet\transport.names $(TargetDir)\DetectionNetwork
-cp $(SolutionDir)\ThirdParty\Darknet\yolo_cpp_dll.dll $(TargetDir)
-cp $(SolutionDir)\ThirdParty\Darknet\yolo_cpp_dll_no_gpu.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\DarknetV3\yolo_cpp_dll.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\DarknetV3\yolo_cpp_dll_no_gpu.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\Darknet\pthreadGC2.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\Darknet\pthreadVC2.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\CUDA9.1\deviceQuery.exe $(TargetDir)

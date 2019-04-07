@@ -13,6 +13,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Darknet;
 using NLog;
 
 namespace VTC.Classifier
@@ -56,57 +57,9 @@ namespace VTC.Classifier
 
     public class YoloClassifier
     {
-        private IntPtr Detector;
+        private YoloWrapper Detector;
 
         public float Threshold = 0.4f;
-
-        [DllImport("yolo_cpp_dll_no_gpu.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr Detector_no_gpu_new(String cfg_filename, String weight_filename, int gpu_id);
-
-        [DllImport("yolo_cpp_dll_no_gpu.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr Detector_no_gpu_Destroy(IntPtr detector);
-
-        [DllImport("yolo_cpp_dll_no_gpu.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int Detector_no_gpu_get_net_width(IntPtr detector);
-
-        [DllImport("yolo_cpp_dll_no_gpu.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int Detector_no_gpu_get_net_height(IntPtr detector);
-
-        [DllImport("yolo_cpp_dll_no_gpu.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Detector_no_gpu_detect_from_image_t(IntPtr detector, IntPtr img, float thresh, bool use_mean, int[] box_list, int max_detection_count);
-
-        [DllImport("yolo_cpp_dll_no_gpu.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Detector_no_gpu_detect_from_filename(IntPtr detector, String image_filename, float thresh, bool use_mean, int[] box_list, int max_detection_count);
-
-        [DllImport("yolo_cpp_dll_no_gpu.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Detector_no_gpu_load_image(IntPtr detector, String image_filename, IntPtr img);
-
-        [DllImport("yolo_cpp_dll_no_gpu.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Detector_no_gpu_free_image(IntPtr img);
-
-        [DllImport("yolo_cpp_dll.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr Detector_new(String cfg_filename, String weight_filename, int gpu_id);
-
-        [DllImport("yolo_cpp_dll.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr Detector_Destroy(IntPtr detector);
-
-        [DllImport("yolo_cpp_dll.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int Detector_get_net_width(IntPtr detector);
-
-        [DllImport("yolo_cpp_dll.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int Detector_get_net_height(IntPtr detector);
-
-        [DllImport("yolo_cpp_dll.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Detector_detect_from_image_t(IntPtr detector, IntPtr img, float thresh, bool use_mean, int[] box_list, int max_detection_count);
-
-        [DllImport("yolo_cpp_dll.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Detector_detect_from_filename(IntPtr detector, String image_filename, float thresh, bool use_mean, int[] box_list, int max_detection_count);
-
-        [DllImport("yolo_cpp_dll.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Detector_load_image(IntPtr detector, String image_filename, IntPtr img);
-
-        [DllImport("yolo_cpp_dll.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void Detector_free_image(IntPtr img);
 
         public bool cpuMode = true;
 
@@ -151,12 +104,13 @@ namespace VTC.Classifier
                 if (cpuMode)
                 {
                     Logger.Debug("Calling detector constructor (no GPU)...");
-                    Detector = Detector_no_gpu_new(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
+                    Detector = new Darknet.YoloWrapper(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
+                    //Detector = Detector_no_gpu_new(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
                 }
                 else
                 {
                     Logger.Debug("Calling detector constructor (with GPU)...");
-                    Detector = Detector_new(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
+                    Detector = new Darknet.YoloWrapper(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
                 }
 
                 Logger.Debug("Classifier initialized.");
@@ -171,11 +125,11 @@ namespace VTC.Classifier
         {
             if (cpuMode)
             {
-                Detector_no_gpu_Destroy(Detector);
+                Detector.Dispose();
             }
             else
             {
-                Detector_Destroy(Detector);
+                Detector.Dispose();
             }
         }
 
@@ -184,57 +138,59 @@ namespace VTC.Classifier
         {
             List<Measurement> measurements = new List<Measurement>();
             int sizeOfbbox_t = 6 * 4 + 8;
-            int [] bbox_t_array = new int[sizeOfbbox_t * MaxDetectionCount];
             var frame_float = frame.Convert<Bgr, float>().Mul(1.0/255.0);
             var memory = MarshalEmguImageToimage_t(frame_float);
 
-            if (Detector != IntPtr.Zero)
+            YoloWrapper.bbox_t[] detection_array;
+            
+            if (Detector != null)
             {
                 if (cpuMode)
                 {
-                    Detector_no_gpu_detect_from_image_t(Detector, memory.pNativeDataStruct, Threshold, false,
-                        bbox_t_array, MaxDetectionCount);
+                    detection_array = Detector.Detect(frame.Bytes);
                 }
                 else
                 {
-                    Detector_detect_from_image_t(Detector, memory.pNativeDataStruct, Threshold, false, bbox_t_array, MaxDetectionCount);
+                    detection_array = Detector.Detect(frame.Bytes);
                 }
 
-                for (int i = 0; i < MaxDetectionCount; i++)
+                if (detection_array == null)
                 {
-                    int h_offset = i * sizeOfbbox_t;
-                    int w_offset = i * sizeOfbbox_t + sizeof(int);
-                    int x_offset = i * sizeOfbbox_t + sizeof(int) + sizeof(int);
-                    int y_offset = i * sizeOfbbox_t + sizeof(int) + sizeof(int) + sizeof(int);
-                    int obj_id_offset = y_offset + sizeof(int);
+                    return new List<Measurement>();
+                }
 
-                    if (bbox_t_array[x_offset] == 0 && bbox_t_array[y_offset] == 0) {break;}
+                for (int i = 0; i < detection_array.Length; i++)
+                {
+                    if (detection_array[i].x == 0 && detection_array[i].y == 0) {break;}
 
                     var m = new Measurement();
-                    m.Height = bbox_t_array[h_offset];
-                    m.Width = bbox_t_array[w_offset];
+                    m.Height = detection_array[i].h;
+                    m.Width = detection_array[i].w;
                     if (m.Height > frame.Height | m.Width > frame.Width)
                     {
                         Debug.WriteLine("Detection rectangle too large.");
                         continue;
                     }
-                    m.X = bbox_t_array[x_offset] + bbox_t_array[w_offset]/2;
-                    m.Y = bbox_t_array[y_offset] + bbox_t_array[h_offset] / 2;
+                    m.X = detection_array[i].x + detection_array[i].w/2;
+                    m.Y = detection_array[i].y + detection_array[i].h/2;
                     if ( (m.X > frame.Width) | (m.Y > frame.Height) | (m.X < 0) | (m.Y < 0))
                     {
                         Debug.WriteLine("Detection coordinates out-of-bounds.");
                         continue;
                     }
 
-                    var color = SampleColorAtRectangle(frame, bbox_t_array[x_offset], bbox_t_array[y_offset],
-                        bbox_t_array[x_offset] + bbox_t_array[w_offset],
-                        bbox_t_array[y_offset] + bbox_t_array[h_offset]);
+                    int x_lim = (int) detection_array[i].x + Convert.ToInt32(detection_array[i].w);
+                    int y_lim = (int) detection_array[i].y + Convert.ToInt32(detection_array[i].h);
+
+                    var color = SampleColorAtRectangle(frame, (int) detection_array[i].x, (int) detection_array[i].y,
+                        x_lim,
+                        y_lim);
 
                     m.Blue = color.Blue;
                     m.Green = color.Green;
                     m.Red = color.Red;
                     m.Size = m.Width * m.Height;
-                    m.ObjectClass = bbox_t_array[obj_id_offset];
+                    m.ObjectClass = (int) detection_array[i].obj_id;
                     measurements.Add(m);
                 }
             }
