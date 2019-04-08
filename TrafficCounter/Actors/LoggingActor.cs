@@ -195,7 +195,7 @@ namespace VTC.Actors
 
         protected override void PreRestart(Exception cause, object msg)
         {
-            Log("Logging actor: restarting due to " + cause.Message, LogLevel.Error);
+            Log("Logging actor: restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
             base.PreRestart(cause, msg);
         }
 
@@ -206,7 +206,7 @@ namespace VTC.Actors
 
         protected override void PostRestart(Exception cause)
         {
-            Log("Logging actor: restarted due to " + cause.Message, LogLevel.Error);
+            Log("Logging actor: restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
             base.PostRestart(cause);
         }
 
@@ -436,6 +436,12 @@ namespace VTC.Actors
 
         private void LogDetections(List<Measurement> detections)
         {
+            if (_currentOutputFolder == null)
+            {
+                Log("LoggingActor: _currentOutputFolder is null in LogDetections.", LogLevel.Error);
+                return;
+            }
+
             try
             {
                 var filename = "Detections";
@@ -645,6 +651,30 @@ namespace VTC.Actors
         private int _totalTrajectoriesCounted = 0;
         private void TrajectoryListHandler(TrackingEvents.TrajectoryListEventArgs args)
         {
+            if (_regionConfig == null)
+            {
+                Log("LoggingActor: _regionConfig is null in TrajectoryListHandler.", LogLevel.Error);
+                return;
+            }
+
+            if (_yoloNameMapping == null)
+            {
+                Log("LoggingActor: _yoloNameMapping is null in TrajectoryListHandler.", LogLevel.Error);
+                return;
+            }
+
+            if (_currentOutputFolder == null)
+            {
+                Log("LoggingActor: _currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error);
+                return;
+            }
+
+            if (_userConfig == null)
+            {
+                Log("_userConfig: _currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error);
+                return;
+            }
+
             try
             {
                 foreach (var d in args.TrackedObjects)
@@ -760,6 +790,24 @@ namespace VTC.Actors
 
         private void UpdateBackgroundFrame(Image<Bgr, byte> image)
         {
+            if (image == null)
+            {
+                Log("LoggingActor: received null-image in UpdateBackgroundFrame.", LogLevel.Error);
+                return;
+            }
+
+            if (_regionConfig == null)
+            {
+                Log("LoggingActor: _regionConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
+                return;
+            }
+
+            if (_userConfig == null)
+            {
+                Log("LoggingActor: _userConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
+                return;
+            }
+
             _background = image.Clone();
             image.Dispose();
 
