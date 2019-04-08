@@ -30,18 +30,10 @@ namespace VTC.Actors
     {
         private UInt64 _nFramesProcessed = 0;
         private double _fps = 24.0;
-        //private DateTime _lastLogVideoTime;
-        //private DateTime _last5MinbinTime;
-        //private DateTime _last15MinbinTime;
-        //private DateTime _last60MinbinTime;
 
         private DateTime _next5MinBinTime;
         private DateTime _next15MinBinTime;
         private DateTime _next60MinBinTime;
-
-        //private bool _5minSampleBinWritten = false;
-        //private bool _15minSampleBinWritten = false;
-        //private bool _60minSampleBinWritten = false;
 
         private bool _liveMode = true;
 
@@ -187,19 +179,40 @@ namespace VTC.Actors
                 LoadUserConfig()
             );
 
-            //Receive<LogPerformanceMessage>(message =>
-            //    Heartbeat()
-            //);
-
-            Self.Tell(new ActorHeartbeatMessage());
+            Self.Tell(new ActorHeartbeatMessage(Self));
 
             Self.Tell(new LoadUserConfigMessage());
 
             //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(1,0,0),new TimeSpan(1,0,0),Self, new GenerateDailyReportMessage(), Self);
+
+            Logger.Log(LogLevel.Info, "LoggingActor initialized.");
+        }
+
+        protected override void PreStart()
+        {
+            base.PreStart();
+        }
+
+        protected override void PreRestart(Exception cause, object msg)
+        {
+            Log("Logging actor: restarting due to " + cause.Message, LogLevel.Error);
+            base.PreRestart(cause, msg);
+        }
+
+        protected override void PostStop()
+        {
+            base.PostStop();
+        }
+
+        protected override void PostRestart(Exception cause)
+        {
+            Log("Logging actor: restarted due to " + cause.Message, LogLevel.Error);
+            base.PostRestart(cause);
         }
 
         private void UpdateFileCreationTime(DateTime dt)
         {
+            Logger.Log(LogLevel.Info, "LoggingActor: new file creation time " + dt);
             _videoStartTime = dt;
             SetAllNextBinTime(dt);
         }
@@ -465,7 +478,7 @@ namespace VTC.Actors
         private void LogUser(string text, LogLevel level)
         {
             UserLogger.Log(level, text);
-            _updateInfoUiDelegate.Invoke(text);
+            _updateInfoUiDelegate?.Invoke(text);
         }
 
         private void Log5MinBinCounts()
@@ -598,6 +611,8 @@ namespace VTC.Actors
 
         private void UpdateVideoSourceInfo(NewVideoSourceMessage message)
         {
+            Logger.Log(LogLevel.Info, "LoggingActor: new video source " + message.CaptureSource.Name);
+
             _currentVideoName = message.CaptureSource.Name;
             CreateOrReplaceOutputFolderIfExists();
 
@@ -883,8 +898,8 @@ namespace VTC.Actors
 
         private void Heartbeat()
         {
-            Context.Parent.Tell(new ActorHeartbeatMessage());
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
+            Context.Parent.Tell(new ActorHeartbeatMessage(Self));
+            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
         }
 
         private void UpdateSequencingActor(IActorRef actorRef)

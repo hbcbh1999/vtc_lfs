@@ -94,7 +94,7 @@ namespace VTC.Actors
                 ReceiveNewBackground(message.Frame)
             );
 
-            Self.Tell(new ActorHeartbeatMessage());
+            Self.Tell(new ActorHeartbeatMessage(Self));
         }
 
         private void UpdateFrameGrabActor(IActorRef actorref)
@@ -213,8 +213,8 @@ namespace VTC.Actors
 
         private void Heartbeat()
         {
-            _supervisorActor?.Tell(new ActorHeartbeatMessage());
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
+            _supervisorActor?.Tell(new ActorHeartbeatMessage(Self));
+            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
         }
 
         private void LookupRegionConfig(string regionName, Guid jobGuid)

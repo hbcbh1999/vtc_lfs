@@ -89,7 +89,7 @@ namespace VTC.Actors
                 LoadUserConfig()
             );
 
-            Self.Tell(new ActorHeartbeatMessage());
+            Self.Tell(new ActorHeartbeatMessage(Self));
 
             Self.Tell(new LoadUserConfigMessage());
 
@@ -254,8 +254,8 @@ namespace VTC.Actors
 
         private void Heartbeat()
         {
-            Context.Parent.Tell(new ActorHeartbeatMessage());
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
+            Context.Parent.Tell(new ActorHeartbeatMessage(Self));
+            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
 
             if (TotalFramesInVideo == 0)
                 return;
@@ -314,6 +314,8 @@ namespace VTC.Actors
         {
             if (CaptureSource is IpCamera oldCaptureSource)
             {
+                LoggingActor.Tell(
+                    new LogMessage("Error-recovery: deleting and re-initializing CaptureSource.", LogLevel.Debug));
                 var newCaptureSource = new IpCamera(oldCaptureSource.Name,oldCaptureSource.ConnectionString);
                 CaptureSource?.Destroy();
                 CaptureSource = newCaptureSource;
@@ -323,26 +325,34 @@ namespace VTC.Actors
 
         private void CheckConnectivity()
         {
-            if (!CaptureSource.IsLiveCapture())
+            if (CaptureSource != null)
             {
-                return;
+                if (!CaptureSource.IsLiveCapture())
+                {
+                    return;
+                }
             }
 
             //Check time-stamp of last received frame
             if (LastFrameTimestamp == DateTime.MinValue)
             {
                 LoggingActor.Tell(
-                    new LogMessage("Frame timestamp is not initialized.", LogLevel.Debug));
+                    new LogMessage("FrameGrab Actor: frame timestamp is not initialized.", LogLevel.Debug));
             }
             else
             {
                 var ts = DateTime.Now - LastFrameTimestamp;
                 LoggingActor.Tell(
-                    new LogMessage("Since last frame: " + ts.Milliseconds + " ms", LogLevel.Debug));
+                    new LogMessage("FrameGrab Actor: ms since last frame = " + ts.Milliseconds, LogLevel.Debug));
+
+                if (ts.Milliseconds > 5000)
+                {
+                    LiveCameraErrorRecovery();
+                }
             }
 
             LoggingActor.Tell(
-                new LogMessage("Null frame count: " + NullFrameCount, LogLevel.Debug));
+                new LogMessage("FrameGrab Actor: null frame count = " + NullFrameCount, LogLevel.Debug));
         }
     }
 }

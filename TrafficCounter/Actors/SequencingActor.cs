@@ -89,7 +89,7 @@ namespace VTC.Actors
                 LoadUserConfig()
             );
 
-            Self.Tell(new ActorHeartbeatMessage());
+            Self.Tell(new ActorHeartbeatMessage(Self));
 
             Self.Tell(new LoadUserConfigMessage());
         }
@@ -195,9 +195,9 @@ namespace VTC.Actors
 
         private void Heartbeat()
         {
-            Context.Parent.Tell(new ActorHeartbeatMessage());
+            Context.Parent.Tell(new ActorHeartbeatMessage(Self));
             CheckVideoProcessingRequestsIPC();
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
+            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
             Self.Tell(new CheckVideoProcessingRequestsIPCMessage());
         }
 

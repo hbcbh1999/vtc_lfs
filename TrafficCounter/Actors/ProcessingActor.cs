@@ -95,7 +95,7 @@ namespace VTC.Actors
                     CheckConfiguration()
                 );
 
-                Self.Tell(new ActorHeartbeatMessage());
+                Self.Tell(new ActorHeartbeatMessage(Self));
 
                 Context.System.Scheduler.ScheduleTellRepeatedly(5000, 5000, Self, new CalculateFrameRateMessage(), Self);
 
@@ -103,9 +103,12 @@ namespace VTC.Actors
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 60000, Self, new ValidateConfigurationMessage(), Self);
 
                 _config = new RegionConfig();
+                _loggingActor?.Tell(new LogMessage("ProcessingActor: creating new Vista.", LogLevel.Debug));
                 _vista = new Vista(640, 480,
                     _config); //TODO: Investigate what resolution Vista should be initialized to
                 _loggingActor?.Tell(new LogMessage($"cpuMode: {_vista._yoloClassifier.cpuMode}", LogLevel.Debug));
+
+                _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug));
                 
             }
             catch (Exception ex)
@@ -155,6 +158,8 @@ namespace VTC.Actors
         {
             try
             {
+                _loggingActor?.Tell(new LogMessage("ProcessingActor received UpdateVideoDimensionsMessage.", LogLevel.Debug));
+                _loggingActor?.Tell(new LogMessage("ProcessingActor: creating new Vista.", LogLevel.Debug));
                 _vista = new Vista(message.Width, message.Height, _config);
                 _loggingActor?.Tell(new LogMessage($"cpuMode: {_vista._yoloClassifier.cpuMode}", LogLevel.Debug));
                 _vista.UpdateRegionConfiguration(_config);
@@ -247,8 +252,8 @@ namespace VTC.Actors
 
         private void Heartbeat()
         {
-            Context.Parent.Tell(new ActorHeartbeatMessage());
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
+            Context.Parent.Tell(new ActorHeartbeatMessage(Self));
+            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
         }
 
         private void BroadcastClassIDMapping()
@@ -267,7 +272,7 @@ namespace VTC.Actors
             }
             else if (_config.RoiMask.Count < 3)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask has" + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Debug));
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask has " + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Debug));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
             }
             else if (!_config.RoiMask.PolygonClosed)

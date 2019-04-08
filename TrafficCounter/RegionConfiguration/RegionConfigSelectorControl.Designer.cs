@@ -73,7 +73,7 @@
             // lblName
             // 
             this.lblName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.lblName.Font = new System.Drawing.Font("Raleway", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblName.Location = new System.Drawing.Point(257, 5);
             this.lblName.Name = "lblName";
             this.tableLayoutPanel1.SetRowSpan(this.lblName, 2);
@@ -85,6 +85,7 @@
             // lbRegionConfigs
             // 
             this.lbRegionConfigs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbRegionConfigs.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbRegionConfigs.FormattingEnabled = true;
             this.lbRegionConfigs.Location = new System.Drawing.Point(506, 8);
             this.lbRegionConfigs.Name = "lbRegionConfigs";
@@ -95,6 +96,7 @@
             // btnCreateNewRegionConfig
             // 
             this.btnCreateNewRegionConfig.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnCreateNewRegionConfig.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCreateNewRegionConfig.Location = new System.Drawing.Point(544, 187);
             this.btnCreateNewRegionConfig.Name = "btnCreateNewRegionConfig";
             this.btnCreateNewRegionConfig.Size = new System.Drawing.Size(167, 23);
