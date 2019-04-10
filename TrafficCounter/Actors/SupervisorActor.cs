@@ -202,7 +202,6 @@ namespace VTC.Actors
         {
             //Stop old frame-grab actor and pause.
             Context.Stop(_frameGrabActor);
-            System.Threading.Thread.Sleep(10000);
 
             //Create new frame-grab actor.
             _frameGrabActor = Context.ActorOf<FrameGrabActor>("FrameGrabActor");
@@ -222,6 +221,11 @@ namespace VTC.Actors
                 _loggingActor?.Tell(
                     new LogMessage("Supervisor Actor: Frame-grab actor is restarted using live source " + _captureSource.Name, LogLevel.Debug));
             }
+            else
+            {
+                _loggingActor?.Tell(
+                    new LogMessage("Supervisor Actor: Frame-grab actor is restarted. No live source.", LogLevel.Debug));
+            }
         }
 
         private void StoreVideoSourceInfo(ICaptureSource source)
@@ -234,7 +238,7 @@ namespace VTC.Actors
             UpdateActorStatusIndicators();
 
             var timeSinceFrameGrabHeartbeat = DateTime.Now - _frameGrabHeartbeat;
-            if (timeSinceFrameGrabHeartbeat.Seconds > 30)
+            if (timeSinceFrameGrabHeartbeat.Seconds > 60)
             {
                 _loggingActor?.Tell(
                     new LogMessage("Supervisor Actor: FrameGrab Actor heartbeat is stale, restarting.", LogLevel.Debug));

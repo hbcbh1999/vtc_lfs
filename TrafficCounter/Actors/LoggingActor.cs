@@ -790,37 +790,45 @@ namespace VTC.Actors
 
         private void UpdateBackgroundFrame(Image<Bgr, byte> image)
         {
-            if (image == null)
+            try
             {
-                Log("LoggingActor: received null-image in UpdateBackgroundFrame.", LogLevel.Error);
-                return;
+                if (image == null)
+                {
+                    Log("LoggingActor: received null-image in UpdateBackgroundFrame.", LogLevel.Error);
+                    return;
+                }
+
+                if (_regionConfig == null)
+                {
+                    Log("LoggingActor: _regionConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
+                    return;
+                }
+
+                if (_userConfig == null)
+                {
+                    Log("LoggingActor: _userConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
+                    return;
+                }
+
+                _background = image.Clone();
+                image.Dispose();
+
+                if (_regionConfig.SendToServer)
+                {
+                    var rs = new RemoteServer();
+                    var rsr = rs.SendImage(_background.Bitmap, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
+
+                    if (rsr != HttpStatusCode.OK)
+                    {
+                        Log("Image-upload failed:" + rsr, LogLevel.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("LoggingActor: " + ex.Message + " at " + ex.StackTrace, LogLevel.Error);
             }
 
-            if (_regionConfig == null)
-            {
-                Log("LoggingActor: _regionConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
-                return;
-            }
-
-            if (_userConfig == null)
-            {
-                Log("LoggingActor: _userConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
-                return;
-            }
-
-            _background = image.Clone();
-            image.Dispose();
-
-            if (_regionConfig.SendToServer)
-            {
-                var rs = new RemoteServer();
-                var rsr = rs.SendImage(_background.Bitmap,_regionConfig.SiteToken,_userConfig.ServerUrl).Result;
-
-                if (rsr != HttpStatusCode.OK)
-                { 
-                    Log("Image-upload failed:" + rsr, LogLevel.Error);
-                } 
-            }
         }
 
         public string GetStatString()

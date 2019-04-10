@@ -133,9 +133,7 @@ namespace VTC.Actors
                     LastFrameTimestamp = DateTime.Now;
                     var timestep = ts.TotalSeconds;
                     var cloned = frame.Clone();
-                    {
-                        ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned, timestep));
-                    }
+                    ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned, timestep));
                     if (FramesProcessed < 10)
                     {
                         var clone2 = frame.Clone();
@@ -145,7 +143,6 @@ namespace VTC.Actors
                     }
 
                     FramesProcessed++;
-                    Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
                 }
                 else
                 {
@@ -178,19 +175,24 @@ namespace VTC.Actors
 
                 var completed = CaptureSource?.CaptureComplete();
                 var isLive = CaptureSource?.IsLiveCapture();
-                if (!completed.HasValue || !completed.Value) return;
+                if (!completed.HasValue || !completed.Value)
+                {
+                    Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
+                    return;
+                }
 
                 if (isLive.Value)
                 {
+                    //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
                     LoggingActor.Tell(new LogMessage("Capture returned null-frame. Pausing to allow camera recovery.",
                         LogLevel.Debug));
                     System.Threading.Thread.Sleep(10000);
                     LoggingActor.Tell(new LogMessage("Pause complete.",
                         LogLevel.Debug));
-                    return; //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
+                    Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
+                    return; 
                 }
 
-                ProcessingActor?.Tell(new RequestBackgroundFrameMessage());
                 ProcessingActor?.Tell(new CaptureSourceCompleteMessage());
                 LoggingActor?.Tell(new LogUserMessage("Video complete", LogLevel.Info));
             }
@@ -315,7 +317,7 @@ namespace VTC.Actors
             if (CaptureSource is IpCamera oldCaptureSource)
             {
                 LoggingActor.Tell(
-                    new LogMessage("Error-recovery: deleting and re-initializing CaptureSource.", LogLevel.Debug));
+                    new LogMessage("Error-recovery: deleting and re-initializing CaptureSource: " + oldCaptureSource.Name + " @ " + oldCaptureSource.ConnectionString, LogLevel.Debug));
                 var newCaptureSource = new IpCamera(oldCaptureSource.Name,oldCaptureSource.ConnectionString);
                 CaptureSource?.Destroy();
                 CaptureSource = newCaptureSource;
