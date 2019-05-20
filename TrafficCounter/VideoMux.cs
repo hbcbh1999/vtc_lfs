@@ -147,12 +147,12 @@ namespace VTC
                 return;
             }
 
-            if(userText.Count() > 0)
+            if(userText.Any())
             {
                 var userTextLabel = new Label();
                 userTextLabel.AutoSize = true;
                 userTextLabel.Text = userText;
-                userTextLabel.Font = new Font(FontFamily.GenericSansSerif, (float) 20.0, FontStyle.Regular);
+                userTextLabel.Font = new Font(FontFamily.Families.First(ff => ff.Name == "Raleway"), (float) 20.0, FontStyle.Regular);
                 userTextLabel.Margin = new Padding(20);
                 userTextLabel.MinimumSize = new Size(300, 20);
 

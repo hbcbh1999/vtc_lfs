@@ -30,18 +30,10 @@ namespace VTC.Actors
     {
         private UInt64 _nFramesProcessed = 0;
         private double _fps = 24.0;
-        //private DateTime _lastLogVideoTime;
-        //private DateTime _last5MinbinTime;
-        //private DateTime _last15MinbinTime;
-        //private DateTime _last60MinbinTime;
 
         private DateTime _next5MinBinTime;
         private DateTime _next15MinBinTime;
         private DateTime _next60MinBinTime;
-
-        //private bool _5minSampleBinWritten = false;
-        //private bool _15minSampleBinWritten = false;
-        //private bool _60minSampleBinWritten = false;
 
         private bool _liveMode = true;
 
@@ -187,19 +179,40 @@ namespace VTC.Actors
                 LoadUserConfig()
             );
 
-            //Receive<LogPerformanceMessage>(message =>
-            //    Heartbeat()
-            //);
-
-            Self.Tell(new ActorHeartbeatMessage());
+            Self.Tell(new ActorHeartbeatMessage(Self));
 
             Self.Tell(new LoadUserConfigMessage());
 
             //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(1,0,0),new TimeSpan(1,0,0),Self, new GenerateDailyReportMessage(), Self);
+
+            Logger.Log(LogLevel.Info, "LoggingActor initialized.");
+        }
+
+        protected override void PreStart()
+        {
+            base.PreStart();
+        }
+
+        protected override void PreRestart(Exception cause, object msg)
+        {
+            Log("Logging actor: restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
+            base.PreRestart(cause, msg);
+        }
+
+        protected override void PostStop()
+        {
+            base.PostStop();
+        }
+
+        protected override void PostRestart(Exception cause)
+        {
+            Log("Logging actor: restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
+            base.PostRestart(cause);
         }
 
         private void UpdateFileCreationTime(DateTime dt)
         {
+            Logger.Log(LogLevel.Info, "LoggingActor: new file creation time " + dt);
             _videoStartTime = dt;
             SetAllNextBinTime(dt);
         }
@@ -423,6 +436,12 @@ namespace VTC.Actors
 
         private void LogDetections(List<Measurement> detections)
         {
+            if (_currentOutputFolder == null)
+            {
+                Log("LoggingActor: _currentOutputFolder is null in LogDetections.", LogLevel.Error);
+                return;
+            }
+
             try
             {
                 var filename = "Detections";
@@ -465,7 +484,7 @@ namespace VTC.Actors
         private void LogUser(string text, LogLevel level)
         {
             UserLogger.Log(level, text);
-            _updateInfoUiDelegate.Invoke(text);
+            _updateInfoUiDelegate?.Invoke(text);
         }
 
         private void Log5MinBinCounts()
@@ -598,6 +617,8 @@ namespace VTC.Actors
 
         private void UpdateVideoSourceInfo(NewVideoSourceMessage message)
         {
+            Logger.Log(LogLevel.Info, "LoggingActor: new video source " + message.CaptureSource.Name);
+
             _currentVideoName = message.CaptureSource.Name;
             CreateOrReplaceOutputFolderIfExists();
 
@@ -630,6 +651,30 @@ namespace VTC.Actors
         private int _totalTrajectoriesCounted = 0;
         private void TrajectoryListHandler(TrackingEvents.TrajectoryListEventArgs args)
         {
+            if (_regionConfig == null)
+            {
+                Log("LoggingActor: _regionConfig is null in TrajectoryListHandler.", LogLevel.Error);
+                return;
+            }
+
+            if (_yoloNameMapping == null)
+            {
+                Log("LoggingActor: _yoloNameMapping is null in TrajectoryListHandler.", LogLevel.Error);
+                return;
+            }
+
+            if (_currentOutputFolder == null)
+            {
+                Log("LoggingActor: _currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error);
+                return;
+            }
+
+            if (_userConfig == null)
+            {
+                Log("_userConfig: _currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error);
+                return;
+            }
+
             try
             {
                 foreach (var d in args.TrackedObjects)
@@ -745,19 +790,45 @@ namespace VTC.Actors
 
         private void UpdateBackgroundFrame(Image<Bgr, byte> image)
         {
-            _background = image.Clone();
-            image.Dispose();
-
-            if (_regionConfig.SendToServer)
+            try
             {
-                var rs = new RemoteServer();
-                var rsr = rs.SendImage(_background.Bitmap,_regionConfig.SiteToken,_userConfig.ServerUrl).Result;
+                if (image == null)
+                {
+                    Log("LoggingActor: received null-image in UpdateBackgroundFrame.", LogLevel.Error);
+                    return;
+                }
 
-                if (rsr != HttpStatusCode.OK)
-                { 
-                    Log("Image-upload failed:" + rsr, LogLevel.Error);
-                } 
+                if (_regionConfig == null)
+                {
+                    Log("LoggingActor: _regionConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
+                    return;
+                }
+
+                if (_userConfig == null)
+                {
+                    Log("LoggingActor: _userConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
+                    return;
+                }
+
+                _background = image.Clone();
+                image.Dispose();
+
+                if (_regionConfig.SendToServer)
+                {
+                    var rs = new RemoteServer();
+                    var rsr = rs.SendImage(_background.Bitmap, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
+
+                    if (rsr != HttpStatusCode.OK)
+                    {
+                        Log("Image-upload failed:" + rsr, LogLevel.Error);
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                Log("LoggingActor: " + ex.Message + " at " + ex.StackTrace, LogLevel.Error);
+            }
+
         }
 
         public string GetStatString()
@@ -883,8 +954,8 @@ namespace VTC.Actors
 
         private void Heartbeat()
         {
-            Context.Parent.Tell(new ActorHeartbeatMessage());
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(), Self);
+            Context.Parent.Tell(new ActorHeartbeatMessage(Self));
+            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
         }
 
         private void UpdateSequencingActor(IActorRef actorRef)

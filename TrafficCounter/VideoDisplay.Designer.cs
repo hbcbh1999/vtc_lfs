@@ -38,9 +38,9 @@
             // 
             this.xyLabel.AutoSize = true;
             this.xyLabel.BackColor = System.Drawing.Color.Transparent;
-            this.xyLabel.Location = new System.Drawing.Point(12, 9);
+            this.xyLabel.Location = new System.Drawing.Point(14, 9);
             this.xyLabel.Name = "xyLabel";
-            this.xyLabel.Size = new System.Drawing.Size(30, 13);
+            this.xyLabel.Size = new System.Drawing.Size(28, 13);
             this.xyLabel.TabIndex = 4;
             this.xyLabel.Text = "(X,Y)";
             // 
@@ -48,18 +48,19 @@
             // 
             this.imageBox.Location = new System.Drawing.Point(0, 0);
             this.imageBox.Name = "imageBox";
-            this.imageBox.Size = new System.Drawing.Size(645, 453);
+            this.imageBox.Size = new System.Drawing.Size(752, 453);
             this.imageBox.TabIndex = 5;
             this.imageBox.TabStop = false;
             // 
             // VideoDisplay
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(644, 452);
+            this.ClientSize = new System.Drawing.Size(751, 452);
             this.Controls.Add(this.xyLabel);
             this.Controls.Add(this.imageBox);
             this.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "VideoDisplay";
             this.Text = "VideoDisplay";

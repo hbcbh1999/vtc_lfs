@@ -216,6 +216,8 @@
     <Compile Include="ExportTrainingSet\ExportTrainingSet.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Messages\ActorHeartbeatMessage.cs" />
+    <Compile Include="Messages\CheckActorLiveness.cs" />
+    <Compile Include="Messages\RestartFrameGrabActorMessage.cs" />
     <Compile Include="Messages\RequestConfigurationMessage.cs" />
     <Compile Include="Messages\ValidateConfigurationMessage.cs" />
     <Compile Include="Messages\CheckConnectivityMessage.cs" />

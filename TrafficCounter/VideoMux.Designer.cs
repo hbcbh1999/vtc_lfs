@@ -53,8 +53,9 @@ namespace VTC
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tlpVideoDisplayTable);
             this.splitContainer1.Panel2MinSize = 100;
-            this.splitContainer1.Size = new System.Drawing.Size(634, 385);
-            this.splitContainer1.SplitterDistance = 200;
+            this.splitContainer1.Size = new System.Drawing.Size(740, 385);
+            this.splitContainer1.SplitterDistance = 233;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -65,12 +66,12 @@ namespace VTC
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(18);
+            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(21, 18, 21, 18);
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 385);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(233, 385);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // tlpVideoDisplayTable
@@ -84,16 +85,17 @@ namespace VTC
             this.tlpVideoDisplayTable.RowCount = 2;
             this.tlpVideoDisplayTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpVideoDisplayTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpVideoDisplayTable.Size = new System.Drawing.Size(430, 385);
+            this.tlpVideoDisplayTable.Size = new System.Drawing.Size(502, 385);
             this.tlpVideoDisplayTable.TabIndex = 0;
             // 
             // VideoMux
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(634, 385);
+            this.ClientSize = new System.Drawing.Size(740, 385);
             this.Controls.Add(this.splitContainer1);
+            this.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "VideoMux";
             this.Text = "Video";

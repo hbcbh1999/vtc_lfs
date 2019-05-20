@@ -19,7 +19,7 @@
     <ROW Property="ARPURLINFOABOUT" Value="https://roadometry.com"/>
     <ROW Property="BannerBitmap" Value="banner" MultiBuildValue="DefaultBuild:BannerBitmap.bmp_1" Type="1" MsiKey="BannerBitmap"/>
     <ROW Property="DialogBitmap" Value="dialog" MultiBuildValue="DefaultBuild:SplashScreen.bmp_1" Type="1" MsiKey="DialogBitmap"/>
-    <ROW Property="LIMITUI" Value="1"/>
+    <ROW Property="LIMITUI" Value="1" MultiBuildValue="DefaultBuild:"/>
     <ROW Property="Manufacturer" Value="Roadometry"/>
     <ROW Property="ProductCode" Value="1033:{F246D294-6F0C-42DF-9519-1E6A3AE210EF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
@@ -40,10 +40,12 @@
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
     <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
     <ROW Directory="DetectionNetwork_Dir" Directory_Parent="APPDIR" DefaultDir="DETECT~1|DetectionNetwork"/>
+    <ROW Directory="FontsFolder" Directory_Parent="TARGETDIR" DefaultDir="FONTSF~1|FontsFolder" IsPseudoRoot="1"/>
     <ROW Directory="ProgramMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="PROGRA~1|ProgramMenuFolder" IsPseudoRoot="1"/>
     <ROW Directory="ReportAssets_Dir" Directory_Parent="APPDIR" DefaultDir="REPORT~1|ReportAssets"/>
     <ROW Directory="Roadometry_Dir" Directory_Parent="ProgramMenuFolder" DefaultDir="ROADOM~1|Roadometry"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
+    <ROW Directory="TestFiles_Dir" Directory_Parent="APPDIR" DefaultDir="TESTFI~1|TestFiles"/>
     <ROW Directory="amd64_Dir" Directory_Parent="APPDIR" DefaultDir="amd64"/>
     <ROW Directory="config_Dir" Directory_Parent="APPDIR" DefaultDir="config"/>
     <ROW Directory="de_Dir" Directory_Parent="APPDIR" DefaultDir="de"/>
@@ -70,6 +72,7 @@
     <ROW Component="DirectShowLib2005.dll" ComponentId="{DF0BB30A-AB00-4DDC-806F-27FD9B0D5091}" Directory_="APPDIR" Attributes="0" KeyPath="DirectShowLib2005.dll"/>
     <ROW Component="Emgu.CV.UI.dll" ComponentId="{90164A11-811A-455A-90FE-3ED94E3151E5}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.UI.dll"/>
     <ROW Component="Emgu.CV.World.dll" ComponentId="{06396228-DD99-40DB-905A-AD33BB164382}" Directory_="APPDIR" Attributes="0" KeyPath="Emgu.CV.World.dll"/>
+    <ROW Component="GeoAPI.CoordinateSystems.dll" ComponentId="{FAA6F650-9AE1-417E-ACD2-221FC5ABD666}" Directory_="APPDIR" Attributes="0" KeyPath="GeoAPI.CoordinateSystems.dll"/>
     <ROW Component="GeoAPI.dll" ComponentId="{C9578AB4-29E1-4EA0-A4F8-822AD0BC925D}" Directory_="APPDIR" Attributes="0" KeyPath="GeoAPI.dll"/>
     <ROW Component="IPManager.dll" ComponentId="{82CA1A36-F7AA-497A-BCC7-29D61E9AE77F}" Directory_="APPDIR" Attributes="0" KeyPath="IPManager.dll"/>
     <ROW Component="Indicators.dll" ComponentId="{E7DC9744-B613-4230-A560-534B16C74403}" Directory_="APPDIR" Attributes="0" KeyPath="Indicators.dll"/>
@@ -79,16 +82,24 @@
     <ROW Component="MathNet.Numerics.IO.dll" ComponentId="{E6A33276-77CB-4ED6-BC6B-DBC638DB221F}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Numerics.IO.dll"/>
     <ROW Component="MathNet.Numerics.dll" ComponentId="{67CCA534-8381-4DDA-BEA7-81BE43B386C4}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Numerics.dll"/>
     <ROW Component="MathNet.Spatial.dll" ComponentId="{6D980480-EA64-4EAF-AE33-E2A42B48EC08}" Directory_="APPDIR" Attributes="0" KeyPath="MathNet.Spatial.dll"/>
+    <ROW Component="MediaInfo.DotNetWrapper.dll" ComponentId="{5B737D8E-8983-41C0-B047-1AD272E81F6B}" Directory_="APPDIR" Attributes="0" KeyPath="MediaInfo.DotNetWrapper.dll"/>
+    <ROW Component="MediaInfo.dll" ComponentId="{9E0BD87B-BCFD-4E2E-A3D8-844CCBAA47D8}" Directory_="APPDIR" Attributes="256" KeyPath="MediaInfo.dll"/>
+    <ROW Component="MediaInfo.dll_1" ComponentId="{2F565D1D-6F60-4C93-B71F-22248DF137E8}" Directory_="x64_Dir" Attributes="256" KeyPath="MediaInfo.dll_1"/>
+    <ROW Component="MediaInfo.dll_2" ComponentId="{FF30563C-2652-4CF0-87BF-BAB9B6CBE35A}" Directory_="x86_Dir" Attributes="0" KeyPath="MediaInfo.dll_2"/>
+    <ROW Component="MediaInfo_InfoTip.dll" ComponentId="{EFFEA694-F0C6-4834-9BDC-BB4F2887C726}" Directory_="APPDIR" Attributes="256" KeyPath="MediaInfo_InfoTip.dll"/>
     <ROW Component="Microsoft.CSharp.dll" ComponentId="{8D11C3D5-D0BD-4522-9CB9-39BFBCADC278}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.CSharp.dll"/>
     <ROW Component="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" ComponentId="{EC7841C9-BD79-4CE2-AA45-1E085DAFAE2F}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"/>
     <ROW Component="NDtw.dll" ComponentId="{D90669D5-9217-4B33-A143-D63CF9713CE5}" Directory_="APPDIR" Attributes="0" KeyPath="NDtw.dll"/>
     <ROW Component="NLog.dll" ComponentId="{14A9D9F9-D380-43F4-A1F3-439F559A3556}" Directory_="APPDIR" Attributes="0" KeyPath="NLog.dll"/>
+    <ROW Component="NetTopologySuite.CoordinateSystems.dll" ComponentId="{DFDAA8D0-B799-402B-9318-68EC12922ACD}" Directory_="APPDIR" Attributes="0" KeyPath="NetTopologySuite.CoordinateSystems.dll"/>
     <ROW Component="NetTopologySuite.dll" ComponentId="{022DD5CC-26E4-4EAF-A2ED-57CDB3269F7A}" Directory_="APPDIR" Attributes="0" KeyPath="NetTopologySuite.dll"/>
     <ROW Component="Newtonsoft.Json.dll" ComponentId="{7709F7A5-AEA2-4C84-87DD-7E7771BC05AB}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
     <ROW Component="NvAPIWrapper.Net.dll" ComponentId="{0105C25B-4B84-4AE8-B81F-BFD17FC907DA}" Directory_="APPDIR" Attributes="0" KeyPath="NvAPIWrapper.Net.dll"/>
+    <ROW Component="NvAPIWrapper.dll" ComponentId="{7D46BA7E-F92A-4B85-ACB4-AE4358B57678}" Directory_="APPDIR" Attributes="0" KeyPath="NvAPIWrapper.dll"/>
     <ROW Component="OptAssignTest.dll" ComponentId="{C6E91EE6-5BBB-4DF5-97AB-ED5605FF2091}" Directory_="APPDIR" Attributes="0" KeyPath="OptAssignTest.dll"/>
     <ROW Component="PowerCollections.dll" ComponentId="{AB27337F-F39E-4B0C-9676-4092190FB54C}" Directory_="APPDIR" Attributes="0" KeyPath="PowerCollections.dll"/>
     <ROW Component="ProductInformation" ComponentId="{D084E5D9-16AD-46DB-B135-D8D9AB1FC552}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="RalewayBlack.ttf" ComponentId="{13E7FADF-0817-4363-A3AB-E2635C9463E4}" Directory_="FontsFolder" Attributes="0" Type="0"/>
     <ROW Component="Roadometry" ComponentId="{D3FC62D0-0B9E-4DBD-B484-260A99633893}" Directory_="Roadometry_Dir" Attributes="0"/>
     <ROW Component="SharpRaven.dll" ComponentId="{DE53BC95-D5E6-4B58-BDEE-6FC3141CE630}" Directory_="APPDIR" Attributes="0" KeyPath="SharpRaven.dll"/>
     <ROW Component="System.Collections.Immutable.dll" ComponentId="{75633288-A27C-42A5-8EAB-8B401202A662}" Directory_="APPDIR" Attributes="0" KeyPath="System.Collections.Immutable.dll"/>
@@ -115,26 +126,46 @@
     <ROW Component="ZedGraph.resources.dll_8" ComponentId="{8393B748-AC01-4D71-825E-EFE7CD0CEAE4}" Directory_="sk_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_8"/>
     <ROW Component="ZedGraph.resources.dll_9" ComponentId="{A2FC45F6-A3D8-4680-966D-85735D50B328}" Directory_="sv_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_9"/>
     <ROW Component="ZeroMQ.dll" ComponentId="{6CBBE2E6-972C-408E-8099-DA80B60D0B40}" Directory_="APPDIR" Attributes="0" KeyPath="ZeroMQ.dll"/>
+    <ROW Component="cars.png" ComponentId="{6A36FD50-DC9A-4C93-B86F-BA4CD77151A9}" Directory_="TestFiles_Dir" Attributes="0" KeyPath="cars.png" Type="0"/>
     <ROW Component="concrt140.dll" ComponentId="{D8D8C160-47D6-4B16-BC7F-E3DC52C35B5B}" Directory_="x64_Dir" Attributes="256" KeyPath="concrt140.dll"/>
     <ROW Component="concrt140.dll_1" ComponentId="{D8F093B4-5E53-494A-AC7C-4CA569D01E99}" Directory_="x86_Dir" Attributes="0" KeyPath="concrt140.dll_1"/>
+    <ROW Component="cublas64_100.dll" ComponentId="{E62A6735-8785-4D0C-A0DC-42CB61AD2635}" Directory_="APPDIR" Attributes="256" KeyPath="cublas64_100.dll"/>
     <ROW Component="cublas64_91.dll" ComponentId="{44321F08-4324-44D6-A123-0D6AEA1B36DF}" Directory_="APPDIR" Attributes="256" KeyPath="cublas64_91.dll"/>
+    <ROW Component="cudart32_100.dll" ComponentId="{212F6725-10C7-4219-ADE6-E985337E88C1}" Directory_="APPDIR" Attributes="0" KeyPath="cudart32_100.dll"/>
+    <ROW Component="cudart64_100.dll" ComponentId="{B1D3B4FE-BA47-42D4-A640-5E1A7A97C319}" Directory_="APPDIR" Attributes="256" KeyPath="cudart64_100.dll"/>
     <ROW Component="cudart64_91.dll" ComponentId="{79D7AB59-33FE-43BF-B062-24950D56A5AE}" Directory_="APPDIR" Attributes="256" KeyPath="cudart64_91.dll"/>
     <ROW Component="cudnn64_7.dll" ComponentId="{532459D8-01A1-43C0-AA2F-D0D529EACCBE}" Directory_="APPDIR" Attributes="256" KeyPath="cudnn64_7.dll"/>
+    <ROW Component="curand64_100.dll" ComponentId="{9160D5CD-01FA-4D59-B3BE-DE7356E35096}" Directory_="APPDIR" Attributes="256" KeyPath="curand64_100.dll"/>
     <ROW Component="curand64_91.dll" ComponentId="{56917387-5A98-4E82-B1EA-A2236ECD0AFD}" Directory_="APPDIR" Attributes="256" KeyPath="curand64_91.dll"/>
     <ROW Component="cvextern.dll" ComponentId="{0BBDBD17-7826-40F8-9A79-55CEE2655192}" Directory_="x64_Dir" Attributes="256" KeyPath="cvextern.dll"/>
     <ROW Component="cvextern.dll_1" ComponentId="{356246F1-F884-46DB-9FE1-78011B729F17}" Directory_="x86_Dir" Attributes="0" KeyPath="cvextern.dll_1"/>
     <ROW Component="deviceQuery.exe" ComponentId="{59236BA1-48FF-40CD-A536-D87E3930945B}" Directory_="APPDIR" Attributes="256" KeyPath="deviceQuery.exe"/>
     <ROW Component="eventConfig.xml" ComponentId="{639105E7-43BA-49C8-AE4D-6EBED690684E}" Directory_="config_Dir" Attributes="0" KeyPath="eventConfig.xml" Type="0"/>
-    <ROW Component="libsodium.dll" ComponentId="{30D84DFB-C05C-40F2-B2AD-F8ADFCDEB152}" Directory_="amd64_Dir" Attributes="256" KeyPath="libsodium.dll"/>
-    <ROW Component="libsodium.dll_1" ComponentId="{2E5B2B38-8281-4782-87F7-BDDEED4A8737}" Directory_="i386_Dir" Attributes="0" KeyPath="libsodium.dll_1"/>
-    <ROW Component="libsodium.so" ComponentId="{E45B3F77-C401-48CD-8B7A-AD9AC5B076F2}" Directory_="amd64_Dir" Attributes="0" KeyPath="libsodium.so" Type="0"/>
-    <ROW Component="libsodium.so_1" ComponentId="{A76F4520-20C3-415F-9894-CC54153101C2}" Directory_="i386_Dir" Attributes="0" KeyPath="libsodium.so_1" Type="0"/>
+    <ROW Component="libcrypto1_1.dll" ComponentId="{3B5672DC-D5CD-4A80-9E67-0551FE0A3156}" Directory_="APPDIR" Attributes="0" KeyPath="libcrypto1_1.dll"/>
+    <ROW Component="libcrypto1_1.dll_1" ComponentId="{F3049A40-8B7A-4618-A68E-E38A3C38FCEC}" Directory_="x86_Dir" Attributes="0" KeyPath="libcrypto1_1.dll_1"/>
+    <ROW Component="libcrypto1_1x64.dll" ComponentId="{05C96E1E-F0C3-483E-9462-CB99DB8425E7}" Directory_="APPDIR" Attributes="256" KeyPath="libcrypto1_1x64.dll"/>
+    <ROW Component="libcrypto1_1x64.dll_1" ComponentId="{9E7D39AE-8509-47AB-A8CE-4803097015BA}" Directory_="x64_Dir" Attributes="256" KeyPath="libcrypto1_1x64.dll_1"/>
+    <ROW Component="libcurl.dll" ComponentId="{E8C50938-7D21-41E8-967D-DBBB1587F181}" Directory_="APPDIR" Attributes="256" KeyPath="libcurl.dll"/>
+    <ROW Component="libcurl.dll_1" ComponentId="{02357BC9-17AF-46F6-BA99-2A5AD64058E4}" Directory_="x64_Dir" Attributes="256" KeyPath="libcurl.dll_1"/>
+    <ROW Component="libcurl.dll_2" ComponentId="{7C69E776-48E2-472C-9959-8AE2613C0C44}" Directory_="x86_Dir" Attributes="0" KeyPath="libcurl.dll_2"/>
+    <ROW Component="libsodium.so" ComponentId="{E45B3F77-C401-48CD-8B7A-AD9AC5B076F2}" Directory_="amd64_Dir" Attributes="0" KeyPath="libzmq.so" Type="0"/>
+    <ROW Component="libssh2.dll" ComponentId="{3D533E2A-9620-4975-AC66-CCEEC34235CC}" Directory_="APPDIR" Attributes="256" KeyPath="libssh2.dll"/>
+    <ROW Component="libssh2.dll_1" ComponentId="{886B6851-0D89-457C-A0F4-D6F223797A69}" Directory_="x64_Dir" Attributes="256" KeyPath="libssh2.dll_1"/>
+    <ROW Component="libssh2.dll_2" ComponentId="{E2F9EE0C-44E4-4E04-8C52-DF91BAD87152}" Directory_="x86_Dir" Attributes="0" KeyPath="libssh2.dll_2"/>
+    <ROW Component="libssl1_1.dll" ComponentId="{A22D001B-F937-4D74-A71D-0AD7B284D1EB}" Directory_="APPDIR" Attributes="0" KeyPath="libssl1_1.dll"/>
+    <ROW Component="libssl1_1.dll_1" ComponentId="{97708D50-B087-4A95-811D-997C8F44CC15}" Directory_="x86_Dir" Attributes="0" KeyPath="libssl1_1.dll_1"/>
+    <ROW Component="libssl1_1x64.dll" ComponentId="{395162EE-28C8-479B-A1E5-A85B8E983A83}" Directory_="APPDIR" Attributes="256" KeyPath="libssl1_1x64.dll"/>
+    <ROW Component="libssl1_1x64.dll_1" ComponentId="{540EAF8E-76CF-492B-B16C-B86E651349AC}" Directory_="x64_Dir" Attributes="256" KeyPath="libssl1_1x64.dll_1"/>
     <ROW Component="libzmq.dll" ComponentId="{D48C11E1-3FFB-4456-9335-D38A6E7B5F2E}" Directory_="amd64_Dir" Attributes="256" KeyPath="libzmq.dll"/>
     <ROW Component="libzmq.dll_1" ComponentId="{04A700C2-F22E-4567-BEFD-584EC3302312}" Directory_="i386_Dir" Attributes="0" KeyPath="libzmq.dll_1"/>
     <ROW Component="msvcp140.dll" ComponentId="{E26B38D1-0D33-4F90-8E7B-45AC018A2271}" Directory_="x64_Dir" Attributes="256" KeyPath="msvcp140.dll"/>
     <ROW Component="msvcp140.dll_1" ComponentId="{52844C7D-9224-4901-8F15-0E632181D54C}" Directory_="x86_Dir" Attributes="0" KeyPath="msvcp140.dll_1"/>
-    <ROW Component="opencv_ffmpeg341.dll" ComponentId="{AE0F2218-00BA-4273-AB8E-7894BC48B2E2}" Directory_="x86_Dir" Attributes="0" KeyPath="opencv_ffmpeg341.dll"/>
-    <ROW Component="opencv_ffmpeg341_64.dll" ComponentId="{286048A9-7931-4153-97CB-F7821AC86FA8}" Directory_="x64_Dir" Attributes="256" KeyPath="opencv_ffmpeg341_64.dll"/>
+    <ROW Component="opencv_ffmpeg330.dll" ComponentId="{ACDA3A09-DE61-4D87-BEF9-8EC380956F7D}" Directory_="APPDIR" Attributes="0" KeyPath="opencv_ffmpeg330.dll"/>
+    <ROW Component="opencv_ffmpeg330_64.dll" ComponentId="{CC2F569C-0C29-47B2-A4C2-DA57680F659A}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_ffmpeg330_64.dll"/>
+    <ROW Component="opencv_ffmpeg343.dll" ComponentId="{70C2596F-0192-40C2-8464-BC41BB884165}" Directory_="x86_Dir" Attributes="0" KeyPath="opencv_ffmpeg343.dll"/>
+    <ROW Component="opencv_ffmpeg343_64.dll" ComponentId="{81C819FC-023B-4195-BD9B-5A645BC3FB73}" Directory_="x64_Dir" Attributes="256" KeyPath="opencv_ffmpeg343_64.dll"/>
+    <ROW Component="opencv_world330.dll" ComponentId="{7CB112EF-F504-4963-A639-7CCC8449F158}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_world330.dll"/>
+    <ROW Component="opencv_world330d.dll" ComponentId="{09A26CAF-16B6-4E8F-A85D-57145756680E}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_world330d.dll"/>
     <ROW Component="pthreadGC2.dll" ComponentId="{E7E01405-D10B-4174-95D4-D8D460B12147}" Directory_="APPDIR" Attributes="256" KeyPath="pthreadGC2.dll"/>
     <ROW Component="pthreadVC2.dll" ComponentId="{19EC3391-32F7-4398-880E-DD9229B66C8F}" Directory_="APPDIR" Attributes="256" KeyPath="pthreadVC2.dll"/>
     <ROW Component="transport.names" ComponentId="{C8702646-E6C8-4895-9BA1-B91618AD56C2}" Directory_="DetectionNetwork_Dir" Attributes="0" KeyPath="transport.names" Type="0"/>
@@ -148,7 +179,7 @@
     <ROW Feature="B63_41B8_9CB7_8C5E07C0FC18_" Title="Visual C++ 2010 SP1 x64 (MFC Security Update)" Description="Visual C++ 2010 SP1 x64 (MFC Security Update)" Display="9" Level="1" Attributes="0" Components="AI_ExePath"/>
     <ROW Feature="CB585686_DAA3_4384_BDDF_08ABA631E9F3_" Title="Visual C++ 2010 SP1 x86 (MFC Security Update)" Description="Visual C++ 2010 SP1 x86 (MFC Security Update)" Display="7" Level="1" Attributes="0" Components="AI_ExePath"/>
     <ROW Feature="FAA_5658_49AA_A41D_71074C8A5006" Title="Visual C++ 2010 x86 (MFC Security Update)" Description="Visual C++ 2010 x86 (MFC Security Update)" Display="5" Level="1" Attributes="0" Components="AI_ExePath"/>
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath Akka.dll BigLogo.png DirectShowLib2005.dll Emgu.CV.UI.dll Emgu.CV.World.dll GeoAPI.dll IPManager.dll Indicators.dll LicenseManager.exe LicenseSpot.Framework.dll Logo.ico MathNet.Numerics.IO.dll MathNet.Numerics.dll MathNet.Spatial.dll Microsoft.CSharp.dll Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll NDtw.dll NLog.dll NetTopologySuite.dll Newtonsoft.Json.dll NvAPIWrapper.Net.dll OptAssignTest.dll PowerCollections.dll ProductInformation Roadometry SharpRaven.dll System.Collections.Immutable.dll System.Runtime.InteropServices.RuntimeInformation.dll TrajectoryAnalyzer.exe VTC.Classifier.dll VTC.Common.dll VTC.Kernel.dll VTC.KernelTests.dll VTC.Reporting.dll VTC.exe ZedGraph.dll ZedGraph.resources.dll ZedGraph.resources.dll_1 ZedGraph.resources.dll_10 ZedGraph.resources.dll_11 ZedGraph.resources.dll_12 ZedGraph.resources.dll_2 ZedGraph.resources.dll_3 ZedGraph.resources.dll_4 ZedGraph.resources.dll_5 ZedGraph.resources.dll_6 ZedGraph.resources.dll_7 ZedGraph.resources.dll_8 ZedGraph.resources.dll_9 ZeroMQ.dll concrt140.dll concrt140.dll_1 cublas64_91.dll cudart64_91.dll cudnn64_7.dll curand64_91.dll cvextern.dll cvextern.dll_1 deviceQuery.exe eventConfig.xml libsodium.dll libsodium.dll_1 libsodium.so libsodium.so_1 libzmq.dll libzmq.dll_1 msvcp140.dll msvcp140.dll_1 opencv_ffmpeg341.dll opencv_ffmpeg341_64.dll pthreadGC2.dll pthreadVC2.dll transport.names vcruntime140.dll vcruntime140.dll_1 yolo_cpp_dll.dll yolo_cpp_dll_no_gpu.dll"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath Akka.dll BigLogo.png DirectShowLib2005.dll Emgu.CV.UI.dll Emgu.CV.World.dll GeoAPI.CoordinateSystems.dll GeoAPI.dll IPManager.dll Indicators.dll LicenseManager.exe LicenseSpot.Framework.dll Logo.ico MathNet.Numerics.IO.dll MathNet.Numerics.dll MathNet.Spatial.dll MediaInfo.DotNetWrapper.dll MediaInfo.dll MediaInfo.dll_1 MediaInfo.dll_2 MediaInfo_InfoTip.dll Microsoft.CSharp.dll Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll NDtw.dll NLog.dll NetTopologySuite.CoordinateSystems.dll NetTopologySuite.dll Newtonsoft.Json.dll NvAPIWrapper.Net.dll NvAPIWrapper.dll OptAssignTest.dll PowerCollections.dll ProductInformation RalewayBlack.ttf Roadometry SharpRaven.dll System.Collections.Immutable.dll System.Runtime.InteropServices.RuntimeInformation.dll TrajectoryAnalyzer.exe VTC.Classifier.dll VTC.Common.dll VTC.Kernel.dll VTC.KernelTests.dll VTC.Reporting.dll VTC.exe ZedGraph.dll ZedGraph.resources.dll ZedGraph.resources.dll_1 ZedGraph.resources.dll_10 ZedGraph.resources.dll_11 ZedGraph.resources.dll_12 ZedGraph.resources.dll_2 ZedGraph.resources.dll_3 ZedGraph.resources.dll_4 ZedGraph.resources.dll_5 ZedGraph.resources.dll_6 ZedGraph.resources.dll_7 ZedGraph.resources.dll_8 ZedGraph.resources.dll_9 ZeroMQ.dll cars.png concrt140.dll concrt140.dll_1 cublas64_100.dll cublas64_91.dll cudart32_100.dll cudart64_100.dll cudart64_91.dll cudnn64_7.dll curand64_100.dll curand64_91.dll cvextern.dll cvextern.dll_1 deviceQuery.exe eventConfig.xml libcrypto1_1.dll libcrypto1_1.dll_1 libcrypto1_1x64.dll libcrypto1_1x64.dll_1 libcurl.dll libcurl.dll_1 libcurl.dll_2 libsodium.so libssh2.dll libssh2.dll_1 libssh2.dll_2 libssl1_1.dll libssl1_1.dll_1 libssl1_1x64.dll libssl1_1x64.dll_1 libzmq.dll libzmq.dll_1 msvcp140.dll msvcp140.dll_1 opencv_ffmpeg330.dll opencv_ffmpeg330_64.dll opencv_ffmpeg343.dll opencv_ffmpeg343_64.dll opencv_world330.dll opencv_world330d.dll pthreadGC2.dll pthreadVC2.dll transport.names vcruntime140.dll vcruntime140.dll_1 yolo_cpp_dll.dll yolo_cpp_dll_no_gpu.dll"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
@@ -160,7 +191,11 @@
     <ROW File="Emgu.CV.UI.xml" Component_="Logo.ico" FileName="EMGUCV~1.XML|Emgu.CV.UI.xml" Attributes="0" SourcePath="..\bin\Emgu.CV.UI.xml" SelfReg="false" NextFile="Emgu.CV.World.xml"/>
     <ROW File="Emgu.CV.World.dll" Component_="Emgu.CV.World.dll" FileName="EMGUCV~2.DLL|Emgu.CV.World.dll" Attributes="0" SourcePath="..\bin\Emgu.CV.World.dll" SelfReg="false" NextFile="GeoAPI.dll"/>
     <ROW File="Emgu.CV.World.xml" Component_="Logo.ico" FileName="EMGUCV~2.XML|Emgu.CV.World.xml" Attributes="0" SourcePath="..\bin\Emgu.CV.World.xml" SelfReg="false" NextFile="GeoAPI.xml"/>
+    <ROW File="GeoAPI.CoordinateSystems.dll" Component_="GeoAPI.CoordinateSystems.dll" FileName="GEOAPI~1.DLL|GeoAPI.CoordinateSystems.dll" Attributes="0" SourcePath="..\bin\GeoAPI.CoordinateSystems.dll" SelfReg="false" NextFile="GeoAPI.CoordinateSystems.pdb"/>
+    <ROW File="GeoAPI.CoordinateSystems.pdb" Component_="GeoAPI.CoordinateSystems.dll" FileName="GEOAPI~1.PDB|GeoAPI.CoordinateSystems.pdb" Attributes="0" SourcePath="..\bin\GeoAPI.CoordinateSystems.pdb" SelfReg="false" NextFile="GeoAPI.CoordinateSystems.xml"/>
+    <ROW File="GeoAPI.CoordinateSystems.xml" Component_="Logo.ico" FileName="GEOAPI~1.XML|GeoAPI.CoordinateSystems.xml" Attributes="0" SourcePath="..\bin\GeoAPI.CoordinateSystems.xml" SelfReg="false" NextFile="GeoAPI.pdb"/>
     <ROW File="GeoAPI.dll" Component_="GeoAPI.dll" FileName="GeoAPI.dll" Attributes="0" SourcePath="..\bin\GeoAPI.dll" SelfReg="false" NextFile="Indicators.dll"/>
+    <ROW File="GeoAPI.pdb" Component_="GeoAPI.dll" FileName="GeoAPI.pdb" Attributes="0" SourcePath="..\bin\GeoAPI.pdb" SelfReg="false" NextFile="ipCameras.txt"/>
     <ROW File="GeoAPI.xml" Component_="Logo.ico" FileName="GeoAPI.xml" Attributes="0" SourcePath="..\bin\GeoAPI.xml" SelfReg="false" NextFile="MathNet.Numerics.IO.xml"/>
     <ROW File="IPManager.dll" Component_="IPManager.dll" FileName="IPMANA~1.DLL|IPManager.dll" Attributes="0" SourcePath="..\bin\IPManager.dll" SelfReg="false" NextFile="LicenseSpot.Framework.dll"/>
     <ROW File="Indicators.dll" Component_="Indicators.dll" FileName="INDICA~1.DLL|Indicators.dll" Attributes="0" SourcePath="..\bin\Indicators.dll" SelfReg="false" NextFile="IPManager.dll"/>
@@ -179,23 +214,52 @@
     <ROW File="MathNet.Numerics.xml" Component_="Logo.ico" FileName="MATHNE~2.XML|MathNet.Numerics.xml" Attributes="0" SourcePath="..\bin\MathNet.Numerics.xml" SelfReg="false" NextFile="MathNet.Spatial.xml"/>
     <ROW File="MathNet.Spatial.dll" Component_="MathNet.Spatial.dll" FileName="MATHNE~3.DLL|MathNet.Spatial.dll" Attributes="0" SourcePath="..\bin\MathNet.Spatial.dll" SelfReg="false" NextFile="Microsoft.CSharp.dll"/>
     <ROW File="MathNet.Spatial.xml" Component_="Logo.ico" FileName="MATHNE~3.XML|MathNet.Spatial.xml" Attributes="0" SourcePath="..\bin\MathNet.Spatial.xml" SelfReg="false" NextFile="Microsoft.CSharp.xml"/>
+    <ROW File="MediaInfo.DotNetWrapper.dll" Component_="MediaInfo.DotNetWrapper.dll" FileName="MEDIAI~2.DLL|MediaInfo.DotNetWrapper.dll" Attributes="0" SourcePath="..\bin\MediaInfo.DotNetWrapper.dll" SelfReg="false" NextFile="MediaInfo_InfoTip.dll"/>
+    <ROW File="MediaInfo.dll" Component_="MediaInfo.dll" FileName="MEDIAI~1.DLL|MediaInfo.dll" Attributes="0" SourcePath="..\bin\MediaInfo.dll" SelfReg="false" NextFile="MediaInfo.DotNetWrapper.dll"/>
+    <ROW File="MediaInfo.dll_1" Component_="MediaInfo.dll_1" FileName="MEDIAI~1.DLL|MediaInfo.dll" Attributes="0" SourcePath="..\bin\x64\MediaInfo.dll" SelfReg="false" NextFile="opencv_ffmpeg343_64.dll"/>
+    <ROW File="MediaInfo.dll_2" Component_="MediaInfo.dll_2" FileName="MEDIAI~1.DLL|MediaInfo.dll" Attributes="0" SourcePath="..\bin\x86\MediaInfo.dll" SelfReg="false" NextFile="opencv_ffmpeg343.dll"/>
+    <ROW File="MediaInfo_InfoTip.dll" Component_="MediaInfo_InfoTip.dll" FileName="MEDIAI~3.DLL|MediaInfo_InfoTip.dll" Attributes="0" SourcePath="..\bin\MediaInfo_InfoTip.dll" SelfReg="false" NextFile="NetTopologySuite.CoordinateSystems.dll"/>
     <ROW File="Microsoft.CSharp.dll" Component_="Microsoft.CSharp.dll" FileName="MICROS~1.DLL|Microsoft.CSharp.dll" Attributes="0" SourcePath="..\bin\Microsoft.CSharp.dll" SelfReg="false" NextFile="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"/>
     <ROW File="Microsoft.CSharp.xml" Component_="Logo.ico" FileName="MICROS~1.XML|Microsoft.CSharp.xml" Attributes="0" SourcePath="..\bin\Microsoft.CSharp.xml" SelfReg="false" NextFile="NetTopologySuite.xml"/>
     <ROW File="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" Component_="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" FileName="MICROS~2.DLL|Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" Attributes="0" SourcePath="..\bin\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" SelfReg="false" NextFile="NDtw.dll"/>
     <ROW File="NDtw.dll" Component_="NDtw.dll" FileName="NDtw.dll" Attributes="0" SourcePath="..\bin\NDtw.dll" SelfReg="false" NextFile="NetTopologySuite.dll"/>
     <ROW File="NLog.dll" Component_="NLog.dll" FileName="NLog.dll" Attributes="0" SourcePath="..\bin\NLog.dll" SelfReg="false" NextFile="NvAPIWrapper.Net.dll"/>
     <ROW File="NLog.xml" Component_="Logo.ico" FileName="NLog.xml" Attributes="0" SourcePath="..\bin\NLog.xml" SelfReg="false" NextFile="NvAPIWrapper.Net.xml"/>
+    <ROW File="NetTopologySuite.CoordinateSystems.dll" Component_="NetTopologySuite.CoordinateSystems.dll" FileName="NETTOP~2.DLL|NetTopologySuite.CoordinateSystems.dll" Attributes="0" SourcePath="..\bin\NetTopologySuite.CoordinateSystems.dll" SelfReg="false" NextFile="NetTopologySuite.CoordinateSystems.pdb"/>
+    <ROW File="NetTopologySuite.CoordinateSystems.pdb" Component_="NetTopologySuite.CoordinateSystems.dll" FileName="NETTOP~1.PDB|NetTopologySuite.CoordinateSystems.pdb" Attributes="0" SourcePath="..\bin\NetTopologySuite.CoordinateSystems.pdb" SelfReg="false" NextFile="NetTopologySuite.CoordinateSystems.xml"/>
+    <ROW File="NetTopologySuite.CoordinateSystems.xml" Component_="Logo.ico" FileName="NETTOP~2.XML|NetTopologySuite.CoordinateSystems.xml" Attributes="0" SourcePath="..\bin\NetTopologySuite.CoordinateSystems.xml" SelfReg="false" NextFile="NetTopologySuite.pdb"/>
     <ROW File="NetTopologySuite.dll" Component_="NetTopologySuite.dll" FileName="NETTOP~1.DLL|NetTopologySuite.dll" Attributes="0" SourcePath="..\bin\NetTopologySuite.dll" SelfReg="false" NextFile="Newtonsoft.Json.dll"/>
+    <ROW File="NetTopologySuite.pdb" Component_="NetTopologySuite.dll" FileName="NETTOP~2.PDB|NetTopologySuite.pdb" Attributes="0" SourcePath="..\bin\NetTopologySuite.pdb" SelfReg="false" NextFile="Newtonsoft.Json.pdb"/>
     <ROW File="NetTopologySuite.xml" Component_="Logo.ico" FileName="NETTOP~1.XML|NetTopologySuite.xml" Attributes="0" SourcePath="..\bin\NetTopologySuite.xml" SelfReg="false" NextFile="Newtonsoft.Json.xml"/>
     <ROW File="Newtonsoft.Json.dll" Component_="Newtonsoft.Json.dll" FileName="NEWTON~1.DLL|Newtonsoft.Json.dll" Attributes="0" SourcePath="..\bin\Newtonsoft.Json.dll" SelfReg="false" NextFile="NLog.dll"/>
+    <ROW File="Newtonsoft.Json.pdb" Component_="Newtonsoft.Json.dll" FileName="NEWTON~1.PDB|Newtonsoft.Json.pdb" Attributes="0" SourcePath="..\bin\Newtonsoft.Json.pdb" SelfReg="false" NextFile="NvAPIWrapper.dll"/>
     <ROW File="Newtonsoft.Json.xml" Component_="Logo.ico" FileName="NEWTON~1.XML|Newtonsoft.Json.xml" Attributes="0" SourcePath="..\bin\Newtonsoft.Json.xml" SelfReg="false" NextFile="NLog.xml"/>
     <ROW File="NvAPIWrapper.Net.dll" Component_="NvAPIWrapper.Net.dll" FileName="NVAPIW~1.DLL|NvAPIWrapper.Net.dll" Attributes="0" SourcePath="..\bin\NvAPIWrapper.Net.dll" SelfReg="false" NextFile="OptAssignTest.dll"/>
     <ROW File="NvAPIWrapper.Net.xml" Component_="Logo.ico" FileName="NVAPIW~1.XML|NvAPIWrapper.Net.xml" Attributes="0" SourcePath="..\bin\NvAPIWrapper.Net.xml" SelfReg="false" NextFile="PowerCollections.xml"/>
+    <ROW File="NvAPIWrapper.dll" Component_="NvAPIWrapper.dll" FileName="NVAPIW~2.DLL|NvAPIWrapper.dll" Attributes="0" SourcePath="..\bin\NvAPIWrapper.dll" SelfReg="false" NextFile="opencv_ffmpeg330.dll"/>
     <ROW File="OptAssignTest.dll" Component_="OptAssignTest.dll" FileName="OPTASS~1.DLL|OptAssignTest.dll" Attributes="0" SourcePath="..\bin\OptAssignTest.dll" SelfReg="false" NextFile="PowerCollections.dll"/>
     <ROW File="OptAssignTest.dll.config" Component_="Logo.ico" FileName="OPTASS~1.CON|OptAssignTest.dll.config" Attributes="0" SourcePath="..\bin\OptAssignTest.dll.config" SelfReg="false" NextFile="TrajectoryAnalyzer.exe.config"/>
     <ROW File="OptAssignTest.pdb" Component_="OptAssignTest.dll" FileName="OPTASS~1.PDB|OptAssignTest.pdb" Attributes="0" SourcePath="..\bin\OptAssignTest.pdb" SelfReg="false" NextFile="TrajectoryAnalyzer.pdb"/>
     <ROW File="PowerCollections.dll" Component_="PowerCollections.dll" FileName="POWERC~1.DLL|PowerCollections.dll" Attributes="0" SourcePath="..\bin\PowerCollections.dll" SelfReg="false" NextFile="pthreadGC2.dll"/>
     <ROW File="PowerCollections.xml" Component_="Logo.ico" FileName="POWERC~1.XML|PowerCollections.xml" Attributes="0" SourcePath="..\bin\PowerCollections.xml" SelfReg="false" NextFile="System.Collections.Immutable.xml"/>
+    <ROW File="RalewayBlack.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~1.TTF|Raleway-Black.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-Black.ttf" SelfReg="false" NextFile="RalewayBlackItalic.ttf"/>
+    <ROW File="RalewayBlackItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~2.TTF|Raleway-BlackItalic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-BlackItalic.ttf" SelfReg="false" NextFile="RalewayBold.ttf"/>
+    <ROW File="RalewayBold.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~3.TTF|Raleway-Bold.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-Bold.ttf" SelfReg="false" NextFile="RalewayBoldItalic.ttf"/>
+    <ROW File="RalewayBoldItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~4.TTF|Raleway-BoldItalic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-BoldItalic.ttf" SelfReg="false" NextFile="RalewayExtraBold.ttf"/>
+    <ROW File="RalewayExtraBold.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~5.TTF|Raleway-ExtraBold.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-ExtraBold.ttf" SelfReg="false" NextFile="RalewayExtraBoldItalic.ttf"/>
+    <ROW File="RalewayExtraBoldItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~6.TTF|Raleway-ExtraBoldItalic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-ExtraBoldItalic.ttf" SelfReg="false" NextFile="RalewayExtraLight.ttf"/>
+    <ROW File="RalewayExtraLight.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~7.TTF|Raleway-ExtraLight.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-ExtraLight.ttf" SelfReg="false" NextFile="RalewayExtraLightItalic.ttf"/>
+    <ROW File="RalewayExtraLightItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~8.TTF|Raleway-ExtraLightItalic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-ExtraLightItalic.ttf" SelfReg="false" NextFile="RalewayItalic.ttf"/>
+    <ROW File="RalewayItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEWA~9.TTF|Raleway-Italic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-Italic.ttf" SelfReg="false" NextFile="RalewayLight.ttf"/>
+    <ROW File="RalewayLight.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~10.TTF|Raleway-Light.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-Light.ttf" SelfReg="false" NextFile="RalewayLightItalic.ttf"/>
+    <ROW File="RalewayLightItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~11.TTF|Raleway-LightItalic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-LightItalic.ttf" SelfReg="false" NextFile="RalewayMedium.ttf"/>
+    <ROW File="RalewayMedium.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~12.TTF|Raleway-Medium.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-Medium.ttf" SelfReg="false" NextFile="RalewayMediumItalic.ttf"/>
+    <ROW File="RalewayMediumItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~13.TTF|Raleway-MediumItalic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-MediumItalic.ttf" SelfReg="false" NextFile="RalewayRegular.ttf"/>
+    <ROW File="RalewayRegular.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~14.TTF|Raleway-Regular.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-Regular.ttf" SelfReg="false" NextFile="RalewaySemiBold.ttf"/>
+    <ROW File="RalewaySemiBold.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~15.TTF|Raleway-SemiBold.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-SemiBold.ttf" SelfReg="false" NextFile="RalewaySemiBoldItalic.ttf"/>
+    <ROW File="RalewaySemiBoldItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~16.TTF|Raleway-SemiBoldItalic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-SemiBoldItalic.ttf" SelfReg="false" NextFile="RalewayThin.ttf"/>
+    <ROW File="RalewayThin.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~17.TTF|Raleway-Thin.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-Thin.ttf" SelfReg="false" NextFile="RalewayThinItalic.ttf"/>
+    <ROW File="RalewayThinItalic.ttf" Component_="RalewayBlack.ttf" FileName="RALEW~18.TTF|Raleway-ThinItalic.ttf" Attributes="0" SourcePath="..\Thirdparty\Fonts\Raleway\Raleway-ThinItalic.ttf" SelfReg="false"/>
     <ROW File="SharpRaven.dll" Component_="SharpRaven.dll" FileName="SHARPR~1.DLL|SharpRaven.dll" Attributes="0" SourcePath="..\bin\SharpRaven.dll" SelfReg="false" NextFile="System.Collections.Immutable.dll"/>
     <ROW File="System.Collections.Immutable.dll" Component_="System.Collections.Immutable.dll" FileName="SYSTEM~1.DLL|System.Collections.Immutable.dll" Attributes="0" SourcePath="..\bin\System.Collections.Immutable.dll" SelfReg="false" NextFile="System.Runtime.InteropServices.RuntimeInformation.dll"/>
     <ROW File="System.Collections.Immutable.xml" Component_="Logo.ico" FileName="SYSTEM~1.XML|System.Collections.Immutable.xml" Attributes="0" SourcePath="..\bin\System.Collections.Immutable.xml" SelfReg="false" NextFile="ZedGraph.xml"/>
@@ -237,31 +301,52 @@
     <ROW File="ZedGraph.resources.dll_9" Component_="ZedGraph.resources.dll_9" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\sv\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_10"/>
     <ROW File="ZedGraph.xml" Component_="Logo.ico" FileName="ZedGraph.xml" Attributes="0" SourcePath="..\bin\ZedGraph.xml" SelfReg="false" NextFile="ZeroMQ.xml"/>
     <ROW File="ZeroMQ.dll" Component_="ZeroMQ.dll" FileName="ZeroMQ.dll" Attributes="0" SourcePath="..\bin\ZeroMQ.dll" SelfReg="false" NextFile="Logo.ico"/>
-    <ROW File="ZeroMQ.xml" Component_="Logo.ico" FileName="ZeroMQ.xml" Attributes="0" SourcePath="..\bin\ZeroMQ.xml" SelfReg="false" NextFile="libsodium.dll"/>
+    <ROW File="ZeroMQ.xml" Component_="Logo.ico" FileName="ZeroMQ.xml" Attributes="0" SourcePath="..\bin\ZeroMQ.xml" SelfReg="false" NextFile="libzmq.dll"/>
+    <ROW File="cars.png" Component_="cars.png" FileName="cars.png" Attributes="0" SourcePath="..\bin\TestFiles\cars.png" SelfReg="false" NextFile="placeholder.png"/>
     <ROW File="concrt140.dll" Component_="concrt140.dll" FileName="CONCRT~1.DLL|concrt140.dll" Attributes="0" SourcePath="..\bin\x64\concrt140.dll" SelfReg="false" NextFile="cvextern.dll"/>
     <ROW File="concrt140.dll_1" Component_="concrt140.dll_1" FileName="CONCRT~1.DLL|concrt140.dll" Attributes="0" SourcePath="..\bin\x86\concrt140.dll" SelfReg="false" NextFile="cvextern.dll_1"/>
+    <ROW File="cublas64_100.dll" Component_="cublas64_100.dll" FileName="CUBLAS~2.DLL|cublas64_100.dll" Attributes="0" SourcePath="..\bin\cublas64_100.dll" SelfReg="false" NextFile="cudart32_100.dll"/>
     <ROW File="cublas64_91.dll" Component_="cublas64_91.dll" FileName="CUBLAS~1.DLL|cublas64_91.dll" Attributes="0" SourcePath="..\bin\cublas64_91.dll" SelfReg="false" NextFile="cudart64_91.dll"/>
+    <ROW File="cudart32_100.dll" Component_="cudart32_100.dll" FileName="CUDART~2.DLL|cudart32_100.dll" Attributes="0" SourcePath="..\bin\cudart32_100.dll" SelfReg="false" NextFile="cudart64_100.dll"/>
+    <ROW File="cudart64_100.dll" Component_="cudart64_100.dll" FileName="CUDART~3.DLL|cudart64_100.dll" Attributes="0" SourcePath="..\bin\cudart64_100.dll" SelfReg="false" NextFile="curand64_100.dll"/>
     <ROW File="cudart64_91.dll" Component_="cudart64_91.dll" FileName="CUDART~1.DLL|cudart64_91.dll" Attributes="0" SourcePath="..\bin\cudart64_91.dll" SelfReg="false" NextFile="cudnn64_7.dll"/>
     <ROW File="cudnn64_7.dll" Component_="cudnn64_7.dll" FileName="CUDNN6~1.DLL|cudnn64_7.dll" Attributes="0" SourcePath="..\bin\cudnn64_7.dll" SelfReg="false" NextFile="curand64_91.dll"/>
+    <ROW File="curand64_100.dll" Component_="curand64_100.dll" FileName="CURAND~2.DLL|curand64_100.dll" Attributes="0" SourcePath="..\bin\curand64_100.dll" SelfReg="false" NextFile="GeoAPI.CoordinateSystems.dll"/>
     <ROW File="curand64_91.dll" Component_="curand64_91.dll" FileName="CURAND~1.DLL|curand64_91.dll" Attributes="0" SourcePath="..\bin\curand64_91.dll" SelfReg="false" NextFile="DirectShowLib2005.dll"/>
     <ROW File="cvextern.dll" Component_="cvextern.dll" FileName="cvextern.dll" Attributes="0" SourcePath="..\bin\x64\cvextern.dll" SelfReg="false" NextFile="msvcp140.dll"/>
     <ROW File="cvextern.dll_1" Component_="cvextern.dll_1" FileName="cvextern.dll" Attributes="0" SourcePath="..\bin\x86\cvextern.dll" SelfReg="false" NextFile="msvcp140.dll_1"/>
     <ROW File="deviceQuery.exe" Component_="deviceQuery.exe" FileName="DEVICE~1.EXE|deviceQuery.exe" Attributes="0" SourcePath="..\bin\deviceQuery.exe" SelfReg="false" NextFile="LicenseManager.exe" DigSign="true"/>
     <ROW File="eventConfig.xml" Component_="eventConfig.xml" FileName="EVENTC~1.XML|eventConfig.xml" Attributes="0" SourcePath="..\bin\config\eventConfig.xml" SelfReg="false" NextFile="regionConfig.xml"/>
     <ROW File="favicon.ico" Component_="BigLogo.png" FileName="favicon.ico" Attributes="0" SourcePath="..\bin\ReportAssets\favicon.ico" SelfReg="false" NextFile="jquery.sparkline.min.js"/>
+    <ROW File="ipCameras.txt" Component_="Logo.ico" FileName="IPCAME~1.TXT|ipCameras.txt" Attributes="0" SourcePath="..\bin\ipCameras.txt" SelfReg="false" NextFile="libcrypto1_1x64.dll"/>
     <ROW File="jquery.sparkline.min.js" Component_="BigLogo.png" FileName="JQUERY~1.JS|jquery.sparkline.min.js" Attributes="0" SourcePath="..\bin\ReportAssets\jquery.sparkline.min.js" SelfReg="false" NextFile="report.css"/>
-    <ROW File="libsodium.dll" Component_="libsodium.dll" FileName="LIBSOD~1.DLL|libsodium.dll" Attributes="0" SourcePath="..\bin\amd64\libsodium.dll" SelfReg="false" NextFile="libsodium.so"/>
-    <ROW File="libsodium.dll_1" Component_="libsodium.dll_1" FileName="LIBSOD~1.DLL|libsodium.dll" Attributes="0" SourcePath="..\bin\i386\libsodium.dll" SelfReg="false" NextFile="libsodium.so_1"/>
-    <ROW File="libsodium.so" Component_="libsodium.so" FileName="LIBSOD~1.SO|libsodium.so" Attributes="0" SourcePath="..\bin\amd64\libsodium.so" SelfReg="false" NextFile="libzmq.dll"/>
-    <ROW File="libsodium.so_1" Component_="libsodium.so_1" FileName="LIBSOD~1.SO|libsodium.so" Attributes="0" SourcePath="..\bin\i386\libsodium.so" SelfReg="false" NextFile="libzmq.dll_1"/>
+    <ROW File="libcrypto1_1.dll" Component_="libcrypto1_1.dll" FileName="LIBCRY~2.DLL|libcrypto-1_1.dll" Attributes="0" SourcePath="..\bin\libcrypto-1_1.dll" SelfReg="false" NextFile="libcurl.dll"/>
+    <ROW File="libcrypto1_1.dll_1" Component_="libcrypto1_1.dll_1" FileName="LIBCRY~1.DLL|libcrypto-1_1.dll" Attributes="0" SourcePath="..\bin\x86\libcrypto-1_1.dll" SelfReg="false" NextFile="libcurl.dll_2"/>
+    <ROW File="libcrypto1_1x64.dll" Component_="libcrypto1_1x64.dll" FileName="LIBCRY~1.DLL|libcrypto-1_1-x64.dll" Attributes="0" SourcePath="..\bin\libcrypto-1_1-x64.dll" SelfReg="false" NextFile="libcrypto1_1.dll"/>
+    <ROW File="libcrypto1_1x64.dll_1" Component_="libcrypto1_1x64.dll_1" FileName="LIBCRY~1.DLL|libcrypto-1_1-x64.dll" Attributes="0" SourcePath="..\bin\x64\libcrypto-1_1-x64.dll" SelfReg="false" NextFile="libcurl.dll_1"/>
+    <ROW File="libcurl.dll" Component_="libcurl.dll" FileName="libcurl.dll" Attributes="0" SourcePath="..\bin\libcurl.dll" SelfReg="false" NextFile="libssh2.dll"/>
+    <ROW File="libcurl.dll_1" Component_="libcurl.dll_1" FileName="libcurl.dll" Attributes="0" SourcePath="..\bin\x64\libcurl.dll" SelfReg="false" NextFile="libssh2.dll_1"/>
+    <ROW File="libcurl.dll_2" Component_="libcurl.dll_2" FileName="libcurl.dll" Attributes="0" SourcePath="..\bin\x86\libcurl.dll" SelfReg="false" NextFile="libssh2.dll_2"/>
+    <ROW File="libssh2.dll" Component_="libssh2.dll" FileName="libssh2.dll" Attributes="0" SourcePath="..\bin\libssh2.dll" SelfReg="false" NextFile="libssl1_1x64.dll"/>
+    <ROW File="libssh2.dll_1" Component_="libssh2.dll_1" FileName="libssh2.dll" Attributes="0" SourcePath="..\bin\x64\libssh2.dll" SelfReg="false" NextFile="libssl1_1x64.dll_1"/>
+    <ROW File="libssh2.dll_2" Component_="libssh2.dll_2" FileName="libssh2.dll" Attributes="0" SourcePath="..\bin\x86\libssh2.dll" SelfReg="false" NextFile="libssl1_1.dll_1"/>
+    <ROW File="libssl1_1.dll" Component_="libssl1_1.dll" FileName="LIBSSL~2.DLL|libssl-1_1.dll" Attributes="0" SourcePath="..\bin\libssl-1_1.dll" SelfReg="false" NextFile="MediaInfo.dll"/>
+    <ROW File="libssl1_1.dll_1" Component_="libssl1_1.dll_1" FileName="LIBSSL~1.DLL|libssl-1_1.dll" Attributes="0" SourcePath="..\bin\x86\libssl-1_1.dll" SelfReg="false" NextFile="MediaInfo.dll_2"/>
+    <ROW File="libssl1_1x64.dll" Component_="libssl1_1x64.dll" FileName="LIBSSL~1.DLL|libssl-1_1-x64.dll" Attributes="0" SourcePath="..\bin\libssl-1_1-x64.dll" SelfReg="false" NextFile="libssl1_1.dll"/>
+    <ROW File="libssl1_1x64.dll_1" Component_="libssl1_1x64.dll_1" FileName="LIBSSL~1.DLL|libssl-1_1-x64.dll" Attributes="0" SourcePath="..\bin\x64\libssl-1_1-x64.dll" SelfReg="false" NextFile="MediaInfo.dll_1"/>
     <ROW File="libzmq.dll" Component_="libzmq.dll" FileName="libzmq.dll" Attributes="0" SourcePath="..\bin\amd64\libzmq.dll" SelfReg="false" NextFile="libzmq.so"/>
-    <ROW File="libzmq.dll_1" Component_="libzmq.dll_1" FileName="libzmq.dll" Attributes="0" SourcePath="..\bin\i386\libzmq.dll" SelfReg="false" NextFile="libzmq.so_1"/>
-    <ROW File="libzmq.so" Component_="libsodium.so" FileName="libzmq.so" Attributes="0" SourcePath="..\bin\amd64\libzmq.so" SelfReg="false" NextFile="libsodium.dll_1"/>
-    <ROW File="libzmq.so_1" Component_="libsodium.so_1" FileName="libzmq.so" Attributes="0" SourcePath="..\bin\i386\libzmq.so" SelfReg="false"/>
-    <ROW File="msvcp140.dll" Component_="msvcp140.dll" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x64\msvcp140.dll" SelfReg="false" NextFile="opencv_ffmpeg341_64.dll"/>
-    <ROW File="msvcp140.dll_1" Component_="msvcp140.dll_1" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x86\msvcp140.dll" SelfReg="false" NextFile="opencv_ffmpeg341.dll"/>
-    <ROW File="opencv_ffmpeg341.dll" Component_="opencv_ffmpeg341.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg341.dll" Attributes="0" SourcePath="..\bin\x86\opencv_ffmpeg341.dll" SelfReg="false" NextFile="vcruntime140.dll_1"/>
-    <ROW File="opencv_ffmpeg341_64.dll" Component_="opencv_ffmpeg341_64.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg341_64.dll" Attributes="0" SourcePath="..\bin\x64\opencv_ffmpeg341_64.dll" SelfReg="false" NextFile="vcruntime140.dll"/>
+    <ROW File="libzmq.dll_1" Component_="libzmq.dll_1" FileName="libzmq.dll" Attributes="0" SourcePath="..\bin\i386\libzmq.dll" SelfReg="false" NextFile="libzmq.dylib"/>
+    <ROW File="libzmq.dylib" Component_="libsodium.so" FileName="LIBZMQ~1.DYL|libzmq.dylib" Attributes="0" SourcePath="..\bin\amd64\libzmq.dylib" SelfReg="false" NextFile="cublas64_100.dll"/>
+    <ROW File="libzmq.so" Component_="libsodium.so" FileName="libzmq.so" Attributes="0" SourcePath="..\bin\amd64\libzmq.so" SelfReg="false" NextFile="libzmq.dll_1"/>
+    <ROW File="msvcp140.dll" Component_="msvcp140.dll" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x64\msvcp140.dll" SelfReg="false" NextFile="vcruntime140.dll"/>
+    <ROW File="msvcp140.dll_1" Component_="msvcp140.dll_1" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x86\msvcp140.dll" SelfReg="false" NextFile="vcruntime140.dll_1"/>
+    <ROW File="opencv_ffmpeg330.dll" Component_="opencv_ffmpeg330.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg330.dll" Attributes="0" SourcePath="..\bin\opencv_ffmpeg330.dll" SelfReg="false" NextFile="opencv_ffmpeg330_64.dll"/>
+    <ROW File="opencv_ffmpeg330_64.dll" Component_="opencv_ffmpeg330_64.dll" FileName="OPENCV~2.DLL|opencv_ffmpeg330_64.dll" Attributes="0" SourcePath="..\bin\opencv_ffmpeg330_64.dll" SelfReg="false" NextFile="opencv_world330.dll"/>
+    <ROW File="opencv_ffmpeg343.dll" Component_="opencv_ffmpeg343.dll" FileName="OPENCV~2.DLL|opencv_ffmpeg343.dll" Attributes="0" SourcePath="..\bin\x86\opencv_ffmpeg343.dll" SelfReg="false" NextFile="RalewayBlack.ttf"/>
+    <ROW File="opencv_ffmpeg343_64.dll" Component_="opencv_ffmpeg343_64.dll" FileName="OPENCV~2.DLL|opencv_ffmpeg343_64.dll" Attributes="0" SourcePath="..\bin\x64\opencv_ffmpeg343_64.dll" SelfReg="false" NextFile="libcrypto1_1.dll_1"/>
+    <ROW File="opencv_world330.dll" Component_="opencv_world330.dll" FileName="OPENCV~3.DLL|opencv_world330.dll" Attributes="0" SourcePath="..\bin\opencv_world330.dll" SelfReg="false" NextFile="opencv_world330d.dll"/>
+    <ROW File="opencv_world330d.dll" Component_="opencv_world330d.dll" FileName="OPENCV~4.DLL|opencv_world330d.dll" Attributes="0" SourcePath="..\bin\opencv_world330d.dll" SelfReg="false" NextFile="cars.png"/>
+    <ROW File="placeholder.png" Component_="cars.png" FileName="PLACEH~1.PNG|placeholder.png" Attributes="0" SourcePath="..\bin\TestFiles\placeholder.png" SelfReg="false" NextFile="libcrypto1_1x64.dll_1"/>
     <ROW File="pthreadGC2.dll" Component_="pthreadGC2.dll" FileName="PTHREA~1.DLL|pthreadGC2.dll" Attributes="0" SourcePath="..\bin\pthreadGC2.dll" SelfReg="false" NextFile="pthreadVC2.dll"/>
     <ROW File="pthreadVC2.dll" Component_="pthreadVC2.dll" FileName="PTHREA~2.DLL|pthreadVC2.dll" Attributes="0" SourcePath="..\bin\pthreadVC2.dll" SelfReg="false" NextFile="SharpRaven.dll"/>
     <ROW File="regionConfig.xml" Component_="eventConfig.xml" FileName="REGION~1.XML|regionConfig.xml" Attributes="0" SourcePath="..\bin\config\regionConfig.xml" SelfReg="false" NextFile="ZedGraph.resources.dll"/>
@@ -291,6 +376,7 @@
   <COMPONENT cid="caphyon.advinst.msicomp.FragmentComponent">
     <ROW Fragment="CommonUI.aip" Path="&lt;AI_FRAGS&gt;CommonUI.aip"/>
     <ROW Fragment="FolderDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\FolderDlg.aip"/>
+    <ROW Fragment="LicenseAgreementDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\LicenseAgreementDlg.aip"/>
     <ROW Fragment="MaintenanceTypeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceTypeDlg.aip"/>
     <ROW Fragment="MaintenanceWelcomeDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\MaintenanceWelcomeDlg.aip"/>
     <ROW Fragment="PreparePrereqDlg.aip" Path="&lt;AI_THEMES&gt;classic\fragments\PreparePrereqDlg.aip"/>
@@ -324,11 +410,14 @@
     <ROW Name="aicustact.dll" SourcePath="&lt;AI_CUSTACTS&gt;aicustact.dll"/>
     <ROW Name="lzmaextractor.dll" SourcePath="&lt;AI_CUSTACTS&gt;lzmaextractor.dll"/>
   </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiControlComponent">
+    <ROW Dialog_="LicenseAgreementDlg" Control="AgreementText" Type="ScrollableText" X="20" Y="60" Width="330" Height="120" Attributes="7" Text="..\VTC EULA.rtf" Order="400" TextLocId="Control.Text.LicenseAgreementDlg#AgreementText" MsiKey="LicenseAgreementDlg#AgreementText"/>
+  </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiControlEventComponent">
     <ROW Dialog_="FatalError" Control_="Finish" Event="DoAction" Argument="AI_SHOW_LOG" Condition="(MsiLogFileLocation AND AI_LOG_CHECKBOX)" Ordering="101" MsiKey="FatalError#Finish#DoAction#AI_SHOW_LOG#(MsiLogFileLocation AND AI_LOG_CHECKBOX)"/>
-    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="WelcomeDlg" Control_="Next" Event="NewDialog" Argument="LicenseAgreementDlg" Condition="AI_INSTALL" Ordering="1"/>
     <ROW Dialog_="FolderDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_INSTALL" Ordering="201"/>
-    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="1"/>
+    <ROW Dialog_="FolderDlg" Control_="Back" Event="NewDialog" Argument="LicenseAgreementDlg" Condition="AI_INSTALL" Ordering="1"/>
     <ROW Dialog_="MaintenanceWelcomeDlg" Control_="Next" Event="NewDialog" Argument="MaintenanceTypeDlg" Condition="AI_MAINT" Ordering="99"/>
     <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_MAINT" Ordering="198"/>
     <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="CustomizeDlg" Condition="AI_MAINT" Ordering="202"/>
@@ -346,12 +435,16 @@
     <ROW Dialog_="VerifyRemoveDlg" Control_="Remove" Event="EndDialog" Argument="Return" Condition="AI_MAINT AND InstallMode=&quot;Remove&quot;" Ordering="299" Options="1"/>
     <ROW Dialog_="PatchWelcomeDlg" Control_="Next" Event="NewDialog" Argument="VerifyReadyDlg" Condition="AI_PATCH" Ordering="201"/>
     <ROW Dialog_="ResumeDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_RESUME" Ordering="299"/>
-    <ROW Dialog_="WelcomePrereqDlg" Control_="Next" Event="NewDialog" Argument="PrerequisitesDlg" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
+    <ROW Dialog_="WelcomePrereqDlg" Control_="Next" Event="NewDialog" Argument="LicenseAgreementDlg" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
     <ROW Dialog_="PrerequisitesDlg" Control_="Next" Event="EndDialog" Argument="Return" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
-    <ROW Dialog_="PrerequisitesDlg" Control_="Back" Event="NewDialog" Argument="WelcomePrereqDlg" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
+    <ROW Dialog_="PrerequisitesDlg" Control_="Back" Event="NewDialog" Argument="LicenseAgreementDlg" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
     <ROW Dialog_="VerifyReadyDlg" Control_="Install" Event="EndDialog" Argument="Return" Condition="AI_PATCH" Ordering="199"/>
     <ROW Dialog_="VerifyReadyDlg" Control_="Back" Event="NewDialog" Argument="PatchWelcomeDlg" Condition="AI_PATCH" Ordering="203"/>
     <ROW Dialog_="CustomizeDlg" Control_="Next" Event="DoAction" Argument="AI_InstallModeCheck" Condition="AI_MAINT" Ordering="100" MsiKey="CustomizeDlg#Next#DoAction#AI_InstallModeCheck#AI_MAINT"/>
+    <ROW Dialog_="LicenseAgreementDlg" Control_="Next" Event="NewDialog" Argument="PrerequisitesDlg" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
+    <ROW Dialog_="LicenseAgreementDlg" Control_="Back" Event="NewDialog" Argument="WelcomePrereqDlg" Condition="AI_BOOTSTRAPPER" Ordering="1"/>
+    <ROW Dialog_="LicenseAgreementDlg" Control_="Next" Event="NewDialog" Argument="FolderDlg" Condition="AI_INSTALL" Ordering="2"/>
+    <ROW Dialog_="LicenseAgreementDlg" Control_="Back" Event="NewDialog" Argument="WelcomeDlg" Condition="AI_INSTALL" Ordering="2"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
     <ROW Directory_="Roadometry_Dir" Component_="Roadometry" ManualDelete="false"/>
@@ -383,6 +476,26 @@
     <ROW Action="SET_APPDIR" Type="307" Source="APPDIR" Target="[ProgramFilesFolder][Manufacturer]\[ProductName]"/>
     <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
     <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiFontsComponent">
+    <ROW File_="RalewayBlack.ttf"/>
+    <ROW File_="RalewayBlackItalic.ttf"/>
+    <ROW File_="RalewayBold.ttf"/>
+    <ROW File_="RalewayBoldItalic.ttf"/>
+    <ROW File_="RalewayExtraBold.ttf"/>
+    <ROW File_="RalewayExtraBoldItalic.ttf"/>
+    <ROW File_="RalewayExtraLight.ttf"/>
+    <ROW File_="RalewayExtraLightItalic.ttf"/>
+    <ROW File_="RalewayItalic.ttf"/>
+    <ROW File_="RalewayLight.ttf"/>
+    <ROW File_="RalewayLightItalic.ttf"/>
+    <ROW File_="RalewayMedium.ttf"/>
+    <ROW File_="RalewayMediumItalic.ttf"/>
+    <ROW File_="RalewayRegular.ttf"/>
+    <ROW File_="RalewaySemiBold.ttf"/>
+    <ROW File_="RalewaySemiBoldItalic.ttf"/>
+    <ROW File_="RalewayThin.ttf"/>
+    <ROW File_="RalewayThinItalic.ttf"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="favicon.exe" SourcePath="..\bin\ReportAssets\favicon.ico" Index="0"/>

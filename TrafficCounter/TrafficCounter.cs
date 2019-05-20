@@ -455,6 +455,7 @@ namespace VTC
             var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
             var frameGrabActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/FrameGrabActor");
             var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+            var supervisorActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor");
             _selectedCaptureSource = _cameras[CameraComboBox.SelectedIndex];
 
             //Create new output folder
@@ -464,6 +465,7 @@ namespace VTC
 
             //Change the capture device.
             frameGrabActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
+            supervisorActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
             frameGrabActor.Tell(new GetNextFrameMessage());
 
             //Tell the configuration actor about this camera

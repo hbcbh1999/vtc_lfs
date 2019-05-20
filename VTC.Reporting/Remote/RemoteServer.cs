@@ -17,6 +17,7 @@ namespace VTC.Remote
     {
         const string MovementsRoute = "/movements";
         const string SitesRoute = "/sites_update_by_token";
+        const string SitesReplaceImageRoute = "/sites_replace_image_by_token";
         private static readonly HttpClient Client = new HttpClient();
 
         public async Task<HttpStatusCode> SendMovement(Movement movement, string siteToken, string serverUrl)
@@ -34,7 +35,7 @@ namespace VTC.Remote
         public async Task<HttpStatusCode> SendImage(System.Drawing.Image image, string siteToken, string serverUrl)
         { 
             //Get remote server
-            var uploadImageUrl = serverUrl + SitesRoute + "?site_token=" + siteToken;
+            var uploadImageUrl = serverUrl + SitesReplaceImageRoute + "?site_token=" + siteToken;
             var mp = new MultipartFormDataContent();
 
             var stream = new MemoryStream();

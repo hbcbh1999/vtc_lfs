@@ -57,9 +57,10 @@
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(899, 519);
+            this.btnOK.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOK.Location = new System.Drawing.Point(1049, 519);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.Size = new System.Drawing.Size(87, 23);
             this.btnOK.TabIndex = 4;
             this.btnOK.Text = "Save";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -68,9 +69,10 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(980, 519);
+            this.btnCancel.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.Location = new System.Drawing.Point(1143, 519);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(87, 23);
             this.btnCancel.TabIndex = 4;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -88,13 +90,13 @@
             this.tlpMain.Controls.Add(this.tlpRegionConfigSelector, 0, 0);
             this.tlpMain.Controls.Add(this.tlpRegionConfigEditor, 1, 0);
             this.tlpMain.Controls.Add(this.panel1, 2, 0);
-            this.tlpMain.Location = new System.Drawing.Point(12, 12);
+            this.tlpMain.Location = new System.Drawing.Point(14, 12);
             this.tlpMain.Margin = new System.Windows.Forms.Padding(3, 3, 3, 50);
             this.tlpMain.Name = "tlpMain";
             this.tlpMain.RowCount = 2;
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMain.Size = new System.Drawing.Size(1043, 499);
+            this.tlpMain.Size = new System.Drawing.Size(1217, 499);
             this.tlpMain.TabIndex = 5;
             // 
             // tlpRegionConfigSelector
@@ -111,26 +113,28 @@
             this.tlpRegionConfigSelector.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpRegionConfigSelector.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpRegionConfigSelector.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpRegionConfigSelector.Size = new System.Drawing.Size(228, 473);
+            this.tlpRegionConfigSelector.Size = new System.Drawing.Size(267, 473);
             this.tlpRegionConfigSelector.TabIndex = 0;
             // 
             // lbRegionConfigurations
             // 
             this.lbRegionConfigurations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbRegionConfigurations.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbRegionConfigurations.FormattingEnabled = true;
             this.lbRegionConfigurations.Location = new System.Drawing.Point(3, 3);
             this.lbRegionConfigurations.Name = "lbRegionConfigurations";
-            this.lbRegionConfigurations.Size = new System.Drawing.Size(222, 409);
+            this.lbRegionConfigurations.Size = new System.Drawing.Size(261, 409);
             this.lbRegionConfigurations.TabIndex = 0;
             this.lbRegionConfigurations.SelectedValueChanged += new System.EventHandler(this.lbRegionConfigurations_SelectedValueChanged);
             // 
             // btnAdd
             // 
             this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnAdd.Location = new System.Drawing.Point(32, 418);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(20, 3, 20, 3);
+            this.btnAdd.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.Location = new System.Drawing.Point(38, 418);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(23, 3, 23, 3);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(164, 23);
+            this.btnAdd.Size = new System.Drawing.Size(191, 23);
             this.btnAdd.TabIndex = 6;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = true;
@@ -139,10 +143,11 @@
             // btnDelete
             // 
             this.btnDelete.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnDelete.Location = new System.Drawing.Point(32, 447);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(20, 3, 20, 3);
+            this.btnDelete.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDelete.Location = new System.Drawing.Point(38, 447);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(23, 3, 23, 3);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(164, 23);
+            this.btnDelete.Size = new System.Drawing.Size(191, 23);
             this.btnDelete.TabIndex = 6;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
@@ -159,13 +164,13 @@
             this.tlpRegionConfigEditor.Controls.Add(this.cbCaptureSource, 1, 2);
             this.tlpRegionConfigEditor.Controls.Add(this.lblCaptureSource, 0, 2);
             this.tlpRegionConfigEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpRegionConfigEditor.Location = new System.Drawing.Point(237, 3);
+            this.tlpRegionConfigEditor.Location = new System.Drawing.Point(276, 3);
             this.tlpRegionConfigEditor.Name = "tlpRegionConfigEditor";
             this.tlpRegionConfigEditor.RowCount = 3;
             this.tlpRegionConfigEditor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpRegionConfigEditor.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpRegionConfigEditor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpRegionConfigEditor.Size = new System.Drawing.Size(696, 473);
+            this.tlpRegionConfigEditor.Size = new System.Drawing.Size(814, 473);
             this.tlpRegionConfigEditor.TabIndex = 4;
             // 
             // tbRegionConfigName
@@ -174,7 +179,7 @@
             this.tbRegionConfigName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbRegionConfigName.Location = new System.Drawing.Point(3, 3);
             this.tbRegionConfigName.Name = "tbRegionConfigName";
-            this.tbRegionConfigName.Size = new System.Drawing.Size(690, 20);
+            this.tbRegionConfigName.Size = new System.Drawing.Size(808, 20);
             this.tbRegionConfigName.TabIndex = 6;
             // 
             // tlpPolygonToggles
@@ -182,7 +187,7 @@
             this.tlpPolygonToggles.AutoSize = true;
             this.tlpPolygonToggles.ColumnCount = 2;
             this.tlpPolygonToggles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpPolygonToggles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+            this.tlpPolygonToggles.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 33F));
             this.tlpPolygonToggles.Controls.Add(this.btnAddApproachExit, 0, 0);
             this.tlpPolygonToggles.Dock = System.Windows.Forms.DockStyle.Top;
             this.tlpPolygonToggles.Location = new System.Drawing.Point(3, 36);
@@ -191,7 +196,7 @@
             this.tlpPolygonToggles.RowCount = 1;
             this.tlpPolygonToggles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpPolygonToggles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-            this.tlpPolygonToggles.Size = new System.Drawing.Size(202, 28);
+            this.tlpPolygonToggles.Size = new System.Drawing.Size(238, 28);
             this.tlpPolygonToggles.TabIndex = 1;
             // 
             // btnAddApproachExit
@@ -200,10 +205,10 @@
             this.btnAddApproachExit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAddApproachExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAddApproachExit.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnAddApproachExit.Location = new System.Drawing.Point(15, 3);
-            this.btnAddApproachExit.Margin = new System.Windows.Forms.Padding(15, 3, 15, 3);
+            this.btnAddApproachExit.Location = new System.Drawing.Point(17, 3);
+            this.btnAddApproachExit.Margin = new System.Windows.Forms.Padding(17, 3, 17, 3);
             this.btnAddApproachExit.Name = "btnAddApproachExit";
-            this.btnAddApproachExit.Size = new System.Drawing.Size(144, 22);
+            this.btnAddApproachExit.Size = new System.Drawing.Size(171, 22);
             this.btnAddApproachExit.TabIndex = 1;
             this.btnAddApproachExit.Text = "+";
             this.btnAddApproachExit.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -216,19 +221,20 @@
             this.panelImage.AutoSize = true;
             this.panelImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelImage.Location = new System.Drawing.Point(211, 29);
+            this.panelImage.Location = new System.Drawing.Point(247, 29);
             this.panelImage.Name = "panelImage";
-            this.panelImage.Size = new System.Drawing.Size(482, 414);
+            this.panelImage.Size = new System.Drawing.Size(564, 414);
             this.panelImage.TabIndex = 3;
             // 
             // cbCaptureSource
             // 
             this.cbCaptureSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbCaptureSource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCaptureSource.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbCaptureSource.FormattingEnabled = true;
-            this.cbCaptureSource.Location = new System.Drawing.Point(211, 449);
+            this.cbCaptureSource.Location = new System.Drawing.Point(247, 449);
             this.cbCaptureSource.Name = "cbCaptureSource";
-            this.cbCaptureSource.Size = new System.Drawing.Size(482, 21);
+            this.cbCaptureSource.Size = new System.Drawing.Size(564, 21);
             this.cbCaptureSource.TabIndex = 7;
             this.cbCaptureSource.SelectedValueChanged += new System.EventHandler(this.cbCaptureSource_SelectedValueChanged);
             // 
@@ -236,9 +242,10 @@
             // 
             this.lblCaptureSource.AutoSize = true;
             this.lblCaptureSource.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblCaptureSource.Location = new System.Drawing.Point(115, 446);
+            this.lblCaptureSource.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCaptureSource.Location = new System.Drawing.Point(144, 446);
             this.lblCaptureSource.Name = "lblCaptureSource";
-            this.lblCaptureSource.Size = new System.Drawing.Size(90, 27);
+            this.lblCaptureSource.Size = new System.Drawing.Size(97, 27);
             this.lblCaptureSource.TabIndex = 8;
             this.lblCaptureSource.Text = "Capture Source:  ";
             this.lblCaptureSource.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -248,18 +255,19 @@
             this.panel1.AutoScroll = true;
             this.panel1.AutoScrollMinSize = new System.Drawing.Size(200, 0);
             this.panel1.AutoSize = true;
-            this.panel1.Location = new System.Drawing.Point(939, 3);
-            this.panel1.MinimumSize = new System.Drawing.Size(100, 0);
+            this.panel1.Location = new System.Drawing.Point(1096, 3);
+            this.panel1.MinimumSize = new System.Drawing.Size(117, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(100, 0);
+            this.panel1.Size = new System.Drawing.Size(117, 0);
             this.panel1.TabIndex = 5;
             // 
             // importButton
             // 
             this.importButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.importButton.Location = new System.Drawing.Point(12, 519);
+            this.importButton.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.importButton.Location = new System.Drawing.Point(14, 519);
             this.importButton.Name = "importButton";
-            this.importButton.Size = new System.Drawing.Size(75, 23);
+            this.importButton.Size = new System.Drawing.Size(87, 23);
             this.importButton.TabIndex = 6;
             this.importButton.Text = "Import";
             this.importButton.UseVisualStyleBackColor = true;
@@ -268,9 +276,10 @@
             // exportButton
             // 
             this.exportButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.exportButton.Location = new System.Drawing.Point(93, 519);
+            this.exportButton.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exportButton.Location = new System.Drawing.Point(108, 519);
             this.exportButton.Name = "exportButton";
-            this.exportButton.Size = new System.Drawing.Size(75, 23);
+            this.exportButton.Size = new System.Drawing.Size(87, 23);
             this.exportButton.TabIndex = 7;
             this.exportButton.Text = "Export";
             this.exportButton.UseVisualStyleBackColor = true;
@@ -282,16 +291,17 @@
             // 
             // RegionEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 549);
+            this.ClientSize = new System.Drawing.Size(1245, 549);
             this.Controls.Add(this.exportButton);
             this.Controls.Add(this.importButton);
             this.Controls.Add(this.tlpMain);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
+            this.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(195, 56);
+            this.MinimumSize = new System.Drawing.Size(225, 56);
             this.Name = "RegionEditor";
             this.Text = "RegionEditor";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

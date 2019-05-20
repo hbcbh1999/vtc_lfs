@@ -35,16 +35,18 @@
             // 
             // settingsPropertyGrid
             // 
-            this.settingsPropertyGrid.Location = new System.Drawing.Point(12, 12);
+            this.settingsPropertyGrid.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.settingsPropertyGrid.Location = new System.Drawing.Point(14, 12);
             this.settingsPropertyGrid.Name = "settingsPropertyGrid";
-            this.settingsPropertyGrid.Size = new System.Drawing.Size(495, 426);
+            this.settingsPropertyGrid.Size = new System.Drawing.Size(577, 426);
             this.settingsPropertyGrid.TabIndex = 0;
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(513, 191);
+            this.saveButton.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.saveButton.Location = new System.Drawing.Point(598, 191);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(123, 23);
+            this.saveButton.Size = new System.Drawing.Size(143, 23);
             this.saveButton.TabIndex = 1;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -52,9 +54,10 @@
             // 
             // resetToDefaultButton
             // 
-            this.resetToDefaultButton.Location = new System.Drawing.Point(513, 220);
+            this.resetToDefaultButton.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.resetToDefaultButton.Location = new System.Drawing.Point(598, 220);
             this.resetToDefaultButton.Name = "resetToDefaultButton";
-            this.resetToDefaultButton.Size = new System.Drawing.Size(123, 23);
+            this.resetToDefaultButton.Size = new System.Drawing.Size(143, 23);
             this.resetToDefaultButton.TabIndex = 2;
             this.resetToDefaultButton.Text = "Reset to default";
             this.resetToDefaultButton.UseVisualStyleBackColor = true;
@@ -62,12 +65,13 @@
             // 
             // SettingsEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(644, 450);
+            this.ClientSize = new System.Drawing.Size(751, 450);
             this.Controls.Add(this.resetToDefaultButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.settingsPropertyGrid);
+            this.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "SettingsEditor";
             this.ShowIcon = false;
             this.Text = "Settings";
