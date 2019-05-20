@@ -60,9 +60,6 @@ namespace VTC.Kernel.Vistas
         public YoloIntegerNameMapping _yoloNameMapping = new YoloIntegerNameMapping();
 
         //************* Debug statistics ******************  
-        private int _framesProcessed = 0;  //Not used right now
-        private int _debugFrameStart = 89;
-        private int _debugFramesEnd = 90;
         private bool _debugMode = false;   //Prevent cancellation token from killing MHT update
 
         private RegionConfig _regionConfiguration;
@@ -97,6 +94,7 @@ namespace VTC.Kernel.Vistas
 
         public Vista(int width, int height, RegionConfig regionConfiguration)
         {
+            Console.WriteLine("New vista created");
             var tempLogger = LogManager.GetLogger("userlog");
             tempLogger.Log(LogLevel.Info, "Vista: Initializer.");
 
@@ -120,12 +118,6 @@ namespace VTC.Kernel.Vistas
         {
             try
             {
-                _framesProcessed++;
-                //if (_framesProcessed >= _debugFrameStart && _framesProcessed <= _debugFramesEnd)
-                //{
-                //   Console.WriteLine("Vista.Update: debug frame");
-                //}
-
                 var measurementsList = _yoloClassifier.DetectFrameYolo(newFrame);
                 var measurementsFilteredByROI = measurementsList.Where(m => IsContainedInROI(m));
                 MeasurementsArray = measurementsFilteredByROI.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(YoloIntegerNameMapping.GetObjectTypeFromClassInteger(m.ObjectClass, _yoloNameMapping.IntegerToObjectType))).ToArray();
@@ -155,6 +147,8 @@ namespace VTC.Kernel.Vistas
                     {
                     }
                 }
+
+                GC.KeepAlive(newFrame);
             }
             catch (Exception e)
             {

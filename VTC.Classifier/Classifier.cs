@@ -59,6 +59,8 @@ namespace VTC.Classifier
     {
         private YoloWrapper Detector;
 
+        private bool isDisposed = false;
+
         public float Threshold = 0.4f;
 
         public bool cpuMode = true;
@@ -67,6 +69,7 @@ namespace VTC.Classifier
 
         public YoloClassifier()
         {
+            Console.WriteLine("New YoloClassifier");
             var gpuDetector = new GPUDetector();
             if(gpuDetector.HasGPU && gpuDetector.MB_VRAM > 3000)
             {
@@ -123,6 +126,9 @@ namespace VTC.Classifier
 
         ~YoloClassifier()
         {
+            Console.WriteLine("Yolo dispose");
+            isDisposed = true;
+            Console.WriteLine("isDisposed: " + isDisposed);
             if (cpuMode)
             {
                 Detector.Dispose();
@@ -133,56 +139,81 @@ namespace VTC.Classifier
             }
         }
 
+        private byte[] GetRGBValues(Bitmap bmp)
+        {
+            // Lock the bitmap's bits. 
+            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            System.Drawing.Imaging.BitmapData bmpData =
+                bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                    bmp.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = bmpData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = bmpData.Stride * bmp.Height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);bmp.UnlockBits(bmpData);
+
+            return rgbValues;
+        }
+
         private const int MaxDetectionCount = 20;
         public List<Measurement> DetectFrameYolo(Image<Bgr, byte> frame)
         {
             List<Measurement> measurements = new List<Measurement>();
-            int sizeOfbbox_t = 6 * 4 + 8;
-            var frame_float = frame.Convert<Bgr, float>().Mul(1.0/255.0);
-            var memory = MarshalEmguImageToimage_t(frame_float);
+            //var frame_float = frame.Convert<Bgr, float>().Mul(1.0/255.0);
+            //var memory = MarshalEmguImageToimage_t(frame_float);
+            //byte[] managedArray = new byte[frame_float.Bytes.Length];
+            //Marshal.Copy(memory.pNativeDataStruct, managedArray, 0, frame_float.Bytes.Length);
 
-            YoloWrapper.bbox_t[] detection_array;
-            
-            if (Detector != null)
+            var converter = new ImageConverter();
+            var bytes = (byte[]) converter.ConvertTo(frame.Bitmap, typeof(byte[]));
+
+            if (Detector != null && !isDisposed)
             {
+                Console.WriteLine("isDisposed: " + isDisposed);
+                YoloWrapper.bbox_t[] detectionArray;
                 if (cpuMode)
                 {
-                    detection_array = Detector.Detect(frame.Bytes);
+                    detectionArray = Detector.Detect(bytes);
                 }
                 else
                 {
-                    detection_array = Detector.Detect(frame.Bytes);
+                    detectionArray = Detector.Detect(bytes);
                 }
 
-                if (detection_array == null)
+                if (detectionArray == null)
                 {
                     return new List<Measurement>();
                 }
 
-                for (int i = 0; i < detection_array.Length; i++)
+                for (int i = 0; i < detectionArray.Length; i++)
                 {
-                    if (detection_array[i].x == 0 && detection_array[i].y == 0) {break;}
+                    if (detectionArray[i].x == 0 && detectionArray[i].y == 0) {break;}
 
                     var m = new Measurement();
-                    m.Height = detection_array[i].h;
-                    m.Width = detection_array[i].w;
+                    m.Height = detectionArray[i].h;
+                    m.Width = detectionArray[i].w;
                     if (m.Height > frame.Height | m.Width > frame.Width)
                     {
                         Debug.WriteLine("Detection rectangle too large.");
                         continue;
                     }
-                    m.X = detection_array[i].x + detection_array[i].w/2;
-                    m.Y = detection_array[i].y + detection_array[i].h/2;
+                    m.X = detectionArray[i].x + detectionArray[i].w/2;
+                    m.Y = detectionArray[i].y + detectionArray[i].h/2;
                     if ( (m.X > frame.Width) | (m.Y > frame.Height) | (m.X < 0) | (m.Y < 0))
                     {
                         Debug.WriteLine("Detection coordinates out-of-bounds.");
                         continue;
                     }
 
-                    int x_lim = (int) detection_array[i].x + Convert.ToInt32(detection_array[i].w);
-                    int y_lim = (int) detection_array[i].y + Convert.ToInt32(detection_array[i].h);
+                    int x_lim = (int) detectionArray[i].x + Convert.ToInt32(detectionArray[i].w);
+                    int y_lim = (int) detectionArray[i].y + Convert.ToInt32(detectionArray[i].h);
 
-                    var color = SampleColorAtRectangle(frame, (int) detection_array[i].x, (int) detection_array[i].y,
+                    var color = SampleColorAtRectangle(frame, (int) detectionArray[i].x, (int) detectionArray[i].y,
                         x_lim,
                         y_lim);
 
@@ -190,16 +221,14 @@ namespace VTC.Classifier
                     m.Green = color.Green;
                     m.Red = color.Red;
                     m.Size = m.Width * m.Height;
-                    m.ObjectClass = (int) detection_array[i].obj_id;
+                    m.ObjectClass = (int) detectionArray[i].obj_id;
                     measurements.Add(m);
                 }
             }
 
-            GC.KeepAlive(frame_float);
-            GC.KeepAlive(memory);
-
-            Marshal.FreeHGlobal(memory.pNativeDataFrame);
-            Marshal.FreeHGlobal(memory.pNativeDataStruct);
+            GC.KeepAlive(frame);
+            GC.KeepAlive(bytes);
+            GC.KeepAlive(Detector);
 
             return measurements;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 
 namespace Darknet
@@ -66,6 +67,7 @@ namespace Darknet
             try
             {
                 // Copy the array to unmanaged memory.
+                Console.WriteLine("Processing frame");
                 Marshal.Copy(imageData, 0, pnt, imageData.Length);
                 var count = DetectImage(pnt, imageData.Length, ref container);
                 if (count == -1)
@@ -73,9 +75,17 @@ namespace Darknet
                     throw new NotSupportedException($"{YoloLibraryName} has no OpenCV support");
                 }
             }
-            catch (Exception exception)
+            catch (ArgumentOutOfRangeException ex)
             {
-                return null;
+                Console.WriteLine(ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             finally
             {

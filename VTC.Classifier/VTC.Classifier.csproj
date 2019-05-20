@@ -129,6 +129,7 @@
     <Compile Include="GPU.cs" />
     <Compile Include="GPUDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ImageAnalyzer.cs" />
     <Compile Include="YoloWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -151,18 +152,21 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>mkdir $(TargetDir)\DetectionNetwork
-cp $(SolutionDir)\ThirdParty\Darknet\transport_v3_d1.cfg $(TargetDir)\DetectionNetwork
-cp $(SolutionDir)\ThirdParty\Darknet\transport_v3_d1.weights $(TargetDir)\DetectionNetwork
-cp $(SolutionDir)\ThirdParty\Darknet\transport.names $(TargetDir)\DetectionNetwork
+cp $(SolutionDir)\ThirdParty\DarknetV3\yolov3.cfg $(TargetDir)\DetectionNetwork
+cp $(SolutionDir)\ThirdParty\DarknetV3\yolov3.weights $(TargetDir)\DetectionNetwork
+cp $(SolutionDir)\ThirdParty\DarknetV3\coco.names $(TargetDir)\DetectionNetwork
 cp $(SolutionDir)\ThirdParty\DarknetV3\yolo_cpp_dll.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\DarknetV3\yolo_cpp_dll_no_gpu.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\Darknet\pthreadGC2.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\Darknet\pthreadVC2.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\CUDA9.1\deviceQuery.exe $(TargetDir)
-cp $(SolutionDir)\ThirdParty\CUDA9.1\cublas64_91.dll $(TargetDir)
-cp $(SolutionDir)\ThirdParty\CUDA9.1\cudart64_91.dll $(TargetDir)
-cp $(SolutionDir)\ThirdParty\CUDA9.1\curand64_91.dll $(TargetDir)
-cp $(SolutionDir)\ThirdParty\CUDA9.1\cudnn64_7.dll $(TargetDir)</PostBuildEvent>
+cp $(SolutionDir)\ThirdParty\CUDA10.1\cublas64_10.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA10.1\cudart64_101.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA10.1\curand64_10.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA10.1\cudnn64_7.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_ffmpeg346_64.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_world346.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_world346d.dll $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
