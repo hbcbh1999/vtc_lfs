@@ -59,8 +59,6 @@ namespace VTC.Classifier
     {
         private YoloWrapper Detector;
 
-        private bool isDisposed = false;
-
         public float Threshold = 0.4f;
 
         public bool cpuMode = true;
@@ -69,7 +67,6 @@ namespace VTC.Classifier
 
         public YoloClassifier()
         {
-            Console.WriteLine("New YoloClassifier");
             var gpuDetector = new GPUDetector();
             if(gpuDetector.HasGPU && gpuDetector.MB_VRAM > 3000)
             {
@@ -126,9 +123,6 @@ namespace VTC.Classifier
 
         ~YoloClassifier()
         {
-            Console.WriteLine("Yolo dispose");
-            isDisposed = true;
-            Console.WriteLine("isDisposed: " + isDisposed);
             if (cpuMode)
             {
                 Detector.Dispose();
@@ -172,9 +166,8 @@ namespace VTC.Classifier
             var converter = new ImageConverter();
             var bytes = (byte[]) converter.ConvertTo(frame.Bitmap, typeof(byte[]));
 
-            if (Detector != null && !isDisposed)
+            if (Detector != null)
             {
-                Console.WriteLine("isDisposed: " + isDisposed);
                 YoloWrapper.bbox_t[] detectionArray;
                 if (cpuMode)
                 {
@@ -225,10 +218,6 @@ namespace VTC.Classifier
                     measurements.Add(m);
                 }
             }
-
-            GC.KeepAlive(frame);
-            GC.KeepAlive(bytes);
-            GC.KeepAlive(Detector);
 
             return measurements;
         }

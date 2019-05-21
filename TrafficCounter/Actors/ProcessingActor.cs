@@ -45,7 +45,8 @@ namespace VTC.Actors
         public ProcessingActor()
         {
             try
-            {
+            { 
+                Console.WriteLine("Creating new ProcessingActor");
                 //Subscribe to messages
                 Receive<ProcessNextFrameMessage>(newFrameMessage =>
                     NewFrameHandler(newFrameMessage.Frame, newFrameMessage.Timestep)
@@ -103,13 +104,9 @@ namespace VTC.Actors
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 60000, Self, new ValidateConfigurationMessage(), Self);
 
                 _config = new RegionConfig();
-                _loggingActor?.Tell(new LogMessage("ProcessingActor: creating new Vista.", LogLevel.Debug));
-                Console.WriteLine("New ProcessingActor");
-                //_vista = new Vista(640, 480,
-                //    _config); //TODO: Investigate what resolution Vista should be initialized to
-                //_loggingActor?.Tell(new LogMessage($"cpuMode: {_vista._yoloClassifier.cpuMode}", LogLevel.Debug));
-
                 _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug));
+
+                _vista = new Vista(640, 480, _config);
                 
             }
             catch (Exception ex)
@@ -151,8 +148,6 @@ namespace VTC.Actors
                 var args = new TrackingEvents.TrajectoryListEventArgs { TrackedObjects = _vista.DeletedVehicles };
                 _loggingActor?.Tell(new TrackingEventMessage(args));
             }
-
-            GC.KeepAlive(frame);
             frame.Dispose();
         }
 
@@ -160,12 +155,12 @@ namespace VTC.Actors
         {
             try
             {
-                Console.WriteLine("UpdateVideoDimensionsHandler");
                 _loggingActor?.Tell(new LogMessage("ProcessingActor received UpdateVideoDimensionsMessage.", LogLevel.Debug));
                 _loggingActor?.Tell(new LogMessage("ProcessingActor: creating new Vista.", LogLevel.Debug));
-                _vista = new Vista(message.Width, message.Height, _config);
-                _loggingActor?.Tell(new LogMessage($"cpuMode: {_vista._yoloClassifier.cpuMode}", LogLevel.Debug));
+                _vista._height = message.Height;
+                _vista._width = message.Width;
                 _vista.UpdateRegionConfiguration(_config);
+                _loggingActor?.Tell(new LogMessage($"cpuMode: {_vista._yoloClassifier.cpuMode}", LogLevel.Debug));
             }
             catch (Exception ex)
             {

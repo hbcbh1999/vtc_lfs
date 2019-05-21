@@ -44,8 +44,8 @@ namespace VTC.Kernel.Vistas
 
         //************* Main image variables ***************
         public Image<Bgr, float> RoiImage; //Area occupied by traffic
-        public readonly int _width;
-        public readonly int _height;
+        public int _width;
+        public int _height;
 
         public Queue<Measurement[]> MeasurementArrayQueue;              // For displaying detection history (colored dots)
         public Image<Gray, byte> Movement_Mask { get; private set; }    //Thresholded, b&w movement mask

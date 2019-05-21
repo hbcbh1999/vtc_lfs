@@ -60,14 +60,12 @@ namespace Darknet
         public bbox_t[] Detect(byte[] imageData)
         {
             var container = new BboxContainer();
-
             var size = Marshal.SizeOf(imageData[0]) * imageData.Length;
             var pnt = Marshal.AllocHGlobal(size);
 
             try
             {
                 // Copy the array to unmanaged memory.
-                Console.WriteLine("Processing frame");
                 Marshal.Copy(imageData, 0, pnt, imageData.Length);
                 var count = DetectImage(pnt, imageData.Length, ref container);
                 if (count == -1)
