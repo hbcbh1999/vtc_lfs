@@ -283,63 +283,63 @@ namespace VTC.Actors
             
         }
 
-        private string GenerateCountFilename(int minutes, ObjectType className)
+        private string GenerateCountFilename(int minutes, string className)
         {
-            string filename = $"{minutes}-minute binned counts [{className.ToString().ToLower()}].csv";
+            string filename = $"{minutes}-minute binned counts [{className}].csv";
             //TODO: Figure out how to access video name here
             string folderPath = _currentOutputFolder;
             string filepath = Path.Combine(folderPath, filename);
             return filepath;
         }
 
-        private long _totalCountsWrittenTo5MinCsv = 0;
         private void WriteBinnedMovements5Min(DateTime timestamp, Dictionary<Movement, long> turnStats)
         {            
+            foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
             {
-                foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
-                {
-                    var filepath = GenerateCountFilename(5, detectionClass);
-                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
-                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);    
-                }
-
-                foreach (KeyValuePair<Movement, long> countpair in turnStats)
-                {
-                    _totalCountsWrittenTo5MinCsv += countpair.Value;
-                }
-
-                _5MinTurnStats.Clear();
+                var filepath = GenerateCountFilename(5, detectionClass.ToString().ToLower());
+                Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
+                WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);    
             }
+
+            //Generate all-objects CSV report
+            var filepath_all_objects = GenerateCountFilename(5, "All");
+            WriteBinnedMovementsToFile(filepath_all_objects, turnStats, timestamp);
+
+            _5MinTurnStats.Clear();
         }
 
         private void WriteBinnedMovements15Min(DateTime timestamp, Dictionary<Movement, long> turnStats)
         {
-            //TODO: Figure out how to get video name
-            {
                 foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
                 {
-                    var filepath = GenerateCountFilename(15,detectionClass);
+                    var filepath = GenerateCountFilename(15,detectionClass.ToString().ToLower());
                     Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
                     WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);
                 }
+
+                //Generate all-objects CSV report
+                var filepath_all_objects = GenerateCountFilename(15, "All");
+                WriteBinnedMovementsToFile(filepath_all_objects, turnStats, timestamp);
+
                 
                 _15MinTurnStats.Clear();
-            }
         }
 
         private void WriteBinnedMovements60Min(DateTime timestamp, Dictionary<Movement, long> turnStats)
         {
-            //TODO: Figure out how to get video name
-            {
+                //Generate individual CSV reports
                 foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
                 {
-                    var filepath = GenerateCountFilename(60,detectionClass);
+                    var filepath = GenerateCountFilename(60,detectionClass.ToString().ToLower());
                     Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
                     WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);
                 }
+
+                //Generate all-objects CSV report
+                var filepath_all_objects = GenerateCountFilename(60, "All");
+                WriteBinnedMovementsToFile(filepath_all_objects, turnStats, timestamp);
                 
                 _60MinTurnStats.Clear();
-            }
         }
 
         private void CreateOrReplaceOutputFolderIfExists()
@@ -396,7 +396,66 @@ namespace VTC.Actors
                 Logger.Log(LogLevel.Error, ex.Message);
                 ravenClient.Capture(new SentryEvent(ex));
             }
+            
+            //Sort turnStats so that columns are consistent in output CSV
+            var sd = new SortedDictionary<Movement,long>();
+            foreach(var ts in turnStats)
+            {
+                try
+                {
+                    sd.Add(ts.Key,ts.Value);
+                }
+                catch(ArgumentException ex)
+                { 
+                    Logger.Log(LogLevel.Error, ex);
+                }
+            }
 
+            try
+            {
+                using (var sw = File.AppendText(path))
+                {
+                    var binString = "";
+                    binString += timestamp + ",";
+                    foreach (var stat in sd)
+                    {
+                        binString += stat.Key.Approach + " to " + stat.Key.Exit + "," + stat.Key.TurnType + "," + stat.Value + ",";
+                    }
+                    sw.WriteLine(binString);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
+                ravenClient.Capture(new SentryEvent(ex));
+            }
+
+        }
+
+
+        private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp)
+        {
+            try
+            {
+                //Pad turnStats with non-present movements with count equal to zero.
+                //1. Get full list of possible movements
+                foreach(var m in mts.TrajectoryPrototypes)
+                {   
+                    //var modified_prototype = m;
+                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, ObjectType.Unknown, m.StateEstimates, 0);
+                    //2. Check which keys are not present
+                    if(!turnStats.Keys.Contains(modified_prototype))
+                    { 
+                        //3. Add the non-present keys 
+                        turnStats.Add(modified_prototype,0);    
+                    }
+                }
+            }
+            catch(System.ArgumentException ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
+                ravenClient.Capture(new SentryEvent(ex));
+            }
             
             //Sort turnStats so that columns are consistent in output CSV
             var sd = new SortedDictionary<Movement,long>();
@@ -527,12 +586,6 @@ namespace VTC.Actors
                 if(_60MinTurnStats.TotalCount() > 0)
                 {
                     WriteBinnedMovements60Min(tnow, _60MinTurnStats);     
-                }
-
-                //Check that accumulated totals from different sources make sense
-                if (_totalCountsWrittenTo5MinCsv != _totalTrajectoriesCounted)
-                {
-                    Logger.Log(LogLevel.Error, "Accumulated total mismatch in GenerateReport()");
                 }
 
                 using (StreamWriter outputFile = new StreamWriter(folderPath + @"\Version.txt", true))

@@ -152,9 +152,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>mkdir $(TargetDir)\DetectionNetwork
-cp $(SolutionDir)\ThirdParty\DarknetV3\yolov3.cfg $(TargetDir)\DetectionNetwork
-cp $(SolutionDir)\ThirdParty\DarknetV3\yolov3.weights $(TargetDir)\DetectionNetwork
-cp $(SolutionDir)\ThirdParty\DarknetV3\coco.names $(TargetDir)\DetectionNetwork
+cp $(SolutionDir)\ThirdParty\DarknetV3\VTC-yolov3.cfg $(TargetDir)\DetectionNetwork
+cp $(SolutionDir)\ThirdParty\DarknetV3\VTC-yolov3_3000.weights $(TargetDir)\DetectionNetwork
+cp $(SolutionDir)\ThirdParty\DarknetV3\VTC-obj.names $(TargetDir)\DetectionNetwork
 cp $(SolutionDir)\ThirdParty\DarknetV3\yolo_cpp_dll.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\DarknetV3\yolo_cpp_dll_no_gpu.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\Darknet\pthreadGC2.dll $(TargetDir)
