@@ -164,6 +164,7 @@ cp $(SolutionDir)\ThirdParty\CUDA10.1\cublas64_10.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\CUDA10.1\cudart64_101.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\CUDA10.1\curand64_10.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\CUDA10.1\cudnn64_7.dll $(TargetDir)
+cp $(SolutionDir)\ThirdParty\CUDA10.1\cublasLt64_10.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_ffmpeg346_64.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_world346.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_world346d.dll $(TargetDir)</PostBuildEvent>
