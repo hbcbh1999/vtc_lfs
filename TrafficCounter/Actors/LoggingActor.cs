@@ -735,6 +735,12 @@ namespace VTC.Actors
                     var mostLikelyClassType =
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
                             _yoloNameMapping.IntegerToObjectName);
+
+                    if (mostLikelyClassType == "person" && _userConfig.CountPedestriansAsMotorcycles)
+                    {
+                        mostLikelyClassType = "motorcycle";
+                    }
+
                     var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength, _regionConfig.MissRatioThreshold, _regionConfig.PositionCovarianceThreshold);
                     if(validity.valid == false)
                     {
@@ -774,8 +780,6 @@ namespace VTC.Actors
             { 
                 Logger.Log(LogLevel.Error,ex.Message);    
             }
-
-            
         }
 
         private void IncrementTurnStatistics(Movement tp)

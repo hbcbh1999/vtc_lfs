@@ -145,6 +145,7 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public bool SendToServer { get; set; } = false;
 
+
         public RegionConfig()
         {
             RoiMask = new Polygon();

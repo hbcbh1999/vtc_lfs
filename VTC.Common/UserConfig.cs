@@ -58,5 +58,9 @@ namespace VTC.Common
         [Description("URL of remote server for recieving measurements.")]
         [DataMember]
         public string ServerUrl { get; set; }        
+
+        [Description("CountPedestriansAsMotorcycles: Replace any objects counted as pedestrians with motorcycle-counts.")]
+        [DataMember]
+        public bool CountPedestriansAsMotorcycles { get; set; } = false;
     }
 }
