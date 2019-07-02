@@ -21,6 +21,8 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public Dictionary<string, Polygon> Regions;
 
+        [DataMember] public List<ExamplePath> ExamplePaths;
+
         [Description("The name of this configuration")]
         [DataMember]
         public string Title { get; set; }
@@ -164,6 +166,7 @@ namespace VTC.Common.RegionConfig
                 {"Sidewalk 3", new Polygon(true)},
                 {"Sidewalk 4", new Polygon(true)}
             };
+            ExamplePaths = new List<ExamplePath>();
 
             ConfigGuid = Guid.NewGuid();
         }

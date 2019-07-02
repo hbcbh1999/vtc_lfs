@@ -55,6 +55,11 @@ namespace VTC.RegionConfiguration
                         }
 
                         regionConfig.RoiMask.UpdateCentroid();
+
+                        if (regionConfig.ExamplePaths == null)
+                        {
+                            regionConfig.ExamplePaths = new List<ExamplePath>();
+                        }
                     }
                 }
                 catch (SerializationException ex)

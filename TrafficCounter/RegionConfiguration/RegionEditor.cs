@@ -20,7 +20,9 @@ namespace VTC.RegionConfiguration
     public partial class RegionEditor : Form
     {
         private Polygon _editingPolygon;
+        private ExamplePath _editingExamplePath;
         private readonly Dictionary<Button, Polygon> _polygonLookup = new Dictionary<Button, Polygon>();
+        private readonly Dictionary<Button, ExamplePath> _pathLookup = new Dictionary<Button, ExamplePath>();
 
         private readonly PictureBox _preview = new PictureBox();
 
@@ -82,15 +84,22 @@ namespace VTC.RegionConfiguration
             
             panelImage.Controls.Add(_preview);
 
-            if (currentlySelectedConfig != null)
+            try
             {
-                for (int i = 0; i < lbRegionConfigurations.Items.Count; i++)
+                if (currentlySelectedConfig != null)
                 {
-                    if (lbRegionConfigurations.Items[i].Equals(currentlySelectedConfig))
+                    for (int i = 0; i < lbRegionConfigurations.Items.Count; i++)
                     {
-                        lbRegionConfigurations.SelectedIndex = i;
+                        if (lbRegionConfigurations.Items[i].Equals(currentlySelectedConfig))
+                        {
+                            lbRegionConfigurations.SelectedIndex = i;
+                        }
                     }
                 }
+            }
+            catch (NullReferenceException ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
             }
         }
 
@@ -189,13 +198,20 @@ namespace VTC.RegionConfiguration
             tlpPolygonToggles.RowCount = 1;
 
             var roiButton = CreateEditRegionButton("ROI", regionConfig.RoiMask);
-            AddEditAndDeleteButtons(roiButton, null, regionConfig.RoiMask);
+            AddEditAndDeleteRegionButtons(roiButton, null, regionConfig.RoiMask);
 
             foreach (var regionKvp in regionConfig.Regions)
             {
                 var edit = CreateEditRegionButton(regionKvp.Key, regionKvp.Value);
-                var delete = CreateDeleteButton(edit, regionKvp.Value);
-                AddEditAndDeleteButtons(edit, delete, regionKvp.Value);
+                var delete = CreateDeleteRegionButton(edit, regionKvp.Value);
+                AddEditAndDeleteRegionButtons(edit, delete, regionKvp.Value);
+            }
+
+            foreach (var path in regionConfig.ExamplePaths)
+            {
+                var edit = CreateEditExamplePathButton(path);
+                var delete = CreateDeleteExamplePathButton(edit, path);
+                AddEditAndDeleteExamplePathButtons(edit, delete, path);
             }
         }
 
@@ -209,18 +225,37 @@ namespace VTC.RegionConfiguration
                 TextAlign = ContentAlignment.MiddleCenter
             };
 
-
             button.MouseEnter += tb_MouseEnter;
             button.MouseLeave += tb_MouseLeave;
             button.Click += (sender, args) =>
             {
-                SetEditing(true, button, polygon);
+                SetEditingRegion(true, button, polygon);
             };
 
             return button;
         }
 
-        private Button CreateDeleteButton(Button editButton, Polygon polygon)
+        private Button CreateEditExamplePathButton(ExamplePath path)
+        {
+            var button = new Button
+            {
+                Text = path.Description(),
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            button.MouseEnter += path_MouseEnter;
+            button.MouseLeave += path_MouseLeave;
+            button.Click += (sender, args) =>
+            {
+                SetEditingExamplePath(true, button, path);
+            };
+
+            return button;
+        }
+
+        private Button CreateDeleteRegionButton(Button editButton, Polygon polygon)
         {
             var deleteButton = new Button
             {
@@ -251,14 +286,44 @@ namespace VTC.RegionConfiguration
             return deleteButton;
         }
 
+        private Button CreateDeleteExamplePathButton(Button editButton, ExamplePath path)
+        {
+            var deleteButton = new Button
+            {
+                Font =
+                    new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold,
+                        GraphicsUnit.Point, 0),
+                Size = new Size(22, 22),
+                Text = "X",
+                UseVisualStyleBackColor = false
+            };
 
+            deleteButton.Click += (sender, args) =>
+            {
+                if (DialogResult.Yes == MessageBox.Show("Remove path " + editButton.Text + "?", string.Empty, MessageBoxButtons.YesNo))
+                {
+                    foreach (var removeThisPath in SelectedRegionConfig.ExamplePaths.Where(r => r.Equals(path)).ToList())
+                    {
+                        SelectedRegionConfig.ExamplePaths.Remove(removeThisPath);
+                    }
 
-        private void AddEditAndDeleteButtons(Button edit, Button delete, Polygon polygon)
+                    tlpPolygonToggles.Controls.Remove(deleteButton);
+                    tlpPolygonToggles.Controls.Remove(editButton);
+                    _pathLookup.Remove(editButton);
+                }
+            };
+
+            return deleteButton;
+        }
+
+        private void AddEditAndDeleteRegionButtons(Button edit, Button delete, Polygon polygon)
         {
             if (null != polygon)
                 _polygonLookup[edit] = polygon;
 
             tlpPolygonToggles.Controls.Remove(btnAddApproachExit);
+            tlpPolygonToggles.Controls.Remove(btnAddExamplePath);
+
             if (null != edit)
                 tlpPolygonToggles.Controls.Add(edit, 0, tlpPolygonToggles.RowCount - 1);
             if (null != delete) 
@@ -266,9 +331,37 @@ namespace VTC.RegionConfiguration
 
             tlpPolygonToggles.RowCount++;
             tlpPolygonToggles.Controls.Add(btnAddApproachExit, 0, tlpPolygonToggles.RowCount - 1);
+
+            tlpPolygonToggles.RowCount++;
+            tlpPolygonToggles.Controls.Add(btnAddExamplePath, 0, tlpPolygonToggles.RowCount - 1);
+        }
+
+        private void AddEditAndDeleteExamplePathButtons(Button edit, Button delete, ExamplePath path)
+        {
+            if (null != path)
+                _pathLookup[edit] = path;
+
+            tlpPolygonToggles.Controls.Remove(btnAddApproachExit);
+            tlpPolygonToggles.Controls.Remove(btnAddExamplePath);
+
+            if (null != edit)
+                tlpPolygonToggles.Controls.Add(edit, 0, tlpPolygonToggles.RowCount - 1);
+            if (null != delete)
+                tlpPolygonToggles.Controls.Add(delete, 1, tlpPolygonToggles.RowCount - 1);
+
+            tlpPolygonToggles.RowCount++;
+            tlpPolygonToggles.Controls.Add(btnAddApproachExit, 0, tlpPolygonToggles.RowCount - 1);
+
+            tlpPolygonToggles.RowCount++;
+            tlpPolygonToggles.Controls.Add(btnAddExamplePath, 0, tlpPolygonToggles.RowCount - 1);
         }
 
         void tb_MouseLeave(object sender, EventArgs e)
+        {
+            Mask = null;
+        }
+
+        void path_MouseLeave(object sender, EventArgs e)
         {
             Mask = null;
         }
@@ -282,7 +375,16 @@ namespace VTC.RegionConfiguration
             Mask = mask;
         }
 
-        private void SetEditing(bool editing, Button activeButton, Polygon polygon)
+        void path_MouseEnter(object sender, EventArgs e)
+        {
+            var rb = sender as Button;
+            if (rb == null) return;
+            var path = _pathLookup[rb];
+            var mask = path.GetMask(Thumbnail.Width, Thumbnail.Height, new Bgr(Color.Blue));
+            Mask = mask;
+        }
+
+        private void SetEditingRegion(bool editing, Button activeButton, Polygon polygon)
         {
             // Disable all buttons while editing
             tlpRegionConfigSelector.Enabled = !editing;
@@ -314,11 +416,61 @@ namespace VTC.RegionConfiguration
                             _editingPolygon.Add(coord);
                         }
                         polygon.UpdateCentroid();
-                        SetEditing(false, null, null);
+                        SetEditingRegion(false, null, null);
                     };
                     control.OnCancelClicked += (sender, args) =>
                     {
-                        SetEditing(false, null, null);
+                        SetEditingRegion(false, null, null);
+                    };
+                    panelImage.Controls.Clear();
+                    panelImage.Controls.Add(control);
+                }
+            }
+            else
+            {
+                // Restore the preview image
+                panelImage.Controls.Clear();
+                panelImage.Controls.Add(_preview);
+            }
+        }
+
+        private void SetEditingExamplePath(bool editing, Button activeButton, ExamplePath path)
+        {
+            // Disable all buttons while editing
+            tlpRegionConfigSelector.Enabled = !editing;
+            btnOK.Enabled = !editing;
+            btnCancel.Enabled = !editing;
+            foreach (var control in tlpRegionConfigEditor.Controls)
+            {
+                if (control == panelImage || !(control is Control))
+                    continue;
+
+                ((Control)control).Enabled = !editing;
+            }
+
+            if (editing)
+            {
+                _editingExamplePath = path;
+
+                if (null != activeButton)
+                {
+                    var control = new ExamplePathBuilderControl(Thumbnail, _pathLookup[activeButton])
+                    {
+                        Dock = DockStyle.Fill
+                    };
+                    control.OnDoneClicked += (sender, args) =>
+                    {
+                        _editingExamplePath.Points.Clear();
+                        foreach (var coord in control.Coordinates.Points)
+                        {
+                            _editingExamplePath.Points.Add(coord);
+                        }
+                        
+                        SetEditingExamplePath(false, null, null);
+                    };
+                    control.OnCancelClicked += (sender, args) =>
+                    {
+                        SetEditingExamplePath(false, null, null);
                     };
                     panelImage.Controls.Clear();
                     panelImage.Controls.Add(control);
@@ -344,8 +496,8 @@ namespace VTC.RegionConfiguration
 
             var polygon = new Polygon();
             var edit = CreateEditRegionButton(input.InputString, polygon);
-            var delete = CreateDeleteButton(edit, polygon);
-            AddEditAndDeleteButtons(edit, delete, polygon);
+            var delete = CreateDeleteRegionButton(edit, polygon);
+            AddEditAndDeleteRegionButtons(edit, delete, polygon);
 
             selectedRegionConfig.Regions.Add(input.InputString, polygon);
         }
@@ -466,6 +618,14 @@ namespace VTC.RegionConfiguration
             var regionConfigs = _regionConfigurationsBindingSource.DataSource as List<RegionConfig>;
             if (null != regionConfigs)
             {
+                foreach (var regionConfig in regionConfigs)
+                {
+                    foreach (var example in regionConfig.ExamplePaths)
+                    {
+                        Console.WriteLine("Name: " + example.Description());
+                    }
+                }
+
                 _regionConfigDal.SaveRegionConfigList(regionConfigs);
             }
 
@@ -524,6 +684,29 @@ namespace VTC.RegionConfiguration
                 xr.Close();
                 sr.Close();
             }
+        }
+
+        private void btnAddExamplePath_Click(object sender, EventArgs e)
+        {
+            var selectedRegionConfig = lbRegionConfigurations.SelectedItem as RegionConfig;
+            if (null == selectedRegionConfig)
+                return;
+
+            var input = new ExamplePathCreatePrompt();
+            if (DialogResult.OK != input.ShowDialog())
+                return;
+
+            var examplePath = new ExamplePath();
+            examplePath.Approach = input.Approach;
+            examplePath.Exit = input.Exit;
+            examplePath.Ignored = input.Ignored;
+            examplePath.PedestrianOnly = input.PedestrianOnly;
+
+            var edit = CreateEditExamplePathButton(examplePath);
+            var delete = CreateDeleteExamplePathButton(edit, examplePath);
+            AddEditAndDeleteExamplePathButtons(edit, delete, examplePath);
+
+            selectedRegionConfig.ExamplePaths.Add(examplePath);
         }
     }
 }

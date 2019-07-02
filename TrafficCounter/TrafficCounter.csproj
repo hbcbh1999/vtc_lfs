@@ -287,8 +287,20 @@
     <Compile Include="RegionConfiguration\InputPrompt.Designer.cs">
       <DependentUpon>InputPrompt.cs</DependentUpon>
     </Compile>
+    <Compile Include="RegionConfiguration\ExamplePathCreatePrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegionConfiguration\ExamplePathCreatePrompt.Designer.cs">
+      <DependentUpon>ExamplePathCreatePrompt.cs</DependentUpon>
+    </Compile>
     <Compile Include="RegionConfiguration\IRegionConfigDataAccessLayer.cs" />
     <Compile Include="RegionConfiguration\IRegionConfigSelectorView.cs" />
+    <Compile Include="RegionConfiguration\ExamplePathBuilderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RegionConfiguration\ExamplePathBuilderControl.Designer.cs">
+      <DependentUpon>ExamplePathBuilderControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="RegionConfiguration\PolygonBuilderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -361,6 +373,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RegionConfiguration\InputPrompt.resx">
       <DependentUpon>InputPrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegionConfiguration\ExamplePathCreatePrompt.resx">
+      <DependentUpon>ExamplePathCreatePrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegionConfiguration\ExamplePathBuilderControl.resx">
+      <DependentUpon>ExamplePathBuilderControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RegionConfiguration\PolygonBuilderControl.resx">
       <DependentUpon>PolygonBuilderControl.cs</DependentUpon>
