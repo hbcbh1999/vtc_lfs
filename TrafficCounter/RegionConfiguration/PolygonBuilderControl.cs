@@ -225,7 +225,6 @@ namespace VTC.RegionConfiguration
             Coordinates.Add(Coordinates.First());
 
             //Calculate centroid
-            //GeoAPI.Geometries.Coordinate[] points = new GeoAPI.Geometries.Coordinate[Coordinates.Count];
             var points = Coordinates.Select(x => new GeoAPI.Geometries.Coordinate(x.X, x.Y)).ToArray();
             NetTopologySuite.Geometries.LinearRing ring = new NetTopologySuite.Geometries.LinearRing(points);
             NetTopologySuite.Geometries.Polygon ntsPoly = new NetTopologySuite.Geometries.Polygon(ring);
@@ -241,27 +240,35 @@ namespace VTC.RegionConfiguration
             int indexOfExisting;
             Point coord;
 
-            try
-            {
-                coord = Coordinates.First(c => start.DistanceTo(c) <= CircleRadius);
-                indexOfExisting = Coordinates.IndexOf(coord);
-            }
-            catch
+            if (Coordinates.Count < 1)
             {
                 return false;
             }
 
-            if (end.X < 0) end.X = 0;
-            //if (end.X >= Width) end.X = Width - 1;
-            if (end.Y < 0) end.Y = 0;
-            //if (end.Y >= Height) end.Y = Height - 1;
+            try
+            {
+                var coordinatesInRange = Coordinates.Where(c => start.DistanceTo(c) <= CircleRadius);
+                if (coordinatesInRange.Any())
+                {
+                    coord = coordinatesInRange.First();
+                    indexOfExisting = Coordinates.IndexOf(coord);
 
-            coord.X = end.X;
-            coord.Y = end.Y;
-            Coordinates.RemoveAt(indexOfExisting);
-            Coordinates.Insert(indexOfExisting, coord);
+                    if (end.X < 0) end.X = 0;
+                    if (end.Y < 0) end.Y = 0;
 
-            return true;
+                    coord.X = end.X;
+                    coord.Y = end.Y;
+                    Coordinates.RemoveAt(indexOfExisting);
+                    Coordinates.Insert(indexOfExisting, coord);
+                    return true;
+                }
+            }
+            catch(InvalidOperationException ex)
+            {
+                return false;
+            }
+
+            return false;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
