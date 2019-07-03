@@ -79,7 +79,7 @@ namespace VTC.Common.RegionConfig
 
             var lastPoint = coords.Last();
             image.Draw(new CircleF(new PointF(lastPoint.X, lastPoint.Y), 10), new Bgr(0,0,0), 2, LineType.EightConnected);
-
+            
             return image;
         }
 

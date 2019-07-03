@@ -123,6 +123,11 @@ namespace VTC.Classifier
 
         ~YoloClassifier()
         {
+            if (Detector == null)
+            {
+                return;
+            }
+
             if (cpuMode)
             {
                 Detector.Dispose();

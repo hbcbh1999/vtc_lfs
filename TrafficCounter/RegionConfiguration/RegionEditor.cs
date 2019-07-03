@@ -32,6 +32,8 @@ namespace VTC.RegionConfiguration
 
         private BindingSource _regionConfigurationsBindingSource;
 
+        private List<RegionConfig> _regionConfigs;
+
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
    
         public RegionEditor(IEnumerable<ICaptureSource> captureSources, IRegionConfigDataAccessLayer regionConfigDal, RegionConfig currentlySelectedConfig = null)
@@ -40,9 +42,9 @@ namespace VTC.RegionConfiguration
 
             _regionConfigDal = regionConfigDal;
 
-            var regionConfigs = _regionConfigDal.LoadRegionConfigList();
+            _regionConfigs = _regionConfigDal.LoadRegionConfigList();
 
-            _regionConfigurationsBindingSource = new BindingSource { DataSource = regionConfigs };
+            _regionConfigurationsBindingSource = new BindingSource { DataSource = _regionConfigs };
             PopulateConfigurationList();
 
             lbRegionConfigurations.DataSource = _regionConfigurationsBindingSource;
@@ -53,6 +55,11 @@ namespace VTC.RegionConfiguration
 
             foreach (var cs in captureSources)
             {
+                if (cs == null)
+                {
+                    continue;
+                }
+
                 try
                 {
                     var name = cs.Name;
@@ -581,8 +588,19 @@ namespace VTC.RegionConfiguration
             {
                 Title = input.InputString
             };
-            _regionConfigurationsBindingSource.Add(newConfig);
+
+            lbRegionConfigurations.DataSource = null;
+
+            _regionConfigs.Add(newConfig);
+            _regionConfigurationsBindingSource = new BindingSource { DataSource = _regionConfigs };
+
+            lbRegionConfigurations.DataSource = _regionConfigurationsBindingSource;
+            lbRegionConfigurations.DisplayMember = "Title";
+            lbRegionConfigurations.ValueMember = "";
+
             lbRegionConfigurations.SelectedItem = newConfig;
+
+            PopulateConfigurationList();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

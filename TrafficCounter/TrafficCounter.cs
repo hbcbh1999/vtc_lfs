@@ -483,9 +483,13 @@ namespace VTC
         private void btnConfigureRegions_Click(object sender, EventArgs e)
         {
             var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
-            var selected_camera_list = new List<ICaptureSource>();
-            selected_camera_list.Add(_selectedCaptureSource);
-            configurationActor.Tell(new CamerasMessage(selected_camera_list));
+            var selectedCameraList = new List<ICaptureSource>();
+            if (_selectedCaptureSource != null)
+            {
+                selectedCameraList.Add(_selectedCaptureSource);
+            }
+            
+            configurationActor.Tell(new CamerasMessage(selectedCameraList));
             configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
         }
 
