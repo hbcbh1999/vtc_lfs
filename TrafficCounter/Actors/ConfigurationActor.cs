@@ -159,6 +159,11 @@ namespace VTC.Actors
 
                     if (regionEditor.ShowDialog() == DialogResult.OK)
                     {
+                        if (regionEditor.SelectedRegionConfig == null)
+                        {
+                            return;
+                        }
+
                         _processingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
                         _loggingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
                         _liveRegionConfig = regionEditor.SelectedRegionConfig;
