@@ -75,6 +75,11 @@ namespace VTC.Common.RegionConfig
             var image = new Image<Bgr, float>(width, height);
             image.SetValue(fgColor);
 
+            if (!coords.Any())
+            {
+                return image;
+            }
+
             image.DrawPolyline(coords.ToArray(), false, new Bgr(Color.Black), 3);
 
             var lastPoint = coords.Last();
