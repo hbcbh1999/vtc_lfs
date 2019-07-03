@@ -166,30 +166,36 @@ namespace VTC.RegionConfiguration
 
         private bool TryDragCoord(Point start, Point end)
         {
-            int indexOfExisting;
-            Point coord;
+            if (Coordinates.Points.Count() < 1)
+            {
+                return false;
+            }
 
             try
             {
-                coord = Coordinates.Points.First(c => start.DistanceTo(c) <= CircleRadius);
-                indexOfExisting = Coordinates.Points.IndexOf(coord);
+                var coordinatesInRange = Coordinates.Points.Where(c => start.DistanceTo(c) <= CircleRadius);
+                if (coordinatesInRange.Any())
+                {
+                    var coord = coordinatesInRange.First();
+                    var indexOfExisting = Coordinates.Points.IndexOf(coord);
+
+                    if (end.X < 0) end.X = 0;
+                    if (end.Y < 0) end.Y = 0;
+
+                    coord.X = end.X;
+                    coord.Y = end.Y;
+                    Coordinates.Points.RemoveAt(indexOfExisting);
+                    Coordinates.Points.Insert(indexOfExisting, coord);
+
+                    return true;
+                }
             }
             catch
             {
                 return false;
             }
 
-            if (end.X < 0) end.X = 0;
-            //if (end.X >= Width) end.X = Width - 1;
-            if (end.Y < 0) end.Y = 0;
-            //if (end.Y >= Height) end.Y = Height - 1;
-
-            coord.X = end.X;
-            coord.Y = end.Y;
-            Coordinates.Points.RemoveAt(indexOfExisting);
-            Coordinates.Points.Insert(indexOfExisting, coord);
-
-            return true;
+            return false;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
