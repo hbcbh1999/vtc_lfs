@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using VTC.Common;
 
 namespace VTC.RegionConfiguration
 {
@@ -12,6 +13,8 @@ namespace VTC.RegionConfiguration
         public bool Ignored => ignoredCheckbox.Checked;
 
         public bool PedestrianOnly => pedestrianCheckbox.Checked;
+
+        public Turn SelectedTurn => getSelectedTurn();
 
         public ExamplePathCreatePrompt()
         {
@@ -39,6 +42,32 @@ namespace VTC.RegionConfiguration
             
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private Turn getSelectedTurn()
+        {
+            if (turnComboBox.Text == "Straight")
+            {
+                return Turn.Straight;
+            }
+            else if (turnComboBox.Text == "Left")
+            {
+                return Turn.Left;
+            }
+            else if (turnComboBox.Text == "Right")
+            {
+                return Turn.Right;
+            }
+            else if (turnComboBox.Text == "UTurn")
+            {
+                return Turn.UTurn;
+            }
+            else if (turnComboBox.Text == "Crossing")
+            {
+                return Turn.Crossing;
+            }
+
+            return Turn.Unknown;
         }
     }
 }

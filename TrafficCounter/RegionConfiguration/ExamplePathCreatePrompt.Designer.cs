@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InputPrompt));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExamplePathCreatePrompt));
             this.approachTextbox = new System.Windows.Forms.TextBox();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
@@ -37,6 +37,8 @@
             this.exitTextbox = new System.Windows.Forms.TextBox();
             this.ignoredCheckbox = new System.Windows.Forms.CheckBox();
             this.pedestrianCheckbox = new System.Windows.Forms.CheckBox();
+            this.turnComboBox = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // approachTextbox
@@ -117,7 +119,31 @@
             this.pedestrianCheckbox.Text = "Pedestrian-only";
             this.pedestrianCheckbox.UseVisualStyleBackColor = true;
             // 
-            // InputPrompt
+            // turnComboBox
+            // 
+            this.turnComboBox.FormattingEnabled = true;
+            this.turnComboBox.Items.AddRange(new object[] {
+            "Straight",
+            "Left",
+            "Right",
+            "UTurn",
+            "Crossing",
+            "Unknown"});
+            this.turnComboBox.Location = new System.Drawing.Point(199, 125);
+            this.turnComboBox.Name = "turnComboBox";
+            this.turnComboBox.Size = new System.Drawing.Size(121, 21);
+            this.turnComboBox.TabIndex = 7;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(264, 149);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Turn type";
+            // 
+            // ExamplePathCreatePrompt
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -125,6 +151,8 @@
             this.AutoSize = true;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(335, 239);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.turnComboBox);
             this.Controls.Add(this.pedestrianCheckbox);
             this.Controls.Add(this.ignoredCheckbox);
             this.Controls.Add(this.label1);
@@ -136,7 +164,7 @@
             this.Font = new System.Drawing.Font("Raleway", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "InputPrompt";
+            this.Name = "ExamplePathCreatePrompt";
             this.Text = "Create Example Path";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -153,5 +181,7 @@
         private System.Windows.Forms.TextBox exitTextbox;
         private System.Windows.Forms.CheckBox ignoredCheckbox;
         private System.Windows.Forms.CheckBox pedestrianCheckbox;
+        private System.Windows.Forms.ComboBox turnComboBox;
+        private System.Windows.Forms.Label label2;
     }
 }

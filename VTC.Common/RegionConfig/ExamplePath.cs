@@ -18,6 +18,8 @@ namespace VTC.Common.RegionConfig
 
         public bool Ignored { get; set; } = false;
 
+        public Turn TurnType { get; set; } = Turn.Unknown;
+
         public string Approach { get; set; } = "";
 
         public string Exit { get; set; } = "";

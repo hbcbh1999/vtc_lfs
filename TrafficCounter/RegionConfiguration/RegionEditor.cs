@@ -719,6 +719,7 @@ namespace VTC.RegionConfiguration
             examplePath.Exit = input.Exit;
             examplePath.Ignored = input.Ignored;
             examplePath.PedestrianOnly = input.PedestrianOnly;
+            examplePath.TurnType = input.SelectedTurn;
 
             var edit = CreateEditExamplePathButton(examplePath);
             var delete = CreateDeleteExamplePathButton(edit, examplePath);

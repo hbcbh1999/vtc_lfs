@@ -39,6 +39,7 @@
             this.tlpRegionConfigEditor = new System.Windows.Forms.TableLayoutPanel();
             this.tbRegionConfigName = new System.Windows.Forms.TextBox();
             this.tlpPolygonToggles = new System.Windows.Forms.TableLayoutPanel();
+            this.btnAddExamplePath = new System.Windows.Forms.Button();
             this.btnAddApproachExit = new System.Windows.Forms.Button();
             this.panelImage = new System.Windows.Forms.Panel();
             this.cbCaptureSource = new System.Windows.Forms.ComboBox();
@@ -48,7 +49,6 @@
             this.exportButton = new System.Windows.Forms.Button();
             this.importRegionConfigFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.exportRegionConfigFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.btnAddExamplePath = new System.Windows.Forms.Button();
             this.tlpMain.SuspendLayout();
             this.tlpRegionConfigSelector.SuspendLayout();
             this.tlpRegionConfigEditor.SuspendLayout();
@@ -200,8 +200,24 @@
             this.tlpPolygonToggles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpPolygonToggles.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tlpPolygonToggles.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpPolygonToggles.Size = new System.Drawing.Size(238, 96);
+            this.tlpPolygonToggles.Size = new System.Drawing.Size(238, 102);
             this.tlpPolygonToggles.TabIndex = 1;
+            // 
+            // btnAddExamplePath
+            // 
+            this.btnAddExamplePath.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAddExamplePath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAddExamplePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddExamplePath.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnAddExamplePath.Location = new System.Drawing.Point(17, 74);
+            this.btnAddExamplePath.Margin = new System.Windows.Forms.Padding(17, 3, 17, 3);
+            this.btnAddExamplePath.Name = "btnAddExamplePath";
+            this.btnAddExamplePath.Size = new System.Drawing.Size(171, 25);
+            this.btnAddExamplePath.TabIndex = 2;
+            this.btnAddExamplePath.Text = "+ Path";
+            this.btnAddExamplePath.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnAddExamplePath.UseVisualStyleBackColor = false;
+            this.btnAddExamplePath.Click += new System.EventHandler(this.btnAddExamplePath_Click);
             // 
             // btnAddApproachExit
             // 
@@ -212,9 +228,9 @@
             this.btnAddApproachExit.Location = new System.Drawing.Point(17, 3);
             this.btnAddApproachExit.Margin = new System.Windows.Forms.Padding(17, 3, 17, 3);
             this.btnAddApproachExit.Name = "btnAddApproachExit";
-            this.btnAddApproachExit.Size = new System.Drawing.Size(171, 22);
+            this.btnAddApproachExit.Size = new System.Drawing.Size(171, 25);
             this.btnAddApproachExit.TabIndex = 1;
-            this.btnAddApproachExit.Text = "+";
+            this.btnAddApproachExit.Text = "+ Region";
             this.btnAddApproachExit.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnAddApproachExit.UseVisualStyleBackColor = false;
             this.btnAddApproachExit.Click += new System.EventHandler(this.btnAddApproachExit_Click);
@@ -292,22 +308,6 @@
             // importRegionConfigFileDialog
             // 
             this.importRegionConfigFileDialog.FileName = "openFileDialog1";
-            // 
-            // btnAddExamplePath
-            // 
-            this.btnAddExamplePath.BackColor = System.Drawing.SystemColors.Control;
-            this.btnAddExamplePath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnAddExamplePath.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddExamplePath.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnAddExamplePath.Location = new System.Drawing.Point(17, 71);
-            this.btnAddExamplePath.Margin = new System.Windows.Forms.Padding(17, 3, 17, 3);
-            this.btnAddExamplePath.Name = "btnAddExamplePath";
-            this.btnAddExamplePath.Size = new System.Drawing.Size(171, 22);
-            this.btnAddExamplePath.TabIndex = 2;
-            this.btnAddExamplePath.Text = "+";
-            this.btnAddExamplePath.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnAddExamplePath.UseVisualStyleBackColor = false;
-            this.btnAddExamplePath.Click += new System.EventHandler(this.btnAddExamplePath_Click);
             // 
             // RegionEditor
             // 
