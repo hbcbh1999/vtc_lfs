@@ -150,7 +150,48 @@ namespace VTC.Kernel
                 tl.Save(filepath);  
             }
 
+            var examplePaths = GenerateExamplePathTrajectories(regionConfig, filepath);
+            TrajectoryPrototypes.AddRange(examplePaths);
+
             Console.WriteLine("Synthetic trajectory generation finished.");
+        }
+
+        List<Movement> GenerateExamplePathTrajectories(RegionConfig config, string filepath)
+        {
+            List<Movement> examplePaths = new List<Movement>();
+            foreach (var path in config.ExamplePaths)
+            {
+                List<StateEstimate> stateEstimates = new List<StateEstimate>();
+                foreach (var pt in path.Points)
+                {
+                    var se = new StateEstimate
+                    {
+                        X = pt.X,
+                        Y = pt.Y
+                    };
+                    stateEstimates.Add(se);
+                }
+
+                for (int i = 1; i < stateEstimates.Count; i++)
+                {
+                    stateEstimates[i].Vx = stateEstimates[i].X - stateEstimates[i - 1].X;
+                    stateEstimates[i].Vy = stateEstimates[i].Y - stateEstimates[i - 1].Y;
+                }
+
+                stateEstimates[0].Vx = stateEstimates[1].Vx;
+                stateEstimates[0].Vy = stateEstimates[1].Vy;
+
+                var m = new Movement(path.Approach, path.Exit, path.TurnType, ObjectType.Car, stateEstimates, 0);
+                examplePaths.Add(m);
+            }
+
+            foreach (var m in examplePaths)
+            {
+                var tl = new TrajectoryLogger(m);
+                tl.Save(filepath);
+            }
+
+            return examplePaths;
         }
 
         List<Movement> ApproachExitPairToMovements(Polygon approach, Polygon exit, Turn turnType, ObjectType objectType, int max)
