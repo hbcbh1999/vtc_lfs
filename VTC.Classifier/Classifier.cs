@@ -57,7 +57,27 @@ namespace VTC.Classifier
 
     public class YoloClassifier
     {
+        private const int MaxObjects = 1000;
+        [StructLayout(LayoutKind.Sequential)]
+        public struct bbox_t
+        {
+            public UInt32 x, y, w, h;    // (x,y) - top-left corner, (w, h) - width & height of bounded box
+            public float prob;           // confidence - probability that the object was found correctly
+            public UInt32 obj_id;        // class of object - from range [0, classes-1]
+            public UInt32 track_id;      // tracking id for video (0 - untracked, 1 - inf - tracked object)
+            public UInt32 frames_counter;
+            public float x_3d, y_3d, z_3d;  // 3-D coordinates, if there is used 3D-stereo camera
+        };
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct BboxContainer
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaxObjects)]
+            public bbox_t[] candidates;
+        }
+
         private YoloWrapper Detector;
+        private YoloWrapperNoGPU DetectorNoGPU;
 
         public float Threshold = 0.4f;
 
@@ -70,7 +90,7 @@ namespace VTC.Classifier
             var gpuDetector = new GPUDetector();
             if(gpuDetector.HasGPU && gpuDetector.MB_VRAM > 3000)
             {
-                cpuMode = false;
+                //cpuMode = false;
             }
 
             try
@@ -104,8 +124,7 @@ namespace VTC.Classifier
                 if (cpuMode)
                 {
                     Logger.Debug("Calling detector constructor (no GPU)...");
-                    Detector = new Darknet.YoloWrapper(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
-                    //Detector = Detector_no_gpu_new(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
+                    DetectorNoGPU = new Darknet.YoloWrapperNoGPU(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
                 }
                 else
                 {
@@ -130,7 +149,7 @@ namespace VTC.Classifier
 
             if (cpuMode)
             {
-                Detector.Dispose();
+                DetectorNoGPU.Dispose();
             }
             else
             {
@@ -171,58 +190,55 @@ namespace VTC.Classifier
             var converter = new ImageConverter();
             var bytes = (byte[]) converter.ConvertTo(frame.Bitmap, typeof(byte[]));
 
-            if (Detector != null)
+            bbox_t[] detectionArray;
+            if (cpuMode && DetectorNoGPU != null)
             {
-                YoloWrapper.bbox_t[] detectionArray;
-                if (cpuMode)
-                {
-                    detectionArray = Detector.Detect(bytes);
-                }
-                else
-                {
-                    detectionArray = Detector.Detect(bytes);
-                }
-
-                if (detectionArray == null)
-                {
-                    return new List<Measurement>();
-                }
-
-                for (int i = 0; i < detectionArray.Length; i++)
-                {
-                    if (detectionArray[i].x == 0 && detectionArray[i].y == 0) {break;}
-
-                    var m = new Measurement();
-                    m.Height = detectionArray[i].h;
-                    m.Width = detectionArray[i].w;
-                    if (m.Height > frame.Height | m.Width > frame.Width)
-                    {
-                        Debug.WriteLine("Detection rectangle too large.");
-                        continue;
-                    }
-                    m.X = detectionArray[i].x + detectionArray[i].w/2;
-                    m.Y = detectionArray[i].y + detectionArray[i].h/2;
-                    if ( (m.X > frame.Width) | (m.Y > frame.Height) | (m.X < 0) | (m.Y < 0))
-                    {
-                        Debug.WriteLine("Detection coordinates out-of-bounds.");
-                        continue;
-                    }
-
-                    int x_lim = (int) detectionArray[i].x + Convert.ToInt32(detectionArray[i].w);
-                    int y_lim = (int) detectionArray[i].y + Convert.ToInt32(detectionArray[i].h);
-
-                    var color = SampleColorAtRectangle(frame, (int) detectionArray[i].x, (int) detectionArray[i].y,
-                        x_lim,
-                        y_lim);
-
-                    m.Blue = color.Blue;
-                    m.Green = color.Green;
-                    m.Red = color.Red;
-                    m.Size = m.Width * m.Height;
-                    m.ObjectClass = (int) detectionArray[i].obj_id;
-                    measurements.Add(m);
-                }
+                detectionArray = DetectorNoGPU.Detect(bytes);
             }
+            else if(!cpuMode && Detector != null)
+            {
+                detectionArray = Detector.Detect(bytes);
+            }
+            else
+            {
+                return new List<Measurement>();
+            }
+
+            for (int i = 0; i < detectionArray.Length; i++)
+            {
+                if (detectionArray[i].x == 0 && detectionArray[i].y == 0) {break;}
+
+                var m = new Measurement();
+                m.Height = detectionArray[i].h;
+                m.Width = detectionArray[i].w;
+                if (m.Height > frame.Height | m.Width > frame.Width)
+                {
+                    Debug.WriteLine("Detection rectangle too large.");
+                    continue;
+                }
+                m.X = detectionArray[i].x + detectionArray[i].w/2;
+                m.Y = detectionArray[i].y + detectionArray[i].h/2;
+                if ( (m.X > frame.Width) | (m.Y > frame.Height) | (m.X < 0) | (m.Y < 0))
+                {
+                    Debug.WriteLine("Detection coordinates out-of-bounds.");
+                    continue;
+                }
+
+                int x_lim = (int) detectionArray[i].x + Convert.ToInt32(detectionArray[i].w);
+                int y_lim = (int) detectionArray[i].y + Convert.ToInt32(detectionArray[i].h);
+
+                var color = SampleColorAtRectangle(frame, (int) detectionArray[i].x, (int) detectionArray[i].y,
+                    x_lim,
+                    y_lim);
+
+                m.Blue = color.Blue;
+                m.Green = color.Green;
+                m.Red = color.Red;
+                m.Size = m.Width * m.Height;
+                m.ObjectClass = (int) detectionArray[i].obj_id;
+                measurements.Add(m);
+            }
+            
 
             return measurements;
         }

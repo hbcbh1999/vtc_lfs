@@ -5,9 +5,9 @@ using VTC.Classifier;
 
 namespace Darknet
 {
-    public class YoloWrapper : IDisposable
+    public class YoloWrapperNoGPU : IDisposable
     {
-        private const string YoloLibraryName = "yolo_cpp_dll.dll";
+        private const string YoloLibraryName = "yolo_cpp_dll_no_gpu.dll";
         private const int MaxObjects = 1000;
 
         [DllImport(YoloLibraryName, EntryPoint = "init")]
@@ -22,7 +22,7 @@ namespace Darknet
         [DllImport(YoloLibraryName, EntryPoint = "dispose")]
         private static extern int DisposeYolo();
 
-        public YoloWrapper(string configurationFilename, string weightsFilename, int gpu)
+        public YoloWrapperNoGPU(string configurationFilename, string weightsFilename, int gpu)
         {
             InitializeYolo(configurationFilename, weightsFilename, gpu);
         }

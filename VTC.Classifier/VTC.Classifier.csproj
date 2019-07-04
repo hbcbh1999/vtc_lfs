@@ -130,6 +130,7 @@
     <Compile Include="GPUDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImageAnalyzer.cs" />
+    <Compile Include="YoloWrapperNoGPU.cs" />
     <Compile Include="YoloWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
