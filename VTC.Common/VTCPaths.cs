@@ -11,12 +11,19 @@ namespace VTC.Common
     public static class VTCPaths
     {
 
-        public static string FolderPath(string filename, DateTime time)
+        public static string FolderPath(string filename, DateTime time, UserConfig userConfig)
         {
             var dt = time;
             var dateTime = "D" + dt.Day + "M" + dt.Month + "Y" + dt.Year + " H" + dt.Hour + "M" + dt.Minute + "S" + dt.Second;
             var folderName = "VTC Movement Counts " + SanitizeFilename(filename) + " " + dateTime;
-            var folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+
+            var basePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            if (!string.IsNullOrEmpty(userConfig.OutputPath))
+            {
+                basePath = userConfig.OutputPath;
+            }
+
+            var folderPath = Path.Combine(basePath,
                 folderName);
             return folderPath;
         }

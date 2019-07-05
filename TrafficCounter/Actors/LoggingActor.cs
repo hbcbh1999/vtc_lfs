@@ -346,7 +346,7 @@ namespace VTC.Actors
         {
             //Create output folder
             //TODO: Figure out how to get _selectedCamera.Name value here
-            var folderPath = VTC.Common.VTCPaths.FolderPath(_currentVideoName,_videoStartTime);
+            var folderPath = VTC.Common.VTCPaths.FolderPath(_currentVideoName,_videoStartTime, _userConfig);
             if (Directory.Exists(folderPath))
             {
                 Directory.Delete(folderPath, true);

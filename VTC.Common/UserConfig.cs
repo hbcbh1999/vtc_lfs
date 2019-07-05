@@ -62,5 +62,9 @@ namespace VTC.Common
         [Description("CountPedestriansAsMotorcycles: Replace any objects counted as pedestrians with motorcycle-counts.")]
         [DataMember]
         public bool CountPedestriansAsMotorcycles { get; set; } = false;
+
+        [Description("Path for storage of movement-count logs and reports.")]
+        [DataMember]
+        public string OutputPath { get; set; }
     }
 }

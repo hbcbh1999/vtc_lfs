@@ -189,6 +189,7 @@ namespace VTC.Reporting
                 summaryReport += Resources.rowTopBufferDivOpenTag; //summary statistics
                 summaryReport += "<h3>Summary statistics</h3>";
 
+
                 var a1Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 1");
                 var a2Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 2");
                 var a3Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 3");
