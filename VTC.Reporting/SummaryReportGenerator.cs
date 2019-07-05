@@ -189,27 +189,14 @@ namespace VTC.Reporting
                 summaryReport += Resources.rowTopBufferDivOpenTag; //summary statistics
                 summaryReport += "<h3>Summary statistics</h3>";
 
-
-                var a1Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 1");
-                var a2Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 2");
-                var a3Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 3");
-                var a4Metrics = CalculateFlowMetrics(mcrl5minTotal,"Approach 4");
-                var summaryReportA1 = SummaryReportForApproach(a1Metrics, "Approach 1", mcrl5minTotal);
-                var summaryReportA2 = SummaryReportForApproach(a2Metrics, "Approach 2", mcrl5minTotal);
-                var summaryReportA3 = SummaryReportForApproach(a3Metrics, "Approach 3", mcrl5minTotal);
-                var summaryReportA4 = SummaryReportForApproach(a4Metrics, "Approach 4", mcrl5minTotal);
-
-                if (a1Metrics != null)
-                    summaryReport += summaryReportA1;
-
-                if (a2Metrics != null)
-                    summaryReport += summaryReportA2;
-
-                if (a3Metrics != null)
-                    summaryReport += summaryReportA3;
-
-                if (a4Metrics != null)
-                    summaryReport += summaryReportA4;
+                var approaches = GetAllUniqueApproachNames(mcrl5minTotal);
+                foreach (var approach in approaches)
+                {
+                    var metrics = CalculateFlowMetrics(mcrl5minTotal, approach);
+                    var summaryReportThisApproach = SummaryReportForApproach(metrics, approach, mcrl5minTotal);
+                    if (metrics != null)
+                        summaryReport += summaryReportThisApproach;
+                }
 
                 summaryReport += "</div>"; //summary statistics row close
 
@@ -243,6 +230,23 @@ namespace VTC.Reporting
                 throw;
 #endif          
             }
+        }
+
+        public static List<string> GetAllUniqueApproachNames(MovementCountRowList mcrl)
+        {
+            var approachNames = new List<string>();
+            foreach (var mcr in mcrl)
+            {
+                foreach (var k in mcr.MovementCt.Keys)
+                {
+                    if (!approachNames.Contains(k.Approach))
+                    {
+                        approachNames.Add(k.Approach);
+                    }
+                }
+            }
+
+            return approachNames;
         }
 
         public static void GenerateSummaryReportHTML(string exportPath, string location, DateTime videoTime, string objectType)
@@ -284,85 +288,30 @@ namespace VTC.Reporting
                 summaryReport += Resources.rowTopBufferDivOpenTag; //summary statistics
                 summaryReport += "<h3>Summary statistics</h3>";
 
-                if(objectType == "person")
+                var approaches = GetAllUniqueApproachNames(mcrl5min);
+                foreach (var approach in approaches)
                 {
-                    var s1Metrics = CalculateFlowMetrics(mcrl5min,"Sidewalk 1");
-                    var s2Metrics = CalculateFlowMetrics(mcrl5min,"Sidewalk 2");
-                    var s3Metrics = CalculateFlowMetrics(mcrl5min,"Sidewalk 3");
-                    var s4Metrics = CalculateFlowMetrics(mcrl5min,"Sidewalk 4");
-                    var summaryReportS1 = SummaryReportForSidewalk(s1Metrics, "Sidewalk 1", mcrl5min);
-                    var summaryReportS2 = SummaryReportForSidewalk(s2Metrics, "Sidewalk 2", mcrl5min);
-                    var summaryReportS3 = SummaryReportForSidewalk(s3Metrics, "Sidewalk 3", mcrl5min);
-                    var summaryReportS4 = SummaryReportForSidewalk(s4Metrics, "Sidewalk 4", mcrl5min);
-
-                    if (s1Metrics != null)
-                        summaryReport += summaryReportS1;
-
-                    if (s2Metrics != null)
-                        summaryReport += summaryReportS2;
-
-                    if (s3Metrics != null)
-                        summaryReport += summaryReportS3;
-
-                    if (s4Metrics != null)
-                        summaryReport += summaryReportS4;
-
-                    summaryReport += "</div>"; //summary statistics row close
-
-                    if (mcrl60min.Count > 0)
-                    {
-                        summaryReport += AddRowOfSidewalkTables(mcrl60min, "60");
-                    }
-
-                    if (mcrl15min.Count > 0)
-                    {
-                        summaryReport += AddRowOfSidewalkTables(mcrl15min, "15");
-                    }
-
-                    if (mcrl5min.Count > 0)
-                    {
-                        summaryReport += AddRowOfSidewalkTables(mcrl5min, "5");
-                    }
+                    var metrics = CalculateFlowMetrics(mcrl5min, approach);
+                    var summaryReportThisApproach = SummaryReportForApproach(metrics, approach, mcrl5min);
+                    if (metrics != null)
+                        summaryReport += summaryReportThisApproach;
                 }
-                else
+
+                summaryReport += "</div>"; //summary statistics row close
+
+                if (mcrl60min.Count > 0)
                 {
-                    var a1Metrics = CalculateFlowMetrics(mcrl5min,"Approach 1");
-                    var a2Metrics = CalculateFlowMetrics(mcrl5min,"Approach 2");
-                    var a3Metrics = CalculateFlowMetrics(mcrl5min,"Approach 3");
-                    var a4Metrics = CalculateFlowMetrics(mcrl5min,"Approach 4");
-                    var summaryReportA1 = SummaryReportForApproach(a1Metrics, "Approach 1", mcrl5min);
-                    var summaryReportA2 = SummaryReportForApproach(a2Metrics, "Approach 2", mcrl5min);
-                    var summaryReportA3 = SummaryReportForApproach(a3Metrics, "Approach 3", mcrl5min);
-                    var summaryReportA4 = SummaryReportForApproach(a4Metrics, "Approach 4", mcrl5min);
+                    summaryReport += AddRowOfApproachTables(mcrl60min, "60");
+                }
 
-                    if (a1Metrics != null)
-                        summaryReport += summaryReportA1;
+                if (mcrl15min.Count > 0)
+                {
+                    summaryReport += AddRowOfApproachTables(mcrl15min, "15");
+                }
 
-                    if (a2Metrics != null)
-                        summaryReport += summaryReportA2;
-
-                    if (a3Metrics != null)
-                        summaryReport += summaryReportA3;
-
-                    if (a4Metrics != null)
-                        summaryReport += summaryReportA4;
-
-                    summaryReport += "</div>"; //summary statistics row close
-
-                    if (mcrl60min.Count > 0)
-                    {
-                        summaryReport += AddRowOfApproachTables(mcrl60min, "60");
-                    }
-
-                    if (mcrl15min.Count > 0)
-                    {
-                        summaryReport += AddRowOfApproachTables(mcrl15min, "15");
-                    }
-
-                    if (mcrl5min.Count > 0)
-                    {
-                        summaryReport += AddRowOfApproachTables(mcrl5min, "5");
-                    }
+                if (mcrl5min.Count > 0)
+                {
+                    summaryReport += AddRowOfApproachTables(mcrl5min, "5");
                 }
 
                 summaryReport += "</div>"; //Container close
@@ -497,28 +446,12 @@ namespace VTC.Reporting
             rowOfTables += "<span class=\"glyphicon glyphicon-collapse-down\"></span>";
             rowOfTables += "</button>";
             rowOfTables += Resources.rowTopBufferDivOpenTagCollapse.Replace("@rowid", rowid); // counts
-            rowOfTables += GenerateSingleTable(mcrl, "Approach 1");
-            rowOfTables += GenerateSingleTable(mcrl, "Approach 2");
-            rowOfTables += GenerateSingleTable(mcrl, "Approach 3");
-            rowOfTables += GenerateSingleTable(mcrl, "Approach 4");
 
-            rowOfTables += "</div>"; // row close
-            return rowOfTables;
-        }
-
-        private static string AddRowOfSidewalkTables(MovementCountRowList mcrl, string minutes)
-        {
-            string rowid = "row" + minutes;
-            string rowOfTables = "";
-            rowOfTables += "<h3>" + minutes + "-minute counts</h3>";
-            rowOfTables += "<button data-toggle=\"collapse\" class=\"btn\" data-target=\"#" + rowid + "\">";
-            rowOfTables += "<span class=\"glyphicon glyphicon-collapse-down\"></span>";
-            rowOfTables += "</button>";
-            rowOfTables += Resources.rowTopBufferDivOpenTagCollapse.Replace("@rowid", rowid); // counts
-            rowOfTables += GenerateSingleTableSidewalk(mcrl, "Sidewalk 1");
-            rowOfTables += GenerateSingleTableSidewalk(mcrl, "Sidewalk 2");
-            rowOfTables += GenerateSingleTableSidewalk(mcrl, "Sidewalk 3");
-            rowOfTables += GenerateSingleTableSidewalk(mcrl, "Sidewalk 4");
+            var approaches = GetAllUniqueApproachNames(mcrl);
+            foreach (var approach in approaches)
+            {
+                rowOfTables += GenerateSingleTable(mcrl, approach);
+            }
 
             rowOfTables += "</div>"; // row close
             return rowOfTables;
