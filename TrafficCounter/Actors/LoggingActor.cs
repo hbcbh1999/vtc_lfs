@@ -372,7 +372,7 @@ namespace VTC.Actors
                 foreach(var m in mts.TrajectoryPrototypes)
                 {   
                     //var modified_prototype = m;
-                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, objectType, m.StateEstimates, 0);
+                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, objectType, m.StateEstimates, timestamp, 0, false);
                     //2. Check which keys are not present
                     if(!turnStats.Keys.Contains(modified_prototype))
                     { 
@@ -442,7 +442,7 @@ namespace VTC.Actors
                 foreach(var m in mts.TrajectoryPrototypes)
                 {   
                     //var modified_prototype = m;
-                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, ObjectType.Unknown, m.StateEstimates, 0);
+                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, ObjectType.Unknown, m.StateEstimates, timestamp, 0, false);
                     //2. Check which keys are not present
                     if(!turnStats.Keys.Contains(modified_prototype))
                     { 
@@ -749,10 +749,11 @@ namespace VTC.Actors
                     }
                     var movement = TrajectorySimilarity.MatchNearestTrajectory(d, mostLikelyClassType, _regionConfig.MinPathLength, mts.TrajectoryPrototypes);
                     if (movement == null) continue;
+                    if (movement.Ignored) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
-                    var edited_movement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, d.FirstDetectionFrame);
-                    IncrementTurnStatistics(edited_movement);
-                    var tl = new TrajectoryLogger(edited_movement);
+                    var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), d.FirstDetectionFrame, false);
+                    IncrementTurnStatistics(editedMovement);
+                    var tl = new TrajectoryLogger(editedMovement);
                     var folderPath = _currentOutputFolder;
                     const string filename = "Movements";
                     var filepath = Path.Combine(folderPath, filename);
@@ -761,7 +762,7 @@ namespace VTC.Actors
                     if(_regionConfig.SendToServer)
                     {
                         var rs = new RemoteServer();
-                        var rsr = rs.SendMovement(edited_movement, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
+                        var rsr = rs.SendMovement(editedMovement, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
                         if (rsr != HttpStatusCode.OK)
                         {
                             Log("Movement POST failed:" + rsr, LogLevel.Error);

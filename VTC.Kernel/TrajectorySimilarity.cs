@@ -228,7 +228,7 @@ namespace VTC.Kernel
            
             Parallel.ForEach(trajectoryPrototypes, (tp) =>
             {
-                var mt = new MatchTrajectory(tp.Approach, tp.Exit, tp.TrafficObjectType, tp.TurnType,tp.StateEstimates, 0);
+                var mt = new MatchTrajectory(tp.Approach, tp.Exit, tp.TrafficObjectType, tp.TurnType,tp.StateEstimates, DateTime.Now, 0, tp.Ignored);
                 bool isValidPersonMatch = classType.ToLower() == "person" && tp.TrafficObjectType == ObjectType.Person;
                 bool isValidVehicleMatch = classType.ToLower() != "person" && tp.TrafficObjectType != ObjectType.Person;
                 if(isValidPersonMatch || isValidVehicleMatch)
@@ -283,7 +283,7 @@ namespace VTC.Kernel
     {
         public double matchCost;
 
-        public MatchTrajectory(string approach, string exit, ObjectType ot, Turn turn, List<StateEstimate> stateEstimates, int frame) : base(approach,exit,turn,ot,stateEstimates, frame)
+        public MatchTrajectory(string approach, string exit, ObjectType ot, Turn turn, List<StateEstimate> stateEstimates, DateTime timestamp, int frame, bool ignored) : base(approach,exit,turn,ot,stateEstimates, timestamp, frame, ignored)
         { 
         }
     }

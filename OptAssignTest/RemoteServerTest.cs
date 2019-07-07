@@ -22,7 +22,7 @@ namespace VTC
 
             var stateEstimates = new List<StateEstimate>();
 
-            var m = new Movement("Approach 1", "Exit 1", Turn.Left, ObjectType.Car, stateEstimates, 0);
+            var m = new Movement("Approach 1", "Exit 1", Turn.Left, ObjectType.Car, stateEstimates, DateTime.Now, 0, false);
 
             try
             {
