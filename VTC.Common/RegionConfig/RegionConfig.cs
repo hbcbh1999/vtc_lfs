@@ -29,51 +29,51 @@ namespace VTC.Common.RegionConfig
 
         [Description("Q_position: position movement covariance. Decrease for objects with smooth movement; increase for objects with complex movement.")]
         [DataMember]
-        public double Q_position { get; set; } = 300;
+        public double Q_position { get; set; } = 200;
 
         [Description("Q_color: color-change covariance. Decrease for scenes with consistent lighting; increase for scenes with variable lighting.")]
         [DataMember]
-        public double Q_color { get; set; } = 100000;
+        public double Q_color { get; set; } = 100;
 
         [Description("R_position: position measurement covariance. Decrease when detection-quality is high. Increase when detection-quality is low.")]
         [DataMember]
-        public double R_position { get; set; } = 25;
+        public double R_position { get; set; } = 2;
 
         [Description("R_color: color measurement covariance. Decrease for scenes with consistent lighting; increase for scenes with variable lighting.")]
         [DataMember]
-        public double R_color { get; set; } = 100000;
+        public double R_color { get; set; } = 100;
 
         [Description("Initial X covariance: increase for scenes with nearby vehicles. Decrease for scenes with far-away vehicles.")]
         [DataMember]
-        public double VehicleInitialCovX { get; set; } = 1000;
+        public double VehicleInitialCovX { get; set; } = 4;
 
         [Description("Initial Vx covariance: increase for scenes with rapidly-moving vehicles. Decrease for scenes with slowly-moving vehicles.")]
         [DataMember]
-        public double VehicleInitialCovVX { get; set; } = 5000;
+        public double VehicleInitialCovVX { get; set; } = 1500;
 
         [Description("Initial Y covariance: increase for scenes with nearby vehicles. Decrease for scenes with far-away vehicles.")]
         [DataMember]
-        public double VehicleInitialCovY { get; set; } = 1000;
+        public double VehicleInitialCovY { get; set; } = 4;
 
         [Description("Initial Vy covariance: increase for scenes with rapidly-moving vehicles. Decrease for scenes with slowly-moving vehicles.")]
         [DataMember]
-        public double VehicleInitialCovVY { get; set; } = 5000;
+        public double VehicleInitialCovVY { get; set; } = 1500;
 
         [Description("Initial R covariance: initial assumption on R-channel color certainty.")]
         [DataMember]
-        public double VehicleInitialCovR { get; set; } = 100000;
+        public double VehicleInitialCovR { get; set; } = 100;
 
         [Description("Initial G covariance: initial assumption on G-channel color certainty.")]
         [DataMember]
-        public double VehicleInitialCovG { get; set; } = 100000;
+        public double VehicleInitialCovG { get; set; } = 100;
 
         [Description("Initial B covariance: initial assumption on B-channel color certainty.")]
         [DataMember]
-        public double VehicleInitialCovB { get; set; } = 100000;
+        public double VehicleInitialCovB { get; set; } = 100;
 
         [Description("Compensation gain: how aggressively the tracker seeks a lost object.")]
         [DataMember]
-        public double CompensationGain { get; set; } = 200;
+        public double CompensationGain { get; set; } = 15;
 
         [Description("MinObjectSize: objects with less than this many pixels will be ignored.")]
         [DataMember]
@@ -85,31 +85,31 @@ namespace VTC.Common.RegionConfig
 
         [Description("Lambda-F: The odds of a false-positive object detection per frame.")]
         [DataMember]
-        public double LambdaF { get; set; } = 4E-07;
+        public double LambdaF { get; set; } = 1E-11;
 
         [Description("Lambda-N: The odds of a new object detection per frame.")]
         [DataMember]
-        public double LambdaN { get; set; } = 5E-07;
+        public double LambdaN { get; set; } = 1E-08;
 
         [Description("Pd: probability of detecting a particular vehicle.")]
         [DataMember]
-        public double Pd { get; set; } = 0.8;
+        public double Pd { get; set; } = 0.98;
 
         [Description("Px: probability of a particular vehicle exiting the scene in any frame.")]
         [DataMember]
-        public double Px { get; set; } = 0.0001;
+        public double Px { get; set; } = 0.05;
 
         [Description("VehicleInitialCovSize: the uncertainty in initial object size. Increase if large object tracking-quality is poor.")]
         [DataMember]
-        public double VehicleInitialCovSize { get; set; } = 10000000;
+        public double VehicleInitialCovSize { get; set; } = 1000;
 
         [Description("Q_size: object size change. Increase for scenes where objects appear to change in size significantly, i.e. for fish-eye or wide-angle lenses.")]
         [DataMember]
-        public double Q_size { get; set; } = 10000000;
+        public double Q_size { get; set; } = 95000;
 
         [Description("R_size: size measurement uncertainty. Increase if objects are being 'lost' by trackers. Decrease if trackers are swapping.")]
         [DataMember]
-        public double R_size { get; set; } = 10000000;
+        public double R_size { get; set; } = 500;
 
         [Description("MinPathLength: Object trajectories shorter than this length (in pixels) are discarded without being counted.")]
         [DataMember]
@@ -117,7 +117,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("MHT maximum hypothesis tree-depth: how many frames of tracker history are retained. Increase for better quality; decrease for faster processing.")]
         [DataMember]
-        public int MaxHypTreeDepth { get; set; } = 2;
+        public int MaxHypTreeDepth { get; set; } = 1;
 
         [Description("Maximum number of tracked objects.")]
         [DataMember]
@@ -133,7 +133,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("Position-covariance threshold: if the tracked object's final position-covariance is above this value, it is not counted. Increase this value for scenes with fast-moving vehicles.")]
         [DataMember]
-        public double PositionCovarianceThreshold { get; set; } = 300.0;
+        public double PositionCovarianceThreshold { get; set; } = 1000.0;
 
         [Description("Missed-ratio threshold: the miss-ratio is the number of non-detections divided by the total number of time-steps that an object is tracked for. Increase this value for fast-moving vehicles or scenes with heavy occlusion.")]
         [DataMember]

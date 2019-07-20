@@ -896,10 +896,34 @@ namespace VTC.Actors
 
             if(_userConfig.SimplifiedCountDisplay)
             { 
-               sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 1"));
-               sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 2"));
-               sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 3"));
-               sb.AppendLine(PerApproachClassCount(_turnStats, "Approach 4"));
+               //Get list of approaches seen so far
+                var approaches = new List<string>();
+                foreach (var ts in _turnStats)
+                {
+                    if (!approaches.Contains(ts.Key.Approach))
+                    {
+                        approaches.Add(ts.Key.Approach);
+                    }
+                }
+
+                foreach (var approach in approaches)
+                {
+                    //Get total for this approach, so that we can avoid showing approaches with 0 counts
+                    long total = 0;
+                    foreach (var ts in _turnStats)
+                    {
+                        if (ts.Key.Approach == approach)
+                        {
+                            total += ts.Value;
+                        }
+                    }
+
+                    if (total > 0)
+                    {
+                        sb.AppendLine(PerApproachClassCount(_turnStats, approach));
+                    }
+                }
+               
                 foreach (var kvp in _turnStats)
                 {
                     totalObjects += (int)kvp.Value;

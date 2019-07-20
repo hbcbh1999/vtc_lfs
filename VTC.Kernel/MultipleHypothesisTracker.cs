@@ -92,7 +92,7 @@ namespace VTC.Kernel
                     {
                         //Updating state for missed measurement
                         StateEstimate lastState = childNode.NodeData.Vehicles[j].StateHistory.Last();
-                        StateEstimate noMeasurementUpdate = lastState.PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep), _hypothesisTree.CompensationGain);
+                        StateEstimate noMeasurementUpdate = lastState.PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R(lastState.Size), _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep, lastState.Size), _hypothesisTree.CompensationGain);
                         childHypothesisTree.UpdateVehicleFromPrevious(j, noMeasurementUpdate, false);
                     }
                 }
@@ -124,8 +124,12 @@ namespace VTC.Kernel
 
         public StateHypothesis MostLikelyStateHypothesis()
         {
-            _hypothesisTree.Children.Sort(HypothesisTree.ProbCompare);
-            return _hypothesisTree.Children.First().NodeData;
+            //_hypothesisTree.Children.Sort(HypothesisTree.ProbCompare);
+            //var bestHypothesis = _hypothesisTree.Children.First();
+            var leafNodes = _hypothesisTree.GetLeafNodes();
+            leafNodes.Sort(HypothesisTree.ProbCompare);
+            var bestHypothesis = leafNodes.First();
+            return bestHypothesis.NodeData;
         }
 
         /// <summary>
@@ -213,7 +217,7 @@ namespace VTC.Kernel
                     {
                         //Updating state for missed measurement
                         StateEstimate lastState = hypothesisParent.NodeData.Vehicles[j].StateHistory.Last();
-                        StateEstimate noMeasurementUpdate = lastState.PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep), _hypothesisTree.CompensationGain);
+                        StateEstimate noMeasurementUpdate = lastState.PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R(lastState.Size), _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep,lastState.Size), _hypothesisTree.CompensationGain);
                         childHypothesisTree.UpdateVehicleFromPrevious(j, noMeasurementUpdate, false);
                     }
                 }
@@ -227,6 +231,9 @@ namespace VTC.Kernel
                         // Find predicted velocity
                         var velocity = VelocityField.GetAvgVelocity((int)coords[j].X, (int)coords[j].Y);
 
+                        var size = coords[j].Size;
+                        var approximateRadius = Math.Sqrt(size);
+
                         //Creating new vehicle
                         numTargetsCreated++;
                         childHypothesis.AddVehicle(
@@ -238,14 +245,14 @@ namespace VTC.Kernel
                             Convert.ToInt16(coords[j].Green),
                             Convert.ToInt16(coords[j].Blue), 
                             Convert.ToInt32(coords[j].Size),
-                            _regionConfig.VehicleInitialCovX,
-                            _regionConfig.VehicleInitialCovY,
-                            _regionConfig.VehicleInitialCovVX,
-                            _regionConfig.VehicleInitialCovVY,
+                            _regionConfig.VehicleInitialCovX * approximateRadius,
+                            _regionConfig.VehicleInitialCovY * approximateRadius,
+                            _regionConfig.VehicleInitialCovVX * approximateRadius,
+                            _regionConfig.VehicleInitialCovVY * approximateRadius,
                             _regionConfig.VehicleInitialCovR,
                             _regionConfig.VehicleInitialCovG,
                             _regionConfig.VehicleInitialCovB,
-                            _regionConfig.VehicleInitialCovSize,
+                            _regionConfig.VehicleInitialCovSize * approximateRadius,
                             coords[j].ObjectClass,
                             _numProcessedFrames
                             );
@@ -255,7 +262,7 @@ namespace VTC.Kernel
                     {
                         //Updating vehicle with measurement
                         StateEstimate lastState = hypothesisParent.NodeData.Vehicles[assignment[j] - numDetections].StateHistory.Last();
-                        StateEstimate estimatedState = lastState.PropagateState(timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep), coords[j]);
+                        StateEstimate estimatedState = lastState.PropagateState(timestep, _hypothesisTree.H, _hypothesisTree.R(lastState.Size), _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep,lastState.Size), coords[j]);
                         childHypothesisTree.UpdateVehicleFromPrevious(assignment[j] - numDetections, estimatedState, true);
                     }
 
@@ -313,7 +320,7 @@ namespace VTC.Kernel
             for (int i = 0; i < numExistingTargets; i++)
             {
                 //Get this car's estimated next position using Kalman predictor
-                StateEstimate noMeasurementEstimate = targetStateEstimates[i].PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R, _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep), _hypothesisTree.CompensationGain);
+                StateEstimate noMeasurementEstimate = targetStateEstimates[i].PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R(targetStateEstimates[i].Size), _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep, targetStateEstimates[i].Size), _hypothesisTree.CompensationGain);
 
                 DenseMatrix pBar = new DenseMatrix(8, 8)
                 {
@@ -328,7 +335,7 @@ namespace VTC.Kernel
                 };
 
                 DenseMatrix hTrans = (DenseMatrix)_hypothesisTree.H.Transpose();
-                DenseMatrix b = _hypothesisTree.H * pBar * hTrans + _hypothesisTree.R;
+                DenseMatrix b = _hypothesisTree.H * pBar * hTrans + _hypothesisTree.R(targetStateEstimates[i].Size);
                 DenseMatrix bInverse = (DenseMatrix)b.Inverse();
 
                 for (int j = 0; j < numDetections; j++)

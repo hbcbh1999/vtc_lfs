@@ -275,11 +275,14 @@ namespace VTC.Kernel
     {
         public DenseMatrix H; //Measurement equation
         public DenseMatrix P; //
-        public DenseMatrix R; //
 
         private double _qPosition;
         private double _qColor;
         private double _qSize;
+
+        private double _rPosition;
+        private double _rColor;
+        private double _rSize;
 
         public double CompensationGain; //Gain applied to process noise when a measurement is missed
 
@@ -314,15 +317,9 @@ namespace VTC.Kernel
                 [5, 7] = 1
             }; // Measurement equation: x,y,R,G,B,Size are observed (not velocities)
 
-            R = new DenseMatrix(6, 6)
-            {
-                [0, 0] = rPosition,
-                [1, 1] = rPosition,
-                [2, 2] = rColor,
-                [3, 3] = rColor,
-                [4, 4] = rColor,
-                [5, 5] = rSize
-            }; //Measurement covariance
+            _rPosition = rPosition;
+            _rColor = rColor;
+            _rSize = rSize;
 
             CompensationGain = compensationGain;
         }
@@ -346,7 +343,7 @@ namespace VTC.Kernel
             return m;
         }
 
-        public DenseMatrix Q(double dt)
+        public DenseMatrix Q(double dt, double size)
         { 
             var m = new DenseMatrix(8, 8)
             {
@@ -365,6 +362,22 @@ namespace VTC.Kernel
             }; //Process covariance
 
             return m;
+        }
+
+        public DenseMatrix R(double size)
+        {
+            var measurementRadius = Math.Sqrt(size);
+            DenseMatrix matrixR = new DenseMatrix(6, 6)
+            {
+                [0, 0] = _rPosition * measurementRadius,
+                [1, 1] = _rPosition * measurementRadius,
+                [2, 2] = _rColor,
+                [3, 3] = _rColor,
+                [4, 4] = _rColor,
+                [5, 5] = _rSize * measurementRadius * measurementRadius
+            }; //Measurement covariance
+
+            return matrixR;
         }
 
         /// <summary>
@@ -447,7 +460,14 @@ namespace VTC.Kernel
         public HypothesisTree GetChild(int index)
         {
             var child = (HypothesisTree) Children[index];
-            child.R = R;
+            child.CompensationGain = CompensationGain;
+            child._qColor = _qColor;
+            child._qPosition = _qPosition;
+            child._qSize = _qSize;
+            child._rColor = _rColor;
+            child._rSize = _rSize;
+            child._rPosition = _rPosition;
+            
             child.P = P;
             child.H = H;
             
