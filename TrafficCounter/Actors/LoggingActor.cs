@@ -547,6 +547,10 @@ namespace VTC.Actors
         private void Log(string text, LogLevel level)
         {
             Logger.Log(level, text);
+            if (level == LogLevel.Error)
+            {
+                ravenClient.Capture(new SentryEvent(text));
+            }
         }
 
         private void LogUser(string text, LogLevel level)
