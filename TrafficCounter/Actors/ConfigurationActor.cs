@@ -242,7 +242,14 @@ namespace VTC.Actors
 
         private void SendConfigurationTo(IActorRef actor)
         {
-            actor.Tell(new UpdateRegionConfigurationMessage(_liveRegionConfig));
+            if (_liveRegionConfig != null)
+            {
+                actor.Tell(new UpdateRegionConfigurationMessage(_liveRegionConfig));
+            }
+            else
+            {
+                _loggingActor.Tell(new LogUserMessage("Configuration-request failed; configuration is null.", LogLevel.Error));
+            }
         }
     }
 }

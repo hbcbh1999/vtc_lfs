@@ -98,16 +98,14 @@ namespace VTC.Actors
 
                 Self.Tell(new ActorHeartbeatMessage(Self));
 
-                Context.System.Scheduler.ScheduleTellRepeatedly(5000, 5000, Self, new CalculateFrameRateMessage(), Self);
-
-                Context.System.Scheduler.ScheduleTellRepeatedly(60000, 60000, Self, new RequestBackgroundFrameMessage(), Self);
-                Context.System.Scheduler.ScheduleTellRepeatedly(60000, 60000, Self, new ValidateConfigurationMessage(), Self);
-
                 _config = new RegionConfig();
-                _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug));
-
                 _vista = new Vista(640, 480, _config);
-                
+
+                Context.System.Scheduler.ScheduleTellRepeatedly(5000, 5000, Self, new CalculateFrameRateMessage(), Self);
+                Context.System.Scheduler.ScheduleTellRepeatedly(60000, 5*60000, Self, new RequestBackgroundFrameMessage(), Self);
+                Context.System.Scheduler.ScheduleTellRepeatedly(60000, 5*60000, Self, new ValidateConfigurationMessage(), Self);
+
+                _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug));
             }
             catch (Exception ex)
             {
@@ -263,24 +261,25 @@ namespace VTC.Actors
 
         private void CheckConfiguration()
         {
-            if (_config.RoiMask == null)
+            if (_config == null)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is null.", LogLevel.Debug));
+                _loggingActor.Tell(new LogMessage("RegionConfig is null.", LogLevel.Error));
+                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+            }
+            else if (_config.RoiMask == null)
+            {
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is null.", LogLevel.Error));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
             }
             else if (_config.RoiMask.Count < 3)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask has " + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Debug));
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask has " + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Error));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
             }
             else if (!_config.RoiMask.PolygonClosed)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is not a closed polygon.", LogLevel.Debug));
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is not a closed polygon.", LogLevel.Error));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
-            }
-            else
-            {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: configuration is OK.", LogLevel.Debug));
             }
         }
     }

@@ -56,6 +56,7 @@ namespace VTC.Actors
         private Dictionary<int, string> _classIdMapping = new Dictionary<int, string>();
 
         private IActorRef _sequencingActor;
+        private IActorRef _configurationActor;
         private Image<Bgr, byte> _background;
 
         public delegate void UpdateStatsUIDelegate(string statString);
@@ -151,6 +152,10 @@ namespace VTC.Actors
                 UpdateSequencingActor(message.ActorRef)
             );
 
+            Receive<ConfigurationActorMessage>(message =>
+                UpdateConfigurationActor(message.ActorRef)
+            );
+
             Receive<HandleClassIDMappingMessage>(message =>
                 UpdateClassIDMapping(message.ClassIdMapping)
             );
@@ -177,6 +182,10 @@ namespace VTC.Actors
 
             Receive<LoadUserConfigMessage>(message => 
                 LoadUserConfig()
+            );
+
+            Receive<ValidateConfigurationMessage>(message =>
+                CheckConfiguration()
             );
 
             Self.Tell(new ActorHeartbeatMessage(Self));
@@ -1101,6 +1110,42 @@ namespace VTC.Actors
             IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
 
             _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
+        }
+
+        private void CheckConfiguration()
+        {
+            if (_regionConfig == null)
+            {
+                Log("LoggingActor: RegionConfig is null.", LogLevel.Error);
+                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+            }
+            else if (_regionConfig.RoiMask == null)
+            {
+                Log("LoggingActor: ROI mask is null.", LogLevel.Error);
+                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+            }
+            else if (_regionConfig.RoiMask.Count < 3)
+            {
+                Log("LoggingActor: ROI mask has " + _regionConfig.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Error);
+                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+            }
+            else if (!_regionConfig.RoiMask.PolygonClosed)
+            {
+                Log("LoggingActor: ROI mask is not a closed polygon.", LogLevel.Error);
+                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+            }
+        }
+
+        private void UpdateConfigurationActor(IActorRef actorRef)
+        {
+            try
+            {
+                _configurationActor = actorRef;
+            }
+            catch (Exception ex)
+            {
+               Log("Exception in UpdateConfigurationActor:" + ex.Message, LogLevel.Error);
+            }
         }
     }
 }

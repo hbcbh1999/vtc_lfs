@@ -154,6 +154,7 @@ namespace VTC.Actors
             _configurationActor.Tell(new LoggingActorMessage(_loggingActor));
             _configurationActor.Tell(new SupervisorActorMessage(Self));
             _loggingActor.Tell(new SequencingActorMessage(_sequencingActor));
+            _loggingActor.Tell(new ConfigurationActorMessage(_configurationActor));
             IntroduceNewFrameGrabActor();
         }
 
