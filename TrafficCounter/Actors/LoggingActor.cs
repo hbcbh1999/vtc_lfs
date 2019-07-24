@@ -204,7 +204,7 @@ namespace VTC.Actors
 
         protected override void PreRestart(Exception cause, object msg)
         {
-            Log("Logging actor: restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
+            Log("Logging actor (PreRestart): restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
             base.PreRestart(cause, msg);
         }
 
@@ -215,7 +215,7 @@ namespace VTC.Actors
 
         protected override void PostRestart(Exception cause)
         {
-            Log("Logging actor: restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
+            Log("Logging actor (PostRestart): restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
             base.PostRestart(cause);
         }
 
@@ -286,7 +286,7 @@ namespace VTC.Actors
             }
             catch(NullReferenceException ex)
             {
-                Logger.Log(LogLevel.Error, ex.Message);
+                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedCounts):" + ex.Message);
                 ravenClient.Capture(new SentryEvent(ex));
             }
             
@@ -362,6 +362,8 @@ namespace VTC.Actors
             }
             Directory.CreateDirectory(folderPath);
 
+            Log("LoggingActor: CreateOrReplaceOutputFolderIfExists: " + folderPath, LogLevel.Info);
+
             _turnStats.Clear();
             _5MinTurnStats.Clear();
             _15MinTurnStats.Clear();
@@ -402,7 +404,7 @@ namespace VTC.Actors
             }
             catch(System.ArgumentException ex)
             {
-                Logger.Log(LogLevel.Error, ex.Message);
+                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex.Message);
                 ravenClient.Capture(new SentryEvent(ex));
             }
             
@@ -416,7 +418,7 @@ namespace VTC.Actors
                 }
                 catch(ArgumentException ex)
                 { 
-                    Logger.Log(LogLevel.Error, ex);
+                    Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex);
                 }
             }
 
@@ -435,7 +437,7 @@ namespace VTC.Actors
             }
             catch (FileNotFoundException ex)
             {
-                Logger.Log(LogLevel.Error, ex.Message);
+                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex.Message);
                 ravenClient.Capture(new SentryEvent(ex));
             }
 
@@ -462,7 +464,7 @@ namespace VTC.Actors
             }
             catch(System.ArgumentException ex)
             {
-                Logger.Log(LogLevel.Error, ex.Message);
+                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex.Message);
                 ravenClient.Capture(new SentryEvent(ex));
             }
             
@@ -476,7 +478,7 @@ namespace VTC.Actors
                 }
                 catch(ArgumentException ex)
                 { 
-                    Logger.Log(LogLevel.Error, ex);
+                    Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex);
                 }
             }
 
@@ -495,7 +497,7 @@ namespace VTC.Actors
             }
             catch (FileNotFoundException ex)
             {
-                Logger.Log(LogLevel.Error, ex.Message);
+                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex.Message);
                 ravenClient.Capture(new SentryEvent(ex));
             }
 
@@ -521,7 +523,7 @@ namespace VTC.Actors
             }
             catch (NullReferenceException e)
             {
-                Logger.Log(LogLevel.Error, e);
+                Logger.Log(LogLevel.Error, "LoggingActor (LogDetections):" + e);
                 ravenClient.Capture(new SentryEvent(e));
             }
         }
@@ -539,7 +541,7 @@ namespace VTC.Actors
             }
             catch (NullReferenceException e)
             {
-                Logger.Log(LogLevel.Error, e);
+                Logger.Log(LogLevel.Error, "LoggingActor (LogAssociations):" + e);
                 ravenClient.Capture(new SentryEvent(e));
             }
         }
@@ -626,7 +628,7 @@ namespace VTC.Actors
             }
             catch (NullReferenceException e)
             {
-                Logger.Log(LogLevel.Error, e);
+                Logger.Log(LogLevel.Error, "LoggingActor(GenerateReport):" + e);
             }
 
         }
@@ -677,7 +679,7 @@ namespace VTC.Actors
             catch (Exception ex)
             {
                 //TODO: Deal with exception
-                Logger.Log(LogLevel.Error, ex);
+                Logger.Log(LogLevel.Error, "LoggingActor(GenerateRegionsLegendImage):" + ex);
             }
         }
 
@@ -696,22 +698,22 @@ namespace VTC.Actors
 
             _liveMode = message.CaptureSource.IsLiveCapture();
             _fps = message.CaptureSource.FPS();
-
-            if(_liveMode)
-            {
-                UpdateFileCreationTime(DateTime.Now);
-            }
         }
 
         private void UpdateConfig(RegionConfig config)
         {
+            Log("LoggingActor: UpdateConfig", LogLevel.Info);
+
             _regionConfig = config;
 
             const string filename = "Synthetic Trajectories";
-            var folderPath = _currentOutputFolder;
-            var filepath = Path.Combine(folderPath, filename);
 
-            mts.GenerateSyntheticTrajectories(_regionConfig, filepath);
+            if (Directory.Exists(_currentOutputFolder))
+            {
+                var folderPath = _currentOutputFolder;
+                var filepath = Path.Combine(folderPath, filename);
+                mts.GenerateSyntheticTrajectories(_regionConfig, filepath);
+            }
         }
 
         private int _totalTrajectoriesCounted = 0;
@@ -792,7 +794,7 @@ namespace VTC.Actors
             }
             catch(Exception ex)
             { 
-                Logger.Log(LogLevel.Error,ex.Message);    
+                Logger.Log(LogLevel.Error, "LoggingActor(TrajectoryListHandler):" + ex.Message);    
             }
         }
 
@@ -1085,7 +1087,7 @@ namespace VTC.Actors
             }
             catch(Exception ex)
             {
-                Logger.Log(LogLevel.Error, ex);
+                Logger.Log(LogLevel.Error, "LoggingActor (CopyGroundTruth): " + ex);
             }
             
         }

@@ -19,8 +19,6 @@ namespace VTC.Kernel
 
         public void GenerateSyntheticTrajectories(RegionConfig regionConfig, string filepath)
         {
-            Console.WriteLine("Generating synthetic trajectories...");
-
             TrajectoryPrototypes.Clear();
 
             var approach1 = regionConfig.Regions.FirstOrDefault(kvp => kvp.Key.Contains("Approach 1")).Value;
@@ -39,35 +37,92 @@ namespace VTC.Kernel
             var sidewalk4 = regionConfig.Regions.FirstOrDefault(kvp => kvp.Key.Contains("Sidewalk 4")).Value;
 
             //TODO: Name assignment below is kind of a hack, should not be necessary.
-            approach1.DisplayName = "Approach 1";
-            approach2.DisplayName = "Approach 2";
-            approach3.DisplayName = "Approach 3";
-            approach4.DisplayName = "Approach 4";
+            if (approach1 != null)
+            {
+                approach1.DisplayName = "Approach 1";
+            }
 
-            exit1.DisplayName = "Exit 1";
-            exit2.DisplayName = "Exit 2";
-            exit3.DisplayName = "Exit 3";
-            exit4.DisplayName = "Exit 4";
+            if (approach2 != null)
+            {
+                approach2.DisplayName = "Approach 2";
+            }
 
-            sidewalk1.DisplayName = "Sidewalk 1";
-            sidewalk2.DisplayName = "Sidewalk 2";
-            sidewalk3.DisplayName = "Sidewalk 3";
-            sidewalk4.DisplayName = "Sidewalk 4";
+            if (approach3 != null)
+            {
+                approach3.DisplayName = "Approach 3";
+            }
+
+            if (approach4 != null)
+            {
+                approach4.DisplayName = "Approach 4";
+            }
+
+            if (exit1 != null)
+            {
+                exit1.DisplayName = "Exit 1";
+            }
+
+            if (exit2 != null)
+            {
+                exit2.DisplayName = "Exit 2";
+            }
+
+            if (exit3 != null)
+            {
+                exit3.DisplayName = "Exit 3";
+            }
+
+            if (exit4 != null)
+            {
+                exit4.DisplayName = "Exit 4";
+            }
+
+            if (sidewalk1 != null)
+            {
+                sidewalk1.DisplayName = "Sidewalk 1";
+            }
+
+            if (sidewalk2 != null)
+            {
+                sidewalk2.DisplayName = "Sidewalk 2";
+            }
+
+            if (sidewalk3 != null)
+            {
+                sidewalk3.DisplayName = "Sidewalk 3";
+            }
+
+            if (sidewalk4 != null)
+            {
+                sidewalk4.DisplayName = "Sidewalk 4";
+            }
 
             //Generate Straight movements
             var straightMovements = new List<Movement>();
 
-            var road1StraightMovements = ApproachExitPairToMovements(approach1, exit1, Turn.Straight, ObjectType.Car, 40);
-            straightMovements.AddRange(road1StraightMovements);
+            if (approach1 != null && exit1 != null)
+            {
+                var road1StraightMovements = ApproachExitPairToMovements(approach1, exit1, Turn.Straight, ObjectType.Car, 40);
+                straightMovements.AddRange(road1StraightMovements);
+            }
 
-            var road2StraightMovements = ApproachExitPairToMovements(approach2, exit2, Turn.Straight, ObjectType.Car, 40);
-            straightMovements.AddRange(road2StraightMovements);
+            if (approach2 != null && exit2 != null)
+            {
+                var road2StraightMovements = ApproachExitPairToMovements(approach2, exit2, Turn.Straight, ObjectType.Car, 40);
+                straightMovements.AddRange(road2StraightMovements);
+            }
 
-            var road3StraightMovements = ApproachExitPairToMovements(approach3, exit3, Turn.Straight, ObjectType.Car, 40);
-            straightMovements.AddRange(road3StraightMovements);
+            if (approach3 != null && exit3 != null)
+            {
+                var road3StraightMovements = ApproachExitPairToMovements(approach3, exit3, Turn.Straight, ObjectType.Car, 40);
+                straightMovements.AddRange(road3StraightMovements);
+            }
 
-            var road4StraightMovements = ApproachExitPairToMovements(approach4, exit4, Turn.Straight, ObjectType.Car, 40);
-            straightMovements.AddRange(road4StraightMovements);
+            if (approach4 != null && exit4 != null)
+            {
+                var road4StraightMovements = ApproachExitPairToMovements(approach4, exit4, Turn.Straight, ObjectType.Car, 40);
+                straightMovements.AddRange(road4StraightMovements);
+            }
             
             foreach(var m in straightMovements)
             { 
@@ -79,35 +134,54 @@ namespace VTC.Kernel
             //Generate turn movements
             var turnMovements = new List<Movement>();
 
-            var road12Movements = RoadPairToTurnMovements(approach1, exit1, approach2, exit2,Turn.Left, ObjectType.Car, 20);
-            turnMovements.AddRange(road12Movements);
-            var road21Movements = RoadPairToTurnMovements(approach2, exit2, approach1, exit1,Turn.Right, ObjectType.Car, 20);
-            turnMovements.AddRange(road21Movements);
+            if(approach1 != null && approach2 != null && exit1 != null && exit2 != null)
+            {
+                var road12Movements = RoadPairToTurnMovements(approach1, exit1, approach2, exit2, Turn.Left, ObjectType.Car, 20);
+                turnMovements.AddRange(road12Movements);
+                var road21Movements = RoadPairToTurnMovements(approach2, exit2, approach1, exit1, Turn.Right, ObjectType.Car, 20);
+                turnMovements.AddRange(road21Movements);
+            }
 
-            var road23Movements = RoadPairToTurnMovements(approach2, exit2, approach3, exit3,Turn.Left, ObjectType.Car, 20);
-            turnMovements.AddRange(road23Movements);
-            var road32Movements = RoadPairToTurnMovements(approach3, exit3, approach2, exit2,Turn.Right, ObjectType.Car, 20);
-            turnMovements.AddRange(road32Movements);
+            if (approach2 != null && approach3 != null && exit2 != null && exit3 != null)
+            {
+                var road23Movements = RoadPairToTurnMovements(approach2, exit2, approach3, exit3, Turn.Left, ObjectType.Car, 20);
+                turnMovements.AddRange(road23Movements);
+                var road32Movements = RoadPairToTurnMovements(approach3, exit3, approach2, exit2, Turn.Right, ObjectType.Car, 20);
+                turnMovements.AddRange(road32Movements);
+            }
 
-            var road34Movements = RoadPairToTurnMovements(approach3, exit3, approach4, exit4,Turn.Left, ObjectType.Car, 20);
-            turnMovements.AddRange(road34Movements);
-            var road43Movements = RoadPairToTurnMovements(approach4, exit4, approach3, exit3,Turn.Right, ObjectType.Car, 20);
-            turnMovements.AddRange(road43Movements);
+            if (approach3 != null && approach4 != null && exit3 != null && exit4 != null)
+            {
+                var road34Movements = RoadPairToTurnMovements(approach3, exit3, approach4, exit4, Turn.Left, ObjectType.Car, 20);
+                turnMovements.AddRange(road34Movements);
+                var road43Movements = RoadPairToTurnMovements(approach4, exit4, approach3, exit3, Turn.Right, ObjectType.Car, 20);
+                turnMovements.AddRange(road43Movements);
+            }
 
-            var road41Movements = RoadPairToTurnMovements(approach4, exit4, approach1, exit1,Turn.Left, ObjectType.Car, 20);
-            turnMovements.AddRange(road41Movements);
-            var road14Movements = RoadPairToTurnMovements(approach1, exit1, approach4, exit4,Turn.Right, ObjectType.Car, 20);
-            turnMovements.AddRange(road14Movements);
+            if (approach4 != null && approach1 != null && exit4 != null && exit1 != null)
+            {
+                var road41Movements = RoadPairToTurnMovements(approach4, exit4, approach1, exit1, Turn.Left, ObjectType.Car, 20);
+                turnMovements.AddRange(road41Movements);
+                var road14Movements = RoadPairToTurnMovements(approach1, exit1, approach4, exit4, Turn.Right, ObjectType.Car, 20);
+                turnMovements.AddRange(road14Movements);
+            }
 
             //U-Turns
-            var road13Movements = RoadPairToTurnMovements(approach1,exit1,approach3,exit3,Turn.UTurn, ObjectType.Car, 20);
-            turnMovements.AddRange(road13Movements);
-            var road24Movements = RoadPairToTurnMovements(approach2,exit2,approach4,exit4,Turn.UTurn, ObjectType.Car, 20);
-            turnMovements.AddRange(road24Movements);
-            var road31Movements = RoadPairToTurnMovements(approach3,exit3,approach1,exit1,Turn.UTurn, ObjectType.Car, 20);
-            turnMovements.AddRange(road31Movements);
-            var road42Movements = RoadPairToTurnMovements(approach4,exit4,approach2,exit2,Turn.UTurn, ObjectType.Car, 20);
-            turnMovements.AddRange(road42Movements);
+            if (approach1 != null && approach3 != null && exit1 != null && exit3 != null)
+            {
+                var road13Movements = RoadPairToTurnMovements(approach1, exit1, approach3, exit3, Turn.UTurn, ObjectType.Car, 20);
+                turnMovements.AddRange(road13Movements);
+                var road31Movements = RoadPairToTurnMovements(approach3, exit3, approach1, exit1, Turn.UTurn, ObjectType.Car, 20);
+                turnMovements.AddRange(road31Movements);
+            }
+
+            if (approach2 != null && approach4 != null && exit2 != null && exit4 != null)
+            {
+                var road24Movements = RoadPairToTurnMovements(approach2, exit2, approach4, exit4, Turn.UTurn, ObjectType.Car, 20);
+                turnMovements.AddRange(road24Movements);
+                var road42Movements = RoadPairToTurnMovements(approach4, exit4, approach2, exit2, Turn.UTurn, ObjectType.Car, 20);
+                turnMovements.AddRange(road42Movements);
+            }
 
             foreach(var m in turnMovements)
             { 
@@ -119,29 +193,41 @@ namespace VTC.Kernel
             //Generate pedestrian Crossing movements
             var pedestrianMovements = new List<Movement>();
 
-            var crossing12Movements = ApproachExitPairToMovements(sidewalk1, sidewalk2, Turn.Crossing, ObjectType.Person, 4);
-            pedestrianMovements.AddRange(crossing12Movements);
+            if (sidewalk1 != null && sidewalk2 != null)
+            {
+                var crossing12Movements = ApproachExitPairToMovements(sidewalk1, sidewalk2, Turn.Crossing, ObjectType.Person, 4);
+                pedestrianMovements.AddRange(crossing12Movements);
 
-            var crossing21Movements = ApproachExitPairToMovements(sidewalk2, sidewalk1, Turn.Crossing, ObjectType.Person, 4);
-            pedestrianMovements.AddRange(crossing21Movements);
+                var crossing21Movements = ApproachExitPairToMovements(sidewalk2, sidewalk1, Turn.Crossing, ObjectType.Person, 4);
+                pedestrianMovements.AddRange(crossing21Movements);
+            }
 
-            var crossing23Movements = ApproachExitPairToMovements(sidewalk2, sidewalk3, Turn.Crossing, ObjectType.Person, 4);
-            pedestrianMovements.AddRange(crossing23Movements);
+            if (sidewalk3 != null && sidewalk2 != null)
+            {
+                var crossing23Movements = ApproachExitPairToMovements(sidewalk2, sidewalk3, Turn.Crossing, ObjectType.Person, 4);
+                pedestrianMovements.AddRange(crossing23Movements);
 
-            var crossing32Movements = ApproachExitPairToMovements(sidewalk3, sidewalk2, Turn.Crossing, ObjectType.Person, 4);
-            pedestrianMovements.AddRange(crossing32Movements);
+                var crossing32Movements = ApproachExitPairToMovements(sidewalk3, sidewalk2, Turn.Crossing, ObjectType.Person, 4);
+                pedestrianMovements.AddRange(crossing32Movements);
+            }
 
-            var crossing34Movements = ApproachExitPairToMovements(sidewalk3, sidewalk4, Turn.Crossing, ObjectType.Person, 4);
-            pedestrianMovements.AddRange(crossing34Movements);
+            if (sidewalk3 != null && sidewalk4 != null)
+            {
+                var crossing34Movements = ApproachExitPairToMovements(sidewalk3, sidewalk4, Turn.Crossing, ObjectType.Person, 4);
+                pedestrianMovements.AddRange(crossing34Movements);
 
-            var crossing43Movements = ApproachExitPairToMovements(sidewalk4, sidewalk3, Turn.Crossing, ObjectType.Person, 4);
-            pedestrianMovements.AddRange(crossing43Movements);
+                var crossing43Movements = ApproachExitPairToMovements(sidewalk4, sidewalk3, Turn.Crossing, ObjectType.Person, 4);
+                pedestrianMovements.AddRange(crossing43Movements);
+            }
 
-            var crossing14Movements = ApproachExitPairToMovements(sidewalk1, sidewalk4, Turn.Crossing, ObjectType.Person, 4);
-            pedestrianMovements.AddRange(crossing14Movements);
+            if (sidewalk1 != null && sidewalk4 != null)
+            {
+                var crossing14Movements = ApproachExitPairToMovements(sidewalk1, sidewalk4, Turn.Crossing, ObjectType.Person, 4);
+                pedestrianMovements.AddRange(crossing14Movements);
 
-            var crossing41Movements = ApproachExitPairToMovements(sidewalk4, sidewalk1, Turn.Crossing, ObjectType.Person, 4);
-            pedestrianMovements.AddRange(crossing41Movements);
+                var crossing41Movements = ApproachExitPairToMovements(sidewalk4, sidewalk1, Turn.Crossing, ObjectType.Person, 4);
+                pedestrianMovements.AddRange(crossing41Movements);
+            }
 
             foreach(var m in pedestrianMovements)
             { 
@@ -152,8 +238,6 @@ namespace VTC.Kernel
 
             var examplePaths = GenerateExamplePathTrajectories(regionConfig, filepath);
             TrajectoryPrototypes.AddRange(examplePaths);
-
-            Console.WriteLine("Synthetic trajectory generation finished.");
         }
 
         List<Movement> GenerateExamplePathTrajectories(RegionConfig config, string filepath)
