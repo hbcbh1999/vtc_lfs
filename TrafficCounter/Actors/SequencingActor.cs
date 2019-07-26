@@ -140,7 +140,7 @@ namespace VTC.Actors
             else
             {
                 UserLog("Batch complete.");
-                UserLog("Movement counts saved to desktop.");
+                UserLog("Movement counts saved to " + _userConfig.OutputPath);
             }
         }
 

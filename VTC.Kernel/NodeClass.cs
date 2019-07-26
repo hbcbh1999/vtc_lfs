@@ -344,21 +344,22 @@ namespace VTC.Kernel
         }
 
         public DenseMatrix Q(double dt, double size)
-        { 
+        {
+            var radius = Math.Sqrt(size);
             var m = new DenseMatrix(8, 8)
             {
-                [0, 0] = (dt*dt*dt*dt/4)*_qPosition,
-                [0, 1] = (dt*dt*dt/3)*_qPosition,
-                [1, 0] = (dt*dt*dt/3)*_qPosition,
-                [1, 1] = (dt*dt/2)*_qPosition,
-                [2, 2] = (dt*dt*dt*dt/4)*_qPosition,
-                [2, 3] = (dt*dt*dt/3)*_qPosition,
-                [3, 2] = (dt*dt*dt/3)*_qPosition,
-                [3, 3] = (dt*dt/2)*_qPosition,
+                [0, 0] = (dt*dt*dt*dt/4)*_qPosition * radius,
+                [0, 1] = (dt*dt*dt/3)* _qPosition * radius,
+                [1, 0] = (dt*dt*dt/3)* _qPosition * radius,
+                [1, 1] = (dt*dt/2)* _qPosition * radius,
+                [2, 2] = (dt*dt*dt*dt/4)* _qPosition * radius,
+                [2, 3] = (dt*dt*dt/3)* _qPosition * radius,
+                [3, 2] = (dt*dt*dt/3)* _qPosition * radius,
+                [3, 3] = (dt*dt/2)* _qPosition * radius,
                 [4, 4] = _qColor,
                 [5, 5] = _qColor,
                 [6, 6] = _qColor,
-                [7, 7] = _qSize
+                [7, 7] = _qSize * radius
             }; //Process covariance
 
             return m;
