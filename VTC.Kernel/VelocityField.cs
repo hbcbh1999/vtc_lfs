@@ -30,7 +30,7 @@ namespace VTC.Kernel
         private readonly int _sourceWidth;
         private readonly int _sourceHeight;
         private const double Alpha = 0.001;
-        private const int DistanceThreshold = 2;
+        private const int DistanceThreshold = 6;
         private readonly Mutex _updateMutex = new Mutex();
 
         public Image<Gray, Byte> ProjectedPointsImage;
@@ -126,10 +126,14 @@ namespace VTC.Kernel
 
                         if (point.DistanceTo(neighbors[nearest]) < DistanceThreshold)
                         {
-                            var vx = _velocityField[x, y].Vx * (1 - Alpha);
+                            var distanceDivisor = point.DistanceTo(neighbors[nearest]) > 1
+                                ? point.DistanceTo(neighbors[nearest])
+                                : 1;
+
+                            var vx = _velocityField[x, y].Vx * (1 - Alpha) / distanceDivisor;
                             vx += (velocities[nearest].Vx * Alpha);
 
-                            var vy = _velocityField[x, y].Vy * (1 - Alpha);
+                            var vy = _velocityField[x, y].Vy * (1 - Alpha) / distanceDivisor;
                             vy += (velocities[nearest].Vy * Alpha);
 
                             _velocityField[x, y].Vx = vx;

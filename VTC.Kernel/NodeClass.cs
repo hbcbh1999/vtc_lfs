@@ -359,7 +359,7 @@ namespace VTC.Kernel
                 [4, 4] = _qColor,
                 [5, 5] = _qColor,
                 [6, 6] = _qColor,
-                [7, 7] = _qSize * radius
+                [7, 7] = _qSize * radius * radius
             }; //Process covariance
 
             return m;
