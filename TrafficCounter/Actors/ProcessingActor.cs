@@ -106,7 +106,7 @@ namespace VTC.Actors
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 5*60000, Self, new RequestBackgroundFrameMessage(), Self);
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 5*60000, Self, new ValidateConfigurationMessage(), Self);
 
-                _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug));
+                _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug, "ProcessingActor"));
             }
             catch (Exception ex)
             {
@@ -154,12 +154,12 @@ namespace VTC.Actors
         {
             try
             {
-                _loggingActor?.Tell(new LogMessage("ProcessingActor received UpdateVideoDimensionsMessage.", LogLevel.Debug));
-                _loggingActor?.Tell(new LogMessage("ProcessingActor: creating new Vista.", LogLevel.Debug));
+                _loggingActor?.Tell(new LogMessage("ProcessingActor received UpdateVideoDimensionsMessage.", LogLevel.Debug, "ProcessingActor"));
+                _loggingActor?.Tell(new LogMessage("ProcessingActor: creating new Vista.", LogLevel.Debug, "ProcessingActor"));
                 _vista._height = message.Height;
                 _vista._width = message.Width;
                 _vista.UpdateRegionConfiguration(_config);
-                _loggingActor?.Tell(new LogMessage($"cpuMode: {_vista._yoloClassifier.cpuMode}", LogLevel.Debug));
+                _loggingActor?.Tell(new LogMessage($"cpuMode: {_vista._yoloClassifier.cpuMode}", LogLevel.Debug, "ProcessingActor"));
             }
             catch (Exception ex)
             {
@@ -187,7 +187,7 @@ namespace VTC.Actors
             _processedFramesStartTime = DateTime.Now;
             _processedFramesThisBin = 0;
             _fps = fps;
-            _loggingActor.Tell(new LogMessage($"FPS: {_fps}", LogLevel.Debug));
+            _loggingActor.Tell(new LogMessage($"FPS: {_fps}", LogLevel.Debug, "ProcessingActor"));
         }
 
         private void UpdateConfig(RegionConfig config)
@@ -264,22 +264,22 @@ namespace VTC.Actors
         {
             if (_config == null)
             {
-                _loggingActor.Tell(new LogMessage("RegionConfig is null.", LogLevel.Error));
+                _loggingActor.Tell(new LogMessage("RegionConfig is null.", LogLevel.Error, "ProcessingActor"));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
             }
             else if (_config.RoiMask == null)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is null.", LogLevel.Error));
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is null.", LogLevel.Error, "ProcessingActor"));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
             }
             else if (_config.RoiMask.Count < 3)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask has " + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Error));
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask has " + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Error, "ProcessingActor"));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
             }
             else if (!_config.RoiMask.PolygonClosed)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is not a closed polygon.", LogLevel.Error));
+                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is not a closed polygon.", LogLevel.Error, "ProcessingActor"));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
             }
         }

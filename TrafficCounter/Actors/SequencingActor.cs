@@ -98,7 +98,7 @@ namespace VTC.Actors
         {
             if(_currentJob == null)
             {
-                _loggingActor.Tell(new LogMessage("SequencingActor thinks a non-existant job has completed. This can happen with unreliable IP-camera streams.", LogLevel.Error));
+                _loggingActor.Tell(new LogMessage("SequencingActor thinks a non-existant job has completed. This can happen with unreliable IP-camera streams.", LogLevel.Error, "SequencingActor"));
                 return;
             }
             
@@ -109,7 +109,7 @@ namespace VTC.Actors
         {
             if (_videoJobs.Count > 0)
             {
-                _loggingActor?.Tell(new LogUserMessage("Loading video from batch", LogLevel.Info));
+                _loggingActor?.Tell(new LogUserMessage("Loading video from batch", LogLevel.Info, "SequencingActor"));
                 _currentJob = _videoJobs.First();
 
                 if (_currentJob.RegionConfiguration != null)
@@ -158,12 +158,12 @@ namespace VTC.Actors
 
         private void Log(LogLevel logLevel, string text)
         {
-            _loggingActor?.Tell(new LogMessage(text, logLevel));
+            _loggingActor?.Tell(new LogMessage(text, logLevel, "SequencingActor"));
         }
 
         private void UserLog(string text)
         {
-            _loggingActor?.Tell(new LogUserMessage(text, LogLevel.Info));
+            _loggingActor?.Tell(new LogUserMessage(text, LogLevel.Info, "SequencingActor"));
         }
 
         private void UpdateLoggingActor(IActorRef actorRef)

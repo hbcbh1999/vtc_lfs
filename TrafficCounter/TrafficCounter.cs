@@ -367,13 +367,13 @@ namespace VTC
         private void Log(LogLevel logLevel, string text)
         {
             var loggingActor = _actorSystem?.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
-            loggingActor?.Tell(new LogMessage(text, logLevel));
+            loggingActor?.Tell(new LogMessage(text, logLevel, "TrafficCounter"));
         }
 
         private void UserLog(string text)
         {
             var loggingActor = _actorSystem?.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
-            loggingActor?.Tell(new LogUserMessage(text, LogLevel.Info));
+            loggingActor?.Tell(new LogUserMessage(text, LogLevel.Info, "TrafficCounter"));
         }
 
        private void PushStateProcess(object sender, EventArgs e)

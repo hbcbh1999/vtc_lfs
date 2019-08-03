@@ -85,11 +85,11 @@ namespace VTC.Actors
             );
 
             Receive<LogMessage>(message =>
-                Log(message.Text, message.Level)
+                Log(message.Text, message.Level, message.ActorName)
             );
 
             Receive<LogUserMessage>(message =>
-                LogUser(message.Text, message.Level)
+                LogUser(message.Text, message.Level, message.ActorName)
             );
 
             Receive<GenerateReportMessage>(message =>
@@ -194,7 +194,7 @@ namespace VTC.Actors
 
             //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(1,0,0),new TimeSpan(1,0,0),Self, new GenerateDailyReportMessage(), Self);
 
-            Logger.Log(LogLevel.Info, "LoggingActor initialized.");
+            Log("LoggingActor initialized.", LogLevel.Info, "LoggingActor");
         }
 
         protected override void PreStart()
@@ -204,7 +204,7 @@ namespace VTC.Actors
 
         protected override void PreRestart(Exception cause, object msg)
         {
-            Log("Logging actor (PreRestart): restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
+            Log("(PreRestart) Restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error, "LoggingActor");
             base.PreRestart(cause, msg);
         }
 
@@ -215,13 +215,13 @@ namespace VTC.Actors
 
         protected override void PostRestart(Exception cause)
         {
-            Log("Logging actor (PostRestart): restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error);
+            Log("(PostRestart) restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error, "LoggingActor");
             base.PostRestart(cause);
         }
 
         private void UpdateFileCreationTime(DateTime dt)
         {
-            Logger.Log(LogLevel.Info, "LoggingActor: new file creation time " + dt);
+            Log("New file creation time " + dt, LogLevel.Info, "LoggingActor");
             _videoStartTime = dt;
             SetAllNextBinTime(dt);
         }
@@ -286,7 +286,7 @@ namespace VTC.Actors
             }
             catch(NullReferenceException ex)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedCounts):" + ex.Message);
+                Log("(WriteBinnedCounts) " + ex.Message, LogLevel.Error, "LoggingActor");
                 ravenClient.Capture(new SentryEvent(ex));
             }
             
@@ -362,7 +362,7 @@ namespace VTC.Actors
             }
             Directory.CreateDirectory(folderPath);
 
-            Log("LoggingActor: CreateOrReplaceOutputFolderIfExists: " + folderPath, LogLevel.Info);
+            Log("(CreateOrReplaceOutputFolderIfExists) " + folderPath, LogLevel.Info, "LoggingActor");
 
             _turnStats.Clear();
             _5MinTurnStats.Clear();
@@ -404,7 +404,7 @@ namespace VTC.Actors
             }
             catch(System.ArgumentException ex)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex.Message);
+                Log("(WriteBinnedMovementsToFile) " + ex.Message, LogLevel.Error, "LoggingActor");
                 ravenClient.Capture(new SentryEvent(ex));
             }
             
@@ -418,7 +418,7 @@ namespace VTC.Actors
                 }
                 catch(ArgumentException ex)
                 { 
-                    Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex);
+                    Log("(WriteBinnedMovementsToFile) " + ex, LogLevel.Error, "LoggingActor");
                 }
             }
 
@@ -437,7 +437,7 @@ namespace VTC.Actors
             }
             catch (FileNotFoundException ex)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex.Message);
+                Log("(WriteBinnedMovementsToFile) " + ex.Message, LogLevel.Error, "LoggingActor");
                 ravenClient.Capture(new SentryEvent(ex));
             }
 
@@ -464,7 +464,7 @@ namespace VTC.Actors
             }
             catch(System.ArgumentException ex)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex.Message);
+                Log("(WriteBinnedMovementsToFile) " + ex.Message, LogLevel.Error, "LoggingActor");
                 ravenClient.Capture(new SentryEvent(ex));
             }
             
@@ -478,7 +478,7 @@ namespace VTC.Actors
                 }
                 catch(ArgumentException ex)
                 { 
-                    Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex);
+                    Log("(WriteBinnedMovementsToFile) " + ex, LogLevel.Error, "LoggingActor");
                 }
             }
 
@@ -497,7 +497,7 @@ namespace VTC.Actors
             }
             catch (FileNotFoundException ex)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor (WriteBinnedMovementsToFile):" + ex.Message);
+                Log("(WriteBinnedMovementsToFile) " + ex.Message, LogLevel.Error, "LoggingActor");
                 ravenClient.Capture(new SentryEvent(ex));
             }
 
@@ -508,7 +508,7 @@ namespace VTC.Actors
         {
             if (_currentOutputFolder == null)
             {
-                Log("LoggingActor: _currentOutputFolder is null in LogDetections.", LogLevel.Error);
+                Log("_currentOutputFolder is null in LogDetections.", LogLevel.Error, "LoggingActor");
                 return;
             }
 
@@ -523,7 +523,7 @@ namespace VTC.Actors
             }
             catch (NullReferenceException e)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor (LogDetections):" + e);
+                Log("(LogDetections) " + e, LogLevel.Error, "LoggingActor");
                 ravenClient.Capture(new SentryEvent(e));
             }
         }
@@ -541,21 +541,21 @@ namespace VTC.Actors
             }
             catch (NullReferenceException e)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor (LogAssociations):" + e);
+                Log("(LogAssociations) " + e, LogLevel.Error, "LoggingActor");
                 ravenClient.Capture(new SentryEvent(e));
             }
         }
 
-        private void Log(string text, LogLevel level)
+        private void Log(string text, LogLevel level, string actorName)
         {
-            Logger.Log(level, text);
+            Logger.Log(level, actorName + ":" + text);
             if (level == LogLevel.Error)
             {
                 ravenClient.Capture(new SentryEvent(text));
             }
         }
 
-        private void LogUser(string text, LogLevel level)
+        private void LogUser(string text, LogLevel level, string actorName)
         {
             UserLogger.Log(level, text);
             _updateInfoUiDelegate?.Invoke(text);
@@ -628,7 +628,7 @@ namespace VTC.Actors
             }
             catch (NullReferenceException e)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor(GenerateReport):" + e);
+                Logger.Log(LogLevel.Error, "(GenerateReport) " + e);
             }
 
         }
@@ -679,13 +679,13 @@ namespace VTC.Actors
             catch (Exception ex)
             {
                 //TODO: Deal with exception
-                Logger.Log(LogLevel.Error, "LoggingActor(GenerateRegionsLegendImage):" + ex);
+                Logger.Log(LogLevel.Error, "(GenerateRegionsLegendImage) " + ex);
             }
         }
 
         private void UpdateVideoSourceInfo(NewVideoSourceMessage message)
         {
-            Logger.Log(LogLevel.Info, "LoggingActor: new video source " + message.CaptureSource.Name);
+            Logger.Log(LogLevel.Info, "New video source " + message.CaptureSource.Name);
 
             _currentVideoName = message.CaptureSource.Name;
             CreateOrReplaceOutputFolderIfExists();
@@ -702,18 +702,24 @@ namespace VTC.Actors
 
         private void UpdateConfig(RegionConfig config)
         {
-            Log("LoggingActor: UpdateConfig", LogLevel.Info);
+            Log("(UpdateConfig) ", LogLevel.Info, "LoggingActor");
 
-            _regionConfig = config;
-
-            const string filename = "Synthetic Trajectories";
-
-            if (Directory.Exists(_currentOutputFolder))
+            try
             {
-                var folderPath = _currentOutputFolder;
-                var filepath = Path.Combine(folderPath, filename);
-                mts.GenerateSyntheticTrajectories(_regionConfig, filepath);
+                _regionConfig = config;
+                const string filename = "Synthetic Trajectories";
+                if (Directory.Exists(_currentOutputFolder))
+                {
+                    var folderPath = _currentOutputFolder;
+                    var filepath = Path.Combine(folderPath, filename);
+                    mts.GenerateSyntheticTrajectories(_regionConfig, filepath);
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, "(UpdateConfig) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite);
+            }
+
         }
 
         private int _totalTrajectoriesCounted = 0;
@@ -721,25 +727,26 @@ namespace VTC.Actors
         {
             if (_regionConfig == null)
             {
-                Log("LoggingActor: _regionConfig is null in TrajectoryListHandler.", LogLevel.Error);
+                Log("_regionConfig is null in TrajectoryListHandler.", LogLevel.Error, "LoggingActor");
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
                 return;
             }
 
             if (_yoloNameMapping == null)
             {
-                Log("LoggingActor: _yoloNameMapping is null in TrajectoryListHandler.", LogLevel.Error);
+                Log("_yoloNameMapping is null in TrajectoryListHandler.", LogLevel.Error, "LoggingActor");
                 return;
             }
 
             if (_currentOutputFolder == null)
             {
-                Log("LoggingActor: _currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error);
+                Log("_currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error, "LoggingActor");
                 return;
             }
 
             if (_userConfig == null)
             {
-                Log("_userConfig: _currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error);
+                Log("_userConfig: _currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error, "LoggingActor");
                 return;
             }
 
@@ -751,7 +758,7 @@ namespace VTC.Actors
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
                             _yoloNameMapping.IntegerToObjectName);
 
-                    if (mostLikelyClassType == "person" && _userConfig.CountPedestriansAsMotorcycles)
+                    if (mostLikelyClassType == "person" && _regionConfig.CountPedestriansAsMotorcycles)
                     {
                         mostLikelyClassType = "motorcycle";
                     }
@@ -780,7 +787,7 @@ namespace VTC.Actors
                         var rsr = rs.SendMovement(editedMovement, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
                         if (rsr != HttpStatusCode.OK)
                         {
-                            Log("Movement POST failed:" + rsr, LogLevel.Error);
+                            Log("Movement POST failed:" + rsr, LogLevel.Error, "LoggingActor");
                         }
                     }
 
@@ -794,7 +801,7 @@ namespace VTC.Actors
             }
             catch(Exception ex)
             { 
-                Logger.Log(LogLevel.Error, "LoggingActor(TrajectoryListHandler):" + ex.Message);    
+                Log("(TrajectoryListHandler) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite, LogLevel.Error, "LoggingActor");
             }
         }
 
@@ -867,19 +874,20 @@ namespace VTC.Actors
             {
                 if (image == null)
                 {
-                    Log("LoggingActor: received null-image in UpdateBackgroundFrame.", LogLevel.Error);
+                    Log("received null-image in UpdateBackgroundFrame.", LogLevel.Error, "LoggingActor");
                     return;
                 }
 
                 if (_regionConfig == null)
                 {
-                    Log("LoggingActor: _regionConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
+                    Log("_regionConfig is null in UpdateBackgroundFrame.", LogLevel.Error, "LoggingActor");
+                    _configurationActor?.Tell(new RequestConfigurationMessage(Self));
                     return;
                 }
 
                 if (_userConfig == null)
                 {
-                    Log("LoggingActor: _userConfig is null in UpdateBackgroundFrame.", LogLevel.Error);
+                    Log("_userConfig is null in UpdateBackgroundFrame.", LogLevel.Error, "LoggingActor");
                     return;
                 }
 
@@ -893,13 +901,13 @@ namespace VTC.Actors
 
                     if (rsr != HttpStatusCode.OK)
                     {
-                        Log("Image-upload failed:" + rsr, LogLevel.Error);
+                        Log("Image-upload failed:" + rsr, LogLevel.Error, "LoggingActor");
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log("LoggingActor: " + ex.Message + " at " + ex.StackTrace, LogLevel.Error);
+                Log("(UpdateBackgroundFrame) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite, LogLevel.Error, "LoggingActor");
             }
 
         }
@@ -1021,7 +1029,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateStatsUiHandler:" + ex.Message);
+                MessageBox.Show("(UpdateStatsUiHandler) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite);
             }
         }
 
@@ -1033,7 +1041,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateInfoUiHandler:" + ex.Message);
+                MessageBox.Show("(UpdateInfoUiHandler) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite);
             }
         }
 
@@ -1045,7 +1053,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateDebugDelegate:" + ex.Message);
+                MessageBox.Show("(UpdateDebugDelegate) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite);
             }
         }
 
@@ -1063,7 +1071,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateSequencingActor:" + ex.Message);
+                MessageBox.Show("(UpdateSequencingActor) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite);
             }
         }
 
@@ -1078,7 +1086,7 @@ namespace VTC.Actors
             {
                 if (groundTruthPath == null)
                 {
-                    Log("Logging actor: Ground truth file path is null.", LogLevel.Info);
+                    Log("Ground truth file path is null.", LogLevel.Info, "LoggingActor");
                     return;
                 }
                 var folderPath = _currentOutputFolder;
@@ -1087,7 +1095,7 @@ namespace VTC.Actors
             }
             catch(Exception ex)
             {
-                Logger.Log(LogLevel.Error, "LoggingActor (CopyGroundTruth): " + ex);
+                Log("(CopyGroundTruth) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite, LogLevel.Error, "LoggingActor");
             }
             
         }
@@ -1122,23 +1130,23 @@ namespace VTC.Actors
         {
             if (_regionConfig == null)
             {
-                Log("LoggingActor: RegionConfig is null.", LogLevel.Error);
-                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+                Log("RegionConfig is null.", LogLevel.Error, "LoggingActor");
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
             }
             else if (_regionConfig.RoiMask == null)
             {
-                Log("LoggingActor: ROI mask is null.", LogLevel.Error);
-                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+                Log("ROI mask is null.", LogLevel.Error, "LoggingActor");
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
             }
             else if (_regionConfig.RoiMask.Count < 3)
             {
-                Log("LoggingActor: ROI mask has " + _regionConfig.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Error);
-                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+                Log("ROI mask has " + _regionConfig.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Error, "LoggingActor");
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
             }
             else if (!_regionConfig.RoiMask.PolygonClosed)
             {
-                Log("LoggingActor: ROI mask is not a closed polygon.", LogLevel.Error);
-                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+                Log("ROI mask is not a closed polygon.", LogLevel.Error, "LoggingActor");
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
             }
         }
 
@@ -1150,7 +1158,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-               Log("Exception in UpdateConfigurationActor:" + ex.Message, LogLevel.Error);
+               Log("(UpdateConfigurationActor) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite, LogLevel.Error, "LoggingActor");
             }
         }
     }

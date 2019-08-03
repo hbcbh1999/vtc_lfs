@@ -9,11 +9,12 @@ namespace VTC.Messages
 {
     class LogUserMessage : StringMessage
     {
-        public LogUserMessage(string text, LogLevel level) : base(text)
+        public LogUserMessage(string text, LogLevel level, string actorName) : base(text)
         {
             Level = level;
         }
 
         public LogLevel Level { get; private set; }
+        public string ActorName { get; private set; }
     }
 }

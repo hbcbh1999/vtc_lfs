@@ -202,11 +202,11 @@ namespace VTC.Actors
             }
             // Update regionconfigs with any possible changes
             _regionConfigs = _regionConfigDataAccessLayer.LoadRegionConfigList();
-            _loggingActor.Tell(new LogUserMessage("Region configuration updated.", LogLevel.Info));
+            _loggingActor.Tell(new LogUserMessage("Region configuration updated.", LogLevel.Info, "ConfigurationActor"));
             }
             catch (Exception ex)
             {
-                _loggingActor.Tell(new LogMessage("Exception in btnConfigureRegions_Click: " + ex.Message, LogLevel.Error));
+                _loggingActor.Tell(new LogMessage("Exception in btnConfigureRegions_Click: " + ex.Message, LogLevel.Error, "ConfigurationActor"));
 #if DEBUG
                 MessageBox.Show("Region configuration failed: " + ex.Message);
                 throw;
@@ -248,7 +248,7 @@ namespace VTC.Actors
             }
             else
             {
-                _loggingActor.Tell(new LogUserMessage("Configuration-request failed; configuration is null.", LogLevel.Error));
+                _loggingActor.Tell(new LogUserMessage("Configuration-request failed; configuration is null.", LogLevel.Error, "ConfigurationActor"));
             }
         }
     }

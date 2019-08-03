@@ -220,12 +220,12 @@ namespace VTC.Actors
                 _frameGrabActor.Tell(new GetNextFrameMessage());
 
                 _loggingActor?.Tell(
-                    new LogMessage("Supervisor Actor: Frame-grab actor is restarted using live source " + _captureSource.Name, LogLevel.Debug));
+                    new LogMessage("Supervisor Actor: Frame-grab actor is restarted using live source " + _captureSource.Name, LogLevel.Debug, "SupervisorActor"));
             }
             else
             {
                 _loggingActor?.Tell(
-                    new LogMessage("Supervisor Actor: Frame-grab actor is restarted. No live source.", LogLevel.Debug));
+                    new LogMessage("Supervisor Actor: Frame-grab actor is restarted. No live source.", LogLevel.Debug, "SupervisorActor"));
             }
         }
 
@@ -242,7 +242,7 @@ namespace VTC.Actors
             if (timeSinceFrameGrabHeartbeat.Seconds > 60)
             {
                 _loggingActor?.Tell(
-                    new LogMessage("Supervisor Actor: FrameGrab Actor heartbeat is stale, restarting.", LogLevel.Debug));
+                    new LogMessage("Supervisor Actor: FrameGrab Actor heartbeat is stale, restarting.", LogLevel.Debug, "SupervisorActor"));
                 RestartFrameGrabActor();
             }
         }

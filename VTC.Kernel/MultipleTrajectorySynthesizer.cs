@@ -256,6 +256,15 @@ namespace VTC.Kernel
                     stateEstimates.Add(se);
                 }
 
+                if (stateEstimates.Count < 2)
+                {
+                    //I'm not entirely sure why this is necessary, but logs from a user computer where the LoggingActor is crashing
+                    //suggest that cases are occuring where the length of the stateEstimates list is less than 2, because accessing it at index 1
+                    //causes a crash. 
+                    //TODO: Investigate how it's possible for the stateEstimates length to be 2 or less (maybe the path is just drawn with 2 points?).
+                    continue;
+                }
+
                 for (int i = 1; i < stateEstimates.Count; i++)
                 {
                     stateEstimates[i].Vx = stateEstimates[i].X - stateEstimates[i - 1].X;

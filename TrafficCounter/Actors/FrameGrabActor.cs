@@ -115,7 +115,7 @@ namespace VTC.Actors
 
             //Use hard-coded VGA resolution instead of captureSource.Width / captureSource.Height
             ProcessingActor.Tell(new UpdateVideoDimensionsMessage(640, 480));
-            LoggingActor.Tell(new LogMessage($"CaptureSource: {captureSource.Name}", LogLevel.Debug));
+            LoggingActor.Tell(new LogMessage($"CaptureSource: {captureSource.Name}", LogLevel.Debug, "FrameGrabActor"));
         }
 
         private void GetNewFrame()
@@ -152,10 +152,10 @@ namespace VTC.Actors
                 if (NullFrameCount > NullFrameThreshold)
                 {
                     LoggingActor.Tell(
-                        new LogMessage("Null-frame threshold, performing error-recovery.", LogLevel.Debug));
+                        new LogMessage("Null-frame threshold, performing error-recovery.", LogLevel.Debug, "FrameGrabActor"));
                     LiveCameraErrorRecovery();
                     LoggingActor.Tell(
-                        new LogMessage("Error-recovery complete.", LogLevel.Debug));
+                        new LogMessage("Error-recovery complete.", LogLevel.Debug, "FrameGrabActor"));
                     NullFrameCount = 0;
                 }
 
@@ -166,10 +166,10 @@ namespace VTC.Actors
 
                 if (LowFpsCount > LowFpsCountThreshold)
                 {
-                    LoggingActor.Tell(new LogMessage("Frame-rate low, performing error-recovery.", LogLevel.Debug));
+                    LoggingActor.Tell(new LogMessage("Frame-rate low, performing error-recovery.", LogLevel.Debug, "FrameGrabActor"));
                     LiveCameraErrorRecovery();
                     LoggingActor.Tell(
-                        new LogMessage("Error-recovery complete.", LogLevel.Debug));
+                        new LogMessage("Error-recovery complete.", LogLevel.Debug, "FrameGrabActor"));
                     LowFpsCount = 0;
                 }
 
@@ -185,21 +185,21 @@ namespace VTC.Actors
                 {
                     //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
                     LoggingActor.Tell(new LogMessage("Capture returned null-frame. Pausing to allow camera recovery.",
-                        LogLevel.Debug));
+                        LogLevel.Debug, "FrameGrabActor"));
                     System.Threading.Thread.Sleep(10000);
                     LoggingActor.Tell(new LogMessage("Pause complete.",
-                        LogLevel.Debug));
+                        LogLevel.Debug, "FrameGrabActor"));
                     Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
                     return; 
                 }
 
                 ProcessingActor?.Tell(new CaptureSourceCompleteMessage());
-                LoggingActor?.Tell(new LogUserMessage("Video complete", LogLevel.Info));
+                LoggingActor?.Tell(new LogUserMessage("Video complete", LogLevel.Info, "FrameGrabActor"));
             }
             catch (TimeoutException ex)
             {
                 LoggingActor.Tell(
-                    new LogMessage("Frame-query timeout, performing error-recovery.", LogLevel.Debug));
+                    new LogMessage("Frame-query timeout, performing error-recovery.", LogLevel.Debug, "FrameGrabActor"));
                 LiveCameraErrorRecovery();
             }
 
@@ -317,7 +317,7 @@ namespace VTC.Actors
             if (CaptureSource is IpCamera oldCaptureSource)
             {
                 LoggingActor.Tell(
-                    new LogMessage("Error-recovery: deleting and re-initializing CaptureSource: " + oldCaptureSource.Name + " @ " + oldCaptureSource.ConnectionString, LogLevel.Debug));
+                    new LogMessage("Error-recovery: deleting and re-initializing CaptureSource: " + oldCaptureSource.Name + " @ " + oldCaptureSource.ConnectionString, LogLevel.Debug, "FrameGrabActor"));
                 var newCaptureSource = new IpCamera(oldCaptureSource.Name,oldCaptureSource.ConnectionString);
                 CaptureSource?.Destroy();
                 CaptureSource = newCaptureSource;
@@ -339,13 +339,13 @@ namespace VTC.Actors
             if (LastFrameTimestamp == DateTime.MinValue)
             {
                 LoggingActor.Tell(
-                    new LogMessage("FrameGrab Actor: frame timestamp is not initialized.", LogLevel.Debug));
+                    new LogMessage("FrameGrab Actor: frame timestamp is not initialized.", LogLevel.Debug, "FrameGrabActor"));
             }
             else
             {
                 var ts = DateTime.Now - LastFrameTimestamp;
                 LoggingActor.Tell(
-                    new LogMessage("FrameGrab Actor: ms since last frame = " + ts.Milliseconds, LogLevel.Debug));
+                    new LogMessage("FrameGrab Actor: ms since last frame = " + ts.Milliseconds, LogLevel.Debug, "FrameGrabActor"));
 
                 if (ts.Milliseconds > 5000)
                 {
@@ -354,7 +354,7 @@ namespace VTC.Actors
             }
 
             LoggingActor.Tell(
-                new LogMessage("FrameGrab Actor: null frame count = " + NullFrameCount, LogLevel.Debug));
+                new LogMessage("FrameGrab Actor: null frame count = " + NullFrameCount, LogLevel.Debug, "FrameGrabActor"));
         }
     }
 }

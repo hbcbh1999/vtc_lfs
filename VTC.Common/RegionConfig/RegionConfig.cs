@@ -37,7 +37,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("R_position: position measurement covariance. Decrease when detection-quality is high. Increase when detection-quality is low.")]
         [DataMember]
-        public double R_position { get; set; } = 2;
+        public double R_position { get; set; } = 3;
 
         [Description("R_color: color measurement covariance. Decrease for scenes with consistent lighting; increase for scenes with variable lighting.")]
         [DataMember]
@@ -113,7 +113,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("MinPathLength: Object trajectories shorter than this length (in pixels) are discarded without being counted.")]
         [DataMember]
-        public int MinPathLength { get; set; } = 200;
+        public int MinPathLength { get; set; } = 100;
 
         [Description("MHT maximum hypothesis tree-depth: how many frames of tracker history are retained. Increase for better quality; decrease for faster processing.")]
         [DataMember]
@@ -133,11 +133,11 @@ namespace VTC.Common.RegionConfig
 
         [Description("Position-covariance threshold: if the tracked object's final position-covariance is above this value, it is not counted. Increase this value for scenes with fast-moving vehicles.")]
         [DataMember]
-        public double PositionCovarianceThreshold { get; set; } = 1000.0;
+        public double PositionCovarianceThreshold { get; set; } = 4000.0;
 
         [Description("Missed-ratio threshold: the miss-ratio is the number of non-detections divided by the total number of time-steps that an object is tracked for. Increase this value for fast-moving vehicles or scenes with heavy occlusion.")]
         [DataMember]
-        public double MissRatioThreshold { get; set; } = 2.5;
+        public double MissRatioThreshold { get; set; } = 3.5;
 
         [Description("Site token: copy this from the web dashboard for your site.")]
         [DataMember]
@@ -146,6 +146,10 @@ namespace VTC.Common.RegionConfig
         [Description("SendToServer: set this to transmit movements and images to a remote server.")]
         [DataMember]
         public bool SendToServer { get; set; } = false;
+
+        [Description("CountPedestriansAsMotorcycles: Replace any objects counted as pedestrians with motorcycle-counts.")]
+        [DataMember]
+        public bool CountPedestriansAsMotorcycles { get; set; } = false;
 
 
         public RegionConfig()
