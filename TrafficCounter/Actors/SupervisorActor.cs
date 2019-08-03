@@ -15,11 +15,10 @@ namespace VTC.Actors
 {
     class SupervisorActor : ReceiveActor
     {
-        private IActorRef _frameGrabActor;
         private FrameGrabActor.UpdateUIDelegate _frameGrabUpdateUiDelegate; //We store this redundantly in SupervisorActor in case FrameGrabActor needs to be restarted.
         private ICaptureSource _captureSource;
-        private DateTime _frameGrabHeartbeat = DateTime.Now;
 
+        private IActorRef _frameGrabActor;
         private IActorRef _loggingActor;
         private IActorRef _configurationActor;
         private IActorRef _processingActor;
@@ -124,11 +123,6 @@ namespace VTC.Actors
                 return;
             }
 
-            if (sender == _frameGrabActor)
-            {
-                _frameGrabHeartbeat = DateTime.Now;
-            }
-
             if (!_actorStatuses.ContainsKey(Sender.Path.Name))
             {
                 _actorStatuses.Add(Sender.Path.Name, DateTime.Now);
@@ -171,14 +165,14 @@ namespace VTC.Actors
         {
             _processingActor = Context.ActorOf(Props.Create(typeof(ProcessingActor)).WithMailbox("processing-bounded-mailbox"), "ProcessingActor");
             _processingActor.Tell(new UpdateUiHandlerMessage(updateUiDelegate));
-            _frameGrabActor = Context.ActorOf<FrameGrabActor>("FrameGrabActor");
+            _frameGrabActor = Context.ActorOf(Props.Create(typeof(FrameGrabActor)).WithMailbox("processing-bounded-mailbox"),"FrameGrabActor");
             _frameGrabActor.Tell(new UpdateUiAccessoryHandlerMessage(frameGrabUiDelegate));
             _frameGrabUpdateUiDelegate = frameGrabUiDelegate;
-            _loggingActor = Context.ActorOf<LoggingActor>("LoggingActor");
+            _loggingActor = Context.ActorOf(Props.Create(typeof(LoggingActor)).WithMailbox("processing-bounded-mailbox"),"LoggingActor");
             _loggingActor.Tell(new UpdateStatsUiHandlerMessage(statsUiDelegate));
             _loggingActor.Tell(new UpdateInfoUiHandlerMessage(infoUiDelegate));
             _loggingActor.Tell(new UpdateDebugHandlerMessage(debugDelegate));
-            _sequencingActor = Context.ActorOf<SequencingActor>("SequencingActor");
+            _sequencingActor = Context.ActorOf(Props.Create(typeof(SequencingActor)).WithMailbox("processing-bounded-mailbox"),"SequencingActor");
             _configurationActor = Context.System.ActorOf(Props.Create(() => new
                 ConfigurationActor()).WithDispatcher("synchronized-dispatcher"), "ConfigurationActor");
 
@@ -205,7 +199,7 @@ namespace VTC.Actors
             Context.Stop(_frameGrabActor);
 
             //Create new frame-grab actor.
-            _frameGrabActor = Context.ActorOf<FrameGrabActor>("FrameGrabActor");
+            _frameGrabActor = Context.ActorOf(Props.Create(typeof(FrameGrabActor)).WithMailbox("processing-bounded-mailbox"),"FrameGrabActor");
             if (_frameGrabUpdateUiDelegate != null)
             {
                 _frameGrabActor.Tell(new UpdateUiAccessoryHandlerMessage(_frameGrabUpdateUiDelegate));
@@ -238,7 +232,7 @@ namespace VTC.Actors
         {
             UpdateActorStatusIndicators();
 
-            var timeSinceFrameGrabHeartbeat = DateTime.Now - _frameGrabHeartbeat;
+            var timeSinceFrameGrabHeartbeat = DateTime.Now - _actorStatuses["FrameGrabActor"];
             if (timeSinceFrameGrabHeartbeat.Seconds > 60)
             {
                 _loggingActor?.Tell(
