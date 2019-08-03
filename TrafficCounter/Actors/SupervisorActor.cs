@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Akka;
 using Akka.Actor;
 using NLog;
+using SharpRaven.Data;
 using VTC.Common;
 using VTC.Kernel.Video;
 using VTC.Messages;
@@ -28,6 +29,8 @@ namespace VTC.Actors
         private UpdateActorStatusDelegate _updateActorStatusDelegate;
 
         private Dictionary<string, DateTime> _actorStatuses = new Dictionary<string, DateTime>();
+
+        private static readonly Logger Logger = LogManager.GetLogger("main.form");
 
         private VTC.Common.UserConfig _userConfig = new UserConfig();
 
@@ -79,6 +82,10 @@ namespace VTC.Actors
 
             Receive<CheckActorLiveness>(message => 
                 CheckLiveness()
+            );
+
+            Receive<Failure>(message =>
+                HandleFailure(message.Exception)
             );
 
             Self.Tell(new LoadUserConfigMessage());
@@ -239,6 +246,16 @@ namespace VTC.Actors
                     new LogMessage("Supervisor Actor: FrameGrab Actor heartbeat is stale, restarting.", LogLevel.Debug, "SupervisorActor"));
                 RestartFrameGrabActor();
             }
+        }
+
+        private void HandleFailure(Exception ex)
+        {
+            Log(ex.Message + " from " + ex.Source + " via " + ex.StackTrace + "(InnerException: " + ex.InnerException + ")", LogLevel.Error, "SupervisorActor");
+        }
+
+        private void Log(string text, LogLevel level, string actorName)
+        {
+            Logger.Log(level, actorName + ":" + text);
         }
 
     }
