@@ -99,6 +99,12 @@ namespace VTC.Actors
                 _config = new RegionConfig();
                 _vista = new Vista(640, 480, _config);
 
+                if (_vista.CpuMode)
+                {
+                    MessageBox.Show(
+                        "VTC is running on CPU. To process footage faster, use a CUDA-capable nVidia GPU with 6GB VRAM minimum. See hardware specs on Roadometry website for details.", "Processing Rate Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);                    
+                }
+
                 Context.System.Scheduler.ScheduleTellRepeatedly(5000, 5000, Self, new CalculateFrameRateMessage(), Self);
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 5*60000, Self, new RequestBackgroundFrameMessage(), Self);
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 5*60000, Self, new ValidateConfigurationMessage(), Self);

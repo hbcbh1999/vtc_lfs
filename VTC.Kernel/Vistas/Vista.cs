@@ -82,6 +82,8 @@ namespace VTC.Kernel.Vistas
         public List<TrackedObject> CurrentVehicles => _mht.CurrentVehicles;
         public List<TrackedObject> DeletedVehicles => _mht.DeletedVehicles;
 
+        public bool CpuMode => _yoloClassifier.cpuMode;
+
         private string ApproachName(int number)
         {
             return ApproachText + " " + number;
