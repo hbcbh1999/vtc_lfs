@@ -68,6 +68,7 @@ namespace VTC
             this.debugTextbox = new System.Windows.Forms.TextBox();
             this.userSettingsButton = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
+            this.aboutButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // pushStateTimer
@@ -396,12 +397,24 @@ namespace VTC
             this.label9.TabIndex = 93;
             this.label9.Text = "Select Camera";
             // 
+            // aboutButton
+            // 
+            this.aboutButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.aboutButton.Location = new System.Drawing.Point(133, 116);
+            this.aboutButton.Name = "aboutButton";
+            this.aboutButton.Size = new System.Drawing.Size(115, 24);
+            this.aboutButton.TabIndex = 94;
+            this.aboutButton.Text = "About";
+            this.aboutButton.UseVisualStyleBackColor = true;
+            this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
+            // 
             // TrafficCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(468, 676);
+            this.Controls.Add(this.aboutButton);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.userSettingsButton);
             this.Controls.Add(this.debugTextbox);
@@ -479,5 +492,6 @@ namespace VTC
         private TextBox debugTextbox;
         private Button userSettingsButton;
         private Label label9;
+        private Button aboutButton;
     }
 }

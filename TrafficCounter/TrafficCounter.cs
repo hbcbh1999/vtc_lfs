@@ -632,5 +632,12 @@ namespace VTC
 
            _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
        }
+
+        private void aboutButton_Click(object sender, EventArgs e)
+        {
+            var aboutForm = new AboutForm(Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                _isLicensed);
+            aboutForm.Show();
+        }
     }
 }
