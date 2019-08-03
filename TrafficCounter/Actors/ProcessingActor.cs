@@ -39,6 +39,8 @@ namespace VTC.Actors
         private UInt64 _processedFramesTotal;
         private Image<Bgr, byte> _mostRecentFrame;
 
+        private static readonly Logger Logger = LogManager.GetLogger("main.form");
+
         private double _fps;
 
         private VTC.Common.UserConfig _userConfig = new UserConfig();
@@ -47,7 +49,6 @@ namespace VTC.Actors
         {
             try
             { 
-                Console.WriteLine("Creating new ProcessingActor");
                 //Subscribe to messages
                 Receive<ProcessNextFrameMessage>(newFrameMessage =>
                     NewFrameHandler(newFrameMessage.Frame, newFrameMessage.Timestep)
@@ -59,10 +60,6 @@ namespace VTC.Actors
 
                 Receive<UpdateUiHandlerMessage>(message =>
                     UpdateUiHandler(message.UiDelegate)
-                );
-
-                Receive<RequestUpdateClassIDMappingMessage>(message => 
-                    BroadcastClassIDMapping()
                 );
 
                 Receive<UpdateRegionConfigurationMessage>(configMessage =>
@@ -110,7 +107,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in ProcessingActor initialization:" + ex.Message);
+                Log("(ProcessingActor) " + ex.Message, LogLevel.Error);
             }
         }
 
@@ -163,7 +160,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateVideoDimensionsHandler:" + ex.Message);
+                Log("(UpdateVideoDimensionsHandler) " + ex.Message, LogLevel.Error);
             }
         }
 
@@ -175,7 +172,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateUiHandler:" + ex.Message);
+                Log("(UpdateUiHandler) " + ex.Message, LogLevel.Error);
             }
         }
 
@@ -199,7 +196,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateConfig:" + ex.Message);
+                Log("(UpdateConfig) " + ex.Message, LogLevel.Error);
             }
             
         }
@@ -212,7 +209,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateLoggingActor:" + ex.Message);
+                Log("(UpdateLoggingActor) " + ex.Message, LogLevel.Error);
             }   
         }
 
@@ -224,7 +221,7 @@ namespace VTC.Actors
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception in UpdateConfigurationActor:" + ex.Message);
+                Log("(UpdateConfigurationActor) " + ex.Message, LogLevel.Error);
             }   
         }
 
@@ -253,13 +250,6 @@ namespace VTC.Actors
             Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
         }
 
-        private void BroadcastClassIDMapping()
-        {
-            {
-                _loggingActor?.Tell(new HandleClassIDMappingMessage(_vista._yoloNameMapping.IntegerToObjectName));
-            }
-        }
-
         private void CheckConfiguration()
         {
             if (_config == null)
@@ -282,6 +272,11 @@ namespace VTC.Actors
                 _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is not a closed polygon.", LogLevel.Error, "ProcessingActor"));
                 _configurationActor.Tell(new RequestConfigurationMessage(Self));
             }
+        }
+
+        private void Log(string text, LogLevel level)
+        {
+            Logger.Log(level, "ProcessingActor: " + text);
         }
     }
 }

@@ -166,6 +166,7 @@ namespace VTC.Actors
 
                         _processingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
                         _loggingActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
+                        _frameGrabActor.Tell(new UpdateRegionConfigurationMessage(regionEditor.SelectedRegionConfig));
                         _liveRegionConfig = regionEditor.SelectedRegionConfig;
                         if (_currentJob != null)
                         {

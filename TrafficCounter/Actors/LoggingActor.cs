@@ -53,8 +53,6 @@ namespace VTC.Actors
 
         private MultipleTrajectorySynthesizer mts;
 
-        private Dictionary<int, string> _classIdMapping = new Dictionary<int, string>();
-
         private IActorRef _sequencingActor;
         private IActorRef _configurationActor;
         private Image<Bgr, byte> _background;
@@ -154,10 +152,6 @@ namespace VTC.Actors
 
             Receive<ConfigurationActorMessage>(message =>
                 UpdateConfigurationActor(message.ActorRef)
-            );
-
-            Receive<HandleClassIDMappingMessage>(message =>
-                UpdateClassIDMapping(message.ClassIdMapping)
             );
 
             Receive<LogDetectionsMessage>(message =>
@@ -1073,11 +1067,6 @@ namespace VTC.Actors
             {
                 MessageBox.Show("(UpdateSequencingActor) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite);
             }
-        }
-
-        private void UpdateClassIDMapping(Dictionary<int, string> classIdMapping)
-        {
-            _classIdMapping = classIdMapping;
         }
 
         private void CopyGroundTruth(string groundTruthPath)
