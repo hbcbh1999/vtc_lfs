@@ -59,7 +59,9 @@ namespace VTC
         // unit tests has own settings, so need to store "pairs" (capture, settings)
        private CaptureContext[] _testCaptureContexts;
 
-       private UserConfig _userConfig = new UserConfig();
+       private Logger _userLogger = LogManager.GetLogger("userlog"); // special logger for user messages
+
+        private UserConfig _userConfig = new UserConfig();
 
        RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
 
@@ -77,10 +79,11 @@ namespace VTC
 
            LoadUserConfig();
 
-            var tempLogger = LogManager.GetLogger("userlog"); // special logger for user messages
+           _userLogger.Log(LogLevel.Info, "VTC: Launched");
+
             if (_isLicensed)
                {
-                 tempLogger.Log(LogLevel.Info, "License: Active"); 
+                   _userLogger.Log(LogLevel.Info, "License: Active"); 
                  var ev = new SentryEvent("Launch");
                  ev.Level = ErrorLevel.Info;
                  ev.Tags.Add("License", "Active");
@@ -88,7 +91,7 @@ namespace VTC
                 }
             else
                {
-                 tempLogger.Log(LogLevel.Info, "License: Unactivated"); 
+                   _userLogger.Log(LogLevel.Info, "License: Unactivated"); 
                  var ev = new SentryEvent("Launch");
                  ev.Level = ErrorLevel.Info;
                  ev.Tags.Add("License", "Unactivated");
@@ -376,25 +379,6 @@ namespace VTC
             loggingActor?.Tell(new LogUserMessage(text, LogLevel.Info, "TrafficCounter"));
         }
 
-       private void PushStateProcess(object sender, EventArgs e)
-       {
-           //TODO: Rewrite this function
-           //if (_vista != null)
-           //{
-           //    if (_currentJob.RegionConfiguration.PushToServer)
-           //    {
-           //        var pushThread = new Thread(PushState);
-           //        pushThread.Start();
-           //    }
-
-           //    if (!_batchMode)
-           //    {
-           //        var args = new TrackingEvents.TrackedObjectsEventArgs {Measurements = _vista.CurrentVehicles};
-           //        TrackedObjectEvent?.Invoke(this, args);
-           //    }
-           //}
-       }
-
         #endregion
 
         #region Batch Processing
@@ -445,6 +429,7 @@ namespace VTC
 
         private void TrafficCounter_FormClosed(object sender, FormClosedEventArgs e)
         {
+            _userLogger.Log(LogLevel.Info, "VTC: Application closed");
         }
 
         /// <summary>

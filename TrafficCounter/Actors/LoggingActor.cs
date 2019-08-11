@@ -142,8 +142,8 @@ namespace VTC.Actors
                 UpdateDebugHandler(message.DebugDelegate)
             );
 
-            Receive<ActorHeartbeatMessage>(message =>
-                Heartbeat()
+            Receive<DashboardHeartbeatMessage>(message =>
+                DashboardHeartbeat()
             );
 
             Receive<SequencingActorMessage>(message =>
@@ -182,11 +182,11 @@ namespace VTC.Actors
                 CheckConfiguration()
             );
 
-            Self.Tell(new ActorHeartbeatMessage(Self));
 
             Self.Tell(new LoadUserConfigMessage());
 
-            //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(1,0,0),new TimeSpan(1,0,0),Self, new GenerateDailyReportMessage(), Self);
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0,0,0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
 
             Log("LoggingActor initialized.", LogLevel.Info, "LoggingActor");
         }
@@ -1051,10 +1051,17 @@ namespace VTC.Actors
             }
         }
 
-        private void Heartbeat()
+        private void DashboardHeartbeat()
         {
-            Context.Parent.Tell(new ActorHeartbeatMessage(Self));
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
+            if (_regionConfig.SendToServer)
+            {
+                var rs = new RemoteServer();
+                var rsr = rs.SendHeartbeat(_regionConfig.SiteToken, _userConfig.ServerUrl).Result;
+                if (rsr != HttpStatusCode.OK)
+                {
+                    Log("Heartbeat POST failed:" + rsr, LogLevel.Error, "LoggingActor");
+                }
+            }
         }
 
         private void UpdateSequencingActor(IActorRef actorRef)

@@ -16,6 +16,7 @@ namespace VTC.Remote
     public class RemoteServer
     {
         const string MovementsRoute = "/movements";
+        const string HeartbeatsRoute = "/heartbeats";
         const string SitesRoute = "/sites_update_by_token";
         const string SitesReplaceImageRoute = "/sites_replace_image_by_token";
         private static readonly HttpClient Client = new HttpClient();
@@ -46,6 +47,18 @@ namespace VTC.Remote
             
             //Transmit
             var response = await Client.PutAsync(uploadImageUrl, mp);
+            return response.StatusCode;
+        }
+
+        public async Task<HttpStatusCode> SendHeartbeat(string siteToken, string serverUrl)
+        {
+            //Get remote server
+            var createMovementUrl = serverUrl + HeartbeatsRoute + "?site_token=" + siteToken;
+            var jsonString = "{ \"heartbeat\" }";
+            var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            //Transmit
+            var response = await Client.PostAsync(createMovementUrl, content);
             return response.StatusCode;
         }
 

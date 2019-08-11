@@ -82,10 +82,6 @@ namespace VTC.Actors
                     RetransmitCaptureComplete()
                 );
 
-                Receive<ActorHeartbeatMessage>(message =>
-                    Heartbeat()
-                );
-
                 Receive<CalculateFrameRateMessage>(message =>
                     CalculateFramerate()
                 );
@@ -95,6 +91,8 @@ namespace VTC.Actors
                 );
 
                 Self.Tell(new ActorHeartbeatMessage(Self));
+
+                Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
 
                 _config = new RegionConfig();
                 _vista = new Vista(640, 480, _config);
@@ -248,12 +246,6 @@ namespace VTC.Actors
         public static Props Props()
         {
             return Akka.Actor.Props.Create(() => new ProcessingActor());
-        }
-
-        private void Heartbeat()
-        {
-            Context.Parent.Tell(new ActorHeartbeatMessage(Self));
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
         }
 
         private void CheckConfiguration()

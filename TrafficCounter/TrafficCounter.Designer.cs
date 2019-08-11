@@ -33,7 +33,6 @@ namespace VTC
       {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrafficCounter));
-            this.pushStateTimer = new System.Windows.Forms.Timer(this.components);
             this.timeActiveTextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tbVistaStats = new System.Windows.Forms.TextBox();
@@ -70,12 +69,6 @@ namespace VTC
             this.label9 = new System.Windows.Forms.Label();
             this.aboutButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // pushStateTimer
-            // 
-            this.pushStateTimer.Enabled = true;
-            this.pushStateTimer.Interval = 10000;
-            this.pushStateTimer.Tick += new System.EventHandler(this.PushStateProcess);
             // 
             // timeActiveTextBox
             // 
@@ -456,8 +449,6 @@ namespace VTC
       }
 
       #endregion
-
-      private Timer pushStateTimer;
       private TextBox timeActiveTextBox;
       private Label label11;
       private TextBox tbVistaStats;

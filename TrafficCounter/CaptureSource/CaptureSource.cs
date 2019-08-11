@@ -71,8 +71,8 @@ namespace VTC.CaptureSource
                         {
                             if (_cameraCapture.CaptureSource == VideoCapture.CaptureModuleType.Camera)
                             {
-                                _captureComplete = true;
-                                CaptureTerminatedEvent?.Invoke();
+                                //_captureComplete = true;
+                                //CaptureTerminatedEvent?.Invoke();
                             }
                             else
                             {

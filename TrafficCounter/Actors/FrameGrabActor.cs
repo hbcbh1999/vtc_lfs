@@ -69,12 +69,12 @@ namespace VTC.Actors
                 UpdateSequencingActor(message.ActorRef)
             );
 
-            Receive<ActorHeartbeatMessage>(message =>
-                Heartbeat()
-            );
-
             Receive<CheckConnectivityMessage>(message =>
                 CheckConnectivity()
+            );
+
+            Receive<UpdateFramerateMessage>(message =>
+                UpdateFramerate()
             );
 
             Receive<UpdateUiAccessoryHandlerMessage>(message =>
@@ -89,7 +89,8 @@ namespace VTC.Actors
                 LoadUserConfig()
             );
 
-            Self.Tell(new ActorHeartbeatMessage(Self));
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new UpdateFramerateMessage(), Self);
 
             Self.Tell(new LoadUserConfigMessage());
 
@@ -254,11 +255,8 @@ namespace VTC.Actors
             }
         }
 
-        private void Heartbeat()
+        private void UpdateFramerate()
         {
-            Context.Parent.Tell(new ActorHeartbeatMessage(Self));
-            Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
-
             if (TotalFramesInVideo == 0)
                 return;
 
