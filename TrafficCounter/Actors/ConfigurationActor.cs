@@ -86,6 +86,10 @@ namespace VTC.Actors
                 SendConfigurationTo(message.ActorRef)
             );
 
+            Receive<LoadConfigurationByNameMessage>(message =>
+                LoadConfigurationByName(message.ConfigurationName)
+            );
+
             Receive<ActorHeartbeatMessage>(message =>
                 Heartbeat()
             );
@@ -231,6 +235,25 @@ namespace VTC.Actors
                 {
                     var rlrm = new RegionConfigLookupResponseMessage(rc,jobGuid);
                     _sequencingActor.Tell(rlrm);
+                    return;
+                }
+            }
+        }
+
+        private void LoadConfigurationByName(string regionName)
+        {
+            foreach (var rc in _regionConfigs)
+            {
+                if (string.Equals(rc.Title, regionName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    _processingActor.Tell(new UpdateRegionConfigurationMessage(rc));
+                    _loggingActor.Tell(new UpdateRegionConfigurationMessage(rc));
+                    _frameGrabActor.Tell(new UpdateRegionConfigurationMessage(rc));
+                    _liveRegionConfig = rc;
+                    if (_currentJob != null)
+                    {
+                        _currentJob.RegionConfiguration = rc;
+                    }
                     return;
                 }
             }

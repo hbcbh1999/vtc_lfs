@@ -115,6 +115,26 @@ namespace VTC.Actors
             }
         }
 
+        protected override void PreStart()
+        {
+            base.PreStart();
+        }
+
+        protected override void PreRestart(Exception cause, object msg)
+        {
+            base.PreRestart(cause, msg);
+        }
+
+        protected override void PostStop()
+        {
+            base.PostStop();
+        }
+
+        protected override void PostRestart(Exception cause)
+        {
+            base.PostRestart(cause);
+        }
+
         private void NewFrameHandler(Image<Bgr, byte> frame, double timestep)
         {
             _mostRecentFrame = frame.Clone();

@@ -90,7 +90,7 @@ namespace VTC.Actors
             );
 
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
-            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new UpdateFramerateMessage(), Self);
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Self, new UpdateFramerateMessage(), Self);
 
             Self.Tell(new LoadUserConfigMessage());
 
@@ -185,11 +185,11 @@ namespace VTC.Actors
                 if (isLive.Value)
                 {
                     //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
-                    LoggingActor.Tell(new LogMessage("Capture returned null-frame. Pausing to allow camera recovery.",
-                        LogLevel.Debug, "FrameGrabActor"));
-                    System.Threading.Thread.Sleep(10000);
-                    LoggingActor.Tell(new LogMessage("Pause complete.",
-                        LogLevel.Debug, "FrameGrabActor"));
+                    //LoggingActor.Tell(new LogMessage("Capture returned null-frame. Pausing to allow camera recovery.",
+                    //    LogLevel.Debug, "FrameGrabActor"));
+                    //System.Threading.Thread.Sleep(10000);
+                    //LoggingActor.Tell(new LogMessage("Pause complete.",
+                        //LogLevel.Debug, "FrameGrabActor"));
                     Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
                     return; 
                 }

@@ -78,11 +78,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Emgu.CV.UI, Version=3.4.3.3016, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
-      <HintPath>..\packages\EMGU.CV.3.4.3.3016\lib\net35\Emgu.CV.UI.dll</HintPath>
+    <Reference Include="Emgu.CV.UI, Version=4.1.0.3420, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <HintPath>..\packages\EMGU.CV.4.1.0.3420\lib\net35\Emgu.CV.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Emgu.CV.World, Version=3.4.3.3016, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
-      <HintPath>..\packages\EMGU.CV.3.4.3.3016\lib\net35\Emgu.CV.World.dll</HintPath>
+    <Reference Include="Emgu.CV.World, Version=4.1.0.3420, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
+      <HintPath>..\packages\EMGU.CV.4.1.0.3420\lib\net35\Emgu.CV.World.dll</HintPath>
     </Reference>
     <Reference Include="GeoAPI, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <HintPath>..\packages\GeoAPI.Core.1.7.5\lib\net45\GeoAPI.dll</HintPath>
@@ -90,17 +90,17 @@
     <Reference Include="GeoAPI.CoordinateSystems, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <HintPath>..\packages\GeoAPI.CoordinateSystems.1.7.5\lib\net45\GeoAPI.CoordinateSystems.dll</HintPath>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.15.1.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.Core.1.15.1\lib\net45\NetTopologySuite.dll</HintPath>
+    <Reference Include="NetTopologySuite, Version=1.15.3.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.Core.1.15.3\lib\net45\NetTopologySuite.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite.CoordinateSystems, Version=1.15.1.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <HintPath>..\packages\NetTopologySuite.CoordinateSystems.1.15.1\lib\net45\NetTopologySuite.CoordinateSystems.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.6.6\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NvAPIWrapper, Version=0.6.1.15, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NvAPIWrapper.Net.0.6.1.15\lib\net45\NvAPIWrapper.dll</HintPath>
+    <Reference Include="NvAPIWrapper, Version=0.7.0.57, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
+      <HintPath>..\packages\NvAPIWrapper.Net.0.7.0.57\lib\net45\NvAPIWrapper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -120,8 +120,8 @@
     <Reference Include="ZedGraph, Version=5.1.7.430, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
       <HintPath>..\packages\ZedGraph.5.1.7\lib\net35-Client\ZedGraph.dll</HintPath>
     </Reference>
-    <Reference Include="ZeroMQ, Version=4.1.0.30, Culture=neutral, PublicKeyToken=4a9630883fd6c563, processorArchitecture=MSIL">
-      <HintPath>..\packages\ZeroMQ.4.1.0.30\lib\net40\ZeroMQ.dll</HintPath>
+    <Reference Include="ZeroMQ, Version=4.1.0.31, Culture=neutral, PublicKeyToken=4a9630883fd6c563, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZeroMQ.4.1.0.31\lib\net40\ZeroMQ.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -170,15 +170,15 @@ cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_ffmpeg346_64.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_world346.dll $(TargetDir)
 cp $(SolutionDir)\ThirdParty\OpenCV3.4.6\opencv_world346d.dll $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets'))" />
-    <Error Condition="!Exists('..\packages\ZeroMQ.4.1.0.30\build\net40\ZeroMQ.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ZeroMQ.4.1.0.30\build\net40\ZeroMQ.targets'))" />
+    <Error Condition="!Exists('..\packages\EMGU.CV.4.1.0.3420\build\EMGU.CV.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EMGU.CV.4.1.0.3420\build\EMGU.CV.targets'))" />
+    <Error Condition="!Exists('..\packages\ZeroMQ.4.1.0.31\build\net40\ZeroMQ.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ZeroMQ.4.1.0.31\build\net40\ZeroMQ.targets'))" />
   </Target>
-  <Import Project="..\packages\ZeroMQ.4.1.0.30\build\net40\ZeroMQ.targets" Condition="Exists('..\packages\ZeroMQ.4.1.0.30\build\net40\ZeroMQ.targets')" />
+  <Import Project="..\packages\EMGU.CV.4.1.0.3420\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.4.1.0.3420\build\EMGU.CV.targets')" />
+  <Import Project="..\packages\ZeroMQ.4.1.0.31\build\net40\ZeroMQ.targets" Condition="Exists('..\packages\ZeroMQ.4.1.0.31\build\net40\ZeroMQ.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

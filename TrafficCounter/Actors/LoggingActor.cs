@@ -45,7 +45,7 @@ namespace VTC.Actors
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
         private static readonly Logger UserLogger = LogManager.GetLogger("userlog"); // special logger for user messages
 
-        private RegionConfig _regionConfig;
+        private RegionConfig _regionConfig = new RegionConfig();
         private EventConfig _eventConfig;
         private string _currentVideoName = "Unknown video";
         private DateTime _videoStartTime = DateTime.Now;
@@ -185,7 +185,7 @@ namespace VTC.Actors
 
             Self.Tell(new LoadUserConfigMessage());
 
-            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0,0,0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0,1,0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
 
             Log("LoggingActor initialized.", LogLevel.Info, "LoggingActor");
@@ -777,6 +777,19 @@ namespace VTC.Actors
 
                     if(_regionConfig.SendToServer)
                     {
+                        if(string.IsNullOrEmpty(_regionConfig.SiteToken))
+                        {
+                            Log("Bad site token", LogLevel.Error, "LoggingActor");
+                            return;
+                        }
+
+                        if (string.IsNullOrEmpty((_userConfig
+                            .ServerUrl)))
+                        {
+                            Log("Bad server URL", LogLevel.Error, "LoggingActor");
+                            return;
+                        }
+
                         var rs = new RemoteServer();
                         var rsr = rs.SendMovement(editedMovement, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
                         if (rsr != HttpStatusCode.OK)
@@ -1053,6 +1066,12 @@ namespace VTC.Actors
 
         private void DashboardHeartbeat()
         {
+            if (_regionConfig == null || _userConfig == null)
+            {
+                Log("Heartbeat skipped, region-configuration or user-configuration is missing.", LogLevel.Warn, "LoggingActor");
+                return;
+            }
+
             if (_regionConfig.SendToServer)
             {
                 var rs = new RemoteServer();
@@ -1061,6 +1080,17 @@ namespace VTC.Actors
                 {
                     Log("Heartbeat POST failed:" + rsr, LogLevel.Error, "LoggingActor");
                 }
+                else
+                {
+                    Log("Heartbeat success", LogLevel.Info, "LoggingActor");
+                }
+
+                string heartbeatStatus = "Heartbeat: " + rsr;
+                _updateDebugDelegate?.Invoke(heartbeatStatus);
+            }
+            else
+            {
+                Log("Send-to-server is disabled, no heartbeat transmitted.", LogLevel.Info, "LoggingActor");
             }
         }
 

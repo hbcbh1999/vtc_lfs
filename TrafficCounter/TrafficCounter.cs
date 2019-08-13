@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using DirectShowLib;
 using Emgu.CV;
@@ -13,12 +14,8 @@ using Emgu.CV.Structure;
 using NLog;
 using VTC.CaptureSource;
 using VTC.Kernel.Video;
-using VTC.Reporting;
-using VTC.Reporting.ReportItems;
 using VTC.Common;
 using VTC.BatchProcessing;
-using VTC.Common.RegionConfig;
-using VTC.RegionConfiguration;
 using Akka.Actor;
 using Akka.Configuration;
 using VTC.Actors;
@@ -43,7 +40,6 @@ namespace VTC
         #endregion
 
         #region Mode Flags
-        private bool _batchMode;
         private readonly bool _unitTestsMode;
         private readonly bool _isLicensed = false;
         #endregion
@@ -68,7 +64,6 @@ namespace VTC
        /// <summary>
        /// Constructor.
        /// </summary>
-       /// <param name="settings">Application settings.</param>
        /// <param name="isLicensed">If false, software will shut down after a few minutes</param>
        /// <param name="appArgument">Can mean different things (Local file with video, Unit tests, etc).</param>
         public TrafficCounter(bool isLicensed, string appArgument = null)
@@ -82,33 +77,27 @@ namespace VTC
            _userLogger.Log(LogLevel.Info, "VTC: Launched");
 
             if (_isLicensed)
-               {
-                   _userLogger.Log(LogLevel.Info, "License: Active"); 
-                 var ev = new SentryEvent("Launch");
-                 ev.Level = ErrorLevel.Info;
-                 ev.Tags.Add("License", "Active");
-                 ravenClient.Capture(ev);
-                }
+            {
+                _userLogger.Log(LogLevel.Info, "License: Active");
+                var ev = new SentryEvent("Launch");
+                ev.Level = ErrorLevel.Info;
+                ev.Tags.Add("License", "Active");
+                ravenClient.Capture(ev);
+            }
             else
-               {
-                   _userLogger.Log(LogLevel.Info, "License: Unactivated"); 
-                 var ev = new SentryEvent("Launch");
-                 ev.Level = ErrorLevel.Info;
-                 ev.Tags.Add("License", "Unactivated");
-                 ravenClient.Capture(ev);
-               }
-
-            // check if app should run in unit test visualization mode
+            {
+                _userLogger.Log(LogLevel.Info, "License: Unactivated");
+                var ev = new SentryEvent("Launch");
+                ev.Level = ErrorLevel.Info;
+                ev.Tags.Add("License", "Unactivated");
+                ravenClient.Capture(ev);
+            }
+          
+           // check if app should run in unit test visualization mode
             _unitTestsMode = false;
             if ("-tests".Equals(appArgument, StringComparison.OrdinalIgnoreCase))
             {
                 _unitTestsMode = DetectTestScenarios("OptAssignTest.dll");
-            }
-
-            // otherwise - run in standard mode
-            if (! _unitTestsMode)
-            {
-                InitializeCameraSelection(appArgument);
             }
 
             //Disable eventhandler for the changing combobox index.
@@ -138,7 +127,13 @@ namespace VTC
             _supervisorActor = _actorSystem.ActorOf(Props.Create(typeof(SupervisorActor)).WithDispatcher("synchronized-dispatcher"), "SupervisorActor");
             _supervisorActor.Tell(new CreateAllActorsMessage(UpdateUI, UpdateStatsUI, UpdateInfoBox, UpdateUIAccessoryInfo, UpdateDebugInfo));
             _supervisorActor.Tell(new UpdateActorStatusHandlerMessage(UpdateActorStatusIndicators));
-       }
+
+           // otherwise - run in standard mode
+           if (!_unitTestsMode)
+           {
+               InitializeCameraSelection(appArgument);
+           }
+        }
 
         private void UpdateUI(TrafficCounterUIUpdateInfo updateInfo)
        {
@@ -306,12 +301,44 @@ namespace VTC
             CameraComboBox.Items.Add(camera.Name);
         }
 
-        private void InitializeCameraSelection(string filename)
+       private async Task LaunchIPCamera(string ipCameraName, int cameraIndex)
+       {
+           if (_cameras.Count < cameraIndex + 1)
+           {
+               return;
+           }
+
+           await Task.Delay(5000);
+           var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+           UpdateCaptureSource(_cameras[cameraIndex], false);
+           configurationActor.Tell(new LoadConfigurationByNameMessage(ipCameraName));
+       }
+
+        private void InitializeCameraSelection(string cameraSelectionString)
         {
-            // Add video file as source, if provided
-            if (UseLocalVideo(filename))
+            _cameras.Clear();
+
+            AddIPCameraIfValid(_userConfig.Camera1Name,_userConfig.Camera1Url);
+            AddIPCameraIfValid(_userConfig.Camera2Name,_userConfig.Camera2Url);
+            AddIPCameraIfValid(_userConfig.Camera3Name,_userConfig.Camera3Url);
+
+            switch (cameraSelectionString)
             {
-                LoadCameraFromFilename(filename);
+                case "IP1":
+                    Task.Run(async () => { await LaunchIPCamera("IP1", 0); });
+                    break;
+                case "IP2":
+                    Task.Run(async () => { await LaunchIPCamera("IP2", 1); });
+                    break;
+                case "IP3":
+                    Task.Run(async () => { await LaunchIPCamera("IP3", 2); });
+                    break;
+            }
+
+            // Add video file as source, if provided
+            if (UseLocalVideo(cameraSelectionString))
+            {
+                LoadCameraFromFilename(cameraSelectionString);
             }
 
             //List all video input devices.
@@ -329,10 +356,6 @@ namespace VTC
                 //Increment the index.
                 deviceIndex++;
             }
-
-            AddIPCameraIfValid(_userConfig.Camera1Name,_userConfig.Camera1Url);
-            AddIPCameraIfValid(_userConfig.Camera2Name,_userConfig.Camera2Url);
-            AddIPCameraIfValid(_userConfig.Camera3Name,_userConfig.Camera3Url);
         }
 
         private void AddIPCameraIfValid(string name, string url)
@@ -437,35 +460,39 @@ namespace VTC
         /// </summary>
         private void CameraComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
-            var frameGrabActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/FrameGrabActor");
-            var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
-            var supervisorActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor");
-            _selectedCaptureSource = _cameras[CameraComboBox.SelectedIndex];
-
-            //Create new output folder
-            loggingActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
-            DateTime videoTime = DateTime.Now;
-            loggingActor.Tell(new FileCreationTimeMessage(videoTime));
-
-            //Change the capture device.
-            frameGrabActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
-            supervisorActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
-            frameGrabActor.Tell(new GetNextFrameMessage());
-
-            //Tell the configuration actor about this camera
-            var selected_camera_list = new List<ICaptureSource>();
-            selected_camera_list.Add(_selectedCaptureSource);
-            configurationActor.Tell(new CamerasMessage(selected_camera_list));
-            configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
-                
-            //configurationActor.Tell(new VideoJobsMessage(videoJobs));
-            //configurationActor.Tell(new CamerasMessage(_cameras));
-            //configurationActor.Tell(new CurrentJobMessage(videoJobs.First()));
-            //btnConfigureRegions_Click(null, null);
+           UpdateCaptureSource(_cameras[CameraComboBox.SelectedIndex],true);
         }
 
-        private void btnConfigureRegions_Click(object sender, EventArgs e)
+       private void UpdateCaptureSource(ICaptureSource source, bool interactive)
+       {
+           var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
+           var frameGrabActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/FrameGrabActor");
+           var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+           var supervisorActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor");
+           _selectedCaptureSource = source;
+
+           //Create new output folder
+           loggingActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
+           DateTime videoTime = DateTime.Now;
+           loggingActor.Tell(new FileCreationTimeMessage(videoTime));
+
+           //Change the capture device.
+           frameGrabActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
+           supervisorActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
+           frameGrabActor.Tell(new GetNextFrameMessage());
+
+           //Tell the configuration actor about this camera
+           var selected_camera_list = new List<ICaptureSource>();
+           selected_camera_list.Add(_selectedCaptureSource);
+           configurationActor.Tell(new CamerasMessage(selected_camera_list));
+
+           if (interactive)
+           {
+               configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
+           }
+        }
+
+       private void btnConfigureRegions_Click(object sender, EventArgs e)
         {
             var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
             var selectedCameraList = new List<ICaptureSource>();
