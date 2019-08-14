@@ -30,9 +30,9 @@ namespace VTC.Kernel
 
     public class TrajectorySimilarity
     {
-        private const double POSITION_MULTIPLIER = 0.012;
+        private const double POSITION_MULTIPLIER = 0.011;
         private const double ANGLE_MULTIPLIER = 0.01;
-        private const double CURVATURE_MULTIPLIER = 400.0;
+        private const double CURVATURE_MULTIPLIER = 500.0;
 
         public static Movement MatchNearestTrajectory(TrackedObject d, string classType, int minPathLength, List<Movement> trajectoryPrototypes)
         {
@@ -233,8 +233,17 @@ namespace VTC.Kernel
                 bool isValidVehicleMatch = classType.ToLower() != "person" && tp.TrafficObjectType != ObjectType.Person;
                 if(isValidPersonMatch || isValidVehicleMatch)
                 {
-                    //Console.WriteLine("Comparing " + mt.Approach + " to " + mt.Exit);
-                    mt.matchCost = PathIntegralCost(matchTrajectory,mt.StateEstimates);
+                    if (tp.TurnType == Turn.UTurn)
+                    {
+                        // 2.0 is just a rough heuristic to implement a 'u-turn likelihood prior'. 
+                        // This is the simplest way of avoiding adding a new configuration parameter,
+                        // while reducing the over-counting of U-turns without completely eliminating them.
+                        mt.matchCost = 1.1*PathIntegralCost(matchTrajectory, mt.StateEstimates);
+                    }
+                    else
+                    {
+                        mt.matchCost = PathIntegralCost(matchTrajectory, mt.StateEstimates);
+                    }
                     matchedTrajectories.Add(mt);
                 }
             });

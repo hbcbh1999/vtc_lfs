@@ -111,6 +111,7 @@
     <ROW Component="VTC.KernelTests.dll" ComponentId="{EEE5CC84-2A3D-4E50-80FE-2C789826A147}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.KernelTests.dll"/>
     <ROW Component="VTC.Reporting.dll" ComponentId="{CC65F582-CB11-442F-8886-3C76398BFAAB}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.Reporting.dll"/>
     <ROW Component="VTC.exe" ComponentId="{676F877F-DD71-40DB-9875-845932711D7C}" Directory_="APPDIR" Attributes="0" KeyPath="VTC.exe"/>
+    <ROW Component="VTCSupervisor.exe" ComponentId="{233CA537-B801-4C01-BF15-79A7C9D05A6F}" Directory_="APPDIR" Attributes="0" KeyPath="VTCSupervisor.exe"/>
     <ROW Component="ZedGraph.dll" ComponentId="{F7584CA9-464A-4725-BFD3-74FADCA8492B}" Directory_="APPDIR" Attributes="0" KeyPath="ZedGraph.dll"/>
     <ROW Component="ZedGraph.resources.dll" ComponentId="{DC684852-9A50-42EF-9CF3-5A609118EB77}" Directory_="de_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll"/>
     <ROW Component="ZedGraph.resources.dll_1" ComponentId="{330AA52D-2C6F-491C-8567-F15F8E4188FB}" Directory_="es_Dir" Attributes="0" KeyPath="ZedGraph.resources.dll_1"/>
@@ -131,6 +132,7 @@
     <ROW Component="concrt140.dll_1" ComponentId="{D8F093B4-5E53-494A-AC7C-4CA569D01E99}" Directory_="x86_Dir" Attributes="0" KeyPath="concrt140.dll_1"/>
     <ROW Component="cublas64_10.dll" ComponentId="{FE1C6FAB-D80C-46B3-9483-99EE477D3BBF}" Directory_="APPDIR" Attributes="256" KeyPath="cublas64_10.dll"/>
     <ROW Component="cublas64_100.dll" ComponentId="{E62A6735-8785-4D0C-A0DC-42CB61AD2635}" Directory_="APPDIR" Attributes="256" KeyPath="cublas64_100.dll"/>
+    <ROW Component="cublasLt64_10.dll" ComponentId="{9F1C9DC8-E1E3-437D-8FA6-A598444FE516}" Directory_="APPDIR" Attributes="256" KeyPath="cublasLt64_10.dll"/>
     <ROW Component="cudart32_100.dll" ComponentId="{212F6725-10C7-4219-ADE6-E985337E88C1}" Directory_="APPDIR" Attributes="0" KeyPath="cudart32_100.dll"/>
     <ROW Component="cudart64_100.dll" ComponentId="{B1D3B4FE-BA47-42D4-A640-5E1A7A97C319}" Directory_="APPDIR" Attributes="256" KeyPath="cudart64_100.dll"/>
     <ROW Component="cudart64_101.dll" ComponentId="{36ED8FBE-CE09-4EA1-BEA2-1CEADC0993E9}" Directory_="APPDIR" Attributes="256" KeyPath="cudart64_101.dll"/>
@@ -150,8 +152,6 @@
     <ROW Component="libcurl.dll_2" ComponentId="{7C69E776-48E2-472C-9959-8AE2613C0C44}" Directory_="x86_Dir" Attributes="0" KeyPath="libcurl.dll_2"/>
     <ROW Component="libsodium.so" ComponentId="{E45B3F77-C401-48CD-8B7A-AD9AC5B076F2}" Directory_="amd64_Dir" Attributes="0" KeyPath="libzmq.so" Type="0"/>
     <ROW Component="libssh2.dll" ComponentId="{3D533E2A-9620-4975-AC66-CCEEC34235CC}" Directory_="APPDIR" Attributes="256" KeyPath="libssh2.dll"/>
-    <ROW Component="libssh2.dll_1" ComponentId="{886B6851-0D89-457C-A0F4-D6F223797A69}" Directory_="x64_Dir" Attributes="256" KeyPath="libssh2.dll_1"/>
-    <ROW Component="libssh2.dll_2" ComponentId="{E2F9EE0C-44E4-4E04-8C52-DF91BAD87152}" Directory_="x86_Dir" Attributes="0" KeyPath="libssh2.dll_2"/>
     <ROW Component="libssl1_1.dll" ComponentId="{A22D001B-F937-4D74-A71D-0AD7B284D1EB}" Directory_="APPDIR" Attributes="0" KeyPath="libssl1_1.dll"/>
     <ROW Component="libssl1_1.dll_1" ComponentId="{97708D50-B087-4A95-811D-997C8F44CC15}" Directory_="x86_Dir" Attributes="0" KeyPath="libssl1_1.dll_1"/>
     <ROW Component="libssl1_1x64.dll" ComponentId="{395162EE-28C8-479B-A1E5-A85B8E983A83}" Directory_="APPDIR" Attributes="256" KeyPath="libssl1_1x64.dll"/>
@@ -162,9 +162,9 @@
     <ROW Component="msvcp140.dll_1" ComponentId="{52844C7D-9224-4901-8F15-0E632181D54C}" Directory_="x86_Dir" Attributes="0" KeyPath="msvcp140.dll_1"/>
     <ROW Component="opencv_ffmpeg330.dll" ComponentId="{ACDA3A09-DE61-4D87-BEF9-8EC380956F7D}" Directory_="APPDIR" Attributes="0" KeyPath="opencv_ffmpeg330.dll"/>
     <ROW Component="opencv_ffmpeg330_64.dll" ComponentId="{CC2F569C-0C29-47B2-A4C2-DA57680F659A}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_ffmpeg330_64.dll"/>
-    <ROW Component="opencv_ffmpeg343.dll" ComponentId="{70C2596F-0192-40C2-8464-BC41BB884165}" Directory_="x86_Dir" Attributes="0" KeyPath="opencv_ffmpeg343.dll"/>
-    <ROW Component="opencv_ffmpeg343_64.dll" ComponentId="{81C819FC-023B-4195-BD9B-5A645BC3FB73}" Directory_="x64_Dir" Attributes="256" KeyPath="opencv_ffmpeg343_64.dll"/>
     <ROW Component="opencv_ffmpeg346_64.dll" ComponentId="{44B31B1C-71CF-49C1-BDC9-A788322F2068}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_ffmpeg346_64.dll"/>
+    <ROW Component="opencv_ffmpeg410.dll" ComponentId="{0560A3C1-511F-4E61-B1C5-F6438D5DD7CF}" Directory_="x86_Dir" Attributes="0" KeyPath="opencv_ffmpeg410.dll"/>
+    <ROW Component="opencv_ffmpeg410_64.dll" ComponentId="{FC6C7FD1-DEB4-4031-8AF2-EFA6946EB69D}" Directory_="x64_Dir" Attributes="256" KeyPath="opencv_ffmpeg410_64.dll"/>
     <ROW Component="opencv_world330.dll" ComponentId="{7CB112EF-F504-4963-A639-7CCC8449F158}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_world330.dll"/>
     <ROW Component="opencv_world330d.dll" ComponentId="{09A26CAF-16B6-4E8F-A85D-57145756680E}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_world330d.dll"/>
     <ROW Component="opencv_world346.dll" ComponentId="{0CDC2C36-7AF4-4E7D-A478-ADF07E7BA93D}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_world346.dll"/>
@@ -182,7 +182,7 @@
     <ROW Feature="B63_41B8_9CB7_8C5E07C0FC18_" Title="Visual C++ 2010 SP1 x64 (MFC Security Update)" Description="Visual C++ 2010 SP1 x64 (MFC Security Update)" Display="9" Level="1" Attributes="0" Components="AI_ExePath"/>
     <ROW Feature="CB585686_DAA3_4384_BDDF_08ABA631E9F3_" Title="Visual C++ 2010 SP1 x86 (MFC Security Update)" Description="Visual C++ 2010 SP1 x86 (MFC Security Update)" Display="7" Level="1" Attributes="0" Components="AI_ExePath"/>
     <ROW Feature="FAA_5658_49AA_A41D_71074C8A5006" Title="Visual C++ 2010 x86 (MFC Security Update)" Description="Visual C++ 2010 x86 (MFC Security Update)" Display="5" Level="1" Attributes="0" Components="AI_ExePath"/>
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath Akka.dll BigLogo.png DirectShowLib2005.dll Emgu.CV.UI.dll Emgu.CV.World.dll GeoAPI.CoordinateSystems.dll GeoAPI.dll IPManager.dll Indicators.dll LicenseManager.exe LicenseSpot.Framework.dll Logo.ico MathNet.Numerics.IO.dll MathNet.Numerics.dll MathNet.Spatial.dll MediaInfo.DotNetWrapper.dll MediaInfo.dll MediaInfo.dll_1 MediaInfo.dll_2 MediaInfo_InfoTip.dll Microsoft.CSharp.dll Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll NDtw.dll NLog.dll NetTopologySuite.CoordinateSystems.dll NetTopologySuite.dll Newtonsoft.Json.dll NvAPIWrapper.Net.dll NvAPIWrapper.dll OptAssignTest.dll PowerCollections.dll ProductInformation RalewayBlack.ttf Roadometry SharpRaven.dll System.Collections.Immutable.dll System.Runtime.InteropServices.RuntimeInformation.dll TrajectoryAnalyzer.exe VTC.Classifier.dll VTC.Common.dll VTC.Kernel.dll VTC.KernelTests.dll VTC.Reporting.dll VTC.exe ZedGraph.dll ZedGraph.resources.dll ZedGraph.resources.dll_1 ZedGraph.resources.dll_10 ZedGraph.resources.dll_11 ZedGraph.resources.dll_12 ZedGraph.resources.dll_2 ZedGraph.resources.dll_3 ZedGraph.resources.dll_4 ZedGraph.resources.dll_5 ZedGraph.resources.dll_6 ZedGraph.resources.dll_7 ZedGraph.resources.dll_8 ZedGraph.resources.dll_9 ZeroMQ.dll cars.png concrt140.dll concrt140.dll_1 cublas64_10.dll cublas64_100.dll cudart32_100.dll cudart64_100.dll cudart64_101.dll cudnn64_7.dll curand64_10.dll curand64_100.dll cvextern.dll cvextern.dll_1 deviceQuery.exe eventConfig.xml libcrypto1_1.dll libcrypto1_1.dll_1 libcrypto1_1x64.dll libcrypto1_1x64.dll_1 libcurl.dll libcurl.dll_1 libcurl.dll_2 libsodium.so libssh2.dll libssh2.dll_1 libssh2.dll_2 libssl1_1.dll libssl1_1.dll_1 libssl1_1x64.dll libssl1_1x64.dll_1 libzmq.dll libzmq.dll_1 msvcp140.dll msvcp140.dll_1 opencv_ffmpeg330.dll opencv_ffmpeg330_64.dll opencv_ffmpeg343.dll opencv_ffmpeg343_64.dll opencv_ffmpeg346_64.dll opencv_world330.dll opencv_world330d.dll opencv_world346.dll opencv_world346d.dll pthreadGC2.dll pthreadVC2.dll transport.names vcruntime140.dll vcruntime140.dll_1 yolo_cpp_dll.dll yolo_cpp_dll_no_gpu.dll"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0" Components="AI_ExePath Akka.dll BigLogo.png DirectShowLib2005.dll Emgu.CV.UI.dll Emgu.CV.World.dll GeoAPI.CoordinateSystems.dll GeoAPI.dll IPManager.dll Indicators.dll LicenseManager.exe LicenseSpot.Framework.dll Logo.ico MathNet.Numerics.IO.dll MathNet.Numerics.dll MathNet.Spatial.dll MediaInfo.DotNetWrapper.dll MediaInfo.dll MediaInfo.dll_1 MediaInfo.dll_2 MediaInfo_InfoTip.dll Microsoft.CSharp.dll Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll NDtw.dll NLog.dll NetTopologySuite.CoordinateSystems.dll NetTopologySuite.dll Newtonsoft.Json.dll NvAPIWrapper.Net.dll NvAPIWrapper.dll OptAssignTest.dll PowerCollections.dll ProductInformation RalewayBlack.ttf Roadometry SharpRaven.dll System.Collections.Immutable.dll System.Runtime.InteropServices.RuntimeInformation.dll TrajectoryAnalyzer.exe VTC.Classifier.dll VTC.Common.dll VTC.Kernel.dll VTC.KernelTests.dll VTC.Reporting.dll VTC.exe VTCSupervisor.exe ZedGraph.dll ZedGraph.resources.dll ZedGraph.resources.dll_1 ZedGraph.resources.dll_10 ZedGraph.resources.dll_11 ZedGraph.resources.dll_12 ZedGraph.resources.dll_2 ZedGraph.resources.dll_3 ZedGraph.resources.dll_4 ZedGraph.resources.dll_5 ZedGraph.resources.dll_6 ZedGraph.resources.dll_7 ZedGraph.resources.dll_8 ZedGraph.resources.dll_9 ZeroMQ.dll cars.png concrt140.dll concrt140.dll_1 cublas64_10.dll cublas64_100.dll cublasLt64_10.dll cudart32_100.dll cudart64_100.dll cudart64_101.dll cudnn64_7.dll curand64_10.dll curand64_100.dll cvextern.dll cvextern.dll_1 deviceQuery.exe eventConfig.xml libcrypto1_1.dll libcrypto1_1.dll_1 libcrypto1_1x64.dll libcrypto1_1x64.dll_1 libcurl.dll libcurl.dll_1 libcurl.dll_2 libsodium.so libssh2.dll libssl1_1.dll libssl1_1.dll_1 libssl1_1x64.dll libssl1_1x64.dll_1 libzmq.dll libzmq.dll_1 msvcp140.dll msvcp140.dll_1 opencv_ffmpeg330.dll opencv_ffmpeg330_64.dll opencv_ffmpeg346_64.dll opencv_ffmpeg410.dll opencv_ffmpeg410_64.dll opencv_world330.dll opencv_world330d.dll opencv_world346.dll opencv_world346d.dll pthreadGC2.dll pthreadVC2.dll transport.names vcruntime140.dll vcruntime140.dll_1 yolo_cpp_dll.dll yolo_cpp_dll_no_gpu.dll"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
@@ -219,8 +219,8 @@
     <ROW File="MathNet.Spatial.xml" Component_="Logo.ico" FileName="MATHNE~3.XML|MathNet.Spatial.xml" Attributes="0" SourcePath="..\bin\MathNet.Spatial.xml" SelfReg="false" NextFile="Microsoft.CSharp.xml"/>
     <ROW File="MediaInfo.DotNetWrapper.dll" Component_="MediaInfo.DotNetWrapper.dll" FileName="MEDIAI~2.DLL|MediaInfo.DotNetWrapper.dll" Attributes="0" SourcePath="..\bin\MediaInfo.DotNetWrapper.dll" SelfReg="false" NextFile="MediaInfo_InfoTip.dll"/>
     <ROW File="MediaInfo.dll" Component_="MediaInfo.dll" FileName="MEDIAI~1.DLL|MediaInfo.dll" Attributes="0" SourcePath="..\bin\MediaInfo.dll" SelfReg="false" NextFile="MediaInfo.DotNetWrapper.dll"/>
-    <ROW File="MediaInfo.dll_1" Component_="MediaInfo.dll_1" FileName="MEDIAI~1.DLL|MediaInfo.dll" Attributes="0" SourcePath="..\bin\x64\MediaInfo.dll" SelfReg="false" NextFile="opencv_ffmpeg343_64.dll"/>
-    <ROW File="MediaInfo.dll_2" Component_="MediaInfo.dll_2" FileName="MEDIAI~1.DLL|MediaInfo.dll" Attributes="0" SourcePath="..\bin\x86\MediaInfo.dll" SelfReg="false" NextFile="opencv_ffmpeg343.dll"/>
+    <ROW File="MediaInfo.dll_1" Component_="MediaInfo.dll_1" FileName="MEDIAI~1.DLL|MediaInfo.dll" Attributes="0" SourcePath="..\bin\x64\MediaInfo.dll" SelfReg="false" NextFile="libcrypto1_1.dll_1"/>
+    <ROW File="MediaInfo.dll_2" Component_="MediaInfo.dll_2" FileName="MEDIAI~1.DLL|MediaInfo.dll" Attributes="0" SourcePath="..\bin\x86\MediaInfo.dll" SelfReg="false" NextFile="RalewayBlack.ttf"/>
     <ROW File="MediaInfo_InfoTip.dll" Component_="MediaInfo_InfoTip.dll" FileName="MEDIAI~3.DLL|MediaInfo_InfoTip.dll" Attributes="0" SourcePath="..\bin\MediaInfo_InfoTip.dll" SelfReg="false" NextFile="NetTopologySuite.CoordinateSystems.dll"/>
     <ROW File="Microsoft.CSharp.dll" Component_="Microsoft.CSharp.dll" FileName="MICROS~1.DLL|Microsoft.CSharp.dll" Attributes="0" SourcePath="..\bin\Microsoft.CSharp.dll" SelfReg="false" NextFile="Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"/>
     <ROW File="Microsoft.CSharp.xml" Component_="Logo.ico" FileName="MICROS~1.XML|Microsoft.CSharp.xml" Attributes="0" SourcePath="..\bin\Microsoft.CSharp.xml" SelfReg="false" NextFile="NetTopologySuite.xml"/>
@@ -240,6 +240,7 @@
     <ROW File="NvAPIWrapper.Net.dll" Component_="NvAPIWrapper.Net.dll" FileName="NVAPIW~1.DLL|NvAPIWrapper.Net.dll" Attributes="0" SourcePath="..\bin\NvAPIWrapper.Net.dll" SelfReg="false" NextFile="OptAssignTest.dll"/>
     <ROW File="NvAPIWrapper.Net.xml" Component_="Logo.ico" FileName="NVAPIW~1.XML|NvAPIWrapper.Net.xml" Attributes="0" SourcePath="..\bin\NvAPIWrapper.Net.xml" SelfReg="false" NextFile="PowerCollections.xml"/>
     <ROW File="NvAPIWrapper.dll" Component_="NvAPIWrapper.dll" FileName="NVAPIW~2.DLL|NvAPIWrapper.dll" Attributes="0" SourcePath="..\bin\NvAPIWrapper.dll" SelfReg="false" NextFile="opencv_ffmpeg330.dll"/>
+    <ROW File="NvAPIWrapper.xml" Component_="Logo.ico" FileName="NVAPIW~2.XML|NvAPIWrapper.xml" Attributes="0" SourcePath="..\bin\NvAPIWrapper.xml" SelfReg="false" NextFile="VTCSupervisor.exe"/>
     <ROW File="OptAssignTest.dll" Component_="OptAssignTest.dll" FileName="OPTASS~1.DLL|OptAssignTest.dll" Attributes="0" SourcePath="..\bin\OptAssignTest.dll" SelfReg="false" NextFile="PowerCollections.dll"/>
     <ROW File="OptAssignTest.dll.config" Component_="Logo.ico" FileName="OPTASS~1.CON|OptAssignTest.dll.config" Attributes="0" SourcePath="..\bin\OptAssignTest.dll.config" SelfReg="false" NextFile="TrajectoryAnalyzer.exe.config"/>
     <ROW File="OptAssignTest.pdb" Component_="OptAssignTest.dll" FileName="OPTASS~1.PDB|OptAssignTest.pdb" Attributes="0" SourcePath="..\bin\OptAssignTest.pdb" SelfReg="false" NextFile="TrajectoryAnalyzer.pdb"/>
@@ -288,6 +289,9 @@
     <ROW File="VTC.exe" Component_="VTC.exe" FileName="VTC.exe" Attributes="0" SourcePath="..\bin\VTC.exe" SelfReg="false" NextFile="Akka.dll" DigSign="true"/>
     <ROW File="VTC.exe.config" Component_="Logo.ico" FileName="VTCEXE~1.CON|VTC.exe.config" Attributes="0" SourcePath="..\bin\VTC.exe.config" SelfReg="false" NextFile="VTC.Kernel.dll.config"/>
     <ROW File="VTC.pdb" Component_="VTC.exe" FileName="VTC.pdb" Attributes="0" SourcePath="..\bin\VTC.pdb" SelfReg="false" NextFile="VTC.Reporting.pdb"/>
+    <ROW File="VTCSupervisor.exe" Component_="VTCSupervisor.exe" FileName="VTCSUP~1.EXE|VTC Supervisor.exe" Attributes="0" SourcePath="..\bin\VTC Supervisor.exe" SelfReg="false" NextFile="VTCSupervisor.exe.config" DigSign="true"/>
+    <ROW File="VTCSupervisor.exe.config" Component_="Logo.ico" FileName="VTCSUP~1.CON|VTC Supervisor.exe.config" Attributes="0" SourcePath="..\bin\VTC Supervisor.exe.config" SelfReg="false" NextFile="VTCSupervisor.pdb"/>
+    <ROW File="VTCSupervisor.pdb" Component_="VTCSupervisor.exe" FileName="VTCSUP~1.PDB|VTC Supervisor.pdb" Attributes="0" SourcePath="..\bin\VTC Supervisor.pdb" SelfReg="false" NextFile="opencv_ffmpeg410_64.dll"/>
     <ROW File="VTCobj.names" Component_="transport.names" FileName="VTC-OB~1.NAM|VTC-obj.names" Attributes="0" SourcePath="..\bin\DetectionNetwork\VTC-obj.names" SelfReg="false" NextFile="VTCyolov3.cfg"/>
     <ROW File="VTCyolov3.cfg" Component_="transport.names" FileName="VTC-YO~1.CFG|VTC-yolov3.cfg" Attributes="0" SourcePath="..\bin\DetectionNetwork\VTC-yolov3.cfg" SelfReg="false" NextFile="VTCyolov3_3000.weights"/>
     <ROW File="VTCyolov3_3000.weights" Component_="transport.names" FileName="VTC-YO~1.WEI|VTC-yolov3_3000.weights" Attributes="0" SourcePath="..\bin\DetectionNetwork\VTC-yolov3_3000.weights" SelfReg="false" NextFile="opencv_ffmpeg346_64.dll"/>
@@ -313,6 +317,7 @@
     <ROW File="concrt140.dll_1" Component_="concrt140.dll_1" FileName="CONCRT~1.DLL|concrt140.dll" Attributes="0" SourcePath="..\bin\x86\concrt140.dll" SelfReg="false" NextFile="cvextern.dll_1"/>
     <ROW File="cublas64_10.dll" Component_="cublas64_10.dll" FileName="CUBLAS~3.DLL|cublas64_10.dll" Attributes="0" SourcePath="..\bin\cublas64_10.dll" SelfReg="false" NextFile="cudart64_101.dll"/>
     <ROW File="cublas64_100.dll" Component_="cublas64_100.dll" FileName="CUBLAS~2.DLL|cublas64_100.dll" Attributes="0" SourcePath="..\bin\cublas64_100.dll" SelfReg="false" NextFile="cudart32_100.dll"/>
+    <ROW File="cublasLt64_10.dll" Component_="cublasLt64_10.dll" FileName="CUBLAS~1.DLL|cublasLt64_10.dll" Attributes="0" SourcePath="..\bin\cublasLt64_10.dll" SelfReg="false" NextFile="NvAPIWrapper.xml"/>
     <ROW File="cudart32_100.dll" Component_="cudart32_100.dll" FileName="CUDART~2.DLL|cudart32_100.dll" Attributes="0" SourcePath="..\bin\cudart32_100.dll" SelfReg="false" NextFile="cudart64_100.dll"/>
     <ROW File="cudart64_100.dll" Component_="cudart64_100.dll" FileName="CUDART~3.DLL|cudart64_100.dll" Attributes="0" SourcePath="..\bin\cudart64_100.dll" SelfReg="false" NextFile="curand64_100.dll"/>
     <ROW File="cudart64_101.dll" Component_="cudart64_101.dll" FileName="CUDART~4.DLL|cudart64_101.dll" Attributes="0" SourcePath="..\bin\cudart64_101.dll" SelfReg="false" NextFile="curand64_10.dll"/>
@@ -331,11 +336,9 @@
     <ROW File="libcrypto1_1x64.dll" Component_="libcrypto1_1x64.dll" FileName="LIBCRY~1.DLL|libcrypto-1_1-x64.dll" Attributes="0" SourcePath="..\bin\libcrypto-1_1-x64.dll" SelfReg="false" NextFile="libcrypto1_1.dll"/>
     <ROW File="libcrypto1_1x64.dll_1" Component_="libcrypto1_1x64.dll_1" FileName="LIBCRY~1.DLL|libcrypto-1_1-x64.dll" Attributes="0" SourcePath="..\bin\x64\libcrypto-1_1-x64.dll" SelfReg="false" NextFile="libcurl.dll_1"/>
     <ROW File="libcurl.dll" Component_="libcurl.dll" FileName="libcurl.dll" Attributes="0" SourcePath="..\bin\libcurl.dll" SelfReg="false" NextFile="libssh2.dll"/>
-    <ROW File="libcurl.dll_1" Component_="libcurl.dll_1" FileName="libcurl.dll" Attributes="0" SourcePath="..\bin\x64\libcurl.dll" SelfReg="false" NextFile="libssh2.dll_1"/>
-    <ROW File="libcurl.dll_2" Component_="libcurl.dll_2" FileName="libcurl.dll" Attributes="0" SourcePath="..\bin\x86\libcurl.dll" SelfReg="false" NextFile="libssh2.dll_2"/>
+    <ROW File="libcurl.dll_1" Component_="libcurl.dll_1" FileName="libcurl.dll" Attributes="0" SourcePath="..\bin\x64\libcurl.dll" SelfReg="false" NextFile="libssl1_1x64.dll_1"/>
+    <ROW File="libcurl.dll_2" Component_="libcurl.dll_2" FileName="libcurl.dll" Attributes="0" SourcePath="..\bin\x86\libcurl.dll" SelfReg="false" NextFile="libssl1_1.dll_1"/>
     <ROW File="libssh2.dll" Component_="libssh2.dll" FileName="libssh2.dll" Attributes="0" SourcePath="..\bin\libssh2.dll" SelfReg="false" NextFile="libssl1_1x64.dll"/>
-    <ROW File="libssh2.dll_1" Component_="libssh2.dll_1" FileName="libssh2.dll" Attributes="0" SourcePath="..\bin\x64\libssh2.dll" SelfReg="false" NextFile="libssl1_1x64.dll_1"/>
-    <ROW File="libssh2.dll_2" Component_="libssh2.dll_2" FileName="libssh2.dll" Attributes="0" SourcePath="..\bin\x86\libssh2.dll" SelfReg="false" NextFile="libssl1_1.dll_1"/>
     <ROW File="libssl1_1.dll" Component_="libssl1_1.dll" FileName="LIBSSL~2.DLL|libssl-1_1.dll" Attributes="0" SourcePath="..\bin\libssl-1_1.dll" SelfReg="false" NextFile="MediaInfo.dll"/>
     <ROW File="libssl1_1.dll_1" Component_="libssl1_1.dll_1" FileName="LIBSSL~1.DLL|libssl-1_1.dll" Attributes="0" SourcePath="..\bin\x86\libssl-1_1.dll" SelfReg="false" NextFile="MediaInfo.dll_2"/>
     <ROW File="libssl1_1x64.dll" Component_="libssl1_1x64.dll" FileName="LIBSSL~1.DLL|libssl-1_1-x64.dll" Attributes="0" SourcePath="..\bin\libssl-1_1-x64.dll" SelfReg="false" NextFile="libssl1_1.dll"/>
@@ -348,9 +351,9 @@
     <ROW File="msvcp140.dll_1" Component_="msvcp140.dll_1" FileName="msvcp140.dll" Attributes="0" SourcePath="..\bin\x86\msvcp140.dll" SelfReg="false" NextFile="vcruntime140.dll_1"/>
     <ROW File="opencv_ffmpeg330.dll" Component_="opencv_ffmpeg330.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg330.dll" Attributes="0" SourcePath="..\bin\opencv_ffmpeg330.dll" SelfReg="false" NextFile="opencv_ffmpeg330_64.dll"/>
     <ROW File="opencv_ffmpeg330_64.dll" Component_="opencv_ffmpeg330_64.dll" FileName="OPENCV~2.DLL|opencv_ffmpeg330_64.dll" Attributes="0" SourcePath="..\bin\opencv_ffmpeg330_64.dll" SelfReg="false" NextFile="opencv_world330.dll"/>
-    <ROW File="opencv_ffmpeg343.dll" Component_="opencv_ffmpeg343.dll" FileName="OPENCV~2.DLL|opencv_ffmpeg343.dll" Attributes="0" SourcePath="..\bin\x86\opencv_ffmpeg343.dll" SelfReg="false" NextFile="RalewayBlack.ttf"/>
-    <ROW File="opencv_ffmpeg343_64.dll" Component_="opencv_ffmpeg343_64.dll" FileName="OPENCV~2.DLL|opencv_ffmpeg343_64.dll" Attributes="0" SourcePath="..\bin\x64\opencv_ffmpeg343_64.dll" SelfReg="false" NextFile="libcrypto1_1.dll_1"/>
     <ROW File="opencv_ffmpeg346_64.dll" Component_="opencv_ffmpeg346_64.dll" FileName="OPENCV~5.DLL|opencv_ffmpeg346_64.dll" Attributes="0" SourcePath="..\bin\opencv_ffmpeg346_64.dll" SelfReg="false" NextFile="opencv_world346.dll"/>
+    <ROW File="opencv_ffmpeg410.dll" Component_="opencv_ffmpeg410.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg410.dll" Attributes="0" SourcePath="..\bin\x86\opencv_ffmpeg410.dll" SelfReg="false"/>
+    <ROW File="opencv_ffmpeg410_64.dll" Component_="opencv_ffmpeg410_64.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg410_64.dll" Attributes="0" SourcePath="..\bin\x64\opencv_ffmpeg410_64.dll" SelfReg="false" NextFile="opencv_ffmpeg410.dll"/>
     <ROW File="opencv_world330.dll" Component_="opencv_world330.dll" FileName="OPENCV~3.DLL|opencv_world330.dll" Attributes="0" SourcePath="..\bin\opencv_world330.dll" SelfReg="false" NextFile="opencv_world330d.dll"/>
     <ROW File="opencv_world330d.dll" Component_="opencv_world330d.dll" FileName="OPENCV~4.DLL|opencv_world330d.dll" Attributes="0" SourcePath="..\bin\opencv_world330d.dll" SelfReg="false" NextFile="cars.png"/>
     <ROW File="opencv_world346.dll" Component_="opencv_world346.dll" FileName="OPENCV~6.DLL|opencv_world346.dll" Attributes="0" SourcePath="..\bin\opencv_world346.dll" SelfReg="false" NextFile="opencv_world346d.dll"/>
@@ -366,7 +369,7 @@
     <ROW File="yolo_cpp_dll.dll" Component_="yolo_cpp_dll.dll" FileName="YOLO_C~1.DLL|yolo_cpp_dll.dll" Attributes="0" SourcePath="..\bin\yolo_cpp_dll.dll" SelfReg="false" NextFile="yolo_cpp_dll_no_gpu.dll"/>
     <ROW File="yolo_cpp_dll.pdb" Component_="yolo_cpp_dll.dll" FileName="YOLO_C~1.PDB|yolo_cpp_dll.pdb" Attributes="0" SourcePath="..\bin\yolo_cpp_dll.pdb" SelfReg="false" NextFile="yolo_cpp_dll_no_gpu.pdb"/>
     <ROW File="yolo_cpp_dll_no_gpu.dll" Component_="yolo_cpp_dll_no_gpu.dll" FileName="YOLO_C~2.DLL|yolo_cpp_dll_no_gpu.dll" Attributes="0" SourcePath="..\bin\yolo_cpp_dll_no_gpu.dll" SelfReg="false" NextFile="ZedGraph.dll"/>
-    <ROW File="yolo_cpp_dll_no_gpu.pdb" Component_="yolo_cpp_dll_no_gpu.dll" FileName="YOLO_C~2.PDB|yolo_cpp_dll_no_gpu.pdb" Attributes="0" SourcePath="..\bin\yolo_cpp_dll_no_gpu.pdb" SelfReg="false"/>
+    <ROW File="yolo_cpp_dll_no_gpu.pdb" Component_="yolo_cpp_dll_no_gpu.dll" FileName="YOLO_C~2.PDB|yolo_cpp_dll_no_gpu.pdb" Attributes="0" SourcePath="..\bin\yolo_cpp_dll_no_gpu.pdb" SelfReg="false" NextFile="cublasLt64_10.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -506,6 +509,7 @@
     <ROW File_="RalewayThinItalic.ttf"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
+    <ROW Name="VTCSupervisor.exe" SourcePath="..\VTC Supervisor\supervisor.ico" Index="0"/>
     <ROW Name="favicon.exe" SourcePath="..\bin\ReportAssets\favicon.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
@@ -561,6 +565,8 @@
     <ROW Shortcut="TrajectoryAnalyzer" Directory_="DesktopFolder" Name="TRAJEC~1|TrajectoryAnalyzer" Component_="TrajectoryAnalyzer.exe" Target="[#TrajectoryAnalyzer.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="TrajectoryAnalyzer_1" Directory_="Roadometry_Dir" Name="TRAJEC~1|TrajectoryAnalyzer" Component_="TrajectoryAnalyzer.exe" Target="[#TrajectoryAnalyzer.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="VTC" Directory_="DesktopFolder" Name="VTC" Component_="VTC.exe" Target="[#VTC.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="VTCSupervisor" Directory_="Roadometry_Dir" Name="VTCSUP~1|VTC Supervisor" Component_="VTCSupervisor.exe" Target="[#VTCSupervisor.exe]" Hotkey="0" Icon_="VTCSupervisor.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="VTCSupervisor_1" Directory_="DesktopFolder" Name="VTCSUP~1|VTC Supervisor" Component_="VTCSupervisor.exe" Target="[#VTCSupervisor.exe]" Hotkey="0" Icon_="VTCSupervisor.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="VTC_1" Directory_="Roadometry_Dir" Name="VTC" Component_="VTC.exe" Target="[#VTC.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">

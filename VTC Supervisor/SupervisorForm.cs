@@ -62,16 +62,19 @@ namespace VTC_Supervisor
             if (ipcamera1Checkbox.Checked)
             {
                 Process.Start("VTC.exe","IP1");
+                System.Threading.Thread.Sleep(5000);
             }
 
             if (ipcamera2Checkbox.Checked)
             {
                 Process.Start("VTC.exe","IP2");
+                System.Threading.Thread.Sleep(5000);
             }
 
             if (ipcamera3Checkbox.Checked)
             {
                 Process.Start("VTC.exe","IP3");
+                System.Threading.Thread.Sleep(5000);
             }
         }
     }
