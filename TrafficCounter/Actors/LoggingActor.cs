@@ -185,6 +185,8 @@ namespace VTC.Actors
 
             Self.Tell(new LoadUserConfigMessage());
 
+            Context.Parent.Tell(new RequestVideoSourceMessage(Self));
+
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0,1,0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
 
@@ -209,7 +211,7 @@ namespace VTC.Actors
 
         protected override void PostRestart(Exception cause)
         {
-            Log("(PostRestart) restarting due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error, "LoggingActor");
+            Log("(PostRestart) restarted due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error, "LoggingActor");
             base.PostRestart(cause);
         }
 
@@ -1074,19 +1076,28 @@ namespace VTC.Actors
 
             if (_regionConfig.SendToServer)
             {
-                var rs = new RemoteServer();
-                var rsr = rs.SendHeartbeat(_regionConfig.SiteToken, _userConfig.ServerUrl).Result;
-                if (rsr != HttpStatusCode.OK)
+                try
                 {
-                    Log("Heartbeat POST failed:" + rsr, LogLevel.Error, "LoggingActor");
+                    var rs = new RemoteServer();
+                    var rsr = rs.SendHeartbeat(_regionConfig.SiteToken, _userConfig.ServerUrl).Result;
+                    if (rsr != HttpStatusCode.OK)
+                    {
+                        Log("Heartbeat POST failed:" + rsr, LogLevel.Error, "LoggingActor");
+                    }
+                    else
+                    {
+                        Log("Heartbeat success", LogLevel.Info, "LoggingActor");
+                    }
+
+                    string heartbeatStatus = "Heartbeat: " + rsr;
+                    _updateDebugDelegate?.Invoke(heartbeatStatus);
                 }
-                else
+                catch (Exception ex)
                 {
-                    Log("Heartbeat success", LogLevel.Info, "LoggingActor");
+                    Log(ex.Message + " at " + ex.StackTrace + " , exception " + ex.InnerException, LogLevel.Error,
+                        "LoggingActor");
                 }
 
-                string heartbeatStatus = "Heartbeat: " + rsr;
-                _updateDebugDelegate?.Invoke(heartbeatStatus);
             }
             else
             {

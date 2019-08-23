@@ -52,14 +52,32 @@ namespace VTC.Remote
 
         public async Task<HttpStatusCode> SendHeartbeat(string siteToken, string serverUrl)
         {
-            //Get remote server
-            var createHeartbeatUrl = serverUrl + HeartbeatsRoute + "?site_token=" + siteToken;
-            var jsonString = "";
-            var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            if (siteToken == "" || serverUrl == "" || siteToken == null || serverUrl == null)
+            {
+                return HttpStatusCode.NotFound;
+            }
 
-            //Transmit
-            var response = await Client.PostAsync(createHeartbeatUrl, content);
-            return response.StatusCode;
+            try
+            {
+                //Get remote server
+                var createHeartbeatUrl = serverUrl + HeartbeatsRoute + "?site_token=" + siteToken;
+                var jsonString = "";
+                var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+                //Transmit
+                var response = await Client.PostAsync(createHeartbeatUrl, content);
+                return response.StatusCode;
+            }
+            catch (WebException ex)
+            {
+
+            }
+            catch (Exception Ex)
+            {
+
+            }
+
+            return HttpStatusCode.NotFound;
         }
 
     }

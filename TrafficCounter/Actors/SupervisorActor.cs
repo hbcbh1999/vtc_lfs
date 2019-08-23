@@ -56,6 +56,10 @@ namespace VTC.Actors
                 UpdateConfigurationActor(message.ActorRef)
             );
 
+            Receive<RequestVideoSourceMessage>(message =>
+                HandleVideoSourceRequest(message.ActorRef)
+            );
+
             Receive<CreateAllActorsMessage>(message =>
                 CreateAllActors(message.UpdateUiDelegate, message.UpdateStatsUiDelegate, message.UpdateInfoUiDelegate, message.UpdateFrameGrabUiDelegate, message.UpdateDebugDelegate)
             );
@@ -198,6 +202,14 @@ namespace VTC.Actors
             IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
 
             _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
+        }
+
+        private void HandleVideoSourceRequest(IActorRef actor)
+        {
+            if (_captureSource != null)
+            {
+                actor.Tell(new NewVideoSourceMessage(_captureSource));
+            }
         }
 
         private void RestartFrameGrabActor()
