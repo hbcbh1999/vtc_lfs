@@ -167,24 +167,27 @@ namespace VTC.Kernel
             }
 
             //U-Turns
-            if (approach1 != null && approach3 != null && exit1 != null && exit3 != null)
+            if (regionConfig.DisableUTurns == false)
             {
-                var road13Movements = RoadPairToTurnMovements(approach1, exit1, approach3, exit3, Turn.UTurn, ObjectType.Car, 20);
-                turnMovements.AddRange(road13Movements);
-                var road31Movements = RoadPairToTurnMovements(approach3, exit3, approach1, exit1, Turn.UTurn, ObjectType.Car, 20);
-                turnMovements.AddRange(road31Movements);
-            }
+                if (approach1 != null && approach3 != null && exit1 != null && exit3 != null)
+                {
+                    var road13Movements = RoadPairToTurnMovements(approach1, exit1, approach3, exit3, Turn.UTurn, ObjectType.Car, 20);
+                    turnMovements.AddRange(road13Movements);
+                    var road31Movements = RoadPairToTurnMovements(approach3, exit3, approach1, exit1, Turn.UTurn, ObjectType.Car, 20);
+                    turnMovements.AddRange(road31Movements);
+                }
 
-            if (approach2 != null && approach4 != null && exit2 != null && exit4 != null)
-            {
-                var road24Movements = RoadPairToTurnMovements(approach2, exit2, approach4, exit4, Turn.UTurn, ObjectType.Car, 20);
-                turnMovements.AddRange(road24Movements);
-                var road42Movements = RoadPairToTurnMovements(approach4, exit4, approach2, exit2, Turn.UTurn, ObjectType.Car, 20);
-                turnMovements.AddRange(road42Movements);
+                if (approach2 != null && approach4 != null && exit2 != null && exit4 != null)
+                {
+                    var road24Movements = RoadPairToTurnMovements(approach2, exit2, approach4, exit4, Turn.UTurn, ObjectType.Car, 20);
+                    turnMovements.AddRange(road24Movements);
+                    var road42Movements = RoadPairToTurnMovements(approach4, exit4, approach2, exit2, Turn.UTurn, ObjectType.Car, 20);
+                    turnMovements.AddRange(road42Movements);
+                }
             }
 
             foreach(var m in turnMovements)
-            { 
+            {
                 TrajectoryPrototypes.Add(m);
                 var tl = new TrajectoryLogger(m);
                 tl.Save(filepath);  

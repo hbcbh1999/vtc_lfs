@@ -151,6 +151,10 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public bool CountPedestriansAsMotorcycles { get; set; } = false;
 
+        [Description("DisableUTurns: Do not classify any movements as U-turns.")]
+        [DataMember]
+        public bool DisableUTurns { get; set; } = false;
+
 
         public RegionConfig()
         {
