@@ -33,6 +33,8 @@ namespace VTC.Kernel
         private const double POSITION_MULTIPLIER = 0.011;
         private const double ANGLE_MULTIPLIER = 0.01;
         private const double CURVATURE_MULTIPLIER = 500.0;
+        private const int STOP_COUNT_THRESHOLD = 5;
+        private const double STOPPED_VELOCITY_MAGNITUDE_THRESHOLD = 1.5;
 
         public static Movement MatchNearestTrajectory(TrackedObject d, string classType, int minPathLength, List<Movement> trajectoryPrototypes)
         {
@@ -81,7 +83,13 @@ namespace VTC.Kernel
             //want to accidentally iterate backwards on t2.
             var indexT2 = 0;
 
-            for(int i=0;i<trajectory1.Count;i++)
+            //These variables are used to detect and clip (discard) match-costs for long periods where the vehicle is stopped. 
+            //If this operation is not performed, the periods where the vehicle is stopped are over-weighted and tend to dominate
+            //the classifier's decision.
+            bool objectStopped = false;
+            int stopCount = 0;
+
+            for (int i=0;i<trajectory1.Count;i++)
             {
                 var trajectory1StateEstimate = trajectory1[i];
                 var trajectory2NearestStateEstimate = NearestPointOnTrajectory(trajectory1StateEstimate, trajectory2.GetRange(indexT2,trajectory2.Count()-indexT2));
@@ -98,14 +106,32 @@ namespace VTC.Kernel
                 iv2.x = trajectory2NearestStateEstimate.Vx;
                 iv2.y = trajectory2NearestStateEstimate.Vy;
 
-                var angle1 = Math.Atan2(-iv1.y, iv1.x);
-                var angle2 = Math.Atan2(-iv2.y, iv2.x);
-
                 var angleDiff = CompareAngles(iv1, iv2);
                 var velocityMagnitude = Math.Sqrt(Math.Pow(iv1.x,2) + Math.Pow(iv1.y,2));
+
+                if (velocityMagnitude < STOPPED_VELOCITY_MAGNITUDE_THRESHOLD)
+                {
+                    stopCount++;
+                }
+                else
+                {
+                    stopCount = 0;
+                }
+
+                if (stopCount >= STOP_COUNT_THRESHOLD)
+                {
+                    objectStopped = true;
+                }
+                else
+                {
+                    objectStopped = false;
+                }
+
                 var thisPointCost = POSITION_MULTIPLIER*positionCost + ANGLE_MULTIPLIER*angleDiff*velocityMagnitude;
-                //Console.WriteLine("TotalCost," + thisPointCost + ",PositionCost," + positionCost + ",AngleCost," + angleDiff + ",Angle1," + iv1.AngleRad() + ",Angle2," + iv2.AngleRad() + ",Vx1," + iv1.x + ",Vy1," + iv1.y + ",Vx2," + iv2.x + ",Vy2," + iv2.y);
-                cost += thisPointCost;
+                if (!objectStopped)
+                {
+                    cost += thisPointCost;
+                }
             }
 
             var curvature1 = Curvature(trajectory1);
@@ -113,7 +139,6 @@ namespace VTC.Kernel
             var curvatureDifference = Math.Abs(curvature1 - curvature2);
             cost += curvatureDifference*CURVATURE_MULTIPLIER;
             
-            //Console.WriteLine("Final cost: " + cost);
             return cost;
         }
 
@@ -131,6 +156,12 @@ namespace VTC.Kernel
             //This index is used to force the comparison to proceed in the 'forwards' direction; we do not
             //want to accidentally iterate backwards on t2.
             var indexT2 = 0;
+
+            //These variables are used to detect and clip (discard) match-costs for long periods where the vehicle is stopped. 
+            //If this operation is not performed, the periods where the vehicle is stopped are over-weighted and tend to dominate
+            //the classifier's decision.
+            bool objectStopped = false;
+            int stopCount = 0;
 
             for(int i=0;i<trajectory1.Count;i++)
             {
@@ -150,15 +181,36 @@ namespace VTC.Kernel
                 iv2.x = trajectory2NearestStateEstimate.Vx;
                 iv2.y = trajectory2NearestStateEstimate.Vy;
 
-                var angle1 = Math.Atan2(-iv1.y, iv1.x);
-                var angle2 = Math.Atan2(-iv2.y, iv2.x);
-
                 var angleDiff = CompareAngles(iv1, iv2);
                 var velocityMagnitude = Math.Sqrt(Math.Pow(iv1.x,2) + Math.Pow(iv1.y,2));
+
+                if (velocityMagnitude < STOPPED_VELOCITY_MAGNITUDE_THRESHOLD)
+                {
+                    stopCount++;
+                }
+                else
+                {
+                    stopCount = 0;
+                }
+
+                if (stopCount >= STOP_COUNT_THRESHOLD)
+                {
+                    objectStopped = true;
+                }
+                else
+                {
+                    objectStopped = false;
+                }
+
                 totalAngleCost += angleDiff * velocityMagnitude;
-                var thisPointCost = POSITION_MULTIPLIER*positionCost + ANGLE_MULTIPLIER*angleDiff*velocityMagnitude;  
-                cost += thisPointCost;
-                //Console.WriteLine("TotalCost," + thisPointCost + ",PositionCost," + positionCost + ",AngleCost," + angleDiff + ",Angle1," + iv1.AngleRad() + ",Angle2," + iv2.AngleRad() + ",Vx1," + iv1.x + ",Vy1," + iv1.y + ",Vx2," + iv2.x + ",Vy2," + iv2.y,"indexT2",indexT2);
+                var thisPointCost = POSITION_MULTIPLIER*positionCost + ANGLE_MULTIPLIER*angleDiff*velocityMagnitude;
+
+                if (!objectStopped)
+                {
+                    cost += thisPointCost;
+                }
+
+                //System.Diagnostics.Debug.WriteLine("TotalCost," + Math.Round(thisPointCost,2) + ",PositionCost," + Math.Round(positionCost,2) + ",AngleCost," + Math.Round(angleDiff,2) + ",Angle1," + Math.Round(iv1.AngleRad(),2) + ",Angle2," + Math.Round(iv2.AngleRad(),2) + ",Vx1," + Math.Round(iv1.x,2) + ",Vy1," + Math.Round(iv1.y,2) + ",Vx2," + Math.Round(iv2.x,2) + ",Vy2," + Math.Round(iv2.y,2),"indexT2",indexT2);
             }
             
             var curvature1 = Curvature(trajectory1);

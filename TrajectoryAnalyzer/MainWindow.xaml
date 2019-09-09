@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrajectoryAnalyzer"
         mc:Ignorable="d"
-        Title="Roadometry Trajectory Analyzer" Height="979" Width="930.314" WindowState="Maximized" Drop="Window_Drop" AllowDrop="True">
+        Title="Roadometry Trajectory Analyzer" Height="979" Width="1001.314" WindowState="Maximized" Drop="Window_Drop" AllowDrop="True">
     <StackPanel HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Height="920">
-        <Canvas Width="707" Margin="0,10">
+        <Canvas Width="779" Margin="0,10">
             <TextBox x:Name="TrajectoryFilenameBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="345" IsEnabled="False" Canvas.Left="35" Canvas.Top="64"/>
             <ListView x:Name="trajectoryListView" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="345" SelectionChanged="trajectoryListView_SelectionChanged" SelectionMode="Single" Canvas.Left="35" Canvas.Top="161">
                 <ListView.ItemTemplate>
@@ -48,7 +48,7 @@
             </ListView>
             <Label Content="Trajectory Matches" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Height="26" Canvas.Left="35" Canvas.Top="467" RenderTransformOrigin="1.663,1.154"/>
             <Label x:Name="movementNameBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" Canvas.Left="246" Canvas.Top="10" FontSize="16" FontWeight="Bold"/>
-            <StackPanel Canvas.Left="433" Orientation="Vertical" Canvas.Top="44" Width="209">
+            <StackPanel Canvas.Left="433" Orientation="Vertical" Canvas.Top="44" Width="270">
                 <Label Content="Number of samples:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Height="26" RenderTransformOrigin="1.663,1.154"/>
                 <Label x:Name="numSamplesBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
                 <Label Content="Missed detections:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="118" Height="26" RenderTransformOrigin="1.663,1.154"/>
@@ -61,6 +61,16 @@
                 <Label x:Name="netMovementBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
                 <Label Content="Path length:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="143" Height="26" RenderTransformOrigin="1.663,1.154"/>
                 <Label x:Name="pathLengthBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Maximum position covariance:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="maximumPositionCovarianceBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Average position covariance:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="183" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="averagePositionCovarianceBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Smoothness:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="183" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="smoothnessBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="Movement/length ratio:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="183" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="movementToLengthRatioBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
+                <Label Content="SmoothMovement:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="183" Height="26" RenderTransformOrigin="1.663,1.154"/>
+                <Label x:Name="smoothMovementBox" Content="--" HorizontalAlignment="Left" VerticalAlignment="Top" Width="209" Height="38" FontSize="16" FontWeight="Bold"/>
             </StackPanel>
             <CheckBox x:Name="filterSyntheticCheckbox" Content="Filter Synthetic Trajectories" Canvas.Left="246" Canvas.Top="140"/>
         </Canvas>

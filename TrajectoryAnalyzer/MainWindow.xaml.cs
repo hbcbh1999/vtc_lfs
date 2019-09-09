@@ -262,9 +262,6 @@ namespace TrajectoryAnalyzer
 
             if(showEndpointsCheckbox.IsChecked.Value)
             { 
-                //drawingContext.DrawText(new FormattedText("Start", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 18, Brushes.Red), new Point(firstMeasurement.X, firstMeasurement.Y));
-                //drawingContext.DrawText(new FormattedText("End", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 18, Brushes.Red), new Point(lastMeasurement.X, lastMeasurement.Y));
-
                 drawingContext.DrawEllipse(Brushes.Yellow, new  System.Windows.Media.Pen(Brushes.Yellow,1), new Point(firstMeasurement.X, firstMeasurement.Y), 3, 3);
                 drawingContext.DrawEllipse(Brushes.Purple, new  System.Windows.Media.Pen(Brushes.Purple,1), new Point(lastMeasurement.X, lastMeasurement.Y), 3, 3);
             }
@@ -347,13 +344,35 @@ namespace TrajectoryAnalyzer
                     lvi.Tag = me;
                     trajectoryMatchListView.Items.Add(lvi);
                 }
-                
-                netMovementBox.Content = tracked_object.NetMovement();
+
+                //var recalculateMatchCost = TrajectorySimilarity.PathIntegralCost(tracked_object.StateHistory, sortedMatches.First().movement.StateEstimates); 
+                //var recalculatedExplanation = sortedMatches.First().movement + " match-cost: " + Math.Round(recalculateMatchCost, 1) + "," + TrajectorySimilarity.CostExplanation(tracked_object.StateHistory, sortedMatches.First().movement.StateEstimates);
+                //System.Windows.Forms.MessageBox.Show(recalculatedExplanation);
+
+                var netMovement = tracked_object.NetMovement();
+                netMovementBox.Content = netMovement;
+
+                var pathLength = tracked_object.PathLengthIntegral();
+                pathLengthBox.Content = pathLength;
+
                 numSamplesBox.Content = movement.StateEstimates.Count();
                 missedDetectionsBox.Content = movement.StateEstimates.Sum(se => se.MissedDetections);
                 var lastStateEstimate = movement.StateEstimates.Last();
                 finalPositionCovarianceBox.Content = Math.Sqrt(Math.Pow(lastStateEstimate.CovX,2) + Math.Pow(lastStateEstimate.CovX,2));
-                pathLengthBox.Content = tracked_object.PathLengthIntegral();
+                maximumPositionCovarianceBox.Content =
+                    movement.StateEstimates.Select(se => Math.Sqrt(Math.Pow(se.CovX,2) + Math.Pow(se.CovY,2))).Max();
+                averagePositionCovarianceBox.Content =
+                    movement.StateEstimates.Select(se => Math.Sqrt(Math.Pow(se.CovX, 2) + Math.Pow(se.CovY, 2))).Average();
+
+                var smoothness = movement.Smoothness();
+                smoothnessBox.Content = smoothness;
+
+                var movementToLengthRatio = netMovement / pathLength;
+                movementToLengthRatioBox.Content = movementToLengthRatio;
+
+                var smoothMovement = smoothness * movementToLengthRatio;
+                smoothMovementBox.Content = smoothMovement;
+                
                 missRatioBox.Content = Math.Round( movement.MissRatio(),2);
             }
         }
@@ -444,7 +463,11 @@ namespace TrajectoryAnalyzer
 
                         foreach(var mwe in selectedPrototypeTrajectoriesList)
                         {
-                            RenderJoins(t.StateEstimates,mwe.movement.StateEstimates, drawingContext, Brushes.Yellow, 0.5);    
+                            RenderJoins(t.StateEstimates,mwe.movement.StateEstimates, drawingContext, Brushes.Yellow, 0.5);
+
+                            //var recalculateMatchCost = TrajectorySimilarity.PathIntegralCost(t.StateEstimates, mwe.movement.StateEstimates);
+                            //var recalculatedExplanation = mwe.movement + " match-cost: " + Math.Round(recalculateMatchCost, 1) + "," + TrajectorySimilarity.CostExplanation(t.StateEstimates, mwe.movement.StateEstimates);
+                            //System.Windows.Forms.MessageBox.Show(recalculatedExplanation);
                         }
                     }
                     else

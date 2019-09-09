@@ -94,5 +94,18 @@ namespace VTC.Common
             var missRatio = (double) StateEstimates.Sum(se => se.MissedDetections) / StateEstimates.Count();
             return missRatio;
         }
+
+        public double Smoothness()
+        {
+            var xPositions = StateEstimates.Select(se => se.Vx).ToArray();
+            var xAutocorrelation = MathNet.Numerics.Statistics.Correlation.Auto(xPositions, 1, 1).Sum();
+
+            var yPositions = StateEstimates.Select(se => se.Vy).ToArray();
+            var yAutocorrelation = MathNet.Numerics.Statistics.Correlation.Auto(yPositions, 1, 1).Sum();
+
+            var totalAutocorrelation = xAutocorrelation + yAutocorrelation;
+
+            return totalAutocorrelation;
+        }
     }
 }
