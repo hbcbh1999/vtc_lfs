@@ -178,19 +178,14 @@ namespace VTC.Actors
                 var isLive = CaptureSource?.IsLiveCapture();
                 if (!completed.HasValue || !completed.Value)
                 {
-                    Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
+                    Context.System.Scheduler.ScheduleTellOnce(0, Self, new GetNextFrameMessage(), Self);
                     return;
                 }
 
                 if (isLive.Value)
                 {
                     //Don't terminate frame-grab process during live acquisition, even if CaptureComplete indicates that the capture is complete.
-                    //LoggingActor.Tell(new LogMessage("Capture returned null-frame. Pausing to allow camera recovery.",
-                    //    LogLevel.Debug, "FrameGrabActor"));
-                    //System.Threading.Thread.Sleep(10000);
-                    //LoggingActor.Tell(new LogMessage("Pause complete.",
-                        //LogLevel.Debug, "FrameGrabActor"));
-                    Context.System.Scheduler.ScheduleTellOnce(FRAME_DELAY_MS, Self, new GetNextFrameMessage(), Self);
+                    Context.System.Scheduler.ScheduleTellOnce(0, Self, new GetNextFrameMessage(), Self);
                     return; 
                 }
 

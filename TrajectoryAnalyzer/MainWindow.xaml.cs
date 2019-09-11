@@ -364,7 +364,7 @@ namespace TrajectoryAnalyzer
                 averagePositionCovarianceBox.Content =
                     movement.StateEstimates.Select(se => Math.Sqrt(Math.Pow(se.CovX, 2) + Math.Pow(se.CovY, 2))).Average();
 
-                var smoothness = movement.Smoothness();
+                var smoothness = movement.StateEstimates.Smoothness();
                 smoothnessBox.Content = smoothness;
 
                 var movementToLengthRatio = netMovement / pathLength;

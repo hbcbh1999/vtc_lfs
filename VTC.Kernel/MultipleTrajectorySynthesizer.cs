@@ -248,7 +248,7 @@ namespace VTC.Kernel
             List<Movement> examplePaths = new List<Movement>();
             foreach (var path in config.ExamplePaths)
             {
-                List<StateEstimate> stateEstimates = new List<StateEstimate>();
+                var stateEstimates = new StateEstimateList();
                 foreach (var pt in path.Points)
                 {
                     var se = new StateEstimate

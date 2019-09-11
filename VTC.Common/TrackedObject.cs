@@ -4,22 +4,25 @@ using System.Linq;
 
 namespace VTC.Common
 {
+    //TODO: Reconsider whether this should be a struct or class. Not sure why it was originally declared as a struct.
     public struct TrackedObject
     {
         public string ObjectType;
-        public List<StateEstimate> StateHistory;
+        public StateEstimateList StateHistory;
         public int FirstDetectionFrame;
 
         public TrackedObject(StateEstimate initialState, int frame)
         {
-            StateHistory = new List<StateEstimate> {initialState};
+            StateHistory = new StateEstimateList { initialState};
             ObjectType = "unknown";
             FirstDetectionFrame = frame;
         }
 
         public TrackedObject(IEnumerable<StateEstimate> stateHistoryOld, StateEstimate currentState, int frame)
         {
-            StateHistory = new List<StateEstimate>(stateHistoryOld) {currentState};
+            StateHistory = new StateEstimateList();
+            StateHistory.AddRange(stateHistoryOld);
+            StateHistory.Add(currentState);
             ObjectType = "unknown";
             FirstDetectionFrame = frame;
         }

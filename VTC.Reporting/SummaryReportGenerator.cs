@@ -105,7 +105,7 @@ namespace VTC.Reporting
                     {
                         if(k.Approach == v.Approach && k.Exit == v.Exit)
                         {
-                            var movement_new = new Movement(k.Approach, k.Exit, k.TurnType, ObjectType.Unknown, new List<StateEstimate>(), mcr_new.Time, 0, false);
+                            var movement_new = new Movement(k.Approach, k.Exit, k.TurnType, ObjectType.Unknown, new StateEstimateList(), mcr_new.Time, 0, false);
                             mcr_new.MovementCt[movement_new] = mcrl1[i].MovementCt[k] + mcrl2[i].MovementCt[v];
                             break;
                         }

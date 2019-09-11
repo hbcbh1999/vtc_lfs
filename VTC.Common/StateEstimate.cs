@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace VTC.Common
@@ -206,6 +207,21 @@ namespace VTC.Common
 
     }
 
+    public class StateEstimateList : List<StateEstimate>
+    {
+        public double Smoothness()
+        {
+            var xPositions = this.Select(se => se.Vx).ToArray();
+            var xAutocorrelation = MathNet.Numerics.Statistics.Correlation.Auto(xPositions, 1, 1).Sum();
+
+            var yPositions = this.Select(se => se.Vy).ToArray();
+            var yAutocorrelation = MathNet.Numerics.Statistics.Correlation.Auto(yPositions, 1, 1).Sum();
+
+            var totalAutocorrelation = xAutocorrelation + yAutocorrelation;
+
+            return totalAutocorrelation;
+        }
+    }
 
 
 

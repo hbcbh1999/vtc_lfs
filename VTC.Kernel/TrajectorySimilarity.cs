@@ -42,7 +42,7 @@ namespace VTC.Kernel
             return matchedTrajectoryName;
         }
 
-        public static TrajectoryValidity ValidateTrajectory(TrackedObject d,  int minPathLength, double missRatioThreshold, double covarianceThreshold)
+        public static TrajectoryValidity ValidateTrajectory(TrackedObject d,  int minPathLength, double missRatioThreshold, double covarianceThreshold, double smoothnessThreshold)
         {
             var tv = new TrajectoryValidity();
             tv.valid = true;
@@ -65,6 +65,13 @@ namespace VTC.Kernel
             if (fpc > covarianceThreshold)
             { 
                 tv.description = "Trajectory rejected: final position covariance too high (" + Math.Round(fpc) + ")"; 
+                tv.valid = false;
+            }
+
+            var smoothness = d.StateHistory.Smoothness();
+            if (smoothness < smoothnessThreshold)
+            {
+                tv.description = "Trajectory rejected: smoothness too low (" + Math.Round(smoothness,2) + ")";
                 tv.valid = false;
             }
 
@@ -344,7 +351,7 @@ namespace VTC.Kernel
     {
         public double matchCost;
 
-        public MatchTrajectory(string approach, string exit, ObjectType ot, Turn turn, List<StateEstimate> stateEstimates, DateTime timestamp, int frame, bool ignored) : base(approach,exit,turn,ot,stateEstimates, timestamp, frame, ignored)
+        public MatchTrajectory(string approach, string exit, ObjectType ot, Turn turn, StateEstimateList stateEstimates, DateTime timestamp, int frame, bool ignored) : base(approach,exit,turn,ot,stateEstimates, timestamp, frame, ignored)
         { 
         }
     }

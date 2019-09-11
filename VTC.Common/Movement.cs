@@ -35,7 +35,7 @@ namespace VTC.Common
         [DataMember] [JsonConverter(typeof(StringEnumConverter))]
         public readonly ObjectType TrafficObjectType;
 
-        [DataMember] public List<StateEstimate> StateEstimates;
+        [DataMember] public StateEstimateList StateEstimates;
 
         [DataMember] public readonly DateTime Timestamp;
 
@@ -43,7 +43,7 @@ namespace VTC.Common
 
         [DataMember] public bool Ignored;
 
-        public Movement(string approach, string exit, Turn turn, ObjectType objectType, List<StateEstimate> stateEstimates, DateTime timeStamp, int frame, bool ignored)
+        public Movement(string approach, string exit, Turn turn, ObjectType objectType, StateEstimateList stateEstimates, DateTime timeStamp, int frame, bool ignored)
         {
             Approach = approach;
             Exit = exit;
@@ -93,19 +93,6 @@ namespace VTC.Common
         {
             var missRatio = (double) StateEstimates.Sum(se => se.MissedDetections) / StateEstimates.Count();
             return missRatio;
-        }
-
-        public double Smoothness()
-        {
-            var xPositions = StateEstimates.Select(se => se.Vx).ToArray();
-            var xAutocorrelation = MathNet.Numerics.Statistics.Correlation.Auto(xPositions, 1, 1).Sum();
-
-            var yPositions = StateEstimates.Select(se => se.Vy).ToArray();
-            var yAutocorrelation = MathNet.Numerics.Statistics.Correlation.Auto(yPositions, 1, 1).Sum();
-
-            var totalAutocorrelation = xAutocorrelation + yAutocorrelation;
-
-            return totalAutocorrelation;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace VTC.KernelTests
         {
             //Create StateHistory
             var d = new TrackedObject();
-            d.StateHistory = new List<StateEstimate>();
+            d.StateHistory = new StateEstimateList();
             PopulateStateHistory(d, 50.0, 80.0, 0.0, -3.0, 0.0, 0.0, 25);
             var matchedTrajectoryName = TrajectorySimilarity.BestMatchTrajectory(d.StateHistory, mts.TrajectoryPrototypes, "Car");
             var tl = new TrajectoryLogger(matchedTrajectoryName);
@@ -46,7 +46,7 @@ namespace VTC.KernelTests
         {
             //Create StateHistory
             var d = new TrackedObject();
-            d.StateHistory = new List<StateEstimate>();
+            d.StateHistory = new StateEstimateList();
             PopulateStateHistory(d, 50.0, 80.0, -3.0, -3.0, 0.0, 0.0, 25);
 
             var matchedTrajectoryName = TrajectorySimilarity.BestMatchTrajectory(d.StateHistory, mts.TrajectoryPrototypes, "Car");
@@ -58,7 +58,7 @@ namespace VTC.KernelTests
         {
             //Create StateHistory
             var d = new TrackedObject();
-            d.StateHistory = new List<StateEstimate>();
+            d.StateHistory = new StateEstimateList();
             PopulateStateHistory(d, 50.0, 80.0, 3.0, 3.0, 0.0, 0.0, 25);
 
             var matchedTrajectoryName = TrajectorySimilarity.BestMatchTrajectory(d.StateHistory, mts.TrajectoryPrototypes, "Car");

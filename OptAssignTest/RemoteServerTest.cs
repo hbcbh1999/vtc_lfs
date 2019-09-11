@@ -20,7 +20,7 @@ namespace VTC
         {
             var rs = new RemoteServer();
 
-            var stateEstimates = new List<StateEstimate>();
+            var stateEstimates = new StateEstimateList();
 
             var m = new Movement("Approach 1", "Exit 1", Turn.Left, ObjectType.Car, stateEstimates, DateTime.Now, 0, false);
 

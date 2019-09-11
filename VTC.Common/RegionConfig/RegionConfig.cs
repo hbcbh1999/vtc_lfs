@@ -139,6 +139,10 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public double MissRatioThreshold { get; set; } = 3.5;
 
+        [Description("Smoothness threshold: this parameter allows VTC to reject jagged, discontinuous trajectories.")]
+        [DataMember]
+        public double SmoothnessThreshold { get; set; } = 1.4;
+
         [Description("Site token: copy this from the web dashboard for your site.")]
         [DataMember]
         public string SiteToken { get; set; } = "";

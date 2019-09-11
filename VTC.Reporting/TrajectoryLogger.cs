@@ -42,7 +42,9 @@ namespace VTC.Reporting
 
         private Movement RoundForLogging(Movement m)
         {
-            m.StateEstimates = m.StateEstimates.Select(RoundForLogging).ToList();
+            var stateEstimatesRounded = new StateEstimateList();
+            stateEstimatesRounded.AddRange(m.StateEstimates.Select(RoundForLogging));
+            m.StateEstimates = stateEstimatesRounded;
             return m;
         }
 
