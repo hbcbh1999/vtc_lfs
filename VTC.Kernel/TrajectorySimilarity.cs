@@ -42,7 +42,7 @@ namespace VTC.Kernel
             return matchedTrajectoryName;
         }
 
-        public static TrajectoryValidity ValidateTrajectory(TrackedObject d,  int minPathLength, double missRatioThreshold, double covarianceThreshold, double smoothnessThreshold)
+        public static TrajectoryValidity ValidateTrajectory(TrackedObject d,  int minPathLength, double missRatioThreshold, double covarianceThreshold, double smoothnessThreshold, double movementLengthRatioThreshold)
         {
             var tv = new TrajectoryValidity();
             tv.valid = true;
@@ -72,6 +72,13 @@ namespace VTC.Kernel
             if (smoothness < smoothnessThreshold)
             {
                 tv.description = "Trajectory rejected: smoothness too low (" + Math.Round(smoothness,2) + ")";
+                tv.valid = false;
+            }
+
+            var movementLengthRatio = distance/d.PathLengthIntegral();
+            if (movementLengthRatio < movementLengthRatioThreshold)
+            {
+                tv.description = "Trajectory rejected: movement-length ratio too low (" + Math.Round(movementLengthRatio, 2) + ")";
                 tv.valid = false;
             }
 

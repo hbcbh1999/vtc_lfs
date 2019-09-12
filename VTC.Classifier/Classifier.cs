@@ -90,7 +90,7 @@ namespace VTC.Classifier
             var gpuDetector = new GPUDetector();
             if(gpuDetector.HasGPU && gpuDetector.MB_VRAM > 3000)
             {
-                cpuMode = false;
+                //cpuMode = false;
             }
 
             try

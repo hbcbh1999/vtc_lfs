@@ -143,6 +143,10 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public double SmoothnessThreshold { get; set; } = 1.4;
 
+        [Description("Movement-length ratio: this parameter allows VTC to reject trajectories with low net-movement-to-integrated-path-length ratio.")]
+        [DataMember]
+        public double MovementLengthRatio { get; set; } = 0.5;
+
         [Description("Site token: copy this from the web dashboard for your site.")]
         [DataMember]
         public string SiteToken { get; set; } = "";

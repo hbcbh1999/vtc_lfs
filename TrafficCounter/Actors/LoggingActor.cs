@@ -759,7 +759,7 @@ namespace VTC.Actors
                         mostLikelyClassType = "motorcycle";
                     }
 
-                    var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength, _regionConfig.MissRatioThreshold, _regionConfig.PositionCovarianceThreshold, _regionConfig.SmoothnessThreshold);
+                    var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength, _regionConfig.MissRatioThreshold, _regionConfig.PositionCovarianceThreshold, _regionConfig.SmoothnessThreshold, _regionConfig.MovementLengthRatio);
                     if(validity.valid == false)
                     {
                         _updateDebugDelegate?.Invoke(validity.description);

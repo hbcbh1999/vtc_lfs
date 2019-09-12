@@ -127,14 +127,17 @@ namespace VTC.Actors
                 var frame = TimeoutFrameQuery();
                 var fps = CaptureSource?.FPS();
 
-                if (frame != null)
+                if (frame != null && CaptureSource != null && fps.HasValue)
                 {
                     NullFrameCount = 0;
-                    var ts = DateTime.Now - LastFrameTimestamp;
+                    var ts_measured = DateTime.Now - LastFrameTimestamp;
                     LastFrameTimestamp = DateTime.Now;
-                    var timestep = ts.TotalSeconds;
+                    var timestep_measured = ts_measured.TotalSeconds; //Use this if we're running from video. In this scenario, the measured delay is relevant.
+                    var timestep_calculated = 1.0 / fps; //Use the video-file's stated FPS if we're reading from disk, regardless of how quickly we're actually reading.
+                    var timestep_selected = CaptureSource.IsLiveCapture() ? timestep_measured : timestep_calculated;
+
                     var cloned = frame.Clone();
-                    ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned, timestep));
+                    ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned, timestep_selected.Value));
                     if (FramesProcessed < 10)
                     {
                         var clone2 = frame.Clone();
