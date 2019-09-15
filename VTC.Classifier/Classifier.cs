@@ -208,28 +208,38 @@ namespace VTC.Classifier
             {
                 if (detectionArray[i].x == 0 && detectionArray[i].y == 0) {break;}
 
-                var m = new Measurement();
-                m.Height = detectionArray[i].h;
-                m.Width = detectionArray[i].w;
+                var m = new Measurement
+                {
+                    Height = detectionArray[i].h,
+                    Width = detectionArray[i].w,
+                    X = detectionArray[i].x + detectionArray[i].w / 2,
+                    Y = detectionArray[i].y + detectionArray[i].h / 2
+                };
+
                 if (m.Height > frame.Height | m.Width > frame.Width)
                 {
                     Debug.WriteLine("Detection rectangle too large.");
                     continue;
                 }
-                m.X = detectionArray[i].x + detectionArray[i].w/2;
-                m.Y = detectionArray[i].y + detectionArray[i].h/2;
+
                 if ( (m.X > frame.Width) | (m.Y > frame.Height) | (m.X < 0) | (m.Y < 0))
                 {
                     Debug.WriteLine("Detection coordinates out-of-bounds.");
                     continue;
                 }
 
-                int x_lim = (int) detectionArray[i].x + Convert.ToInt32(detectionArray[i].w);
-                int y_lim = (int) detectionArray[i].y + Convert.ToInt32(detectionArray[i].h);
+                //Select a region smaller than the entire detection rectangle. Divide height and width by 2.
+                // 
 
-                var color = SampleColorAtRectangle(frame, (int) detectionArray[i].x, (int) detectionArray[i].y,
-                    x_lim,
-                    y_lim);
+                int xColor1 = (int) m.X - Convert.ToInt32(detectionArray[i].w / 2);
+                int yColor1 = (int) m.Y - Convert.ToInt32(detectionArray[i].h / 2);
+
+                int xColor2 = (int) m.X + Convert.ToInt32(detectionArray[i].w/2);
+                int yColor2 = (int) m.Y + Convert.ToInt32(detectionArray[i].h/2);
+
+                var color = SampleColorAtRectangle(frame, xColor1, yColor1,
+                    xColor2,
+                    yColor2);
 
                 m.Blue = color.Blue;
                 m.Green = color.Green;
@@ -245,13 +255,15 @@ namespace VTC.Classifier
 
         private Bgr SampleColorAtRectangle(Image<Bgr, byte> frame, int x1, int y1, int x2, int y2)
         {
-            int width = frame.Width;
-            int height = frame.Height;
+            int width_original = frame.Width;
+            int height_original = frame.Height;
             Bgr avg;
             MCvScalar MVcavg;
-            frame.ROI = new Rectangle(x1, y1, x2, y2);
+            int width = x2 - x1;
+            int height = y2 - y1;
+            frame.ROI = new Rectangle(x1, y1, width, height);
             frame.AvgSdv(out avg, out MVcavg);
-            frame.ROI = new Rectangle(0,0,width,height); //Reset ROI
+            frame.ROI = new Rectangle(0,0, width_original, height_original); //Reset ROI
             return avg;
         }
 

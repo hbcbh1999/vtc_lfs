@@ -50,6 +50,7 @@ namespace VTC.Kernel
         /// <param name="detections">Information about each detected item present in the latest readings.  This 
         /// list is assumed to be complete.</param>
         /// <param name="ct">Token for breaking out of execution</param>
+        /// <param name="timestep">Time (in seconds) since previous set of measurements/detections.</param>
         public void Update(Measurement[] detections, CancellationToken ct, double timestep)
         {
             int numDetections = detections.Length;
