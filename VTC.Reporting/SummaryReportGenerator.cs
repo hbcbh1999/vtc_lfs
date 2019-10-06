@@ -193,9 +193,18 @@ namespace VTC.Reporting
                 foreach (var approach in approaches)
                 {
                     var metrics = CalculateFlowMetrics(mcrl5minTotal, approach);
-                    var summaryReportThisApproach = SummaryReportForApproach(metrics, approach, mcrl5minTotal);
-                    if (metrics != null)
-                        summaryReport += summaryReportThisApproach;
+                    if (approach.ToLower().Contains("sidewalk"))
+                    {
+                        var summaryReportThisApproach = SummaryReportForSidewalk(metrics, approach, mcrl5minTotal);
+                        if (metrics != null)
+                            summaryReport += summaryReportThisApproach;
+                    }
+                    else
+                    {
+                        var summaryReportThisApproach = SummaryReportForApproach(metrics, approach, mcrl5minTotal);
+                        if (metrics != null)
+                            summaryReport += summaryReportThisApproach;
+                    }
                 }
 
                 summaryReport += "</div>"; //summary statistics row close
@@ -292,9 +301,18 @@ namespace VTC.Reporting
                 foreach (var approach in approaches)
                 {
                     var metrics = CalculateFlowMetrics(mcrl5min, approach);
-                    var summaryReportThisApproach = SummaryReportForApproach(metrics, approach, mcrl5min);
-                    if (metrics != null)
-                        summaryReport += summaryReportThisApproach;
+                    if (approach.ToLower().Contains("sidewalk"))
+                    {
+                        var summaryReportThisApproach = SummaryReportForSidewalk(metrics, approach, mcrl5min);
+                        if (metrics != null)
+                            summaryReport += summaryReportThisApproach;
+                    }
+                    else
+                    {
+                        var summaryReportThisApproach = SummaryReportForApproach(metrics, approach, mcrl5min);
+                        if (metrics != null)
+                            summaryReport += summaryReportThisApproach;
+                    }
                 }
 
                 summaryReport += "</div>"; //summary statistics row close
@@ -382,7 +400,7 @@ namespace VTC.Reporting
             if (a1PeakSample != null)
             {
                 metrics.PeakFlow = a1PeakSample.MovementTypeApproachCount(Turn.Left, approachName) + a1PeakSample.MovementTypeApproachCount(Turn.Right, approachName) + a1PeakSample.MovementTypeApproachCount(Turn.Straight, approachName) +
-                                     a1PeakSample.MovementTypeApproachCount(Turn.UTurn, approachName);
+                                     a1PeakSample.MovementTypeApproachCount(Turn.UTurn, approachName) + a1PeakSample.MovementTypeApproachCount(Turn.Crossing, approachName);
                 metrics.PeakTime = a1PeakSample.Time;
             }
             metrics.TotalFlow = countRows.Sum(mc => mc.MovementTypeApproachCount(Turn.Left, approachName) + mc.MovementTypeApproachCount(Turn.Right, approachName) + mc.MovementTypeApproachCount(Turn.Straight, approachName) + mc.MovementTypeApproachCount(Turn.UTurn, approachName));
@@ -450,7 +468,14 @@ namespace VTC.Reporting
             var approaches = GetAllUniqueApproachNames(mcrl);
             foreach (var approach in approaches)
             {
-                rowOfTables += GenerateSingleTable(mcrl, approach);
+                if (approach.ToLower().Contains("sidewalk"))
+                {
+                    rowOfTables += GenerateSingleTableSidewalk(mcrl, approach);
+                }
+                else
+                {
+                    rowOfTables += GenerateSingleTable(mcrl, approach);
+                }
             }
 
             rowOfTables += "</div>"; // row close

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -71,6 +72,8 @@ namespace VTC.Actors
         RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
 
         private VTC.Common.UserConfig _userConfig = new UserConfig();
+
+        private List<Movement> MovementTransmitBuffer = new List<Movement>();
 
         public LoggingActor()
         {
@@ -182,13 +185,19 @@ namespace VTC.Actors
                 CheckConfiguration()
             );
 
+            Receive<FlushBuffersMessage>(message =>
+                FlushTransmitBuffer()
+            );
+
 
             Self.Tell(new LoadUserConfigMessage());
 
             Context.Parent.Tell(new RequestVideoSourceMessage(Self));
 
-            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0,1,0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0), new TimeSpan(0, 5, 0), Self, new FlushBuffersMessage(), Self);
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
+
 
             Log("LoggingActor initialized.", LogLevel.Info, "LoggingActor");
         }
@@ -718,7 +727,6 @@ namespace VTC.Actors
 
         }
 
-        private int _totalTrajectoriesCounted = 0;
         private void TrajectoryListHandler(TrackingEvents.TrajectoryListEventArgs args)
         {
             if (_regionConfig == null)
@@ -792,15 +800,26 @@ namespace VTC.Actors
                             return;
                         }
 
-                        var rs = new RemoteServer();
-                        var rsr = rs.SendMovement(editedMovement, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
-                        if (rsr != HttpStatusCode.OK)
+                        try
                         {
-                            Log("Movement POST failed:" + rsr, LogLevel.Error, "LoggingActor");
+                            var rs = new RemoteServer();
+                            var rsr = rs.SendMovement(editedMovement, _regionConfig.SiteToken, _userConfig.ServerUrl)
+                                .Result;
+                            if (rsr != HttpStatusCode.OK)
+                            {
+                                Log("Movement POST failed:" + rsr, LogLevel.Error, "LoggingActor");
+                            }
+                        }
+                        catch (HttpRequestException httpEx)
+                        {
+                            MovementTransmitBuffer.Add(editedMovement);
                         }
                     }
+                }
 
-                    _totalTrajectoriesCounted++;
+                if (MovementTransmitBuffer.Count > 0)
+                {
+                    Log("(TrajectoryListHandler) " + MovementTransmitBuffer + " measurements buffered to transmit.", LogLevel.Info, "LoggingActor");
                 }
 
                 var stats = GetStatString();
@@ -1196,6 +1215,38 @@ namespace VTC.Actors
             catch (Exception ex)
             {
                Log("(UpdateConfigurationActor) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite, LogLevel.Error, "LoggingActor");
+            }
+        }
+
+        private void FlushTransmitBuffer()
+        {
+            var transmittedMovements = new List<Movement>();
+
+            foreach (var m in MovementTransmitBuffer)
+            {
+                try
+                {
+                    var rs = new RemoteServer();
+                    var rsr = rs.SendMovement(m, _regionConfig.SiteToken, _userConfig.ServerUrl)
+                        .Result;
+                    if (rsr != HttpStatusCode.OK)
+                    {
+                        Log("Movement-buffer transmit failed:" + rsr, LogLevel.Info, "LoggingActor");
+                    }
+                    else
+                    {
+                        transmittedMovements.Add(m);
+                    }
+                }
+                catch (HttpRequestException httpEx)
+                {
+                    MovementTransmitBuffer.Add(m);
+                }
+            }
+
+            foreach (var m in transmittedMovements)
+            {
+                MovementTransmitBuffer.Remove(m);
             }
         }
     }

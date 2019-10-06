@@ -79,8 +79,6 @@ namespace VTC.Classifier
         private YoloWrapper Detector;
         private YoloWrapperNoGPU DetectorNoGPU;
 
-        public float Threshold = 0.4f;
-
         public bool cpuMode = true;
 
         private static readonly Logger Logger = LogManager.GetLogger("main.form");

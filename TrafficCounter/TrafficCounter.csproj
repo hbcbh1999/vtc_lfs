@@ -223,6 +223,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Messages\RequestVideoSourceMessage.cs" />
     <Compile Include="Messages\LoadConfigurationByNameMessage.cs" />
+    <Compile Include="Messages\FlushBuffersMessage.cs" />
     <Compile Include="Messages\UpdateFramerateMessage.cs" />
     <Compile Include="Messages\DashboardHeartbeatMessage.cs" />
     <Compile Include="Messages\ActorHeartbeatMessage.cs" />
