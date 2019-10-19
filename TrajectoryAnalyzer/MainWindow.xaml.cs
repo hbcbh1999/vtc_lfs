@@ -356,7 +356,7 @@ namespace TrajectoryAnalyzer
                 pathLengthBox.Content = pathLength;
 
                 numSamplesBox.Content = movement.StateEstimates.Count();
-                missedDetectionsBox.Content = movement.StateEstimates.Sum(se => se.MissedDetections);
+                missedDetectionsBox.Content = movement.StateEstimates.Last().TotalMissedDetections;
                 var lastStateEstimate = movement.StateEstimates.Last();
                 finalPositionCovarianceBox.Content = Math.Sqrt(Math.Pow(lastStateEstimate.CovX,2) + Math.Pow(lastStateEstimate.CovX,2));
                 maximumPositionCovarianceBox.Content =
