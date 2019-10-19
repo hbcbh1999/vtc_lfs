@@ -189,6 +189,10 @@ namespace VTC.Actors
                 FlushTransmitBuffer()
             );
 
+            Receive<ClearStatsMessage>(message =>
+                ClearTurnStats()
+            );
+
 
             Self.Tell(new LoadUserConfigMessage());
 
@@ -377,6 +381,11 @@ namespace VTC.Actors
             var filepath = Path.Combine(folderPath, "Movements.json");
             File.Create(filepath);     
             _currentOutputFolder = folderPath;
+        }
+        
+        private void ClearTurnStats()
+        {
+            _turnStats.Clear();
         }
 
         private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp, ObjectType objectType)
@@ -820,6 +829,8 @@ namespace VTC.Actors
                 if (MovementTransmitBuffer.Count > 0)
                 {
                     Log("(TrajectoryListHandler) " + MovementTransmitBuffer + " measurements buffered to transmit.", LogLevel.Info, "LoggingActor");
+
+                    
                 }
 
                 var stats = GetStatString();

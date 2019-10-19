@@ -68,6 +68,7 @@ namespace VTC
             this.userSettingsButton = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.aboutButton = new System.Windows.Forms.Button();
+            this.resetCountsButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // timeActiveTextBox
@@ -94,11 +95,11 @@ namespace VTC
             this.tbVistaStats.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.tbVistaStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbVistaStats.Location = new System.Drawing.Point(12, 356);
+            this.tbVistaStats.Location = new System.Drawing.Point(12, 385);
             this.tbVistaStats.Multiline = true;
             this.tbVistaStats.Name = "tbVistaStats";
             this.tbVistaStats.ReadOnly = true;
-            this.tbVistaStats.Size = new System.Drawing.Size(442, 308);
+            this.tbVistaStats.Size = new System.Drawing.Size(442, 279);
             this.tbVistaStats.TabIndex = 6;
             // 
             // CameraComboBox
@@ -153,7 +154,7 @@ namespace VTC
             // infoBox
             // 
             this.infoBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoBox.Location = new System.Drawing.Point(12, 228);
+            this.infoBox.Location = new System.Drawing.Point(12, 257);
             this.infoBox.Multiline = true;
             this.infoBox.Name = "infoBox";
             this.infoBox.ReadOnly = true;
@@ -189,7 +190,7 @@ namespace VTC
             // trackedObjectsTextbox
             // 
             this.trackedObjectsTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.trackedObjectsTextbox.Location = new System.Drawing.Point(12, 184);
+            this.trackedObjectsTextbox.Location = new System.Drawing.Point(12, 213);
             this.trackedObjectsTextbox.Multiline = true;
             this.trackedObjectsTextbox.Name = "trackedObjectsTextbox";
             this.trackedObjectsTextbox.ReadOnly = true;
@@ -362,7 +363,7 @@ namespace VTC
             // debugTextbox
             // 
             this.debugTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.debugTextbox.Location = new System.Drawing.Point(12, 292);
+            this.debugTextbox.Location = new System.Drawing.Point(12, 321);
             this.debugTextbox.Multiline = true;
             this.debugTextbox.Name = "debugTextbox";
             this.debugTextbox.ReadOnly = true;
@@ -401,12 +402,24 @@ namespace VTC
             this.aboutButton.UseVisualStyleBackColor = true;
             this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
             // 
+            // resetCountsButton
+            // 
+            this.resetCountsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.resetCountsButton.Location = new System.Drawing.Point(12, 176);
+            this.resetCountsButton.Name = "resetCountsButton";
+            this.resetCountsButton.Size = new System.Drawing.Size(115, 24);
+            this.resetCountsButton.TabIndex = 95;
+            this.resetCountsButton.Text = "Reset counts";
+            this.resetCountsButton.UseVisualStyleBackColor = true;
+            this.resetCountsButton.Click += new System.EventHandler(this.ResetCountsButton_Click);
+            // 
             // TrafficCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(468, 676);
+            this.Controls.Add(this.resetCountsButton);
             this.Controls.Add(this.aboutButton);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.userSettingsButton);
@@ -484,5 +497,6 @@ namespace VTC
         private Button userSettingsButton;
         private Label label9;
         private Button aboutButton;
+        private Button resetCountsButton;
     }
 }

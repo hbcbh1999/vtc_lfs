@@ -651,5 +651,11 @@ namespace VTC
                 _isLicensed);
             aboutForm.Show();
         }
+
+        private void ResetCountsButton_Click(object sender, EventArgs e)
+        {
+            var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
+            loggingActor?.Tell(new ClearStatsMessage());
+        }
     }
 }
