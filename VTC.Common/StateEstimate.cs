@@ -35,7 +35,8 @@ namespace VTC.Common
 
         public double PathLength;    //Total path length travelled so far
 
-        public int MissedDetections; //Total number of times this object has not been detected during its lifetime
+        public int TotalMissedDetections; //Total number of times this object has not been detected during its lifetime
+        public int SuccessiveMissedDetections; //Successive number of times this object has not been detected since the last detection
 
         public Dictionary<int, int> ClassDetectionCounts = new Dictionary<int, int>();
 
@@ -43,7 +44,8 @@ namespace VTC.Common
         {
             var updatedState = new StateEstimate
             {
-                MissedDetections = MissedDetections + 1,
+                TotalMissedDetections = TotalMissedDetections + 1,
+                SuccessiveMissedDetections = SuccessiveMissedDetections + 1,
                 PathLength =
                     PathLength + Math.Sqrt(Math.Pow((timestep * Vx), 2) + Math.Pow((timestep * Vy), 2))
             };
@@ -197,8 +199,9 @@ namespace VTC.Common
         {
             if (ClassDetectionCounts.Count > 0)
             {
-                ClassDetectionCounts.ToList().Sort((x, y) => (x.Value >= y.Value) ? 1 : -1);
-                KeyValuePair<int,int> mostCommon = ClassDetectionCounts.ElementAt(0);
+                var sortedCounts = ClassDetectionCounts.ToList();
+                sortedCounts.Sort((x, y) => (x.Value.CompareTo(y.Value)));
+                KeyValuePair<int, int> mostCommon = sortedCounts.Last();
                 return mostCommon.Key;
             }
             

@@ -403,9 +403,9 @@ namespace VTC.Kernel
             var lastFrameVehicle = parentHypothesis.Vehicles[address];
             var updatedVehicle = new TrackedObject(lastFrameVehicle.StateHistory, currentState, lastFrameVehicle.FirstDetectionFrame);
             if (withMeasurement)
-                currentState.MissedDetections = 0;
+                currentState.SuccessiveMissedDetections = 0;
 
-            if (currentState.MissedDetections < NodeData.MissDetectionThreshold)
+            if (currentState.SuccessiveMissedDetections < NodeData.MissDetectionThreshold)
                 NodeData.Vehicles.Add(updatedVehicle);
             else
                 NodeData.DeletedVehicles.Add(updatedVehicle);

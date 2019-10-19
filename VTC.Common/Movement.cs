@@ -91,7 +91,7 @@ namespace VTC.Common
 
         public double MissRatio()
         {
-            var missRatio = (double) StateEstimates.Sum(se => se.MissedDetections) / StateEstimates.Count();
+            var missRatio = (double) StateEstimates.Sum(se => se.TotalMissedDetections) / StateEstimates.Count();
             return missRatio;
         }
     }

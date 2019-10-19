@@ -54,7 +54,7 @@ namespace VTC.Common
 
         public double MissRatio()
         {
-            var missRatio = (double) StateHistory.Sum(se => se.MissedDetections) / StateHistory.Count();
+            var missRatio = (double) StateHistory.Sum(se => se.TotalMissedDetections) / StateHistory.Count();
             return missRatio;
         }
 

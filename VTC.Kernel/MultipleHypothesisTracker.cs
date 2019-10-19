@@ -397,52 +397,6 @@ namespace VTC.Kernel
             }
         }
 
-        public string SerializeTreeState(HypothesisTree t)
-        {
-            string treeState = "========MHT=======" + Environment.NewLine;
-            foreach (var h in t.ToList())
-            {
-                treeState += "Node depth " + h.NodeDepth() + Environment.NewLine;
-                treeState += SerializeNodeState(h.NodeData);
-            }
-            return treeState;
-        }
-
-        public string SerializeNodeState(StateHypothesis h)
-        {
-            string nodeState = " -----Node------" + Environment.NewLine;
-            nodeState += " p: " + h.Probability + Environment.NewLine;
-            
-            if(h.Vehicles.Count > 0)
-            {
-                nodeState += " Vehicles (all): " + Environment.NewLine;
-                foreach (var v in h.Vehicles)
-                    nodeState += SerializeTrackerState(v);
-            }
-            
-            if(h.NewVehicles.Count > 0)
-            {
-                nodeState += " Vehicles (new): " + Environment.NewLine;
-                foreach (var v in h.NewVehicles)
-                    nodeState += SerializeTrackerState(v);
-            }
-            
-            if(h.DeletedVehicles.Count > 0)
-            {
-                nodeState += " Vehicles (deleted): " + Environment.NewLine;
-                foreach (var v in h.DeletedVehicles)
-                    nodeState += SerializeTrackerState(v);
-            }
-
-            return nodeState;
-        }
-
-        public string SerializeTrackerState(TrackedObject v)
-        {
-            StateEstimate latest = v.StateHistory.Last();
-            string trackerState = "  Tracker (" + latest.X + "," + latest.Y + "), " + latest.MissedDetections + " misses" + Environment.NewLine;
-            return trackerState;
-        }
     }
 
     public struct TrajectoryFade

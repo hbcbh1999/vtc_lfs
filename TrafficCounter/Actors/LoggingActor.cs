@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -767,13 +768,24 @@ namespace VTC.Actors
             {
                 foreach (var d in args.TrackedObjects)
                 {
+                    if (d.FirstDetectionFrame == 757 || d.FirstDetectionFrame == 756)
+                    {
+                        Trace.WriteLine("Stop here");
+                    }
+
+                    var mostFrequentClassId = d.StateHistory.Last().MostFrequentClassId();
                     var mostLikelyClassType =
-                        YoloIntegerNameMapping.GetObjectNameFromClassInteger(d.StateHistory.Last().MostFrequentClassId(),
+                        YoloIntegerNameMapping.GetObjectNameFromClassInteger(mostFrequentClassId,
                             _yoloNameMapping.IntegerToObjectName);
 
                     if (mostLikelyClassType == "person" && _regionConfig.CountPedestriansAsMotorcycles)
                     {
                         mostLikelyClassType = "motorcycle";
+                    }
+
+                    if (mostLikelyClassType == "bus")
+                    {
+                        Trace.WriteLine("Bus detected");
                     }
 
                     var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength, _regionConfig.MissRatioThreshold, _regionConfig.PositionCovarianceThreshold, _regionConfig.SmoothnessThreshold, _regionConfig.MovementLengthRatio);
