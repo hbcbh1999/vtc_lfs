@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{634B0138-6F56-40CB-946C-271F88129B4F}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,8 +32,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Indicators", "Indicators\Indicators.csproj", "{EAB5A391-2876-44F9-BE43-163753F00450}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrajectoryAnalyzer", "TrajectoryAnalyzer\TrajectoryAnalyzer.csproj", "{825F1CDD-489B-4041-8184-5CA75A35F467}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VTC.TurnClassifier", "VTC.TurnClassifier\VTC.TurnClassifier.csproj", "{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC Supervisor", "VTC Supervisor\VTC Supervisor.csproj", "{C4655E0B-FD11-4133-8AF0-9BECB26E319C}"
 EndProject
@@ -143,18 +141,6 @@ Global
 		{825F1CDD-489B-4041-8184-5CA75A35F467}.Release|x64.Build.0 = Release|x64
 		{825F1CDD-489B-4041-8184-5CA75A35F467}.Release|x86.ActiveCfg = Release|x86
 		{825F1CDD-489B-4041-8184-5CA75A35F467}.Release|x86.Build.0 = Release|x86
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Debug|x64.ActiveCfg = Debug|x64
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Debug|x64.Build.0 = Debug|x64
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Debug|x86.ActiveCfg = Debug|x86
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Debug|x86.Build.0 = Debug|x86
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Release|x64.ActiveCfg = Release|x64
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Release|x64.Build.0 = Release|x64
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Release|x86.ActiveCfg = Release|x86
-		{5EEE753E-DD16-47E5-9C95-5BDAC3751D1A}.Release|x86.Build.0 = Release|x86
 		{C4655E0B-FD11-4133-8AF0-9BECB26E319C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C4655E0B-FD11-4133-8AF0-9BECB26E319C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4655E0B-FD11-4133-8AF0-9BECB26E319C}.Debug|x64.ActiveCfg = Debug|Any CPU

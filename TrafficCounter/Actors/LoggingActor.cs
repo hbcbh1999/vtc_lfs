@@ -200,7 +200,7 @@ namespace VTC.Actors
             Context.Parent.Tell(new RequestVideoSourceMessage(Self));
 
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
-            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0), new TimeSpan(0, 5, 0), Self, new FlushBuffersMessage(), Self);
+            //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0), new TimeSpan(0, 5, 0), Self, new FlushBuffersMessage(), Self);
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
 
 
