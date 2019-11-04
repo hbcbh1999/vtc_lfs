@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrajectoryAnalyzer", "Traje
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC Supervisor", "VTC Supervisor\VTC Supervisor.csproj", "{C4655E0B-FD11-4133-8AF0-9BECB26E319C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{C4655E0B-FD11-4133-8AF0-9BECB26E319C}.Release|x64.Build.0 = Release|Any CPU
 		{C4655E0B-FD11-4133-8AF0-9BECB26E319C}.Release|x86.ActiveCfg = Release|Any CPU
 		{C4655E0B-FD11-4133-8AF0-9BECB26E319C}.Release|x86.Build.0 = Release|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Debug|x64.Build.0 = Debug|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Debug|x86.Build.0 = Debug|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Release|x64.ActiveCfg = Release|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Release|x64.Build.0 = Release|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Release|x86.ActiveCfg = Release|Any CPU
+		{4D52CDDF-5189-4DF7-BCA1-FDE75877FD5D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -122,7 +122,8 @@ namespace VTC.Kernel.Vistas
             {
                 var measurementsList = _yoloClassifier.DetectFrameYolo(newFrame);
                 var measurementsFilteredByROI = measurementsList.Where(m => IsContainedInROI(m));
-                MeasurementsArray = measurementsFilteredByROI.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(YoloIntegerNameMapping.GetObjectTypeFromClassInteger(m.ObjectClass, _yoloNameMapping.IntegerToObjectType))).ToArray();
+                var measurementsFilteredBySize = measurementsFilteredByROI.Where(m => m.Size > _regionConfiguration.MinObjectSize && m.Size < _regionConfiguration.MaxObjectSize);
+                MeasurementsArray = measurementsFilteredBySize.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(YoloIntegerNameMapping.GetObjectTypeFromClassInteger(m.ObjectClass, _yoloNameMapping.IntegerToObjectType))).ToArray();
                 MeasurementArrayQueue.Enqueue(MeasurementsArray);
                 while (MeasurementArrayQueue.Count > MeasurementArrayQueueMaxLength)
                     MeasurementArrayQueue.Dequeue();

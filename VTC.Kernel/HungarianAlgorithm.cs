@@ -109,22 +109,28 @@ namespace VTC.Kernel
 
             //Replace occurrences of -Infinity, +Infinity with double.MaxValue, double.MinValue
             for (int i = 0; i < h; i++)
-                for (int j = 0; j < w; j++)
-                {
-                    if (double.IsPositiveInfinity(costs[i, j]))
-                        costs[i, j] = double.MaxValue;
-                    if (double.IsNegativeInfinity(costs[i, j]))
-                        costs[i, j] = double.MinValue;
-                }
+            for (int j = 0; j < w; j++)
+            {
+                if (double.IsPositiveInfinity(costs[i, j]))
+                    costs[i, j] = double.MaxValue;
+                if (double.IsNegativeInfinity(costs[i, j]))
+                    costs[i, j] = double.MinValue;
+            }
             
 
+            //Overwrite each row with the minimum value in that row.
             for (int i = 0; i < h; i++)
             {
                 var min = double.MaxValue;
                 for (int j = 0; j < w; j++)
-                    min = Math.Min(min, costs[i, j]);
+                { 
+                    min = Math.Min(min, costs[i, j]); 
+                }
+
                 for (int j = 0; j < w; j++)
-                    costs[i, j] -= min;
+                { 
+                    costs[i, j] -= min; 
+                }
             }
 
             var masks = new byte[h, w];

@@ -77,7 +77,11 @@ namespace VTC.Common.RegionConfig
 
         [Description("MinObjectSize: objects with less than this many pixels will be ignored.")]
         [DataMember]
-        public int MinObjectSize { get; set; } = 200;
+        public int MinObjectSize { get; set; } = 1;
+
+        [Description("MaxObjectSize: objects with more than this many pixels will be ignored.")]
+        [DataMember]
+        public int MaxObjectSize { get; set; } = 10000;
 
         [Description("MissThreshold: if an object is not detected for this many frames, it will be considered to be gone.")]
         [DataMember]
@@ -167,6 +171,12 @@ namespace VTC.Common.RegionConfig
         public RegionConfig()
         {
             RoiMask = new Polygon();
+
+            RoiMask.Add(new Point(0,0));
+            RoiMask.Add(new Point(639,0));
+            RoiMask.Add(new Point(639,479));
+            RoiMask.Add(new Point(0,479));
+
             Regions = new Dictionary<string, Polygon>
             {
                 {"Approach 1", new Polygon()},
@@ -201,6 +211,15 @@ namespace VTC.Common.RegionConfig
             }
 
             return true;
+        }
+
+        public void SanitizeBadValues()
+        { 
+            if(MaxObjectSize == 0)
+            { 
+                MaxObjectSize = 10000;
+            }
+                
         }
 
     }

@@ -55,6 +55,7 @@ namespace VTC.RegionConfiguration
                         }
 
                         regionConfig.RoiMask.UpdateCentroid();
+                        regionConfig.SanitizeBadValues();
 
                         if (regionConfig.ExamplePaths == null)
                         {

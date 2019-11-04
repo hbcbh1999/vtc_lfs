@@ -306,7 +306,7 @@ namespace VTC.Kernel
             double b01_X, b01_Y, b11_X, b11_Y;
 
             b01_X = (1 - u) * p0.X + u * p1.X;
-            b01_Y = (1 - u) * p0.Y + u * p0.Y;
+            b01_Y = (1 - u) * p0.Y + u * p1.Y;
             b11_X = (1 - u) * p1.X + u * p2.X;
             b11_Y = (1 - u) * p1.Y + u * p2.Y;
 

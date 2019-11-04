@@ -70,6 +70,7 @@ namespace VTC.Kernel
             //xNormal = _horizontalCoordLookup[x];
             xNormal = (x * _fieldWidth) / _sourceWidth;
             xNormal = Math.Min(xNormal, _fieldWidth - 1);
+            xNormal = Math.Max(xNormal, 0);
 
             //if (!_verticalCoordLookup.ContainsKey(y))
             //{
@@ -81,6 +82,7 @@ namespace VTC.Kernel
             //yNormal = _horizontalCoordLookup[y];
             yNormal = (y * _fieldHeight) / _sourceHeight;
             yNormal = Math.Min(yNormal, _fieldHeight - 1);
+            yNormal = Math.Max(yNormal, 0);
         }
 
         private void InsertVelocities(Dictionary<Point, Velocity> measurements)

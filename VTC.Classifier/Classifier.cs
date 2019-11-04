@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
-using System.Management;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -176,15 +173,9 @@ namespace VTC.Classifier
             return rgbValues;
         }
 
-        private const int MaxDetectionCount = 20;
         public List<Measurement> DetectFrameYolo(Image<Bgr, byte> frame)
         {
             List<Measurement> measurements = new List<Measurement>();
-            //var frame_float = frame.Convert<Bgr, float>().Mul(1.0/255.0);
-            //var memory = MarshalEmguImageToimage_t(frame_float);
-            //byte[] managedArray = new byte[frame_float.Bytes.Length];
-            //Marshal.Copy(memory.pNativeDataStruct, managedArray, 0, frame_float.Bytes.Length);
-
             var converter = new ImageConverter();
             var bytes = (byte[]) converter.ConvertTo(frame.Bitmap, typeof(byte[]));
 
