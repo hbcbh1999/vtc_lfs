@@ -176,6 +176,7 @@ namespace VTC.Common.RegionConfig
             RoiMask.Add(new Point(639,0));
             RoiMask.Add(new Point(639,479));
             RoiMask.Add(new Point(0,479));
+            RoiMask.Add(new Point(0, 0));
 
             Regions = new Dictionary<string, Polygon>
             {
