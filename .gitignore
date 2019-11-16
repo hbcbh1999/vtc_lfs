@@ -199,3 +199,4 @@ FakesAssemblies/
 /AdvancedInstaller/VTC-cache/**
 /AdvancedInstaller/VTC-cache/*
 /AdvancedInstaller/Output/*.exe
+/AdvancedInstaller/Output/*

@@ -123,7 +123,17 @@ namespace VTC.Kernel.Vistas
                 var measurementsList = _yoloClassifier.DetectFrameYolo(newFrame);
                 var measurementsFilteredByROI = measurementsList.Where(m => IsContainedInROI(m));
                 var measurementsFilteredBySize = measurementsFilteredByROI.Where(m => m.Size > _regionConfiguration.MinObjectSize && m.Size < _regionConfiguration.MaxObjectSize);
-                MeasurementsArray = measurementsFilteredBySize.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(YoloIntegerNameMapping.GetObjectTypeFromClassInteger(m.ObjectClass, _yoloNameMapping.IntegerToObjectType))).ToArray();
+                
+                if(_regionConfiguration.FilterOverlap)
+                {
+                    var measurementsFilteredByOverlap = FilterOverlap(measurementsFilteredBySize.ToList());
+                    MeasurementsArray = measurementsFilteredByOverlap.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(YoloIntegerNameMapping.GetObjectTypeFromClassInteger(m.ObjectClass, _yoloNameMapping.IntegerToObjectType))).ToArray();
+                }
+                else
+                {
+                    MeasurementsArray = measurementsFilteredBySize.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(YoloIntegerNameMapping.GetObjectTypeFromClassInteger(m.ObjectClass, _yoloNameMapping.IntegerToObjectType))).ToArray();
+                }
+                
                 MeasurementArrayQueue.Enqueue(MeasurementsArray);
                 while (MeasurementArrayQueue.Count > MeasurementArrayQueueMaxLength)
                     MeasurementArrayQueue.Dequeue();
@@ -162,6 +172,77 @@ namespace VTC.Kernel.Vistas
                 Logger.Log(LogLevel.Error, "In Vista:Update(), " + e.Message);
 #endif
             }   
+        }
+
+        private List<Measurement> FilterOverlap(List<Measurement> boundingBoxes)
+        { 
+            var noMatches = false;
+            int loopCount = 0; // For safety
+            while(noMatches == false && loopCount < 10) //Loop through the list until no matching pairs remain
+            {
+                noMatches = true; //Assume no match has been found. Seek to find a match.
+                foreach (var m in boundingBoxes)
+                {
+                    var matchIsFound = false;
+                    var mList = new List<Measurement>();
+                    mList.Add(m);
+                    foreach(var n in boundingBoxes.Except(mList)) //Compare an element to every other element
+                    {
+                        matchIsFound = MeasurementsOverlap(m,n);
+                        if (matchIsFound)
+                        {
+                            noMatches = false;
+                            boundingBoxes.Remove(n); //Remove the matching element, if a match is found; then bail out.
+                            break;
+                        }
+                    }
+                    if(matchIsFound) //Bail out if a match was found in the previous loop, because the list boundingBoxes has changed.
+                    {
+                        break;
+                    }
+                }
+
+                loopCount++;
+            }
+
+            return boundingBoxes;
+        }
+
+        private Boolean MeasurementsOverlap(Measurement x, Measurement y)
+        {
+            var distance = Math.Sqrt(Math.Pow((x.X - y.X), 2) + Math.Pow((x.Y - y.Y), 2));
+            Boolean within_position_tolerance = distance < 5;
+
+            var sizeRatio = 1.0;
+            if(y.Size != 0)
+            {
+                sizeRatio = x.Size / y.Size;
+            }
+
+            var widthRatio = 1.0;
+            if(y.Width != 0)
+            { 
+                widthRatio = x.Width/y.Width;    
+            }
+
+            var heightRatio = 1.0;
+            if (y.Height != 0)
+            {
+                heightRatio = x.Height / y.Height;
+            }
+
+            Boolean withinRatioTolerance = false;
+            if (sizeRatio > 0.9 && sizeRatio < 1.1 && widthRatio < 1.2 && widthRatio > 0.8 && heightRatio < 1.2 && heightRatio > 0.8)
+            {
+                withinRatioTolerance = true;
+            }
+
+            if(within_position_tolerance && withinRatioTolerance)
+            { 
+                return true;    
+            }
+
+            return false;
         }
 
         public void UpdateRegionConfiguration(RegionConfig newRegionConfig)

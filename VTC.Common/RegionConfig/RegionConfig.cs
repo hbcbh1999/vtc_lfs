@@ -167,6 +167,10 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public bool DisableUTurns { get; set; } = false;
 
+        [Description("FilterOverlap: Filter overlapping bounding-boxes.")]
+        [DataMember]
+        public bool FilterOverlap { get; set; } = false;
+
 
         public RegionConfig()
         {

@@ -127,10 +127,12 @@ namespace VTC.Kernel
         {
             //_hypothesisTree.Children.Sort(HypothesisTree.ProbCompare);
             //var bestHypothesis = _hypothesisTree.Children.First();
-            var leafNodes = _hypothesisTree.GetLeafNodes();
-            leafNodes.Sort(HypothesisTree.ProbCompare);
-            var bestHypothesis = leafNodes.First();
-            return bestHypothesis.NodeData;
+
+            //var leafNodes = _hypothesisTree.GetLeafNodes();
+            //leafNodes.Sort(HypothesisTree.ProbCompare);
+            //var bestHypothesis = leafNodes.First();
+            //return bestHypothesis.NodeData;
+            return _hypothesisTree.NodeData;
         }
 
         /// <summary>
