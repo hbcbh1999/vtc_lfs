@@ -32,6 +32,7 @@ namespace VTC.Actors
 
         private IActorRef _loggingActor;
         private IActorRef _configurationActor;
+        private IActorRef _sequencingActor;
 
         private UInt64 _processedFramesThisBin;
         private DateTime _processedFramesStartTime = DateTime.Now;
@@ -90,6 +91,10 @@ namespace VTC.Actors
                     CheckConfiguration()
                 );
 
+                Receive<InitializedNotificationMessage>(message =>
+                    SendInitializedNotifications()
+                );
+
                 Self.Tell(new ActorHeartbeatMessage(Self));
 
                 Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
@@ -107,7 +112,7 @@ namespace VTC.Actors
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 5*60000, Self, new RequestBackgroundFrameMessage(), Self);
                 Context.System.Scheduler.ScheduleTellRepeatedly(60000, 5*60000, Self, new ValidateConfigurationMessage(), Self);
 
-                _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug, "ProcessingActor"));
+                Context.System.Scheduler.ScheduleTellOnce(1000, Self, new InitializedNotificationMessage(), Self);
             }
             catch (Exception ex)
             {
@@ -266,6 +271,13 @@ namespace VTC.Actors
         public static Props Props()
         {
             return Akka.Actor.Props.Create(() => new ProcessingActor());
+        }
+
+        private void SendInitializedNotifications()
+        {
+            _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug, "ProcessingActor"));
+            _sequencingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug, "ProcessingActor"));
+            _sequencingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug, "ProcessingActor"));
         }
 
         private void CheckConfiguration()

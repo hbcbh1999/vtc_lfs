@@ -155,7 +155,7 @@
     <PostBuildEvent>rmdir "$(TargetDir)DetectionNetwork" /s /q
 mkdir "$(TargetDir)DetectionNetwork"
 cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-yolov3.cfg" "$(TargetDir)DetectionNetwork"
-cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-yolov3_final.weights" "$(TargetDir)DetectionNetwork"
+cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-yolov3_last.weights" "$(TargetDir)DetectionNetwork"
 cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-obj.names" "$(TargetDir)DetectionNetwork"
 cp "$(SolutionDir)ThirdParty\DarknetV3\yolo_cpp_dll.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\DarknetV3\yolo_cpp_dll_no_gpu.dll" $(TargetDir)

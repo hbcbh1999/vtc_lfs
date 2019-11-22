@@ -53,19 +53,23 @@ namespace VTC
         private ICaptureSource _selectedCaptureSource;
 
         // unit tests has own settings, so need to store "pairs" (capture, settings)
-       private CaptureContext[] _testCaptureContexts;
+        private CaptureContext[] _testCaptureContexts;
 
-       private Logger _userLogger = LogManager.GetLogger("userlog"); // special logger for user messages
+        private Logger _userLogger = LogManager.GetLogger("userlog"); // special logger for user messages
 
         private UserConfig _userConfig = new UserConfig();
 
-       RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
+        RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
 
-       /// <summary>
-       /// Constructor.
-       /// </summary>
-       /// <param name="isLicensed">If false, software will shut down after a few minutes</param>
-       /// <param name="appArgument">Can mean different things (Local file with video, Unit tests, etc).</param>
+        public delegate void UpdateInfoUIDelegate(string infoString);
+        public delegate void UpdateStatsUIDelegate(string statString);
+        public delegate void UpdateDebugDelegate(string debugString);
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="isLicensed">If false, software will shut down after a few minutes</param>
+        /// <param name="appArgument">Can mean different things (Local file with video, Unit tests, etc).</param>
         public TrafficCounter(bool isLicensed, string appArgument = null)
        {           
             InitializeComponent();

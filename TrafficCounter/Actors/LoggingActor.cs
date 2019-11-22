@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Messaging;
 using System.Windows.Forms;
 using Akka.Actor;
 using Emgu.CV;
@@ -23,6 +24,7 @@ using VTC.Common.RegionConfig;
 using VTC.Kernel;
 using VTC.Messages;
 using VTC.Remote;
+using VTC.BatchProcessing;
 using VTC.Reporting;
 using VTC.UserConfiguration;
 
@@ -52,6 +54,7 @@ namespace VTC.Actors
         private string _currentVideoName = "Unknown video";
         private DateTime _videoStartTime = DateTime.Now;
         private string _currentOutputFolder;
+        private BatchVideoJob _currentJob;
 
         private MultipleTrajectorySynthesizer mts;
 
@@ -59,14 +62,14 @@ namespace VTC.Actors
         private IActorRef _configurationActor;
         private Image<Bgr, byte> _background;
 
-        public delegate void UpdateStatsUIDelegate(string statString);
-        private UpdateStatsUIDelegate _updateStatsUiDelegate;
+        //public delegate void UpdateStatsUIDelegate(string statString);
+        private TrafficCounter.UpdateStatsUIDelegate _updateStatsUiDelegate;
 
-        public delegate void UpdateInfoUIDelegate(string infoString);
-        private UpdateInfoUIDelegate _updateInfoUiDelegate;
+        //public delegate void UpdateInfoUIDelegate(string infoString);
+        private TrafficCounter.UpdateInfoUIDelegate _updateInfoUiDelegate;
 
-        public delegate void UpdateDebugDelegate(string debugString);
-        private UpdateDebugDelegate _updateDebugDelegate;
+        //public delegate void UpdateDebugDelegate(string debugString);
+        private TrafficCounter.UpdateDebugDelegate _updateDebugDelegate;
 
         private YoloIntegerNameMapping _yoloNameMapping = new YoloIntegerNameMapping();
 
@@ -76,9 +79,20 @@ namespace VTC.Actors
 
         private List<Movement> MovementTransmitBuffer = new List<Movement>();
 
+        private MessageQueue _automationProcessingCompleteMessageQueue;
+
         public LoggingActor()
         {
             InitializeEventConfig();
+
+            try
+            {
+                _automationProcessingCompleteMessageQueue = new MessageQueue(@".\private$\vtcvideoprocesscompletenotification");
+                _automationProcessingCompleteMessageQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(VideoProcessingCompleteNotificationMessage) });
+            }
+            catch (MessageQueueException ex)
+            {
+            }
 
             mts = new MultipleTrajectorySynthesizer();
 
@@ -127,7 +141,7 @@ namespace VTC.Actors
             );
 
             Receive<CaptureSourceCompleteMessage>(message =>
-                GenerateReport()
+                OnCaptureSourceComplete()
             );
 
             Receive<GenerateDailyReportMessage>(message =>
@@ -194,6 +208,10 @@ namespace VTC.Actors
                 ClearTurnStats()
             );
 
+            Receive<NewBatchJobMessage>(message =>
+                UpdateBatchJob(message.Job)
+            );
+
 
             Self.Tell(new LoadUserConfigMessage());
 
@@ -202,7 +220,6 @@ namespace VTC.Actors
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
             //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0), new TimeSpan(0, 5, 0), Self, new FlushBuffersMessage(), Self);
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
-
 
             Log("LoggingActor initialized.", LogLevel.Info, "LoggingActor");
         }
@@ -592,6 +609,24 @@ namespace VTC.Actors
         {
             if (_liveMode)
                 WriteBinnedMovements60Min(DateTime.Now, _60MinTurnStats);
+        }
+
+        private void OnCaptureSourceComplete()
+        { 
+            PostCaptureSourceCompleteMSMQ();
+            GenerateReport();   
+        }
+
+        private void PostCaptureSourceCompleteMSMQ()
+        {
+            var msg = new VideoProcessingCompleteNotificationMessage();
+            
+            msg.ManualCountsPath = _currentJob.GroundTruthPath;
+            msg.VideoFilePath = _currentJob.VideoPath;
+            msg.JobGuid = _currentJob.JobGuid;
+            msg.OutputFolderPath = _currentOutputFolder;
+
+            _automationProcessingCompleteMessageQueue.Send(msg);
         }
 
         private void GenerateReport()
@@ -1072,7 +1107,7 @@ namespace VTC.Actors
             return sb.ToString();
         }
 
-        private void UpdateStatsUiHandler(UpdateStatsUIDelegate handler)
+        private void UpdateStatsUiHandler(TrafficCounter.UpdateStatsUIDelegate handler)
         {
             try
             {
@@ -1084,7 +1119,7 @@ namespace VTC.Actors
             }
         }
 
-        private void UpdateInfoUiHandler(UpdateInfoUIDelegate handler)
+        private void UpdateInfoUiHandler(TrafficCounter.UpdateInfoUIDelegate handler)
         {
             try
             {
@@ -1096,7 +1131,7 @@ namespace VTC.Actors
             }
         }
 
-        private void UpdateDebugHandler(UpdateDebugDelegate handler)
+        private void UpdateDebugHandler(TrafficCounter.UpdateDebugDelegate handler)
         {
             try
             {
@@ -1271,6 +1306,21 @@ namespace VTC.Actors
             {
                 MovementTransmitBuffer.Remove(m);
             }
+        }
+
+        void UpdateBatchJob(BatchVideoJob job)
+        { 
+            _currentJob = job;    
+        }
+
+        [Serializable]
+        public class VideoProcessingCompleteNotificationMessage
+        {
+            public string VideoFilePath = "";
+            public string OutputFolderPath = "";
+            public string ConfigurationName = "";
+            public string ManualCountsPath = "";
+            public Guid JobGuid;
         }
     }
 }

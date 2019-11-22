@@ -405,7 +405,10 @@ namespace VTC.Kernel
             if (withMeasurement)
                 currentState.SuccessiveMissedDetections = 0;
 
-            if (currentState.SuccessiveMissedDetections < NodeData.MissDetectionThreshold)
+            var isWithinBounds = currentState.X >= 0.0 && currentState.Y >= 0.0 && currentState.X <= 640.0 && currentState.Y <= 480;
+            
+
+            if ((currentState.SuccessiveMissedDetections < NodeData.MissDetectionThreshold) && isWithinBounds)
                 NodeData.Vehicles.Add(updatedVehicle);
             else
                 NodeData.DeletedVehicles.Add(updatedVehicle);

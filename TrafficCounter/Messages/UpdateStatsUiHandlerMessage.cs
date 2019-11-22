@@ -10,11 +10,11 @@ namespace VTC.Messages
 {
     class UpdateStatsUiHandlerMessage
     {
-        public UpdateStatsUiHandlerMessage(LoggingActor.UpdateStatsUIDelegate uiDelegate)
+        public UpdateStatsUiHandlerMessage(TrafficCounter.UpdateStatsUIDelegate uiDelegate)
         {
             StatsUiDelegate = uiDelegate;
         }
 
-        public LoggingActor.UpdateStatsUIDelegate StatsUiDelegate { get; private set; }
+        public TrafficCounter.UpdateStatsUIDelegate StatsUiDelegate { get; private set; }
     }
 }

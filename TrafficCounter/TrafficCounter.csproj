@@ -221,7 +221,10 @@
     <Compile Include="CaptureSource\IpCamera.cs" />
     <Compile Include="ExportTrainingSet\ExportTrainingSet.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Messages\InitializedNotificationMessage.cs" />
     <Compile Include="Messages\ClearStatsMessage.cs" />
+    <Compile Include="Messages\InitializationCompleteMessage.cs" />
+    <Compile Include="Messages\NewBatchJobMessage.cs" />
     <Compile Include="Messages\RequestVideoSourceMessage.cs" />
     <Compile Include="Messages\LoadConfigurationByNameMessage.cs" />
     <Compile Include="Messages\FlushBuffersMessage.cs" />

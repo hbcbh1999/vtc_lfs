@@ -172,7 +172,7 @@ namespace VTC.Actors
             _frameGrabActor.Tell(new SequencingActorMessage(_sequencingActor));
         }
 
-        void CreateAllActors(ProcessingActor.UpdateUIDelegate updateUiDelegate, LoggingActor.UpdateStatsUIDelegate statsUiDelegate, LoggingActor.UpdateInfoUIDelegate infoUiDelegate, FrameGrabActor.UpdateUIDelegate frameGrabUiDelegate, LoggingActor.UpdateDebugDelegate debugDelegate)
+        void CreateAllActors(ProcessingActor.UpdateUIDelegate updateUiDelegate, TrafficCounter.UpdateStatsUIDelegate statsUiDelegate, TrafficCounter.UpdateInfoUIDelegate infoUiDelegate, FrameGrabActor.UpdateUIDelegate frameGrabUiDelegate, TrafficCounter.UpdateDebugDelegate debugDelegate)
         {
             _processingActor = Context.ActorOf(Props.Create(typeof(ProcessingActor)).WithMailbox("processing-bounded-mailbox"), "ProcessingActor");
             _processingActor.Tell(new UpdateUiHandlerMessage(updateUiDelegate));
@@ -184,6 +184,7 @@ namespace VTC.Actors
             _loggingActor.Tell(new UpdateInfoUiHandlerMessage(infoUiDelegate));
             _loggingActor.Tell(new UpdateDebugHandlerMessage(debugDelegate));
             _sequencingActor = Context.ActorOf(Props.Create(typeof(SequencingActor)).WithMailbox("processing-bounded-mailbox"),"SequencingActor");
+            _sequencingActor.Tell(new UpdateInfoUiHandlerMessage(infoUiDelegate));
             _configurationActor = Context.System.ActorOf(Props.Create(() => new
                 ConfigurationActor()).WithDispatcher("synchronized-dispatcher"), "ConfigurationActor");
 

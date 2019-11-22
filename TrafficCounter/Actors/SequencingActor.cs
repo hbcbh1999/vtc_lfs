@@ -26,13 +26,19 @@ namespace VTC.Actors
         private readonly List<ICaptureSource> _cameras = new List<ICaptureSource>(); //List of all video input devices. Index, file location, name
         private List<BatchVideoJob> _videoJobs;
         private BatchVideoJob _currentJob;
+
         private IActorRef _loggingActor;
+
         private IActorRef _frameGrabActor;
+
         private IActorRef _processingActor;
+        private bool _processingActorInitialized = false;
+
         private IActorRef _configActor;
         private Dictionary<VideoProcessingRequestMessage, BatchVideoJob> _automationRequestJobs;
-        private MessageQueue _automationProcessingCompleteMessageQueue;
         private string _currentVideoName = "";
+
+        private TrafficCounter.UpdateInfoUIDelegate _updateInfoUiDelegate;
 
         private VTC.Common.UserConfig _userConfig = new UserConfig();
 
@@ -40,14 +46,6 @@ namespace VTC.Actors
         {
             _videoJobs = new List<BatchVideoJob>();
             _automationRequestJobs = new Dictionary<VideoProcessingRequestMessage, BatchVideoJob>();
-            try
-            {
-                _automationProcessingCompleteMessageQueue = new MessageQueue(@".\private$\vtcvideoprocesscompletenotification");
-                _automationProcessingCompleteMessageQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(VideoProcessingCompleteNotificationMessage) });
-            }
-            catch (MessageQueueException ex)
-            {
-            }
 
             Receive<LoggingActorMessage>(message =>
                 UpdateLoggingActor(message.ActorRef)
@@ -89,6 +87,14 @@ namespace VTC.Actors
                 LoadUserConfig()
             );
 
+            Receive<UpdateInfoUiHandlerMessage>(message =>
+                UpdateInfoUiHandler(message.InfoUiDelegate)
+            );
+
+            Receive<InitializationCompleteMessage>(message =>
+                UpdateInitializationStatus(message.Actor)
+            );
+
             Self.Tell(new ActorHeartbeatMessage(Self));
 
             Self.Tell(new LoadUserConfigMessage());
@@ -96,7 +102,7 @@ namespace VTC.Actors
 
         private void SendNotificationForLastAndDequeue()
         {
-            if(_currentJob == null)
+            if (_currentJob == null)
             {
                 _loggingActor.Tell(new LogMessage("SequencingActor thinks a non-existant job has completed. This can happen with unreliable IP-camera streams.", LogLevel.Error, "SequencingActor"));
                 return;
@@ -124,6 +130,7 @@ namespace VTC.Actors
                     _processingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
                     _loggingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
                     _loggingActor.Tell(new CopyGroundtruthMessage(_currentJob.GroundTruthPath));
+                    _loggingActor.Tell(new NewBatchJobMessage(_currentJob));
                     var vm = VideoMetadata.ExtractFromVideo(_currentJob.VideoPath);
                     _loggingActor.Tell(new VideoMetadataMessage(vm));
                     _frameGrabActor.Tell(new GetNextFrameMessage());
@@ -140,7 +147,14 @@ namespace VTC.Actors
             else
             {
                 UserLog("Batch complete.");
-                UserLog("Movement counts saved to " + _userConfig.OutputPath);
+
+                var outputPathString = _userConfig.OutputPath;
+                if(outputPathString == "" || outputPathString == null)
+                {
+                    outputPathString = "desktop";
+                }
+
+                UserLog("Movement counts saved to " + outputPathString);
             }
         }
 
@@ -265,7 +279,9 @@ namespace VTC.Actors
                             new XmlMessageFormatter(new Type[1] { typeof(VideoProcessingRequestMessage) });
                         
                         var vprm = (VideoProcessingRequestMessage) msg.Body;
-                        MessageBox.Show("Video processing request: " + vprm.VideoFilePath + ", " + vprm.ConfigurationName + ", " + vprm.ManualCountsPath);
+                        //MessageBox.Show("Video processing request: " + vprm.VideoFilePath + ", " + vprm.ConfigurationName + ", " + vprm.ManualCountsPath);
+
+                        //_updateInfoUiDelegate?.Invoke("Video processing request: " + vprm.VideoFilePath + ", " + vprm.ConfigurationName + ", " + vprm.ManualCountsPath);
 
                         //At this point we don't have the RegionConfig object associated with this file. We need
                         //to convert the ConfigurationName (String) into a RegionConfig object. 
@@ -319,22 +335,33 @@ namespace VTC.Actors
 
             _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
         }
+
+        private void UpdateInitializationStatus(IActorRef actor)
+        { 
+            if(actor == _processingActor)
+            { 
+                _processingActorInitialized = true;    
+            }            
+        }
+
+        private void UpdateInfoUiHandler(TrafficCounter.UpdateInfoUIDelegate handler)
+        {
+            try
+            {
+                _updateInfoUiDelegate = handler;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("(UpdateInfoUiHandler) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite);
+            }
+
+        }
     }
 
     [Serializable]
     public class VideoProcessingRequestMessage
     {
         public string VideoFilePath = "";
-        public string ConfigurationName = "";
-        public string ManualCountsPath = "";
-        public Guid JobGuid;
-    }
-
-    [Serializable]
-    public class VideoProcessingCompleteNotificationMessage
-    {
-        public string VideoFilePath = "";
-        public string OutputFolderPath = "";
         public string ConfigurationName = "";
         public string ManualCountsPath = "";
         public Guid JobGuid;

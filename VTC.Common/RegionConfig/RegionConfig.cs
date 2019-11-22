@@ -81,7 +81,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("MaxObjectSize: objects with more than this many pixels will be ignored.")]
         [DataMember]
-        public int MaxObjectSize { get; set; } = 10000;
+        public int MaxObjectSize { get; set; } = 1000000;
 
         [Description("MissThreshold: if an object is not detected for this many frames, it will be considered to be gone.")]
         [DataMember]

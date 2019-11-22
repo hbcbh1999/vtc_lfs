@@ -10,11 +10,11 @@ namespace VTC.Messages
 {
     class UpdateDebugHandlerMessage
     {
-        public UpdateDebugHandlerMessage(LoggingActor.UpdateDebugDelegate debugDelegate)
+        public UpdateDebugHandlerMessage(TrafficCounter.UpdateDebugDelegate debugDelegate)
         {
             DebugDelegate = debugDelegate;
         }
 
-        public LoggingActor.UpdateDebugDelegate DebugDelegate { get; private set; }
+        public TrafficCounter.UpdateDebugDelegate DebugDelegate { get; private set; }
     }
 }
