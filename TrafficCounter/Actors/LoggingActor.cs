@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.ServiceProcess;
 using System.Text;
 using System.Messaging;
 using System.Windows.Forms;
@@ -612,9 +613,32 @@ namespace VTC.Actors
         }
 
         private void OnCaptureSourceComplete()
-        { 
-            PostCaptureSourceCompleteMSMQ();
+        {
+            try
+            {
+                if (IsMSMQInstalled())
+                {
+                    PostCaptureSourceCompleteMSMQ();
+                }
+            }
+            catch(Exception ex)
+            { 
+                Log(ex.Message, LogLevel.Error, "LoggingActor");    
+            }
+            
             GenerateReport();   
+        }
+
+        private bool IsMSMQInstalled()
+        {
+            List<ServiceController> services = ServiceController.GetServices().ToList();
+            ServiceController msQue = services.Find(o => o.ServiceName == "MSMQ");
+            if (msQue?.Status == ServiceControllerStatus.Running)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void PostCaptureSourceCompleteMSMQ()

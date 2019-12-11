@@ -151,6 +151,10 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public double MovementLengthRatio { get; set; } = 0.5;
 
+        [Description("Overlap ratio: when overlap filtering is enabled, this area-ratio threshold is applied to detect overlap and eliminate double detections.")]
+        [DataMember]
+        public double OverlapRatio { get; set; } = 0.9;
+
         [Description("Site token: copy this from the web dashboard for your site.")]
         [DataMember]
         public string SiteToken { get; set; } = "";

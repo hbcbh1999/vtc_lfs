@@ -176,36 +176,61 @@ namespace VTC.Kernel.Vistas
 
         private List<Measurement> FilterOverlap(List<Measurement> boundingBoxes)
         { 
-            var noMatches = false;
-            int loopCount = 0; // For safety
-            while(noMatches == false && loopCount < 10) //Loop through the list until no matching pairs remain
-            {
-                noMatches = true; //Assume no match has been found. Seek to find a match.
-                foreach (var m in boundingBoxes)
-                {
-                    var matchIsFound = false;
-                    var mList = new List<Measurement>();
-                    mList.Add(m);
-                    foreach(var n in boundingBoxes.Except(mList)) //Compare an element to every other element
-                    {
-                        matchIsFound = MeasurementsOverlap(m,n);
-                        if (matchIsFound)
-                        {
-                            noMatches = false;
-                            boundingBoxes.Remove(n); //Remove the matching element, if a match is found; then bail out.
-                            break;
-                        }
-                    }
-                    if(matchIsFound) //Bail out if a match was found in the previous loop, because the list boundingBoxes has changed.
-                    {
-                        break;
-                    }
-                }
+            //Algorithm:
+            //
+            //For each element in the boundingBoxes list, compare against all other elements in the non-overlapping list.
+            //If another 'overlapping' element is found, skip to the next element in the boundingBoxlist. Otherwise, add this element
+            // to the non-overlapping list.
 
-                loopCount++;
+            var nonOverlappingBoundingBoxes = new List<Measurement>();
+
+            foreach(var bb in boundingBoxes)
+            { 
+                if(nonOverlappingBoundingBoxes.Where( m => BoxesAreOverlapping(m,bb)).Any())
+                { 
+                    continue;    
+                }
+                else
+                { 
+                    nonOverlappingBoundingBoxes.Add(bb);    
+                }
             }
 
-            return boundingBoxes;
+            return nonOverlappingBoundingBoxes;
+        }
+
+        private bool BoxesAreOverlapping(Measurement a, Measurement b)
+        { 
+            var rA = new Rectangle((int)a.X, (int)a.Y, (int)a.Width, (int)a.Height);
+            var rB = new Rectangle((int)b.X, (int)b.Y, (int)b.Width, (int)b.Height);
+
+            if(rA.Contains(rB) || rB.Contains(rA))
+            { 
+                return true;    
+            }
+
+            //Detect partial overlap?
+            var rA_original = rA;
+            var rB_original = rB;
+            rA.Intersect(rB);
+            rB.Intersect(rA_original);
+            
+            var intersectionAreaA = (double) rA.Height * rA.Width;
+            var originalAreaA = (double) rA_original.Height * rA_original.Width;
+            var intersectionAreaRatioA = intersectionAreaA/originalAreaA;
+            var intersectionAIsOverlapping = (intersectionAreaRatioA >= _regionConfiguration.OverlapRatio) && intersectionAreaRatioA <= (2.0 -_regionConfiguration.OverlapRatio);
+
+            var intersectionAreaB = (double) rB.Height * rB.Width;
+            var originalAreaB = (double) rB_original.Height * rB_original.Width;
+            var intersectionAreaRatioB = intersectionAreaB / originalAreaB;
+            var intersectionBIsOverlapping = (intersectionAreaRatioB >= _regionConfiguration.OverlapRatio) && intersectionAreaRatioB <= (2.0 - _regionConfiguration.OverlapRatio);
+
+            if(intersectionAIsOverlapping || intersectionBIsOverlapping)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private Boolean MeasurementsOverlap(Measurement x, Measurement y)

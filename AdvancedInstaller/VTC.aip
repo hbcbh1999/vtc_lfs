@@ -24,7 +24,7 @@
     <ROW Property="ProductCode" Value="1033:{F246D294-6F0C-42DF-9519-1E6A3AE210EF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="VTC"/>
-    <ROW Property="ProductVersion" Value="1.2.1" Type="32"/>
+    <ROW Property="ProductVersion" Value="1.2.3" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{61CC6191-A4B3-4513-B3EE-E13E694060B0}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -287,14 +287,14 @@
     <ROW File="VTC.Reporting.pdb" Component_="VTC.Reporting.dll" FileName="VTCREP~1.PDB|VTC.Reporting.pdb" Attributes="0" SourcePath="..\bin\VTC.Reporting.pdb" SelfReg="false" NextFile="Indicators.dll.config"/>
     <ROW File="VTC.exe" Component_="VTC.exe" FileName="VTC.exe" Attributes="0" SourcePath="..\bin\VTC.exe" SelfReg="false" NextFile="Akka.dll" DigSign="true"/>
     <ROW File="VTC.exe.config" Component_="Logo.ico" FileName="VTCEXE~1.CON|VTC.exe.config" Attributes="0" SourcePath="..\bin\VTC.exe.config" SelfReg="false" NextFile="VTC.Kernel.dll.config"/>
-    <ROW File="VTC.instr.pdb" Component_="VTC.instr.pdb" FileName="VTCINS~1.PDB|VTC.instr.pdb" Attributes="0" SourcePath="..\bin\VTC.instr.pdb" SelfReg="false"/>
+    <ROW File="VTC.instr.pdb" Component_="VTC.instr.pdb" FileName="VTCINS~1.PDB|VTC.instr.pdb" Attributes="0" SourcePath="..\bin\VTC.instr.pdb" SelfReg="false" NextFile="VTCyolov3_last.weights"/>
     <ROW File="VTC.pdb" Component_="VTC.exe" FileName="VTC.pdb" Attributes="0" SourcePath="..\bin\VTC.pdb" SelfReg="false" NextFile="VTC.Reporting.pdb"/>
     <ROW File="VTCSupervisor.exe" Component_="VTCSupervisor.exe" FileName="VTCSUP~1.EXE|VTC Supervisor.exe" Attributes="0" SourcePath="..\bin\VTC Supervisor.exe" SelfReg="false" NextFile="VTCSupervisor.exe.config" DigSign="true"/>
     <ROW File="VTCSupervisor.exe.config" Component_="Logo.ico" FileName="VTCSUP~1.CON|VTC Supervisor.exe.config" Attributes="0" SourcePath="..\bin\VTC Supervisor.exe.config" SelfReg="false" NextFile="VTCSupervisor.pdb"/>
     <ROW File="VTCSupervisor.pdb" Component_="VTCSupervisor.exe" FileName="VTCSUP~1.PDB|VTC Supervisor.pdb" Attributes="0" SourcePath="..\bin\VTC Supervisor.pdb" SelfReg="false" NextFile="opencv_ffmpeg410_64.dll"/>
     <ROW File="VTCobj.names" Component_="transport.names" FileName="VTC-OB~1.NAM|VTC-obj.names" Attributes="0" SourcePath="..\bin\DetectionNetwork\VTC-obj.names" SelfReg="false" NextFile="VTCyolov3.cfg"/>
     <ROW File="VTCyolov3.cfg" Component_="transport.names" FileName="VTC-YO~1.CFG|VTC-yolov3.cfg" Attributes="0" SourcePath="..\bin\DetectionNetwork\VTC-yolov3.cfg" SelfReg="false" NextFile="opencv_ffmpeg346_64.dll"/>
-    <ROW File="VTCyolov3_final.weights" Component_="transport.names" FileName="VTC-YO~2.WEI|VTC-yolov3_final.weights" Attributes="0" SourcePath="..\bin\DetectionNetwork\VTC-yolov3_final.weights" SelfReg="false" NextFile="SimulatedScene.dll"/>
+    <ROW File="VTCyolov3_last.weights" Component_="transport.names" FileName="VTC-YO~1.WEI|VTC-yolov3_last.weights" Attributes="0" SourcePath="..\bin\DetectionNetwork\VTC-yolov3_last.weights" SelfReg="false"/>
     <ROW File="ZedGraph.dll" Component_="ZedGraph.dll" FileName="ZedGraph.dll" Attributes="0" SourcePath="..\bin\ZedGraph.dll" SelfReg="false" NextFile="ZeroMQ.dll"/>
     <ROW File="ZedGraph.resources.dll" Component_="ZedGraph.resources.dll" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\de\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_1"/>
     <ROW File="ZedGraph.resources.dll_1" Component_="ZedGraph.resources.dll_1" FileName="ZEDGRA~1.DLL|ZedGraph.resources.dll" Attributes="0" SourcePath="..\bin\es\ZedGraph.resources.dll" SelfReg="false" NextFile="ZedGraph.resources.dll_2"/>
@@ -350,7 +350,7 @@
     <ROW File="opencv_ffmpeg330.dll" Component_="opencv_ffmpeg330.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg330.dll" Attributes="0" SourcePath="..\bin\opencv_ffmpeg330.dll" SelfReg="false" NextFile="opencv_ffmpeg330_64.dll"/>
     <ROW File="opencv_ffmpeg330_64.dll" Component_="opencv_ffmpeg330_64.dll" FileName="OPENCV~2.DLL|opencv_ffmpeg330_64.dll" Attributes="0" SourcePath="..\bin\opencv_ffmpeg330_64.dll" SelfReg="false" NextFile="opencv_world330.dll"/>
     <ROW File="opencv_ffmpeg346_64.dll" Component_="opencv_ffmpeg346_64.dll" FileName="OPENCV~5.DLL|opencv_ffmpeg346_64.dll" Attributes="0" SourcePath="..\bin\opencv_ffmpeg346_64.dll" SelfReg="false" NextFile="opencv_world346.dll"/>
-    <ROW File="opencv_ffmpeg410.dll" Component_="opencv_ffmpeg410.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg410.dll" Attributes="0" SourcePath="..\bin\x86\opencv_ffmpeg410.dll" SelfReg="false" NextFile="VTCyolov3_final.weights"/>
+    <ROW File="opencv_ffmpeg410.dll" Component_="opencv_ffmpeg410.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg410.dll" Attributes="0" SourcePath="..\bin\x86\opencv_ffmpeg410.dll" SelfReg="false" NextFile="SimulatedScene.dll"/>
     <ROW File="opencv_ffmpeg410_64.dll" Component_="opencv_ffmpeg410_64.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg410_64.dll" Attributes="0" SourcePath="..\bin\x64\opencv_ffmpeg410_64.dll" SelfReg="false" NextFile="opencv_ffmpeg410.dll"/>
     <ROW File="opencv_world330.dll" Component_="opencv_world330.dll" FileName="OPENCV~3.DLL|opencv_world330.dll" Attributes="0" SourcePath="..\bin\opencv_world330.dll" SelfReg="false" NextFile="opencv_world330d.dll"/>
     <ROW File="opencv_world330d.dll" Component_="opencv_world330d.dll" FileName="OPENCV~4.DLL|opencv_world330d.dll" Attributes="0" SourcePath="..\bin\opencv_world330d.dll" SelfReg="false" NextFile="libcrypto1_1x64.dll_1"/>
