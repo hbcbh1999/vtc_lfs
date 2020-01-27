@@ -37,6 +37,9 @@
             this.startButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
             this.checkProcessTimer = new System.Windows.Forms.Timer(this.components);
+            this.autolaunchLabel = new System.Windows.Forms.Label();
+            this.autolaunchCheckbox = new System.Windows.Forms.CheckBox();
+            this.autolaunchTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // ipcamera1Checkbox
@@ -48,6 +51,7 @@
             this.ipcamera1Checkbox.TabIndex = 0;
             this.ipcamera1Checkbox.Text = "IP Camera 1";
             this.ipcamera1Checkbox.UseVisualStyleBackColor = true;
+            this.ipcamera1Checkbox.CheckedChanged += new System.EventHandler(this.ipcamera1Checkbox_CheckedChanged);
             // 
             // ipcamera2Checkbox
             // 
@@ -58,6 +62,7 @@
             this.ipcamera2Checkbox.TabIndex = 1;
             this.ipcamera2Checkbox.Text = "IP Camera 2";
             this.ipcamera2Checkbox.UseVisualStyleBackColor = true;
+            this.ipcamera2Checkbox.CheckedChanged += new System.EventHandler(this.ipcamera2Checkbox_CheckedChanged);
             // 
             // ipcamera3Checkbox
             // 
@@ -68,6 +73,7 @@
             this.ipcamera3Checkbox.TabIndex = 2;
             this.ipcamera3Checkbox.Text = "IP Camera 3";
             this.ipcamera3Checkbox.UseVisualStyleBackColor = true;
+            this.ipcamera3Checkbox.CheckedChanged += new System.EventHandler(this.ipcamera3Checkbox_CheckedChanged);
             // 
             // label1
             // 
@@ -103,11 +109,39 @@
             this.checkProcessTimer.Interval = 10000;
             this.checkProcessTimer.Tick += new System.EventHandler(this.checkProcessTimer_Tick);
             // 
+            // autolaunchLabel
+            // 
+            this.autolaunchLabel.AutoSize = true;
+            this.autolaunchLabel.Location = new System.Drawing.Point(24, 342);
+            this.autolaunchLabel.Name = "autolaunchLabel";
+            this.autolaunchLabel.Size = new System.Drawing.Size(71, 13);
+            this.autolaunchLabel.TabIndex = 6;
+            this.autolaunchLabel.Text = "Launching in:";
+            // 
+            // autolaunchCheckbox
+            // 
+            this.autolaunchCheckbox.AutoSize = true;
+            this.autolaunchCheckbox.Location = new System.Drawing.Point(92, 376);
+            this.autolaunchCheckbox.Name = "autolaunchCheckbox";
+            this.autolaunchCheckbox.Size = new System.Drawing.Size(83, 17);
+            this.autolaunchCheckbox.TabIndex = 7;
+            this.autolaunchCheckbox.Text = "Auto-launch";
+            this.autolaunchCheckbox.UseVisualStyleBackColor = true;
+            this.autolaunchCheckbox.CheckedChanged += new System.EventHandler(this.autolaunchCheckbox_CheckedChanged);
+            // 
+            // autolaunchTimer
+            // 
+            this.autolaunchTimer.Enabled = true;
+            this.autolaunchTimer.Interval = 1000;
+            this.autolaunchTimer.Tick += new System.EventHandler(this.autolaunchTimer_Tick);
+            // 
             // SupervisorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(295, 369);
+            this.ClientSize = new System.Drawing.Size(295, 491);
+            this.Controls.Add(this.autolaunchCheckbox);
+            this.Controls.Add(this.autolaunchLabel);
             this.Controls.Add(this.stopButton);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.label1);
@@ -131,6 +165,9 @@
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.Timer checkProcessTimer;
+        private System.Windows.Forms.Label autolaunchLabel;
+        private System.Windows.Forms.CheckBox autolaunchCheckbox;
+        private System.Windows.Forms.Timer autolaunchTimer;
     }
 }
 
