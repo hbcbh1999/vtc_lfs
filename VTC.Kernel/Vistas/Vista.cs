@@ -48,6 +48,7 @@ namespace VTC.Kernel.Vistas
         public int _height;
 
         public Queue<Measurement[]> MeasurementArrayQueue;              // For displaying detection history (colored dots)
+        public Queue<Measurement[]> DiscardedMeasurementArrayQueue;     // For displaying discarded detections
         public Image<Gray, byte> Movement_Mask { get; private set; }    //Thresholded, b&w movement mask
         public Image<Bgr, float> ColorBackground { get; private set; }  //Average Background being formed
         public Image<Bgr, byte> TrainingImage { get; private set; }     //Image to be exported for training set
@@ -105,6 +106,7 @@ namespace VTC.Kernel.Vistas
 
             tempLogger.Log(LogLevel.Info, "Vista: Initializer: Creating measurement queue.");
             MeasurementArrayQueue = new Queue<Measurement[]>(MeasurementArrayQueueMaxLength);
+            DiscardedMeasurementArrayQueue = new Queue<Measurement[]>(MeasurementArrayQueueMaxLength);
 
             tempLogger.Log(LogLevel.Info, "Vista: Initializer: Initializing configuration.");
             RegionConfiguration = regionConfiguration ?? new RegionConfig();
@@ -133,10 +135,17 @@ namespace VTC.Kernel.Vistas
                 {
                     MeasurementsArray = measurementsFilteredBySize.Where(m => DetectionClasses.ClassDetectionWhitelist.Contains(YoloIntegerNameMapping.GetObjectTypeFromClassInteger(m.ObjectClass, _yoloNameMapping.IntegerToObjectType))).ToArray();
                 }
+
+                var filteredMeasurements = measurementsList.RemoveAll( item => MeasurementsArray.Contains(item) );
                 
                 MeasurementArrayQueue.Enqueue(MeasurementsArray);
                 while (MeasurementArrayQueue.Count > MeasurementArrayQueueMaxLength)
                     MeasurementArrayQueue.Dequeue();
+
+                //Keep a queue of discarded measurements for display/troubleshooting purposes.
+                DiscardedMeasurementArrayQueue.Enqueue(measurementsList.ToArray());
+                while (DiscardedMeasurementArrayQueue.Count > MeasurementArrayQueueMaxLength)
+                    DiscardedMeasurementArrayQueue.Dequeue();
 
                 var cts = new CancellationTokenSource();
                 var ct = cts.Token;
@@ -375,6 +384,12 @@ namespace VTC.Kernel.Vistas
                 stateImage.Draw(new Rectangle((int) (m.X - m.Width/2), (int) (m.Y - m.Height/2), (int) m.Width, (int) m.Height), new Bgr(Color.Chartreuse), 1);
             }
 
+            var latestDiscardedMeasurements = DiscardedMeasurementArrayQueue.Last();
+            foreach (var m in latestDiscardedMeasurements)
+            {
+                stateImage.Draw(new Rectangle((int)(m.X - m.Width / 2), (int)(m.Y - m.Height / 2), (int)m.Width, (int)m.Height), new Bgr(Color.SlateGray), 1);
+            }
+
 
             return stateImage;
         }
@@ -384,7 +399,29 @@ namespace VTC.Kernel.Vistas
             if (m.X >= RoiImage.Width || m.Y >= RoiImage.Height || m.X < 0 || m.Y < 0)
             {return false;}
 
-            return ( (int) RoiImage[ (int) m.Y, (int) m.X].Blue != 0);
+            // Containment in this context should evaluate to 'true' when a vehicle appears to be occupying this polygon (from above)
+            // after accounting for perspective. In practice, this means that we do not want to evaluate containment using
+            // the exact rectangle-center, because the rectangle-center may be outside the polygon in the image-plan but the vehicle
+            // may be sitting directly on top of the polygon if the entire scene was viewed from above. 
+            //
+            // Typically, users will draw the polygons *as if* the scene were being viewed from above. Most user-drawn polygons will *not*
+            // contain the vehicles in the image-plane in locations where the user considers the vehicle to be contained within the polygon.
+            // 
+            // This containment 
+
+            if(_regionConfiguration.StrictContainment)
+            {
+                return ((int)RoiImage[(int)m.Y, (int)m.X].Blue != 0);
+            }
+
+            var approximateLeftWheelX = m.X - m.Width/4;
+            var approximateRightWheelX = m.X + m.Width/4;
+            var approximateWheelY = m.Y + m.Height/4;
+
+            var leftWheelContained = ((int)RoiImage[(int)approximateWheelY, (int)approximateLeftWheelX].Blue != 0);
+            var rightWheelContained = ((int)RoiImage[(int)approximateWheelY, (int)approximateRightWheelX].Blue != 0);
+
+            return leftWheelContained && rightWheelContained;
         }
 
     }

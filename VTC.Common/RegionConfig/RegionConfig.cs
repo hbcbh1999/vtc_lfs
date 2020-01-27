@@ -175,6 +175,10 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public bool FilterOverlap { get; set; } = false;
 
+        [Description("StrictContainment: Set to 'true' to evaluate polygon containment for a bird's-eye perspective.")]
+        [DataMember]
+        public bool StrictContainment { get; set; } = false;
+
 
         public RegionConfig()
         {
