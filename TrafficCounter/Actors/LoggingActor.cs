@@ -129,7 +129,7 @@ namespace VTC.Actors
                 UpdateVideoSourceInfo(message)
             );
 
-            Receive<TrackingEventMessage>(message =>
+            ReceiveAsync<TrackingEventMessage>(async message =>
                 TrajectoryListHandler(message.EventArgs)
             );
 
@@ -137,7 +137,7 @@ namespace VTC.Actors
                 UpdateConfig(message.Config)
             );
 
-            Receive<HandleUpdatedBackgroundFrameMessage>(message =>
+            ReceiveAsync<HandleUpdatedBackgroundFrameMessage>(async message =>
                 UpdateBackgroundFrame(message.Frame)
             );
 
@@ -161,7 +161,7 @@ namespace VTC.Actors
                 UpdateDebugHandler(message.DebugDelegate)
             );
 
-            Receive<DashboardHeartbeatMessage>(message =>
+            ReceiveAsync<DashboardHeartbeatMessage>(async message =>
                 DashboardHeartbeat()
             );
 
@@ -201,7 +201,7 @@ namespace VTC.Actors
                 CheckConfiguration()
             );
 
-            Receive<FlushBuffersMessage>(message =>
+            ReceiveAsync<FlushBuffersMessage>(async message =>
                 FlushTransmitBuffer()
             );
 
@@ -219,7 +219,7 @@ namespace VTC.Actors
             Context.Parent.Tell(new RequestVideoSourceMessage(Self));
 
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0),new TimeSpan(0,5,0),Self, new DashboardHeartbeatMessage(), Self);
-            //Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 1, 0), new TimeSpan(0, 5, 0), Self, new FlushBuffersMessage(), Self);
+            Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 10, 0), new TimeSpan(0, 10, 0), Self, new FlushBuffersMessage(), Self);
             Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
 
             Log("LoggingActor initialized.", LogLevel.Info, "LoggingActor");
@@ -796,7 +796,7 @@ namespace VTC.Actors
 
         }
 
-        private void TrajectoryListHandler(TrackingEvents.TrajectoryListEventArgs args)
+        private async void TrajectoryListHandler(TrackingEvents.TrajectoryListEventArgs args)
         {
             if (_regionConfig == null)
             {
@@ -827,11 +827,6 @@ namespace VTC.Actors
             {
                 foreach (var d in args.TrackedObjects)
                 {
-                    if (d.FirstDetectionFrame == 757 || d.FirstDetectionFrame == 756)
-                    {
-                        Trace.WriteLine("Stop here");
-                    }
-
                     var mostFrequentClassId = d.StateHistory.Last().MostFrequentClassId();
                     var mostLikelyClassType =
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(mostFrequentClassId,
@@ -840,11 +835,6 @@ namespace VTC.Actors
                     if (mostLikelyClassType == "person" && _regionConfig.CountPedestriansAsMotorcycles)
                     {
                         mostLikelyClassType = "motorcycle";
-                    }
-
-                    if (mostLikelyClassType == "bus")
-                    {
-                        Trace.WriteLine("Bus detected");
                     }
 
                     var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength, _regionConfig.MissRatioThreshold, _regionConfig.PositionCovarianceThreshold, _regionConfig.SmoothnessThreshold, _regionConfig.MovementLengthRatio);
@@ -883,25 +873,18 @@ namespace VTC.Actors
                         try
                         {
                             var rs = new RemoteServer();
-                            var rsr = rs.SendMovement(editedMovement, _regionConfig.SiteToken, _userConfig.ServerUrl)
-                                .Result;
-                            if (rsr != HttpStatusCode.OK)
-                            {
-                                Log("Movement POST failed:" + rsr, LogLevel.Error, "LoggingActor");
-                            }
+                            var rsr = await rs.SendMovement(editedMovement, _regionConfig.SiteToken, _userConfig.ServerUrl);
+                            //if (rsr != HttpStatusCode.OK)
+                            //{
+                            //   Log("Movement POST failed:" + rsr, LogLevel.Error, "LoggingActor");
+                            //}
                         }
                         catch (HttpRequestException httpEx)
                         {
+                            Log("Buffering movement for re-send", LogLevel.Warn, "LoggingActor");
                             MovementTransmitBuffer.Add(editedMovement);
                         }
                     }
-                }
-
-                if (MovementTransmitBuffer.Count > 0)
-                {
-                    Log("(TrajectoryListHandler) " + MovementTransmitBuffer + " measurements buffered to transmit.", LogLevel.Info, "LoggingActor");
-
-                    
                 }
 
                 var stats = GetStatString();
@@ -978,7 +961,7 @@ namespace VTC.Actors
             _eventConfig.Events.Add(new RegionTransition(1, 4, true), "crossing" );
         }
 
-        private void UpdateBackgroundFrame(Image<Bgr, byte> image)
+        private async void UpdateBackgroundFrame(Image<Bgr, byte> image)
         {
             try
             {
@@ -1007,7 +990,7 @@ namespace VTC.Actors
                 if (_regionConfig.SendToServer)
                 {
                     var rs = new RemoteServer();
-                    var rsr = rs.SendImage(_background.Bitmap, _regionConfig.SiteToken, _userConfig.ServerUrl).Result;
+                    var rsr = await rs.SendImage(_background.Bitmap, _regionConfig.SiteToken, _userConfig.ServerUrl);
 
                     if (rsr != HttpStatusCode.OK)
                     {
@@ -1167,7 +1150,7 @@ namespace VTC.Actors
             }
         }
 
-        private void DashboardHeartbeat()
+        private async void DashboardHeartbeat()
         {
             if (_regionConfig == null || _userConfig == null)
             {
@@ -1180,7 +1163,7 @@ namespace VTC.Actors
                 try
                 {
                     var rs = new RemoteServer();
-                    var rsr = rs.SendHeartbeat(_regionConfig.SiteToken, _userConfig.ServerUrl).Result;
+                    var rsr = await rs.SendHeartbeat(_regionConfig.SiteToken, _userConfig.ServerUrl);
                     if (rsr != HttpStatusCode.OK)
                     {
                         Log("Heartbeat POST failed:" + rsr, LogLevel.Error, "LoggingActor");
@@ -1300,17 +1283,18 @@ namespace VTC.Actors
             }
         }
 
-        private void FlushTransmitBuffer()
+        private async void FlushTransmitBuffer()
         {
             var transmittedMovements = new List<Movement>();
+
+            Log("FlushTransmitBuffer", LogLevel.Info, "LoggingActor");
 
             foreach (var m in MovementTransmitBuffer)
             {
                 try
                 {
                     var rs = new RemoteServer();
-                    var rsr = rs.SendMovement(m, _regionConfig.SiteToken, _userConfig.ServerUrl)
-                        .Result;
+                    var rsr = await rs.SendMovement(m, _regionConfig.SiteToken, _userConfig.ServerUrl);
                     if (rsr != HttpStatusCode.OK)
                     {
                         Log("Movement-buffer transmit failed:" + rsr, LogLevel.Info, "LoggingActor");
@@ -1322,7 +1306,8 @@ namespace VTC.Actors
                 }
                 catch (HttpRequestException httpEx)
                 {
-                    MovementTransmitBuffer.Add(m);
+                    Log("Movement-buffer transmit failed:" + httpEx.Message, LogLevel.Error, "LoggingActor");
+                    break;
                 }
             }
 

@@ -25,12 +25,13 @@ namespace VTC.Remote
         { 
             //Get remote server
             var createMovementUrl = serverUrl + MovementsRoute + "?site_token=" + siteToken;
-            var jsonString = "{ \"movement\": { \"approach\": \"" + movement.Approach + "\", \"exit\": \"" + movement.Exit + "\", \"turntype\": \"" + movement.TurnType + "\", \"objectclass\": \"" + movement.TrafficObjectType + "\"} }";
+            var jsonString = "{ \"movement\": { \"approach\": \"" + movement.Approach + "\", \"exit\": \"" + movement.Exit + "\", \"turntype\": \"" + movement.TurnType + "\", \"objectclass\": \"" + movement.TrafficObjectType + "\", \"created_at\": " + movement.Timestamp.Ticks +  "} }";
             var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+            var t = await Client.PostAsync(createMovementUrl, content);
             
             //Transmit
-            var response = await Client.PostAsync(createMovementUrl, content);
-            return response.StatusCode;
+            return t.StatusCode;
         }
 
         public async Task<HttpStatusCode> SendImage(System.Drawing.Image image, string siteToken, string serverUrl)
