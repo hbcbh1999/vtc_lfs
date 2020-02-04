@@ -27,6 +27,7 @@ namespace VTC.CaptureSource
             Console.WriteLine(s);
             //mi.Option("Info_Parameters");
             var fpsString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video,0,"FrameRate");
+            var rotationString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video,0,"Rotation");
 
             try
             {
@@ -36,7 +37,16 @@ namespace VTC.CaptureSource
             {
                 _fps = 24.0;
             }
-            
+
+            try
+            {
+                _rotation = Double.Parse(rotationString);
+            }
+            catch (FormatException ex)
+            {
+                _rotation = 0.0;
+            }
+
         }
 
         protected override VideoCapture GetCapture()
@@ -55,6 +65,11 @@ namespace VTC.CaptureSource
         public override double FPS()
         {
             return _fps;
+        }
+
+        public override double Rotation()
+        { 
+            return _rotation;    
         }
     }
 }

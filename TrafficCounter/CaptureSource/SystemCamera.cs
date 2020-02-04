@@ -25,5 +25,10 @@ namespace VTC.CaptureSource
         {
             return _fps;
         }
+
+        public override double Rotation()
+        {
+            return 0.0;
+        }
     }
 }

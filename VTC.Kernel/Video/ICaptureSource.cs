@@ -48,5 +48,7 @@ namespace VTC.Kernel.Video
         bool IsLiveCapture();
 
         double FPS();
+
+        double Rotation();
     }
 }

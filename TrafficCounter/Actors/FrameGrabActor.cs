@@ -129,6 +129,8 @@ namespace VTC.Actors
 
                 if (frame != null && CaptureSource != null && fps.HasValue)
                 {
+                    var rotatedFrame = frame.Rotate(CaptureSource.Rotation(), frame.GetAverage(),false).Resize(640, 480, Inter.Cubic);
+
                     NullFrameCount = 0;
                     var ts_measured = DateTime.Now - LastFrameTimestamp;
                     LastFrameTimestamp = DateTime.Now;
@@ -136,11 +138,11 @@ namespace VTC.Actors
                     var timestep_calculated = 1.0 / fps; //Use the video-file's stated FPS if we're reading from disk, regardless of how quickly we're actually reading.
                     var timestep_selected = CaptureSource.IsLiveCapture() ? timestep_measured : timestep_calculated;
 
-                    var cloned = frame.Clone();
+                    var cloned = rotatedFrame.Clone();
                     ProcessingActor?.Tell(new ProcessNextFrameMessage(cloned, timestep_selected.Value));
                     if (FramesProcessed < 10)
                     {
-                        var clone2 = frame.Clone();
+                        var clone2 = rotatedFrame.Clone();
                         var configurationActor =
                             Context.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
                         configurationActor.Tell(new FrameMessage(clone2));

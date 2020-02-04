@@ -136,8 +136,11 @@ namespace VTC.CaptureSource
         public abstract bool IsLiveCapture();
 
         private DateTime _lastFrameTime = DateTime.Now; //Only used by live and IP camera, not video-files.
-        public double _fps = 0.0; 
+        public double _fps = 0.0;
+        public double _rotation = 0.0;
 
         public abstract double FPS();
+
+        public abstract double Rotation();
     }
 }
