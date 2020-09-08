@@ -259,6 +259,7 @@ namespace VTC.Kernel
                 CovGreen = covG,
                 CovBlue = covB,
                 CovSize = covSize,
+                CovVSize = covSize,
                 ClassDetectionCounts = classDetectionCounts
             };
 
@@ -307,7 +308,7 @@ namespace VTC.Kernel
             _qColor = qColor;
             _qSize = qSize;
 
-            H = new DenseMatrix(6, 8)
+            H = new DenseMatrix(6, 9)
             {
                 [0, 0] = 1,
                 [1, 2] = 1,
@@ -326,7 +327,7 @@ namespace VTC.Kernel
 
         public DenseMatrix F(double dt)
         {
-            DenseMatrix m = new DenseMatrix(8, 8)
+            DenseMatrix m = new DenseMatrix(9, 9)
             {
                 [0, 0] = 1,
                 [0, 1] = dt,
@@ -337,7 +338,9 @@ namespace VTC.Kernel
                 [4, 4] = 1,
                 [5, 5] = 1,
                 [6, 6] = 1,
-                [7, 7] = 1
+                [7, 7] = 1,
+                [7, 8] = dt,
+                [8, 8] = 1
             }; //Motion equation
 
             return m;
@@ -346,7 +349,7 @@ namespace VTC.Kernel
         public DenseMatrix Q(double dt, double size)
         {
             var radius = Math.Sqrt(size);
-            var m = new DenseMatrix(8, 8)
+            var m = new DenseMatrix(9, 9)
             {
                 [0, 0] = (dt*dt*dt*dt/4)*_qPosition * radius,
                 [0, 1] = (dt*dt*dt/3)* _qPosition * radius,
@@ -359,7 +362,8 @@ namespace VTC.Kernel
                 [4, 4] = _qColor,
                 [5, 5] = _qColor,
                 [6, 6] = _qColor,
-                [7, 7] = _qSize * radius * radius
+                [7, 7] = _qSize * radius * radius,
+                [8, 8] = _qSize * radius * radius * (dt * dt / 2)
             }; //Process covariance
 
             return m;

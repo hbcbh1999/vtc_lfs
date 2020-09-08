@@ -33,6 +33,9 @@ namespace VTC.Common
         public double Size;
         public double CovSize;
 
+        public double VSize;
+        public double CovVSize;
+
         public double PathLength;    //Total path length travelled so far
 
         public int TotalMissedDetections; //Total number of times this object has not been detected during its lifetime
@@ -50,7 +53,7 @@ namespace VTC.Common
                     PathLength + Math.Sqrt(Math.Pow((timestep * Vx), 2) + Math.Pow((timestep * Vy), 2))
             };
 
-            var zEst = new DenseMatrix(8, 1)
+            var zEst = new DenseMatrix(9, 1)
             {
                 [0, 0] = X,
                 [1, 0] = Vx,
@@ -59,10 +62,11 @@ namespace VTC.Common
                 [4, 0] = Red,
                 [5, 0] = Green,
                 [6, 0] = Blue,
-                [7, 0] = Size
-            }; //8-Row state vector: x, vx, y, vy, R, G, B, s
+                [7, 0] = Size,
+                [8,0] = VSize
+            }; //9-Row state vector: x, vx, y, vy, R, G, B, s
 
-            var pBar = new DenseMatrix(8, 8)
+            var pBar = new DenseMatrix(9, 9)
             {
                 [0, 0] = CovX,
                 [1, 1] = CovVx,
@@ -71,7 +75,8 @@ namespace VTC.Common
                 [4, 4] = CovRed,
                 [5, 5] = CovGreen,
                 [6, 6] = CovBlue,
-                [7, 7] = CovSize
+                [7, 7] = CovSize,
+                [8, 8] = CovVSize
             };
 
             //DenseMatrix B = H * P_bar * H;
@@ -88,6 +93,7 @@ namespace VTC.Common
             updatedState.Green = zNext[5, 0];
             updatedState.Blue = zNext[6, 0];
             updatedState.Size = zNext[7, 0];
+            updatedState.VSize = zNext[8, 0];
 
             updatedState.CovX = pNext[0, 0];
             updatedState.CovVx = pNext[1, 1];
@@ -97,6 +103,7 @@ namespace VTC.Common
             updatedState.CovGreen = pNext[5, 5];
             updatedState.CovBlue = pNext[6, 6];
             updatedState.CovSize = pNext[7, 7];
+            updatedState.CovVSize = pNext[8, 8];
 
             updatedState.ClassDetectionCounts = ClassDetectionCounts;
 
@@ -111,7 +118,7 @@ namespace VTC.Common
                     PathLength + Math.Sqrt(Math.Pow((timestep * Vx), 2) + Math.Pow((timestep * Vy), 2))
             };
 
-            var zEst = new DenseMatrix(8, 1)
+            var zEst = new DenseMatrix(9, 1)
             {
                 [0, 0] = X,
                 [1, 0] = Vx,
@@ -120,8 +127,9 @@ namespace VTC.Common
                 [4, 0] = Red,
                 [5, 0] = Green,
                 [6, 0] = Blue,
-                [7, 0] = Size
-            }; //8-Row state vector: x, vx, y, vy, r, g, b, Size
+                [7, 0] = Size,
+                [8,0] = VSize
+            }; //9-Row state vector: x, vx, y, vy, r, g, b, Size, VSize
 
             var zMeas = new DenseMatrix(6, 1)
             {
@@ -133,7 +141,7 @@ namespace VTC.Common
                 [5, 0] = measurements.Size
             }; //6-Row measurement vector: x,y,r,g,b, size
 
-            var pBar = new DenseMatrix(8, 8)
+            var pBar = new DenseMatrix(9, 9)
             {
                 [0, 0] = CovX,
                 [1, 1] = CovVx,
@@ -142,7 +150,8 @@ namespace VTC.Common
                 [4, 4] = CovRed,
                 [5, 5] = CovGreen,
                 [6, 6] = CovBlue,
-                [7, 7] = CovSize
+                [7, 7] = CovSize,
+                [8,8] = CovVSize
             };
 
             //DenseMatrix B = H * P_bar * H;
@@ -155,7 +164,7 @@ namespace VTC.Common
             var sInv = (DenseMatrix)s.Inverse();
             var k = pNext * hTranspose * sInv;
             var zPost = zNext + k * yResidual;
-            var pPost = (DenseMatrix.CreateIdentity(8) - k * H) * pNext;
+            var pPost = (DenseMatrix.CreateIdentity(9) - k * H) * pNext;
 
             //Move values from matrix form into object properties
             updatedState.CovX = pPost[0, 0];
@@ -166,6 +175,7 @@ namespace VTC.Common
             updatedState.CovGreen = pPost[5, 5];
             updatedState.CovBlue = pPost[6, 6];
             updatedState.CovSize = pPost[7, 7];
+            updatedState.CovVSize = pPost[8, 8];
 
             updatedState.X = zPost[0, 0];
             updatedState.Vx = zPost[1, 0];
@@ -175,6 +185,7 @@ namespace VTC.Common
             updatedState.Green = zPost[5, 0];
             updatedState.Blue = zPost[6, 0];
             updatedState.Size = zPost[7, 0];
+            updatedState.VSize = zPost[8, 0];
 
             updatedState.ClassDetectionCounts = ClassDetectionCounts;
             if (updatedState.ClassDetectionCounts.ContainsKey(measurements.ObjectClass))

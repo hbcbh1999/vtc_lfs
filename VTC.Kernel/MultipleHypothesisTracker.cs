@@ -325,7 +325,7 @@ namespace VTC.Kernel
                 //Get this car's estimated next position using Kalman predictor
                 StateEstimate noMeasurementEstimate = targetStateEstimates[i].PropagateStateNoMeasurement(timestep, _hypothesisTree.H, _hypothesisTree.R(targetStateEstimates[i].Size), _hypothesisTree.F(timestep), _hypothesisTree.Q(timestep, targetStateEstimates[i].Size), _hypothesisTree.CompensationGain);
 
-                DenseMatrix pBar = new DenseMatrix(8, 8)
+                DenseMatrix pBar = new DenseMatrix(9, 9)
                 {
                     [0, 0] = noMeasurementEstimate.CovX,
                     [1, 1] = noMeasurementEstimate.CovVx,
@@ -334,7 +334,8 @@ namespace VTC.Kernel
                     [4, 4] = noMeasurementEstimate.CovRed,
                     [5, 5] = noMeasurementEstimate.CovGreen,
                     [6, 6] = noMeasurementEstimate.CovBlue,
-                    [7, 7] = noMeasurementEstimate.CovSize
+                    [7, 7] = noMeasurementEstimate.CovSize,
+                    [8, 8] = noMeasurementEstimate.CovVSize
                 };
 
                 DenseMatrix hTrans = (DenseMatrix)_hypothesisTree.H.Transpose();
