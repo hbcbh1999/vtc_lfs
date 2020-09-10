@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using VTC.Common;
 using VTC.Common.RegionConfig;
 using System.Runtime.Serialization;
+using System.Data.SQLite;
 
 namespace VTC.Reporting
 {
@@ -20,27 +21,15 @@ namespace VTC.Reporting
             _measurements.Measurements = measurements.Select(RoundForLogging).ToList();
         }
 
-        public void LogToJsonfile(string filePath)
+        public void SaveDetection(SQLiteConnection dbConnection)
         {
             try
             {
-                var logString = JsonLogger<MeasurementList>.ToJsonLogString(_measurements);
-
-                string filepathWithExtension = filePath + ".json";
-                if (!File.Exists(filepathWithExtension))
-                {
-                    var fs = File.Create(filepathWithExtension); 
-                    fs.Close();
-                }
-
-                using (var sw = new StreamWriter(filepathWithExtension, true))
-                { 
-                    sw.WriteLine(logString);
-                }
+               //TODO: Re-implement in SQLite - Alex
             }
             catch (Exception e)
             {
-                Debug.WriteLine("LogToJsonfile:" + e.Message);
+                Debug.WriteLine("SaveDetection:" + e.Message);
             }
         }
 

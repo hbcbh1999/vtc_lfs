@@ -9,6 +9,7 @@ using VTC.Common;
 using VTC.Common.RegionConfig;
 using VTC.Reporting;
 using System.Threading;
+using System.Data.SQLite;
 
 namespace VTC.Kernel
 {
@@ -17,7 +18,7 @@ namespace VTC.Kernel
 
         public List<Movement> TrajectoryPrototypes = new List<Movement>();
 
-        public void GenerateSyntheticTrajectories(RegionConfig regionConfig, string filepath)
+        public void GenerateSyntheticTrajectories(RegionConfig regionConfig)
         {
             TrajectoryPrototypes.Clear();
 
@@ -123,13 +124,8 @@ namespace VTC.Kernel
                 var road4StraightMovements = ApproachExitPairToMovements(approach4, exit4, Turn.Straight, ObjectType.Car, 40);
                 straightMovements.AddRange(road4StraightMovements);
             }
-            
-            foreach(var m in straightMovements)
-            { 
-                TrajectoryPrototypes.Add(m);
-                var tl = new TrajectoryLogger(m);
-                tl.Save(filepath);  
-            }
+
+            TrajectoryPrototypes.AddRange(straightMovements);
 
             //Generate turn movements
             var turnMovements = new List<Movement>();
@@ -186,12 +182,7 @@ namespace VTC.Kernel
                 }
             }
 
-            foreach(var m in turnMovements)
-            {
-                TrajectoryPrototypes.Add(m);
-                var tl = new TrajectoryLogger(m);
-                tl.Save(filepath);  
-            }
+            TrajectoryPrototypes.AddRange(turnMovements);
 
             //Generate pedestrian Crossing movements
             var pedestrianMovements = new List<Movement>();
@@ -232,18 +223,13 @@ namespace VTC.Kernel
                 pedestrianMovements.AddRange(crossing41Movements);
             }
 
-            foreach(var m in pedestrianMovements)
-            { 
-                TrajectoryPrototypes.Add(m);
-                var tl = new TrajectoryLogger(m);
-                tl.Save(filepath);  
-            }
-
-            var examplePaths = GenerateExamplePathTrajectories(regionConfig, filepath);
+            TrajectoryPrototypes.AddRange(pedestrianMovements);
+            
+            var examplePaths = GenerateExamplePathTrajectories(regionConfig);
             TrajectoryPrototypes.AddRange(examplePaths);
         }
 
-        List<Movement> GenerateExamplePathTrajectories(RegionConfig config, string filepath)
+        List<Movement> GenerateExamplePathTrajectories(RegionConfig config)
         {
             List<Movement> examplePaths = new List<Movement>();
             foreach (var path in config.ExamplePaths)
@@ -279,12 +265,6 @@ namespace VTC.Kernel
 
                 var m = new Movement(path.Approach, path.Exit, path.TurnType, ObjectType.Car, stateEstimates, DateTime.Now, 0,  path.Ignored);
                 examplePaths.Add(m);
-            }
-
-            foreach (var m in examplePaths)
-            {
-                var tl = new TrajectoryLogger(m);
-                tl.Save(filepath);
             }
 
             return examplePaths;

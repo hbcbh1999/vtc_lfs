@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Data.SQLite;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.ServiceProcess;
@@ -36,16 +37,9 @@ namespace VTC.Actors
         private UInt64 _nFramesProcessed = 0;
         private double _fps = 24.0;
 
-        private DateTime _next5MinBinTime;
-        private DateTime _next15MinBinTime;
-        private DateTime _next60MinBinTime;
-
         private bool _liveMode = true;
 
         private readonly MovementCount _turnStats = new MovementCount();
-        private readonly MovementCount _5MinTurnStats = new MovementCount();
-        private readonly MovementCount _15MinTurnStats = new MovementCount();
-        private readonly MovementCount _60MinTurnStats = new MovementCount();
 
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
         private static readonly Logger UserLogger = LogManager.GetLogger("userlog"); // special logger for user messages
@@ -56,6 +50,7 @@ namespace VTC.Actors
         private DateTime _videoStartTime = DateTime.Now;
         private string _currentOutputFolder;
         private BatchVideoJob _currentJob;
+        private SQLiteConnection _dbConnection;
 
         private MultipleTrajectorySynthesizer mts;
 
@@ -113,18 +108,6 @@ namespace VTC.Actors
                 GenerateReport()
             );
 
-            Receive<Write5MinuteBinCountsMessage>(message =>
-                Log5MinBinCounts()
-            );
-
-            Receive<Write15MinuteBinCountsMessage>(message =>
-                Log15MinBinCounts()
-            );
-
-            Receive<Write60MinuteBinCountsMessage>(message =>
-                Log60MinBinCounts()
-            );
-
             Receive<NewVideoSourceMessage>(message =>
                 UpdateVideoSourceInfo(message)
             );
@@ -177,10 +160,6 @@ namespace VTC.Actors
                 LogDetections(message.Detections)
             );
 
-            Receive<LogAssociationsMessage>(message =>
-                LogAssociations(message.Associations)
-            );
-
             Receive<CopyGroundtruthMessage>(message =>
                 CopyGroundTruth(message.GroundTruthPath)
             );
@@ -213,6 +192,7 @@ namespace VTC.Actors
                 UpdateBatchJob(message.Job)
             );
 
+            OpenDatabaseConnection();
 
             Self.Tell(new LoadUserConfigMessage());
 
@@ -236,44 +216,22 @@ namespace VTC.Actors
             base.PreRestart(cause, msg);
         }
 
-        protected override void PostStop()
-        {
-            base.PostStop();
-        }
-
         protected override void PostRestart(Exception cause)
         {
             Log("(PostRestart) restarted due to " + cause.Message + " at " + cause.TargetSite + ", Trace:" + cause.StackTrace, LogLevel.Error, "LoggingActor");
             base.PostRestart(cause);
         }
 
+        protected override void PostStop()
+        {
+            _dbConnection.Close();
+            base.PostStop();
+        }
+
         private void UpdateFileCreationTime(DateTime dt)
         {
             Log("New file creation time " + dt, LogLevel.Info, "LoggingActor");
             _videoStartTime = dt;
-            SetAllNextBinTime(dt);
-        }
-
-        private void SetNext5MinBinTime(DateTime tnow)
-        {
-            _next5MinBinTime = RoundUp(tnow, TimeSpan.FromMinutes(5));   
-        }
-
-        private void SetNext15MinBinTime(DateTime tnow)
-        { 
-            _next15MinBinTime = RoundUp(tnow, TimeSpan.FromMinutes(15));
-        }
-
-        private void SetNext60MinBinTime(DateTime tnow)
-        { 
-            _next60MinBinTime = RoundUp(tnow, TimeSpan.FromMinutes(60));
-        }
-
-        private void SetAllNextBinTime(DateTime tnow)
-        { 
-            SetNext5MinBinTime(tnow);
-            SetNext15MinBinTime(tnow);
-            SetNext60MinBinTime(tnow);
         }
 
         //This function taken from user 'dtb' on StackOverflow
@@ -283,100 +241,48 @@ namespace VTC.Actors
             return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
         }
 
-        private void WriteBinnedCounts()
+        private void OpenDatabaseConnection()
         {
-            if(_regionConfig == null)
+            //Check if database exists
+            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            const string filename = "VTC.sqlite3";
+            var filePath = Path.Combine(appDataFolder, "VTC", filename);
+            var cs = "PRAGMA foreign_keys = ON; URI=file:" + filePath;
+
+            var fileExists = File.Exists(filePath);
+
+            _dbConnection = new SQLiteConnection(cs);
+            _dbConnection.Open();
+
+            if (!fileExists)
             {
-                return; 
+                CreateDatabase();
             }
 
+            //TODO - Add database schema validation? - Alex
+        }
+
+        private void CreateDatabase()
+        {
             try
             {
-                var tnow = VideoTime();
-
-                if (tnow >= _next5MinBinTime)
-                {
-                    WriteBinnedMovements5Min(tnow, _5MinTurnStats);
-                    SetNext5MinBinTime(tnow);
-                }
-
-                if (tnow >= _next15MinBinTime)
-                {
-                    WriteBinnedMovements15Min(tnow, _15MinTurnStats);
-                    SetNext15MinBinTime(tnow);
-                }
-
-                if (tnow >= _next60MinBinTime)
-                {
-                    WriteBinnedMovements60Min(tnow, _60MinTurnStats);
-                    SetNext60MinBinTime(tnow);
-                }
+                var cmd = new SQLiteCommand(_dbConnection);
+                cmd.CommandText = "CREATE TABLE IF NOT EXISTS videofile (id INTEGER PRIMARY KEY, filepath TEXT)";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "CREATE TABLE IF NOT EXISTS videoreport (id INTEGER PRIMARY KEY, videofile INTEGER, FOREIGN KEY(videofile) REFERENCES videofile(id))";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText =
+                    "CREATE TABLE IF NOT EXISTS movement (id INTEGER PRIMARY KEY, videoreport INTEGER, approach TEXT, exit TEXT, movementtype TEXT, objecttype TEXT, synthetic BOOLEAN, FOREIGN KEY(videoreport) REFERENCES videoreport(id))";
+                cmd.ExecuteNonQuery();
+                cmd.CommandText =
+                    "CREATE TABLE IF NOT EXISTS stateestimate (id INTEGER PRIMARY KEY, movement INTEGER, x REAL, y REAL, vx REAL, vy REAL, red REAL, blue REAL, green REAL, size REAL, covsize REAL, vsize REAL, pathlength REAL, FOREIGN KEY(movement) REFERENCES movement(id))";
+                cmd.ExecuteNonQuery();
             }
-            catch(NullReferenceException ex)
+            catch (Exception ex)
             {
-                Log("(WriteBinnedCounts) " + ex.Message, LogLevel.Error, "LoggingActor");
-                ravenClient.Capture(new SentryEvent(ex));
-            }
-            
-        }
-
-        private string GenerateCountFilename(int minutes, string className)
-        {
-            string filename = $"{minutes}-minute binned counts [{className}].csv";
-            //TODO: Figure out how to access video name here
-            string folderPath = _currentOutputFolder;
-            string filepath = Path.Combine(folderPath, filename);
-            return filepath;
-        }
-
-        private void WriteBinnedMovements5Min(DateTime timestamp, Dictionary<Movement, long> turnStats)
-        {            
-            foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
-            {
-                var filepath = GenerateCountFilename(5, detectionClass.ToString().ToLower());
-                Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
-                WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);    
+                Logger.Log(LogLevel.Error,"LoggingActor.CreateDatabase: " + ex.Message);
             }
 
-            //Generate all-objects CSV report
-            var filepath_all_objects = GenerateCountFilename(5, "All");
-            WriteBinnedMovementsToFile(filepath_all_objects, turnStats, timestamp);
-
-            _5MinTurnStats.Clear();
-        }
-
-        private void WriteBinnedMovements15Min(DateTime timestamp, Dictionary<Movement, long> turnStats)
-        {
-                foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
-                {
-                    var filepath = GenerateCountFilename(15,detectionClass.ToString().ToLower());
-                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
-                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);
-                }
-
-                //Generate all-objects CSV report
-                var filepath_all_objects = GenerateCountFilename(15, "All");
-                WriteBinnedMovementsToFile(filepath_all_objects, turnStats, timestamp);
-
-                
-                _15MinTurnStats.Clear();
-        }
-
-        private void WriteBinnedMovements60Min(DateTime timestamp, Dictionary<Movement, long> turnStats)
-        {
-                //Generate individual CSV reports
-                foreach(var detectionClass in DetectionClasses.ClassDetectionWhitelist)
-                {
-                    var filepath = GenerateCountFilename(60,detectionClass.ToString().ToLower());
-                    Dictionary<Movement,long> filteredTurnStats = turnStats.Where(kvp => kvp.Key.TrafficObjectType == detectionClass).ToDictionary(kvp => kvp.Key,kvp => kvp.Value);
-                    WriteBinnedMovementsToFile(filepath, filteredTurnStats, timestamp, detectionClass);
-                }
-
-                //Generate all-objects CSV report
-                var filepath_all_objects = GenerateCountFilename(60, "All");
-                WriteBinnedMovementsToFile(filepath_all_objects, turnStats, timestamp);
-                
-                _60MinTurnStats.Clear();
         }
 
         private void CreateOrReplaceOutputFolderIfExists()
@@ -393,9 +299,6 @@ namespace VTC.Actors
             Log("(CreateOrReplaceOutputFolderIfExists) " + folderPath, LogLevel.Info, "LoggingActor");
 
             _turnStats.Clear();
-            _5MinTurnStats.Clear();
-            _15MinTurnStats.Clear();
-            _60MinTurnStats.Clear();
 
             var filepath = Path.Combine(folderPath, "Movements.json");
             File.Create(filepath);     
@@ -407,136 +310,6 @@ namespace VTC.Actors
             _turnStats.Clear();
         }
 
-        private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp, ObjectType objectType)
-        {
-            try
-            {
-                //Pad turnStats with non-present movements with count equal to zero.
-                //1. Get full list of possible movements
-                foreach(var m in mts.TrajectoryPrototypes)
-                {   
-                    //var modified_prototype = m;
-                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, objectType, m.StateEstimates, timestamp, 0, false);
-                    //2. Check which keys are not present
-                    if(!turnStats.Keys.Contains(modified_prototype))
-                    { 
-                        //3. Add the non-present keys 
-                        //3a. Only pad with crossing-movements if we're looking at Person stats
-                        if((modified_prototype.TurnType == Turn.Crossing) && objectType == ObjectType.Person)
-                        { 
-                            turnStats.Add(modified_prototype,0);    
-                        }
-                        
-                        //3a. Only pad with road movements if we're looking at vehicle (anything other than Person) stats
-                        if((modified_prototype.TurnType != Turn.Crossing) && objectType != ObjectType.Person)
-                        { 
-                            turnStats.Add(modified_prototype,0);    
-                        }
-                    }
-                }
-            }
-            catch(System.ArgumentException ex)
-            {
-                Log("(WriteBinnedMovementsToFile) " + ex.Message, LogLevel.Error, "LoggingActor");
-                ravenClient.Capture(new SentryEvent(ex));
-            }
-            
-            //Sort turnStats so that columns are consistent in output CSV
-            var sd = new SortedDictionary<Movement,long>();
-            foreach(var ts in turnStats)
-            {
-                try
-                {
-                    sd.Add(ts.Key,ts.Value);
-                }
-                catch(ArgumentException ex)
-                { 
-                    Log("(WriteBinnedMovementsToFile) " + ex, LogLevel.Error, "LoggingActor");
-                }
-            }
-
-            try
-            {
-                using (var sw = File.AppendText(path))
-                {
-                    var binString = "";
-                    binString += timestamp + ",";
-                    foreach (var stat in sd)
-                    {
-                        binString += stat.Key.Approach + " to " + stat.Key.Exit + "," + stat.Key.TurnType + "," + stat.Value + ",";
-                    }
-                    sw.WriteLine(binString);
-                }
-            }
-            catch (FileNotFoundException ex)
-            {
-                Log("(WriteBinnedMovementsToFile) " + ex.Message, LogLevel.Error, "LoggingActor");
-                ravenClient.Capture(new SentryEvent(ex));
-            }
-
-        }
-
-
-        private void WriteBinnedMovementsToFile(string path, Dictionary<Movement, long> turnStats, DateTime timestamp)
-        {
-            try
-            {
-                //Pad turnStats with non-present movements with count equal to zero.
-                //1. Get full list of possible movements
-                foreach(var m in mts.TrajectoryPrototypes)
-                {   
-                    //var modified_prototype = m;
-                    var modified_prototype = new Movement(m.Approach, m.Exit, m.TurnType, ObjectType.Unknown, m.StateEstimates, timestamp, 0, false);
-                    //2. Check which keys are not present
-                    if(!turnStats.Keys.Contains(modified_prototype))
-                    { 
-                        //3. Add the non-present keys 
-                        turnStats.Add(modified_prototype,0);    
-                    }
-                }
-            }
-            catch(System.ArgumentException ex)
-            {
-                Log("(WriteBinnedMovementsToFile) " + ex.Message, LogLevel.Error, "LoggingActor");
-                ravenClient.Capture(new SentryEvent(ex));
-            }
-            
-            //Sort turnStats so that columns are consistent in output CSV
-            var sd = new SortedDictionary<Movement,long>();
-            foreach(var ts in turnStats)
-            {
-                try
-                {
-                    sd.Add(ts.Key,ts.Value);
-                }
-                catch(ArgumentException ex)
-                { 
-                    Log("(WriteBinnedMovementsToFile) " + ex, LogLevel.Error, "LoggingActor");
-                }
-            }
-
-            try
-            {
-                using (var sw = File.AppendText(path))
-                {
-                    var binString = "";
-                    binString += timestamp + ",";
-                    foreach (var stat in sd)
-                    {
-                        binString += stat.Key.Approach + " to " + stat.Key.Exit + "," + stat.Key.TurnType + "," + stat.Value + ",";
-                    }
-                    sw.WriteLine(binString);
-                }
-            }
-            catch (FileNotFoundException ex)
-            {
-                Log("(WriteBinnedMovementsToFile) " + ex.Message, LogLevel.Error, "LoggingActor");
-                ravenClient.Capture(new SentryEvent(ex));
-            }
-
-        }
-
-
         private void LogDetections(List<Measurement> detections)
         {
             if (_currentOutputFolder == null)
@@ -547,34 +320,12 @@ namespace VTC.Actors
 
             try
             {
-                var filename = "Detections";
-                filename = filename.Replace("file-", "");
-                var folderPath = _currentOutputFolder;
-                var filepath = Path.Combine(folderPath, filename);
                 var dl = new DetectionLogger(detections);
-                dl.LogToJsonfile(filepath);
+                dl.SaveDetection(_dbConnection);
             }
             catch (NullReferenceException e)
             {
                 Log("(LogDetections) " + e, LogLevel.Error, "LoggingActor");
-                ravenClient.Capture(new SentryEvent(e));
-            }
-        }
-
-        private void LogAssociations(Dictionary<Measurement,TrackedObject> associations)
-        {
-            try
-            {
-                var filename = "Associations";
-                filename = filename.Replace("file-", "");
-                var folderPath = _currentOutputFolder;
-                var filepath = Path.Combine(folderPath, filename);
-                var al = new AssociationLogger(_regionConfig, associations);
-                al.LogToTextfile(filepath);
-            }
-            catch (NullReferenceException e)
-            {
-                Log("(LogAssociations) " + e, LogLevel.Error, "LoggingActor");
                 ravenClient.Capture(new SentryEvent(e));
             }
         }
@@ -592,24 +343,6 @@ namespace VTC.Actors
         {
             UserLogger.Log(level, text);
             _updateInfoUiDelegate?.Invoke(text);
-        }
-
-        private void Log5MinBinCounts()
-        {
-            if (_liveMode)
-                WriteBinnedMovements5Min(DateTime.Now, _5MinTurnStats);
-        }
-
-        private void Log15MinBinCounts()
-        {
-            if (_liveMode)
-                WriteBinnedMovements15Min(DateTime.Now, _15MinTurnStats);
-        }
-
-        private void Log60MinBinCounts()
-        {
-            if (_liveMode)
-                WriteBinnedMovements60Min(DateTime.Now, _60MinTurnStats);
         }
 
         private void OnCaptureSourceComplete()
@@ -661,21 +394,6 @@ namespace VTC.Actors
                 GenerateRegionsLegendImage(folderPath);
 
                 var tnow = VideoTime();
-
-                if(_5MinTurnStats.TotalCount() > 0)
-                {
-                    WriteBinnedMovements5Min(tnow, _5MinTurnStats); 
-                }
-
-                if(_15MinTurnStats.TotalCount() > 0)
-                {
-                    WriteBinnedMovements15Min(tnow, _15MinTurnStats);
-                }
-                
-                if(_60MinTurnStats.TotalCount() > 0)
-                {
-                    WriteBinnedMovements60Min(tnow, _60MinTurnStats);     
-                }
 
                 using (StreamWriter outputFile = new StreamWriter(folderPath + @"\Version.txt", true))
                 {
@@ -768,7 +486,7 @@ namespace VTC.Actors
             ev.Level = ErrorLevel.Info;
             ev.Tags.Add("Name", message.CaptureSource.Name);
             ravenClient.Capture(ev);
-            _videoStartTime = DateTime.Now;
+            _videoStartTime = message.CaptureSource.StartDateTime();
 
             _liveMode = message.CaptureSource.IsLiveCapture();
             _fps = message.CaptureSource.FPS();
@@ -786,7 +504,7 @@ namespace VTC.Actors
                 {
                     var folderPath = _currentOutputFolder;
                     var filepath = Path.Combine(folderPath, filename);
-                    mts.GenerateSyntheticTrajectories(_regionConfig, filepath);
+                    mts.GenerateSyntheticTrajectories(_regionConfig);
                 }
             }
             catch (Exception ex)
@@ -850,12 +568,9 @@ namespace VTC.Actors
                     var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), d.FirstDetectionFrame, false);
                     IncrementTurnStatistics(editedMovement);
                     var tl = new TrajectoryLogger(editedMovement);
-                    var folderPath = _currentOutputFolder;
-                    const string filename = "Movements";
-                    var filepath = Path.Combine(folderPath, filename);
-                    tl.Save(filepath);
+                    tl.Save(_dbConnection);
 
-                    if(_regionConfig.SendToServer)
+                    if (_regionConfig.SendToServer)
                     {
                         if(string.IsNullOrEmpty(_regionConfig.SiteToken))
                         {
@@ -874,6 +589,7 @@ namespace VTC.Actors
                         {
                             var rs = new RemoteServer();
                             var rsr = await rs.SendMovement(editedMovement, _regionConfig.SiteToken, _userConfig.ServerUrl);
+                            //TODO: Do we want to log these errors? - Alex
                             //if (rsr != HttpStatusCode.OK)
                             //{
                             //   Log("Movement POST failed:" + rsr, LogLevel.Error, "LoggingActor");
@@ -889,8 +605,6 @@ namespace VTC.Actors
 
                 var stats = GetStatString();
                 _updateStatsUiDelegate?.Invoke(stats);
-
-                WriteBinnedCounts();
             }
             catch(Exception ex)
             { 
@@ -901,16 +615,9 @@ namespace VTC.Actors
         private void IncrementTurnStatistics(Movement tp)
         {
             if (!_turnStats.ContainsKey(tp)) _turnStats[tp] = 0;
-            _turnStats[tp]++;
-
-            if (!_5MinTurnStats.ContainsKey(tp)) _5MinTurnStats[tp] = 0;
-            _5MinTurnStats[tp]++;
-
-            if (!_15MinTurnStats.ContainsKey(tp)) _15MinTurnStats[tp] = 0;
-            _15MinTurnStats[tp]++;
-
-            if (!_60MinTurnStats.ContainsKey(tp)) _60MinTurnStats[tp] = 0;
-            _60MinTurnStats[tp]++;
+            {
+                _turnStats[tp]++;
+            }
         }
 
         private DateTime VideoTime()

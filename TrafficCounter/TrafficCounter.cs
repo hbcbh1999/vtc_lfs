@@ -552,25 +552,7 @@ namespace VTC
            infoBox.AppendText(text + Environment.NewLine);
        }
 
-        private void timer5minute_Tick(object sender, EventArgs e)
-        {
-            var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
-            loggingActor?.Tell(new Write5MinuteBinCountsMessage());
-        }
-
-        private void timer15minute_Tick(object sender, EventArgs e)
-        {
-            var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
-            loggingActor?.Tell(new Write15MinuteBinCountsMessage());
-        }
-
-        private void timer60minute_Tick(object sender, EventArgs e)
-        {
-            var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
-            loggingActor?.Tell(new Write60MinuteBinCountsMessage());
-        }
-
-        private void licenseCheckTimer_Tick(object sender, EventArgs e)
+       private void licenseCheckTimer_Tick(object sender, EventArgs e)
         {
             CheckIfLicenseTimerExpired();
             licenseCheckTimer.Enabled = false;

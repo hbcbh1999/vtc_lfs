@@ -10,6 +10,7 @@ using System.Web;
 using VTC.Common;
 using VTC.Common.RegionConfig;
 using VTC.Remote;
+using System.Data.SQLite;
 
 namespace VTC.Reporting
 {
@@ -23,20 +24,17 @@ namespace VTC.Reporting
             _movement = RoundForLogging(movement);
         }
 
-        public void Save(string filePath)
+        public void Save(SQLiteConnection dbConnection)
         {
             try
             {
-                var logString = JsonLogger<Movement>.ToJsonLogString(_movement);
-                string pathWithExtension = filePath + ".json";
-                using (var sw = File.AppendText(pathWithExtension))
-                {
-                    sw.WriteLine(logString);
-                }                
+                var command = dbConnection.CreateCommand();
+                command.CommandText = $"INSERT INTO movement(videoreport,approach,exit,movementtype,objecttype,synthetic) VALUES(NULL,'{_movement.Approach}','{_movement.Exit}','{_movement.TurnType}','{_movement.TrafficObjectType}',0)";
+                command.ExecuteNonQuery();
             }
             catch (Exception e)
             {
-                Debug.WriteLine("LogToJsonfile:" + e.Message);
+                Debug.WriteLine("TrajectoryLogger.Save:" + e.Message);
             }   
         }
 

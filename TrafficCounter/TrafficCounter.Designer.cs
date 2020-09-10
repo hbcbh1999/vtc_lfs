@@ -43,9 +43,6 @@ namespace VTC
             this.selectVideoFilesDialog = new System.Windows.Forms.OpenFileDialog();
             this.infoBox = new System.Windows.Forms.TextBox();
             this.generateReportButton = new System.Windows.Forms.Button();
-            this.timer5minute = new System.Windows.Forms.Timer(this.components);
-            this.timer15minute = new System.Windows.Forms.Timer(this.components);
-            this.timer60minute = new System.Windows.Forms.Timer(this.components);
             this.trackedObjectsTextbox = new System.Windows.Forms.TextBox();
             this.licenseCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
@@ -171,21 +168,6 @@ namespace VTC
             this.generateReportButton.Text = "Generate Report";
             this.generateReportButton.UseVisualStyleBackColor = true;
             this.generateReportButton.Click += new System.EventHandler(this.generateReportButton_Click);
-            // 
-            // timer5minute
-            // 
-            this.timer5minute.Interval = 300000;
-            this.timer5minute.Tick += new System.EventHandler(this.timer5minute_Tick);
-            // 
-            // timer15minute
-            // 
-            this.timer15minute.Interval = 900000;
-            this.timer15minute.Tick += new System.EventHandler(this.timer15minute_Tick);
-            // 
-            // timer60minute
-            // 
-            this.timer60minute.Interval = 3600000;
-            this.timer60minute.Tick += new System.EventHandler(this.timer60minute_Tick);
             // 
             // trackedObjectsTextbox
             // 
@@ -472,9 +454,6 @@ namespace VTC
         private OpenFileDialog selectVideoFilesDialog;
         private TextBox infoBox;
         private Button generateReportButton;
-        private Timer timer5minute;
-        private Timer timer15minute;
-        private Timer timer60minute;
         private TextBox trackedObjectsTextbox;
         private Timer licenseCheckTimer;
         private Label label1;
