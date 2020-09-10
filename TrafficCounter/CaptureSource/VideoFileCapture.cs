@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using MediaInfo.DotNetWrapper;
@@ -19,16 +20,26 @@ namespace VTC.CaptureSource
             _path = path;
             var capture = new VideoCapture(_path);
             FrameCount = capture.GetCaptureProperty(CapProp.FrameCount);
-            //FrameRate = capture.GetCaptureProperty(CapProp.Fps);
 
             var mi = new MediaInfo.DotNetWrapper.MediaInfo();
             mi.Open(_path);
             var s = mi.Inform();
             Console.WriteLine(s);
-            //mi.Option("Info_Parameters");
             var fpsString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video,0,"FrameRate");
             var rotationString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video,0,"Rotation");
+            var encodedDateString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video, 0, "Encoded_Date");
+            var trimmedEncodedDateString = encodedDateString.Substring(4);
 
+            try
+            {
+                _startDate = DateTime.ParseExact(trimmedEncodedDateString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None);
+            }
+            catch (FormatException ex)
+            {
+                _startDate = DateTime.Now;
+            }
+            
             try
             {
                 _fps = Double.Parse(fpsString);
@@ -53,7 +64,6 @@ namespace VTC.CaptureSource
         {
             var capture = new VideoCapture(_path);
             FrameCount = capture.GetCaptureProperty(CapProp.FrameCount);
-            //FrameRate = capture.GetCaptureProperty(CapProp.Fps);      
             return capture;
         }
 
@@ -65,6 +75,11 @@ namespace VTC.CaptureSource
         public override double FPS()
         {
             return _fps;
+        }
+
+        public override DateTime StartDateTime()
+        {
+            return _startDate;
         }
 
         public override double Rotation()

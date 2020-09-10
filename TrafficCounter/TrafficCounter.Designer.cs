@@ -147,7 +147,7 @@ namespace VTC
             // selectVideoFilesDialog
             // 
             this.selectVideoFilesDialog.Filter = "Video files|*.mp4;*.avi;*.wmv;*.3gp;*.asf;*.h264;*.mkv;*.ts;*.MOV;*.AVI;*.3GP;*.H" +
-    "264;*.TS;*.ASF;*.MP4;*.WMV|All files|*.*";
+    "264;*.TS;*.ASF;*.MP4;*.WMV;*.m4v;|All files|*.*";
             this.selectVideoFilesDialog.Multiselect = true;
             this.selectVideoFilesDialog.Title = "Select videos to process";
             // 

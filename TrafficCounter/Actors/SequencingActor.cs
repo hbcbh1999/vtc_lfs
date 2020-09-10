@@ -125,8 +125,7 @@ namespace VTC.Actors
                     _currentVideoName = captureSource.Name;
                     _frameGrabActor.Tell(new UpdateVideoPropertiesMessage(captureSource.FPS(), captureSource.FrameCount));
                     _loggingActor.Tell(new NewVideoSourceMessage(captureSource));
-                    DateTime videoTime = File.GetCreationTime(_currentJob.VideoPath);
-                    _loggingActor.Tell(new FileCreationTimeMessage(videoTime));
+                    _loggingActor.Tell(new FileCreationTimeMessage(captureSource.StartDateTime()));
                     _processingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
                     _loggingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
                     _loggingActor.Tell(new CopyGroundtruthMessage(_currentJob.GroundTruthPath));

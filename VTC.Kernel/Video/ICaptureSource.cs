@@ -1,4 +1,5 @@
-﻿using Emgu.CV;
+﻿using System;
+using Emgu.CV;
 using Emgu.CV.Structure;
 using VTC.Common;
 
@@ -48,6 +49,8 @@ namespace VTC.Kernel.Video
         bool IsLiveCapture();
 
         double FPS();
+
+        DateTime StartDateTime();
 
         double Rotation();
     }

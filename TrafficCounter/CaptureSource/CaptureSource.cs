@@ -138,8 +138,11 @@ namespace VTC.CaptureSource
         private DateTime _lastFrameTime = DateTime.Now; //Only used by live and IP camera, not video-files.
         public double _fps = 0.0;
         public double _rotation = 0.0;
+        public DateTime _startDate; //Only used by video files. Taken from MediaInfo element Encoded_Date
 
         public abstract double FPS();
+
+        public abstract DateTime StartDateTime();
 
         public abstract double Rotation();
     }

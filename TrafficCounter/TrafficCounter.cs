@@ -478,7 +478,7 @@ namespace VTC
            //Create new output folder
            loggingActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
            DateTime videoTime = DateTime.Now;
-           loggingActor.Tell(new FileCreationTimeMessage(videoTime));
+           loggingActor.Tell(new FileCreationTimeMessage(_selectedCaptureSource.StartDateTime()));
 
            //Change the capture device.
            frameGrabActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));

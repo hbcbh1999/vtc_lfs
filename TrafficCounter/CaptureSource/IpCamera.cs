@@ -1,14 +1,17 @@
-﻿using Emgu.CV;
+﻿using System;
+using Emgu.CV;
 
 namespace VTC.CaptureSource
 {
     public class IpCamera : CaptureSource
     {
         public readonly string ConnectionString;
+        private DateTime _startDateTime;
 
         public IpCamera(string name, string connectionString) : base(name)
         {
             ConnectionString = connectionString;
+            _startDateTime = DateTime.Now;
         }
 
         protected override VideoCapture GetCapture()
@@ -24,6 +27,11 @@ namespace VTC.CaptureSource
         public override double FPS()
         {
             return _fps;
+        }
+
+        public override DateTime StartDateTime()
+        {
+            return _startDateTime;
         }
 
         public override double Rotation()
