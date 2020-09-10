@@ -159,10 +159,8 @@ namespace VTC.Actors
                 var stateImage = _vista.GetCurrentStateImage(frame);
                 var tui = new TrafficCounterUIUpdateInfo();
                 tui.Frame = frame;
-                tui.BackgroundImage = _vista.GetBackgroundImage();
                 tui.Fps = _fps;
                 tui.Measurements = _vista.MeasurementsArray;
-                tui.MovementMask = _vista.Movement_Mask;
                 tui.StateImage = stateImage;
                 tui.StateEstimates = _vista.CurrentVehicles.Select(v => v.StateHistory.Last()).ToArray();
                 _updateUiDelegate?.Invoke(tui); 

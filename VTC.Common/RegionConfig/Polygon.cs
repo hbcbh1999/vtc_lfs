@@ -25,7 +25,7 @@ namespace VTC.Common.RegionConfig
             if (Count == 0)
                 return;
 
-            var points = this.Select(x => new GeoAPI.Geometries.Coordinate(x.X, x.Y)).ToArray();
+            var points = this.Select(x => new NetTopologySuite.Geometries.Coordinate(x.X, x.Y)).ToArray();
             var ring = new NetTopologySuite.Geometries.LinearRing(points);
             var ntsPoly = new NetTopologySuite.Geometries.Polygon(ring);
             var ntsCentroid = new NetTopologySuite.Algorithm.Centroid(ntsPoly);

@@ -453,7 +453,7 @@ namespace VTC.Actors
                     maskedBackground = maskedBackground.Add(mask);
                 }
 
-                var g = Graphics.FromImage(maskedBackground.Bitmap);
+                var g = Graphics.FromImage(maskedBackground.ToBitmap());
                 foreach (var p in _regionConfig.Regions)
                 {
                     if (p.Value.Count <= 2) continue;
@@ -697,7 +697,7 @@ namespace VTC.Actors
                 if (_regionConfig.SendToServer)
                 {
                     var rs = new RemoteServer();
-                    var rsr = await rs.SendImage(_background.Bitmap, _regionConfig.SiteToken, _userConfig.ServerUrl);
+                    var rsr = await rs.SendImage(_background.ToBitmap(), _regionConfig.SiteToken, _userConfig.ServerUrl);
 
                     if (rsr != HttpStatusCode.OK)
                     {

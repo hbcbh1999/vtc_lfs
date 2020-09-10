@@ -29,6 +29,7 @@ namespace VTC.Reporting
             try
             {
                 var command = dbConnection.CreateCommand();
+                
                 command.CommandText = $"INSERT INTO movement(videoreport,approach,exit,movementtype,objecttype,synthetic) VALUES(NULL,'{_movement.Approach}','{_movement.Exit}','{_movement.TurnType}','{_movement.TrafficObjectType}',0)";
                 command.ExecuteNonQuery();
             }

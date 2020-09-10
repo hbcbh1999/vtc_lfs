@@ -12,10 +12,7 @@ namespace VTC.UI
     class TrafficCounterUIUpdateInfo
     {
         public Image<Bgr, byte> StateImage;
-        public Image<Gray, byte> MovementMask;
-        public Image<Bgr, float> BackgroundImage;
         public Image<Bgr, byte> Frame;
-        public Image<Bgr, byte> VelocityFieldImage;
         public Measurement[] Measurements;
         public StateEstimate[] StateEstimates;
         public double Fps;

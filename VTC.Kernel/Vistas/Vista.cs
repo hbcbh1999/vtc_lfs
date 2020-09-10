@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Emgu.CV;
-using Emgu.CV.Cvb;
 using Emgu.CV.Structure;
-using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VTC.Common;
@@ -49,9 +46,7 @@ namespace VTC.Kernel.Vistas
 
         public Queue<Measurement[]> MeasurementArrayQueue;              // For displaying detection history (colored dots)
         public Queue<Measurement[]> DiscardedMeasurementArrayQueue;     // For displaying discarded detections
-        public Image<Gray, byte> Movement_Mask { get; private set; }    //Thresholded, b&w movement mask
         public Image<Bgr, float> ColorBackground { get; private set; }  //Average Background being formed
-        public Image<Bgr, byte> TrainingImage { get; private set; }     //Image to be exported for training set
 
         //************* Multiple Hypothesis Tracker ***************  
         private MultipleHypothesisTracker _mht;
@@ -337,7 +332,7 @@ namespace VTC.Kernel.Vistas
                 var validationRegionDeviation = _mht.ValidationRegionDeviation;
 #if DEBUG
                 // Draw class
-                var g = Graphics.FromImage(stateImage.Bitmap);
+                var g = Graphics.FromImage(stateImage.ToBitmap());
                 var className = YoloIntegerNameMapping.GetObjectNameFromClassInteger(lastState.MostFrequentClassId(), _yoloNameMapping.IntegerToObjectName);
                 g.DrawString(className, new Font(FontFamily.GenericMonospace, (float) 10.0), new SolidBrush(Color.White), (float)vehicle.StateHistory.Last().X, (float)vehicle.StateHistory.Last().Y);  
                     
@@ -425,13 +420,5 @@ namespace VTC.Kernel.Vistas
         }
 
     }
-}
-
-public class BlobAreaComparer : IComparer<CvBlob>
-{
-     public int Compare(CvBlob x, CvBlob y)
-     {
-         return x.Area < y.Area ? 1 : -1;
-     }
 }
         

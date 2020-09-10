@@ -13,7 +13,6 @@ namespace VTC_Supervisor
 {
     public partial class SupervisorForm : Form
     {
-        int autolaunchSeconds = 30;
         int ticks = 0;
 
         public SupervisorForm()

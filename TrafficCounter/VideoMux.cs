@@ -1,4 +1,3 @@
-using Emgu.CV.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,13 +30,6 @@ namespace VTC
             _updateDebounceTimer.Tick += UpdateDebounceTimer_Tick;
 
             UpdateMux();
-
-            Resize += VideoMux_Resize;
-        }
-
-        private void VideoMux_Resize(object sender, EventArgs e)
-        {
-            AutoscaleInputs();
         }
 
         private void UpdateDebounceTimer_Tick(object sender, EventArgs e)
@@ -93,35 +85,6 @@ namespace VTC
             {
                 _displayedColCount = cols;
                 resize = true;
-            }
-
-            if (resize)
-                AutoscaleInputs();
-
-        }
-
-        public void AutoscaleInputs()
-        {
-            foreach(var control in tlpVideoDisplayTable.Controls)
-            {
-                var box = control as ImageBox;
-
-                if (box?.Image == null)
-                    continue;
-
-                try
-                {
-                    var size = box.Size;
-                    var imgSize = box.Image.Size;
-
-                    var horizontalScale = size.Width / (double)imgSize.Width;
-                    var verticalScale = size.Height / (double)imgSize.Height;
-                    box.SetZoomScale(Math.Min(horizontalScale, verticalScale), new Point());
-                }
-                catch(NullReferenceException ex)
-                {
-                    //TODO: Fix this - try/catch is a bandaid.
-                }
             }
         }
 

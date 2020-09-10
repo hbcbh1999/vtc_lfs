@@ -142,7 +142,7 @@ namespace VTC
         private void UpdateUI(TrafficCounterUIUpdateInfo updateInfo)
        {
            // Update image boxes
-           UpdateImageBoxes(updateInfo.StateImage, updateInfo.MovementMask, updateInfo.BackgroundImage, updateInfo.Frame, updateInfo.Measurements, updateInfo.VelocityFieldImage);
+           UpdateImageBoxes(updateInfo.StateImage);
 
            if (!trackedObjectsTextbox.IsHandleCreated)
            {
@@ -438,7 +438,7 @@ namespace VTC
             _videoMux.Show();
         }
 
-        private void UpdateImageBoxes(Image<Bgr, byte> stateImage, Image<Gray, byte> movementMask, Image<Bgr, float> backgroundImage, Image<Bgr,byte> frame, Measurement[] measurements, Image<Bgr, byte> velocityFieldImage)
+        private void UpdateImageBoxes(Image<Bgr, byte> stateImage)
         {
             try
             {

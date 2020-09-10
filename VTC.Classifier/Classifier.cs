@@ -10,7 +10,10 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Alturos.Yolo;
+using Alturos.Yolo.Model;
 using Darknet;
+using GeoAPI.CoordinateSystems;
 using NLog;
 
 namespace VTC.Classifier
@@ -43,15 +46,6 @@ namespace VTC.Classifier
         }
     }
 
-    public static class TrajectoryClassifier
-    {
-        public static KeyValuePair<RegionTransition, string>? ClassifyRegionTransition(KeyValuePair<string, Common.RegionConfig.Polygon> start, KeyValuePair<string, Common.RegionConfig.Polygon> end, EventConfig eventConfiguration)
-        {
-            var transitionEvent = eventConfiguration.Events.FirstOrDefault(kvp => kvp.Key.InRegion == start.Key && kvp.Key.OutRegion == end.Key);
-            return transitionEvent;
-        }
-    }
-
     public class YoloClassifier
     {
         private const int MaxObjects = 1000;
@@ -66,15 +60,7 @@ namespace VTC.Classifier
             public float x_3d, y_3d, z_3d;  // 3-D coordinates, if there is used 3D-stereo camera
         };
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct BboxContainer
-        {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaxObjects)]
-            public bbox_t[] candidates;
-        }
-
         private YoloWrapper Detector;
-        private YoloWrapperNoGPU DetectorNoGPU;
 
         public bool cpuMode = true;
 
@@ -96,6 +82,9 @@ namespace VTC.Classifier
                 var selectedYoloCfgFilepath = defaultYoloCfgFilepath;
                 var selectedYoloWeightsFilepath = defaultYoloWeightsFilepath;
 
+                var defaultYoloNamesFilepath = "yolo.names";
+                var selectedYoloNamesFilepath = defaultYoloNamesFilepath;
+
                 var YoloCfgDropinFilepaths = Directory.EnumerateFiles("./DetectionNetwork/");
                 foreach (var p in YoloCfgDropinFilepaths)
                 {
@@ -114,18 +103,29 @@ namespace VTC.Classifier
                         Logger.Debug("Selected YoloWeights:" + selectedYoloWeightsFilepath);
                         Console.WriteLine("Selected YoloWeights:" + selectedYoloWeightsFilepath);
                     }
+
+                    if (ext.Contains("names"))
+                    {
+                        selectedYoloNamesFilepath = p;
+                        Logger.Debug("Selected YoloNames:" + selectedYoloNamesFilepath);
+                        Console.WriteLine("Selected YoloNames:" + selectedYoloNamesFilepath);
+                    }
                 }
 
-                if (cpuMode)
-                {
-                    Logger.Debug("Calling detector constructor (no GPU)...");
-                    DetectorNoGPU = new Darknet.YoloWrapperNoGPU(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
-                }
-                else
-                {
-                    Logger.Debug("Calling detector constructor (with GPU)...");
-                    Detector = new Darknet.YoloWrapper(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
-                }
+                //Detector = new YoloWrapper(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, selectedYoloNamesFilepath, 0, cpuMode);
+                var cfg = new Alturos.Yolo.YoloConfiguration(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, selectedYoloNamesFilepath);
+                Detector = new YoloWrapper(cfg);
+
+                //if (cpuMode)
+                //{
+                //    Logger.Debug("Calling detector constructor (no GPU)...");
+                //    DetectorNoGPU = new Darknet.YoloWrapperNoGPU(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
+                //}
+                //else
+                //{
+                //    Logger.Debug("Calling detector constructor (with GPU)...");
+                //    Detector = new Darknet.YoloWrapper(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, 0);
+                //}
 
                 Logger.Debug("Classifier initialized.");
             }
@@ -137,72 +137,36 @@ namespace VTC.Classifier
 
         ~YoloClassifier()
         {
-            if (Detector == null)
-            {
-                return;
-            }
-
-            if (cpuMode)
-            {
-                DetectorNoGPU.Dispose();
-            }
-            else
-            {
-                Detector.Dispose();
-            }
-        }
-
-        private byte[] GetRGBValues(Bitmap bmp)
-        {
-            // Lock the bitmap's bits. 
-            Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-            System.Drawing.Imaging.BitmapData bmpData =
-                bmp.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadOnly,
-                    bmp.PixelFormat);
-
-            // Get the address of the first line.
-            IntPtr ptr = bmpData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap.
-            int bytes = bmpData.Stride * bmp.Height;
-            byte[] rgbValues = new byte[bytes];
-
-            // Copy the RGB values into the array.
-            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);bmp.UnlockBits(bmpData);
-
-            return rgbValues;
+            Detector?.Dispose();
         }
 
         public List<Measurement> DetectFrameYolo(Image<Bgr, byte> frame)
         {
             List<Measurement> measurements = new List<Measurement>();
             var converter = new ImageConverter();
-            var bytes = (byte[]) converter.ConvertTo(frame.Bitmap, typeof(byte[]));
 
-            bbox_t[] detectionArray;
-            if (cpuMode && DetectorNoGPU != null)
+            IEnumerable<YoloItem> detectionArray = new List<YoloItem>(MaxObjects);
+
+            if(Detector != null)
             {
-                detectionArray = DetectorNoGPU.Detect(bytes);
-            }
-            else if(!cpuMode && Detector != null)
-            {
-                detectionArray = Detector.Detect(bytes);
-            }
-            else
-            {
-                return new List<Measurement>();
+                //IntPtr unmanagedPtr = Marshal.AllocHGlobal(frame.Bytes.Length);
+                //Marshal.Copy(frame.Bytes, 0, unmanagedPtr, frame.Bytes.Length);
+                //detectionArray = Detector.Detect(unmanagedPtr, frame.Bytes.Length);
+                Detector.Detect(frame.Bytes);
+                //Marshal.FreeHGlobal(unmanagedPtr);
             }
 
-            for (int i = 0; i < detectionArray.Length; i++)
+            for (int i = 0; i < detectionArray.Count(); i++)
             {
-                if (detectionArray[i].x == 0 && detectionArray[i].y == 0) {break;}
+                var detection = detectionArray.ElementAt(i);
+                if (detection.X == 0 && detection.Y == 0) {break;}
 
                 var m = new Measurement
                 {
-                    Height = detectionArray[i].h,
-                    Width = detectionArray[i].w,
-                    X = detectionArray[i].x + detectionArray[i].w / 2,
-                    Y = detectionArray[i].y + detectionArray[i].h / 2
+                    Height = detection.Height,
+                    Width = detection.Width,
+                    X = detection.X + detection.Width / 2,
+                    Y = detection.Y + detection.Height / 2
                 };
 
                 if (m.Height > frame.Height | m.Width > frame.Width)
@@ -220,11 +184,11 @@ namespace VTC.Classifier
                 //Select a region smaller than the entire detection rectangle. Divide height and width by 2.
                 // 
 
-                int xColor1 = (int) m.X - Convert.ToInt32(detectionArray[i].w / 2);
-                int yColor1 = (int) m.Y - Convert.ToInt32(detectionArray[i].h / 2);
+                int xColor1 = (int) m.X - Convert.ToInt32(detection.Width / 2);
+                int yColor1 = (int) m.Y - Convert.ToInt32(detection.Height / 2);
 
-                int xColor2 = (int) m.X + Convert.ToInt32(detectionArray[i].w/2);
-                int yColor2 = (int) m.Y + Convert.ToInt32(detectionArray[i].h/2);
+                int xColor2 = (int) m.X + Convert.ToInt32(detection.Width/2);
+                int yColor2 = (int) m.Y + Convert.ToInt32(detection.Height/2);
 
                 var color = SampleColorAtRectangle(frame, xColor1, yColor1,
                     xColor2,
@@ -234,7 +198,16 @@ namespace VTC.Classifier
                 m.Green = color.Green;
                 m.Red = color.Red;
                 m.Size = m.Width * m.Height;
-                m.ObjectClass = (int) detectionArray[i].obj_id;
+
+                var stringToIntMap = new Dictionary<string,int>();
+                stringToIntMap.Add("car",0);
+                stringToIntMap.Add("truck", 1);
+                stringToIntMap.Add("bus", 2);
+                stringToIntMap.Add("person", 3);
+                stringToIntMap.Add("bicycle", 4);
+                stringToIntMap.Add("motorcycle", 5);
+
+                m.ObjectClass = stringToIntMap[detection.Type];
                 measurements.Add(m);
             }
             
@@ -254,77 +227,6 @@ namespace VTC.Classifier
             frame.AvgSdv(out avg, out MVcavg);
             frame.ROI = new Rectangle(0,0, width_original, height_original); //Reset ROI
             return avg;
-        }
-
-        unsafe static byte[] GetBytes(float value) {
-            var bytes = new byte[4];
-            fixed (byte* b = bytes)
-                *((int*)b) = *(int*)&value;
-
-            return bytes;
-        }
-
-        private UnmanagedImageMemory MarshalEmguImageToimage_t(Image<Bgr, float> frame)
-        {
-            if(frame == null)
-                return new UnmanagedImageMemory();
-
-            unsafe
-            {
-                //Calculate sizes for allocation
-                int struct_size = sizeof(float*) + 3 * sizeof(int) + 2;
-                int data_size = frame.Bytes.Length;
-
-                //Allocate
-                IntPtr pNativeDataStruct = Marshal.AllocHGlobal(struct_size);
-                IntPtr pNativeDataFrame = Marshal.AllocHGlobal(data_size);
-
-                //Copy data
-                Marshal.WriteInt32(pNativeDataStruct, frame.Height);
-                Marshal.WriteInt32(pNativeDataStruct + 1 * sizeof(int), frame.Width);
-                Marshal.WriteInt32(pNativeDataStruct + 2 * sizeof(int), frame.NumberOfChannels);
-                Int64 fullPtr = pNativeDataFrame.ToInt64();
-                Marshal.WriteInt64(pNativeDataStruct + 4 * sizeof(int), fullPtr);
-
-                int frameWidth = frame.Width;
-                int frameHeight = frame.Height;
-                //int nChannels = frame.NumberOfChannels;
-                //int[] destinationChannelIndex = { 2, 1, 0 }; //Swap R and B channels: OpenCV is Bgr, Yolo expects Rgb.
-
-                Parallel.For(0, frameWidth, i =>
-                    {
-                        //Parallel.For(0, frameHeight, j =>
-                        for(int j=0;j<frameHeight;j++)
-                        {
-                            int dst_index =
-                                (i + frameWidth * j + frameWidth * frameHeight * 2) *
-                                sizeof(float);
-                            byte[] bytes = BitConverter.GetBytes(frame.Data[j, i, 0]);
-                            IntPtr newptr = new IntPtr(pNativeDataFrame.ToInt64() + dst_index);
-                            Marshal.Copy(bytes, 0, newptr, 4);
-
-                            dst_index =
-                                (i + frameWidth * j + frameWidth * frameHeight) *
-                                sizeof(float);
-                            bytes = BitConverter.GetBytes(frame.Data[j, i, 1]);
-                            newptr = new IntPtr(pNativeDataFrame.ToInt64() + dst_index);
-                            Marshal.Copy(bytes, 0, newptr, 4);
-
-                            dst_index =
-                                (i + frameWidth * j) *
-                                sizeof(float);
-                            bytes = BitConverter.GetBytes(frame.Data[j, i, 2]);
-                            newptr = new IntPtr(pNativeDataFrame.ToInt64() + dst_index);
-                            Marshal.Copy(bytes, 0, newptr, 4);
-                        }
-                    }
-                );
-
-                var memory = new UnmanagedImageMemory();
-                memory.pNativeDataFrame = pNativeDataFrame;
-                memory.pNativeDataStruct = pNativeDataStruct;
-                return memory;
-            }
         }
     }
 

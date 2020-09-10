@@ -225,7 +225,7 @@ namespace VTC.RegionConfiguration
             Coordinates.Add(Coordinates.First());
 
             //Calculate centroid
-            var points = Coordinates.Select(x => new GeoAPI.Geometries.Coordinate(x.X, x.Y)).ToArray();
+            var points = Coordinates.Select(x => new NetTopologySuite.Geometries.Coordinate(x.X, x.Y)).ToArray();
             NetTopologySuite.Geometries.LinearRing ring = new NetTopologySuite.Geometries.LinearRing(points);
             NetTopologySuite.Geometries.Polygon ntsPoly = new NetTopologySuite.Geometries.Polygon(ring);
             NetTopologySuite.Algorithm.Centroid ntsCentroid = new NetTopologySuite.Algorithm.Centroid(ntsPoly);

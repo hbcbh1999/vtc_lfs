@@ -37,7 +37,7 @@ namespace VTC.RegionConfiguration
 
             _startImage = bgImage.Clone();
 
-            pictureBox1.Image = _startImage.ToBitmap();
+            pictureBox1.Image =  _startImage.ToBitmap();
 
             pictureBox1.Size = _startImage.Size;
 

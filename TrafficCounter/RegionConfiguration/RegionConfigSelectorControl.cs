@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Emgu.CV;
 using VTC.Common.RegionConfig;
 
 namespace VTC.RegionConfiguration
