@@ -273,22 +273,21 @@ namespace VTC.Actors
         {
             try
             {
-                var cmd_drop_job_table = new NpgsqlCommand(
-                    "DROP TABLE job",
-                    _dbConnection);
-                cmd_drop_job_table.ExecuteNonQuery();
-
-                var cmd_drop_movement_table = new NpgsqlCommand(
-                    "DROP TABLE movement",
-                    _dbConnection);
-                cmd_drop_movement_table.ExecuteNonQuery();
-
                 var cmd_drop_stateestimate_table = new NpgsqlCommand(
-                    "DROP TABLE stateestimate",
+                    "DELETE FROM public.stateestimate",
                     _dbConnection);
                 cmd_drop_stateestimate_table.ExecuteNonQuery();
 
-                CreateDatabase();
+                var cmd_drop_movement_table = new NpgsqlCommand(
+                    "DELETE FROM public.movement",
+                    _dbConnection);
+                cmd_drop_movement_table.ExecuteNonQuery();
+
+                var cmd_drop_job_table = new NpgsqlCommand(
+                    "DELETE FROM public.job",
+                    _dbConnection);
+                cmd_drop_job_table.ExecuteNonQuery();
+
             }
             catch (Exception ex)
             {
