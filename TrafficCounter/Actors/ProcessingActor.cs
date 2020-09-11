@@ -166,7 +166,6 @@ namespace VTC.Actors
                 _updateUiDelegate?.Invoke(tui); 
                 stateImage.Dispose();
                 _loggingActor?.Tell(new FrameCountMessage(_processedFramesTotal));
-                _loggingActor?.Tell(new LogDetectionsMessage(_vista.MeasurementsArray.ToList()));
                 // Now update child class specific stats
                 var args = new TrackingEvents.TrajectoryListEventArgs { TrackedObjects = _vista.DeletedVehicles };
                 _loggingActor?.Tell(new TrackingEventMessage(args));

@@ -66,6 +66,7 @@ namespace VTC
             this.label9 = new System.Windows.Forms.Label();
             this.aboutButton = new System.Windows.Forms.Button();
             this.resetCountsButton = new System.Windows.Forms.Button();
+            this.resetDatabaseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // timeActiveTextBox
@@ -395,12 +396,24 @@ namespace VTC
             this.resetCountsButton.UseVisualStyleBackColor = true;
             this.resetCountsButton.Click += new System.EventHandler(this.ResetCountsButton_Click);
             // 
+            // resetDatabaseButton
+            // 
+            this.resetDatabaseButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.resetDatabaseButton.Location = new System.Drawing.Point(133, 176);
+            this.resetDatabaseButton.Name = "resetDatabaseButton";
+            this.resetDatabaseButton.Size = new System.Drawing.Size(115, 24);
+            this.resetDatabaseButton.TabIndex = 96;
+            this.resetDatabaseButton.Text = "Reset Database";
+            this.resetDatabaseButton.UseVisualStyleBackColor = true;
+            this.resetDatabaseButton.Click += new System.EventHandler(this.resetDatabaseButton_Click);
+            // 
             // TrafficCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.ClientSize = new System.Drawing.Size(468, 676);
+            this.Controls.Add(this.resetDatabaseButton);
             this.Controls.Add(this.resetCountsButton);
             this.Controls.Add(this.aboutButton);
             this.Controls.Add(this.label9);
@@ -477,5 +490,6 @@ namespace VTC
         private Label label9;
         private Button aboutButton;
         private Button resetCountsButton;
+        private Button resetDatabaseButton;
     }
 }

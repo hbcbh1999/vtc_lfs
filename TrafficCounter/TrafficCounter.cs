@@ -23,6 +23,7 @@ using VTC.Messages;
 using VTC.UI;
 using SharpRaven;
 using SharpRaven.Data;
+using VTC.Classifier;
 using VTC.UserConfiguration;
 
 namespace VTC
@@ -31,11 +32,6 @@ namespace VTC
    {
         #region VideoDisplays
         private VideoDisplay _mainDisplay;
-        //private VideoDisplay _movementDisplay;
-        //private VideoDisplay _backgroundDisplay;
-        //private VideoDisplay _velocityFieldDisplay;
-        private VideoDisplay _mixtureMovementDisplay;
-        private VideoDisplay _3DPointsDisplay;
         private VideoMux _videoMux;
         #endregion
 
@@ -96,8 +92,15 @@ namespace VTC
                 ev.Tags.Add("License", "Unactivated");
                 ravenClient.Capture(ev);
             }
-          
-           // check if app should run in unit test visualization mode
+
+            var gpuDetector = new GPUDetector();
+            if ((gpuDetector.HasGPU == false) || (gpuDetector.MB_VRAM < 3000))
+            {
+                MessageBox.Show("Insufficient hardware: VTC requires an nVidia GPU with at least 3GB VRAM.");
+                Application.Exit();
+            }
+
+            // check if app should run in unit test visualization mode
             _unitTestsMode = false;
             if ("-tests".Equals(appArgument, StringComparison.OrdinalIgnoreCase))
             {
@@ -140,86 +143,86 @@ namespace VTC
         }
 
         private void UpdateUI(TrafficCounterUIUpdateInfo updateInfo)
-       {
-           // Update image boxes
-           UpdateImageBoxes(updateInfo.StateImage);
+        {
+            // Update image boxes
+            UpdateImageBoxes(updateInfo.StateImage);
 
-           if (!trackedObjectsTextbox.IsHandleCreated)
-           {
-               return;
-           }
-           trackedObjectsTextbox.Invoke((MethodInvoker) delegate
+            if (!trackedObjectsTextbox.IsHandleCreated)
+            {
+                return;
+            }
+            trackedObjectsTextbox.Invoke((MethodInvoker) delegate
             {
                 trackedObjectsTextbox.Text = $"{updateInfo.Measurements.Length} objects currently detected";
                 trackedObjectsTextbox.Text += Environment.NewLine + $"{updateInfo.StateEstimates.Length} objects currently tracked";
             });
 
-           var activeTime = DateTime.Now - _applicationStartTime;
-           if (!timeActiveTextBox.IsHandleCreated)
-           {
-               return;
-           }
+            var activeTime = DateTime.Now - _applicationStartTime;
+            if (!timeActiveTextBox.IsHandleCreated)
+            {
+                return;
+            }
             timeActiveTextBox.Invoke((MethodInvoker) delegate
-           {
-               timeActiveTextBox.Text = activeTime.ToString(@"dd\.hh\:mm\:ss");
-           });
+            {
+                timeActiveTextBox.Text = activeTime.ToString(@"dd\.hh\:mm\:ss");
+            });
 
-           if (!fpsTextbox.IsHandleCreated)
-           {
-               return;
-           }
+            if (!fpsTextbox.IsHandleCreated)
+            {
+                return;
+            }
             fpsTextbox.Invoke((MethodInvoker) delegate
-               {
-                   fpsTextbox.Text = $"{Math.Round(updateInfo.Fps,1)} FPS";
-               }
-           );
-       }
+                {
+                    fpsTextbox.Text = $"{Math.Round(updateInfo.Fps,1)} FPS";
+                }
+            );
+        }
 
-       private void UpdateUIAccessoryInfo(TrafficCounterUIAccessoryInfo accessoryInfo)
-       {
-           // Update image boxes
-           remainingTimeBox.Invoke((MethodInvoker) delegate
-           {
-               remainingTimeBox.Text = accessoryInfo.EstimatedTimeRemaining.ToString(@"dd\.hh\:mm\:ss");
-           });
+        private void UpdateUIAccessoryInfo(TrafficCounterUIAccessoryInfo accessoryInfo)
+        {
+            // Update image boxes
+            remainingTimeBox.Invoke((MethodInvoker) delegate
+            {
+                remainingTimeBox.Text = accessoryInfo.EstimatedTimeRemaining.ToString(@"dd\.hh\:mm\:ss");
+            });
 
-           frameTextbox.Invoke((MethodInvoker) delegate
-           {
-               frameTextbox.Text = accessoryInfo.ProcessedFrames.ToString();
-           });
-       }
+            frameTextbox.Invoke((MethodInvoker) delegate
+            {
+                frameTextbox.Text = accessoryInfo.ProcessedFrames.ToString();
+            });
+        }
 
         private void UpdateStatsUI(string statString)
-       {
-           // Update statistics 
-           if (!tbVistaStats.IsHandleCreated)
-           {
-               return;
-           }
-           tbVistaStats.Invoke((MethodInvoker)delegate
-           {
-               tbVistaStats.Text = statString;
-           });
+        {
+            // Update statistics 
+            if (!tbVistaStats.IsHandleCreated)
+            {
+                return;
+            }
+            tbVistaStats.Invoke((MethodInvoker)delegate
+            {
+                tbVistaStats.Text = statString;
+            });
         }
 
-       private void UpdateDebugInfo(string debugString)
-       {
-           // Update statistics
-           if (!debugTextbox.IsHandleCreated)
-           {
-               return;
-           }
-           debugTextbox.Invoke((MethodInvoker)delegate
-           {
-               debugTextbox.Text = debugString;
-           });
+        private void UpdateDebugInfo(string debugString)
+        {
+            // Update statistics
+            if (!debugTextbox.IsHandleCreated)
+            {
+                return;
+            }
+            debugTextbox.Invoke((MethodInvoker)delegate
+            {
+                debugTextbox.Text = debugString;
+            });
         }
 
-       private void CheckIfLicenseTimerExpired()
-       {
-           if(!_isLicensed)
-               NotifyLicenseAndExit();
-       }
+        private void CheckIfLicenseTimerExpired()
+        {
+            if(!_isLicensed)
+                NotifyLicenseAndExit();
+        }
 
         /// <summary>
         /// Try to detect unit tests. Play unit tests (if detected).
@@ -227,61 +230,61 @@ namespace VTC
         /// <param name="assemblyName">Assembly name with test scenarios.</param>
         /// <returns><c>true</c> if unit tests detected.</returns>
         private bool DetectTestScenarios(string assemblyName)
-       {
-           var result = false;
+        {
+            var result = false;
 
-           try
-           {
-               while (! string.IsNullOrWhiteSpace(assemblyName))
-               {
-                   //TODO: Pass test capture contexts to FrameGrabber actor
-                   // ensure absolute path
-                   if (! Path.IsPathRooted(assemblyName))
-                   {
-                       var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                       if(currentDir != null)
-                       assemblyName = Path.Combine(currentDir, assemblyName);
-                   }
+            try
+            {
+                while (! string.IsNullOrWhiteSpace(assemblyName))
+                {
+                    //TODO: Pass test capture contexts to FrameGrabber actor
+                    // ensure absolute path
+                    if (! Path.IsPathRooted(assemblyName))
+                    {
+                        var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                        if(currentDir != null)
+                            assemblyName = Path.Combine(currentDir, assemblyName);
+                    }
 
-                   if (! File.Exists(assemblyName)) break;
+                    if (! File.Exists(assemblyName)) break;
 
-                   var assembly = Assembly.LoadFile(assemblyName);
-                   if (assembly == null) break;
+                    var assembly = Assembly.LoadFile(assemblyName);
+                    if (assembly == null) break;
 
-                   _testCaptureContexts = assembly.GetTypes()
-                       .Where(t => t.GetInterfaces().Contains(typeof (ICaptureContextProvider))
-                                   && (t.GetConstructor(Type.EmptyTypes) != null)) // expected default constructor
-                       .Select(t => Activator.CreateInstance(t) as ICaptureContextProvider)
-                       .SelectMany(instance => instance.GetCaptures())
-                       .ToArray();
+                    _testCaptureContexts = assembly.GetTypes()
+                        .Where(t => t.GetInterfaces().Contains(typeof (ICaptureContextProvider))
+                                    && (t.GetConstructor(Type.EmptyTypes) != null)) // expected default constructor
+                        .Select(t => Activator.CreateInstance(t) as ICaptureContextProvider)
+                        .SelectMany(instance => instance.GetCaptures())
+                        .ToArray();
 
-                   foreach (var captureContext in _testCaptureContexts)
-                   {
-                       AddCamera(captureContext.Capture);
-                   }
+                    foreach (var captureContext in _testCaptureContexts)
+                    {
+                        AddCamera(captureContext.Capture);
+                    }
 
-                   Log(LogLevel.Trace, "Test mode detected.");
-                   result = true;
-                   break;
-               }
-           }
-           catch (Exception e)
-           {
-               Log(LogLevel.Error, e.ToString());
-           }
+                    Log(LogLevel.Trace, "Test mode detected.");
+                    result = true;
+                    break;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(LogLevel.Error, e.ToString());
+            }
 
-           return result;
-       }
+            return result;
+        }
 
         /// <summary>
-       /// Use this function to terminate the application if a trial license timeout occurs
-       /// </summary>
+        /// Use this function to terminate the application if a trial license timeout occurs
+        /// </summary>
         private void NotifyLicenseAndExit()
-       {
-           MessageBox.Show(
-               "This is only a trial version! Please purchase a license from roadometry.com to use software longer than 30 minutes.");
-           Application.Exit();
-       }
+        {
+            MessageBox.Show(
+                "This is only a trial version! Please purchase a license from roadometry.com to use software longer than 30 minutes.");
+            Application.Exit();
+        }
 
         private void heartbeatTimer_Tick(object sender, EventArgs e)
         {
@@ -305,18 +308,18 @@ namespace VTC
             CameraComboBox.Items.Add(camera.Name);
         }
 
-       private async Task LaunchIPCamera(string ipCameraName, int cameraIndex)
-       {
-           if (_cameras.Count < cameraIndex + 1)
-           {
-               return;
-           }
+        private async Task LaunchIPCamera(string ipCameraName, int cameraIndex)
+        {
+            if (_cameras.Count < cameraIndex + 1)
+            {
+                return;
+            }
 
-           await Task.Delay(5000);
-           var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
-           UpdateCaptureSource(_cameras[cameraIndex], false);
-           configurationActor.Tell(new LoadConfigurationByNameMessage(ipCameraName));
-       }
+            await Task.Delay(5000);
+            var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+            UpdateCaptureSource(_cameras[cameraIndex], false);
+            configurationActor.Tell(new LoadConfigurationByNameMessage(ipCameraName));
+        }
 
         private void InitializeCameraSelection(string cameraSelectionString)
         {
@@ -464,39 +467,39 @@ namespace VTC
         /// </summary>
         private void CameraComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-           UpdateCaptureSource(_cameras[CameraComboBox.SelectedIndex],true);
+            UpdateCaptureSource(_cameras[CameraComboBox.SelectedIndex],true);
         }
 
-       private void UpdateCaptureSource(ICaptureSource source, bool interactive)
-       {
-           var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
-           var frameGrabActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/FrameGrabActor");
-           var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
-           var supervisorActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor");
-           _selectedCaptureSource = source;
+        private void UpdateCaptureSource(ICaptureSource source, bool interactive)
+        {
+            var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
+            var frameGrabActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/FrameGrabActor");
+            var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+            var supervisorActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor");
+            _selectedCaptureSource = source;
 
-           //Create new output folder
-           loggingActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
-           DateTime videoTime = DateTime.Now;
-           loggingActor.Tell(new FileCreationTimeMessage(_selectedCaptureSource.StartDateTime()));
+            //Create new output folder
+            loggingActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
+            DateTime videoTime = DateTime.Now;
+            loggingActor.Tell(new FileCreationTimeMessage(_selectedCaptureSource.StartDateTime()));
 
-           //Change the capture device.
-           frameGrabActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
-           supervisorActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
-           frameGrabActor.Tell(new GetNextFrameMessage());
+            //Change the capture device.
+            frameGrabActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
+            supervisorActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
+            frameGrabActor.Tell(new GetNextFrameMessage());
 
-           //Tell the configuration actor about this camera
-           var selected_camera_list = new List<ICaptureSource>();
-           selected_camera_list.Add(_selectedCaptureSource);
-           configurationActor.Tell(new CamerasMessage(selected_camera_list));
+            //Tell the configuration actor about this camera
+            var selected_camera_list = new List<ICaptureSource>();
+            selected_camera_list.Add(_selectedCaptureSource);
+            configurationActor.Tell(new CamerasMessage(selected_camera_list));
 
-           if (interactive)
-           {
-               configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
-           }
+            if (interactive)
+            {
+                configurationActor.Tell(new OpenRegionConfigurationScreenMessage());
+            }
         }
 
-       private void btnConfigureRegions_Click(object sender, EventArgs e)
+        private void btnConfigureRegions_Click(object sender, EventArgs e)
         {
             var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
             var selectedCameraList = new List<ICaptureSource>();
@@ -542,24 +545,24 @@ namespace VTC
             loggingActor?.Tell(new GenerateReportMessage());
         }
 
-       private void UpdateInfoBox(string text)
-       {
-           if (infoBox.InvokeRequired)
-           {
-               infoBox.Invoke((MethodInvoker) (() => infoBox.AppendText(text + Environment.NewLine)));
-               return;
-           }
-           infoBox.AppendText(text + Environment.NewLine);
-       }
+        private void UpdateInfoBox(string text)
+        {
+            if (infoBox.InvokeRequired)
+            {
+                infoBox.Invoke((MethodInvoker) (() => infoBox.AppendText(text + Environment.NewLine)));
+                return;
+            }
+            infoBox.AppendText(text + Environment.NewLine);
+        }
 
-       private void licenseCheckTimer_Tick(object sender, EventArgs e)
+        private void licenseCheckTimer_Tick(object sender, EventArgs e)
         {
             CheckIfLicenseTimerExpired();
             licenseCheckTimer.Enabled = false;
         }
 
-       private void UpdateActorStatusIndicators(Dictionary<string, DateTime> actorStatuses)
-       {
+        private void UpdateActorStatusIndicators(Dictionary<string, DateTime> actorStatuses)
+        {
             loggingIndicator.Invoke((MethodInvoker)delegate
             {
                 if (actorStatuses.ContainsKey("LoggingActor"))
@@ -622,14 +625,14 @@ namespace VTC
             se.Show();
         }
 
-       private void LoadUserConfig()
-       {
-           string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                       "\\VTC\\userConfig.xml";
-           IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+        private void LoadUserConfig()
+        {
+            string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                        "\\VTC\\userConfig.xml";
+            IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
 
-           _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
-       }
+            _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
+        }
 
         private void aboutButton_Click(object sender, EventArgs e)
         {
@@ -642,6 +645,18 @@ namespace VTC
         {
             var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
             loggingActor?.Tell(new ClearStatsMessage());
+        }
+
+        private void resetDatabaseButton_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete the database? This will clear all previous video-counts!", "Confirm database-reset", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
+                loggingActor?.Tell(new ResetDatabaseMessage());
+
+                MessageBox.Show("Ok, the database has been reset.");
+            }
         }
     }
 }

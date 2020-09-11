@@ -5,7 +5,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VTC.Common;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Data.SQLite;
 
 namespace VTC.Common
 {
@@ -93,6 +95,25 @@ namespace VTC.Common
         {
             var missRatio = (double) StateEstimates.Sum(se => se.TotalMissedDetections) / StateEstimates.Count();
             return missRatio;
+        }
+
+        public void Save(SQLiteConnection dbConnection)
+        {
+            try
+            {
+                var command = dbConnection.CreateCommand();
+                command.CommandText = $"INSERT INTO movement(videoreport,approach,exit,movementtype,objecttype,synthetic) VALUES(NULL,'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}',0)";
+                command.ExecuteNonQuery();
+
+                foreach (var s in StateEstimates)
+                {
+                    s.Save(dbConnection);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("TrajectoryLogger.Save:" + e.Message);
+            }
         }
     }
 }

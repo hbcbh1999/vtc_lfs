@@ -1,10 +1,13 @@
 ﻿
+using System;
+using System.Data.SQLite;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace VTC.Common
 {
     [DataContract]
-    public struct Measurement
+    public class Measurement
     {
         [DataMember] public double X;
         [DataMember] public double Y;

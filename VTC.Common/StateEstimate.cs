@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 using MathNet.Numerics.LinearAlgebra.Double;
 
@@ -9,6 +12,7 @@ namespace VTC.Common
     /// <summary>
     /// Holds 2D position and velocity estimates for Kalman filtering
     /// </summary>
+    [DataContract]
     public class StateEstimate
     {
         //public Measurement measurements;
@@ -217,6 +221,20 @@ namespace VTC.Common
             }
             
             return -1;
+        }
+
+        public void Save(SQLiteConnection dbConnection)
+        {
+            try
+            {
+                var command = dbConnection.CreateCommand();
+                command.CommandText = $"INSERT INTO stateestimate(movement,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES(NULL,{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})";
+                command.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("SaveDetection:" + e.Message);
+            }
         }
 
     }

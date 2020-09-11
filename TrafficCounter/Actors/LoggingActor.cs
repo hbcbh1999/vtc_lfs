@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -156,10 +157,6 @@ namespace VTC.Actors
                 UpdateConfigurationActor(message.ActorRef)
             );
 
-            Receive<LogDetectionsMessage>(message =>
-                LogDetections(message.Detections)
-            );
-
             Receive<CopyGroundtruthMessage>(message =>
                 CopyGroundTruth(message.GroundTruthPath)
             );
@@ -170,6 +167,10 @@ namespace VTC.Actors
 
             Receive<FrameCountMessage>(message => 
                 UpdateFrameCount(message.Count)
+            );
+
+            Receive<ResetDatabaseMessage>(message =>
+                ResetDatabase()
             );
 
             Receive<LoadUserConfigMessage>(message => 
@@ -269,13 +270,13 @@ namespace VTC.Actors
                 var cmd = new SQLiteCommand(_dbConnection);
                 cmd.CommandText = "CREATE TABLE IF NOT EXISTS videofile (id INTEGER PRIMARY KEY, filepath TEXT)";
                 cmd.ExecuteNonQuery();
-                cmd.CommandText = "CREATE TABLE IF NOT EXISTS videoreport (id INTEGER PRIMARY KEY, videofile INTEGER, FOREIGN KEY(videofile) REFERENCES videofile(id))";
+                cmd.CommandText = "CREATE TABLE IF NOT EXISTS job (id INTEGER PRIMARY KEY, videofile INTEGER, FOREIGN KEY(videofile) REFERENCES videofile(id))";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText =
-                    "CREATE TABLE IF NOT EXISTS movement (id INTEGER PRIMARY KEY, videoreport INTEGER, approach TEXT, exit TEXT, movementtype TEXT, objecttype TEXT, synthetic BOOLEAN, FOREIGN KEY(videoreport) REFERENCES videoreport(id))";
+                    "CREATE TABLE IF NOT EXISTS movement (id INTEGER PRIMARY KEY, job INTEGER, approach TEXT, exit TEXT, movementtype TEXT, objecttype TEXT, synthetic BOOLEAN, FOREIGN KEY(job) REFERENCES job(id))";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText =
-                    "CREATE TABLE IF NOT EXISTS stateestimate (id INTEGER PRIMARY KEY, movement INTEGER, x REAL, y REAL, vx REAL, vy REAL, red REAL, blue REAL, green REAL, size REAL, covsize REAL, vsize REAL, pathlength REAL, FOREIGN KEY(movement) REFERENCES movement(id))";
+                    "CREATE TABLE IF NOT EXISTS stateestimate (id INTEGER PRIMARY KEY, movement INTEGER, x REAL, y REAL, vx REAL, vy REAL, red REAL, blue REAL, green REAL, size REAL, vsize REAL, pathlength REAL, FOREIGN KEY(movement) REFERENCES movement(id))";
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -283,6 +284,34 @@ namespace VTC.Actors
                 Logger.Log(LogLevel.Error,"LoggingActor.CreateDatabase: " + ex.Message);
             }
 
+        }
+
+        private void ResetDatabase()
+        {
+            try
+            {
+                if ((_dbConnection.State & ConnectionState.Open) != 0)
+                {
+                    _dbConnection.Close();
+                }
+
+                //Delete database
+                var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                const string filename = "VTC.sqlite3";
+                var filePath = Path.Combine(appDataFolder, "VTC", filename);
+                File.Delete(filePath);
+
+                //Make a new one
+                var cs = "PRAGMA foreign_keys = ON; URI=file:" + filePath;
+                _dbConnection = new SQLiteConnection(cs);
+                _dbConnection.Open();
+
+                CreateDatabase();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, "LoggingActor.ResetDatabase: " + ex.Message);
+            }
         }
 
         private void CreateOrReplaceOutputFolderIfExists()
@@ -308,26 +337,6 @@ namespace VTC.Actors
         private void ClearTurnStats()
         {
             _turnStats.Clear();
-        }
-
-        private void LogDetections(List<Measurement> detections)
-        {
-            if (_currentOutputFolder == null)
-            {
-                Log("_currentOutputFolder is null in LogDetections.", LogLevel.Error, "LoggingActor");
-                return;
-            }
-
-            try
-            {
-                var dl = new DetectionLogger(detections);
-                dl.SaveDetection(_dbConnection);
-            }
-            catch (NullReferenceException e)
-            {
-                Log("(LogDetections) " + e, LogLevel.Error, "LoggingActor");
-                ravenClient.Capture(new SentryEvent(e));
-            }
         }
 
         private void Log(string text, LogLevel level, string actorName)
@@ -566,8 +575,7 @@ namespace VTC.Actors
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
                     var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), d.FirstDetectionFrame, false);
                     IncrementTurnStatistics(editedMovement);
-                    var tl = new TrajectoryLogger(editedMovement);
-                    tl.Save(_dbConnection);
+                    editedMovement.Save(_dbConnection);
 
                     if (_regionConfig.SendToServer)
                     {

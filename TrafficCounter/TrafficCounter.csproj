@@ -281,6 +281,7 @@
     <Compile Include="Messages\InitializedNotificationMessage.cs" />
     <Compile Include="Messages\ClearStatsMessage.cs" />
     <Compile Include="Messages\InitializationCompleteMessage.cs" />
+    <Compile Include="Messages\ResetDatabaseMessage.cs" />
     <Compile Include="Messages\NewBatchJobMessage.cs" />
     <Compile Include="Messages\RequestVideoSourceMessage.cs" />
     <Compile Include="Messages\LoadConfigurationByNameMessage.cs" />
@@ -310,7 +311,6 @@
     <Compile Include="Messages\EventConfigMessage.cs" />
     <Compile Include="Messages\FileCreationTimeMessage.cs" />
     <Compile Include="Messages\HandleClassIDMappingMessage.cs" />
-    <Compile Include="Messages\LogDetectionsMessage.cs" />
     <Compile Include="Messages\LogPerformanceMessage.cs" />
     <Compile Include="Messages\OpenRegionConfigurationScreenMessage.cs" />
     <Compile Include="Messages\RegionConfigLookupResponseMessage.cs" />
