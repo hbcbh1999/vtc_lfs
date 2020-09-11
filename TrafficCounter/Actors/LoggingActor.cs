@@ -28,6 +28,7 @@ using VTC.Kernel;
 using VTC.Messages;
 using VTC.Remote;
 using VTC.BatchProcessing;
+using VTC.db;
 using VTC.Reporting;
 using VTC.UserConfiguration;
 
@@ -170,7 +171,7 @@ namespace VTC.Actors
             );
 
             Receive<ResetDatabaseMessage>(message =>
-                ResetDatabase()
+                DatabaseManager.ResetDatabase(_dbConnection)
             );
 
             Receive<LoadUserConfigMessage>(message => 
@@ -193,7 +194,7 @@ namespace VTC.Actors
                 UpdateBatchJob(message.Job)
             );
 
-            _dbConnection = DatabaseAccess.OpenConnection();
+            InitializeDatabase();
 
             Self.Tell(new LoadUserConfigMessage());
 
@@ -227,6 +228,16 @@ namespace VTC.Actors
         {
             _dbConnection.Close();
             base.PostStop();
+        }
+
+        private void InitializeDatabase()
+        {
+            _dbConnection = DatabaseManager.OpenConnection(_userConfig);
+            var dbExists = DatabaseManager.CheckIfDatabaseExists(_dbConnection);
+            if (!dbExists)
+            {
+                DatabaseManager.CreateDatabase(_dbConnection);
+            }
         }
 
         private void UpdateFileCreationTime(DateTime dt)
@@ -267,32 +278,6 @@ namespace VTC.Actors
                 Logger.Log(LogLevel.Error,"LoggingActor.CreateDatabase: " + ex.Message);
             }
 
-        }
-
-        private void ResetDatabase()
-        {
-            try
-            {
-                var cmd_drop_stateestimate_table = new NpgsqlCommand(
-                    "DELETE FROM public.stateestimate",
-                    _dbConnection);
-                cmd_drop_stateestimate_table.ExecuteNonQuery();
-
-                var cmd_drop_movement_table = new NpgsqlCommand(
-                    "DELETE FROM public.movement",
-                    _dbConnection);
-                cmd_drop_movement_table.ExecuteNonQuery();
-
-                var cmd_drop_job_table = new NpgsqlCommand(
-                    "DELETE FROM public.job",
-                    _dbConnection);
-                cmd_drop_job_table.ExecuteNonQuery();
-
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(LogLevel.Error, "LoggingActor.ResetDatabase: " + ex.Message);
-            }
         }
 
         private void CreateOrReplaceOutputFolderIfExists()

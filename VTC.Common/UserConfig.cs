@@ -11,11 +11,11 @@ namespace VTC.Common
     [DataContract]
     public class UserConfig
     {
-        [Description("Remote server username.")]
+        [Description("Postgres username.")]
         [DataMember]
         public string Username { get; set; }
 
-        [Description("Remote server password.")]
+        [Description("Postgres password.")]
         [DataMember]
         public string Password { get; set; }
 
@@ -57,7 +57,19 @@ namespace VTC.Common
 
         [Description("URL of remote server for recieving measurements.")]
         [DataMember]
-        public string ServerUrl { get; set; }        
+        public string ServerUrl { get; set; }
+
+        [Description("URL of postgres database for recieving measurements.")]
+        [DataMember]
+        public string DatabaseUrl { get; set; } = "localhost";
+
+        [Description("Port of postgres database for recieving measurements.")]
+        [DataMember]
+        public int DatabasePort { get; set; } = 5434;
+
+        [Description("Name of postgres database for recieving measurements.")]
+        [DataMember]
+        public string DatabaseName { get; set; } = "roadometry";
 
         [Description("Path for storage of movement-count logs and reports.")]
         [DataMember]
