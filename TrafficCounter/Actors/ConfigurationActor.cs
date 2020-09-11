@@ -79,7 +79,7 @@ namespace VTC.Actors
             );
 
             Receive<RegionConfigNameLookupMessage>(message =>
-                LookupRegionConfig(message.RegionConfigName, message.JobGuid)
+                LookupRegionConfig(message.RegionConfigName, message.JobId)
             );
 
             Receive<RequestConfigurationMessage>(message => 
@@ -227,13 +227,13 @@ namespace VTC.Actors
             Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
         }
 
-        private void LookupRegionConfig(string regionName, Guid jobGuid)
+        private void LookupRegionConfig(string regionName, int jobId)
         {
             foreach (var rc in _regionConfigs)
             {
                 if (string.Equals(rc.Title, regionName, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    var rlrm = new RegionConfigLookupResponseMessage(rc,jobGuid);
+                    var rlrm = new RegionConfigLookupResponseMessage(rc, jobId);
                     _sequencingActor.Tell(rlrm);
                     return;
                 }

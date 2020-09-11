@@ -80,7 +80,7 @@ namespace VTC.Actors
             );
 
             Receive<RegionConfigLookupResponseMessage>(message =>
-                AssociateJobWithConfiguration(message.Configuration, message.JobGuid)
+                AssociateJobWithConfiguration(message.Configuration, message.JobId)
             );
 
             Receive<LoadUserConfigMessage>(message => 
@@ -216,7 +216,10 @@ namespace VTC.Actors
 
         private void EnqueueVideoJobs(List<BatchVideoJob> newVideoJobs)
         {
-            _videoJobs.AddRange(newVideoJobs);
+            foreach (var videoJob in newVideoJobs)
+            {
+                _videoJobs.Add(videoJob);
+            }
         }
 
         private void ResetAndEnqueueVideos(List<BatchVideoJob> newVideoJobs)
@@ -286,12 +289,12 @@ namespace VTC.Actors
                         //to convert the ConfigurationName (String) into a RegionConfig object. 
 
                         var bvj = new BatchVideoJob();
-                        bvj.JobGuid = vprm.JobGuid;
+                        bvj.Id = vprm.JobId;
                         bvj.VideoPath = vprm.VideoFilePath;
                         bvj.GroundTruthPath = vprm.ManualCountsPath;
                         _automationRequestJobs.Add(vprm,bvj);
 
-                        var rcnlm = new RegionConfigNameLookupMessage(vprm.ConfigurationName,bvj.JobGuid);
+                        var rcnlm = new RegionConfigNameLookupMessage(vprm.ConfigurationName,bvj.Id);
                         _configActor.Tell(rcnlm);
                     }
                 }
@@ -301,13 +304,13 @@ namespace VTC.Actors
             }   
         }
 
-        private void AssociateJobWithConfiguration(RegionConfig config, Guid jobGuid)
+        private void AssociateJobWithConfiguration(RegionConfig config, int jobId)
         {
             bool eachHasConfiguration = true;
             Console.WriteLine("Got config:" + config.Title);
             foreach (var bvj in _automationRequestJobs.Values)
             {
-                if (bvj.JobGuid == jobGuid)
+                if (bvj.Id == jobId)
                 {
                     bvj.RegionConfiguration = config;
                     EnqueueVideoJobs(new List<BatchVideoJob> { bvj });
@@ -363,6 +366,6 @@ namespace VTC.Actors
         public string VideoFilePath = "";
         public string ConfigurationName = "";
         public string ManualCountsPath = "";
-        public Guid JobGuid;
+        public int JobId;
     }
 }

@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -518,7 +515,8 @@ namespace VTC
                 var videoPathsList = selectVideoFilesDialog.FileNames.ToList();
                 foreach (var job in videoPathsList.Select(p => new BatchVideoJob {VideoPath = p}))
                 {
-                    UserLog("Queuing batch video: " + Path.GetFileName(job.VideoPath));
+                    var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
+                    loggingActor?.Tell(new VideoJobsMessage(videoJobs));
                     videoJobs.Add(job);
                 }
 

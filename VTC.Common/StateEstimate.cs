@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using MathNet.Numerics.LinearAlgebra.Double;
+using Npgsql;
 
 namespace VTC.Common
 {
@@ -44,6 +44,8 @@ namespace VTC.Common
 
         public int TotalMissedDetections; //Total number of times this object has not been detected during its lifetime
         public int SuccessiveMissedDetections; //Successive number of times this object has not been detected since the last detection
+
+        public int MovementId;
 
         public Dictionary<int, int> ClassDetectionCounts = new Dictionary<int, int>();
 
@@ -223,13 +225,14 @@ namespace VTC.Common
             return -1;
         }
 
-        public void Save(SQLiteConnection dbConnection)
+        public void Save(NpgsqlConnection dbConnection)
         {
             try
             {
-                var command = dbConnection.CreateCommand();
-                command.CommandText = $"INSERT INTO stateestimate(movement,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES(NULL,{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})";
-                command.ExecuteNonQuery();
+                var cmd = new NpgsqlCommand(
+                    $"INSERT INTO stateestimate(movement_id,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES({MovementId},{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})",
+                    dbConnection);
+                cmd.ExecuteNonQuery();
             }
             catch (Exception e)
             {

@@ -8,13 +8,13 @@ namespace VTC.Messages
 {
     class RegionConfigNameLookupMessage
     {
-        public RegionConfigNameLookupMessage(string regionConfigName, Guid jobGuid)
+        public RegionConfigNameLookupMessage(string regionConfigName, int jobId)
         {
             RegionConfigName = regionConfigName;
-            JobGuid = jobGuid;
+            JobId = jobId;
         }
 
         public string RegionConfigName;
-        public Guid JobGuid;
+        public int JobId;
     }
 }

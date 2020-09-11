@@ -8,7 +8,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
-using System.Data.SQLite;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.ServiceProcess;
@@ -19,6 +18,7 @@ using Akka.Actor;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using NLog;
+using Npgsql;
 using SharpRaven;
 using SharpRaven.Data;
 using VTC.Classifier;
@@ -51,7 +51,7 @@ namespace VTC.Actors
         private DateTime _videoStartTime = DateTime.Now;
         private string _currentOutputFolder;
         private BatchVideoJob _currentJob;
-        private SQLiteConnection _dbConnection;
+        private NpgsqlConnection _dbConnection;
 
         private MultipleTrajectorySynthesizer mts;
 
@@ -193,7 +193,7 @@ namespace VTC.Actors
                 UpdateBatchJob(message.Job)
             );
 
-            OpenDatabaseConnection();
+            _dbConnection = DatabaseAccess.OpenConnection();
 
             Self.Tell(new LoadUserConfigMessage());
 
@@ -242,42 +242,25 @@ namespace VTC.Actors
             return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
         }
 
-        private void OpenDatabaseConnection()
-        {
-            //Check if database exists
-            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            const string filename = "VTC.sqlite3";
-            var filePath = Path.Combine(appDataFolder, "VTC", filename);
-            var cs = "PRAGMA foreign_keys = ON; URI=file:" + filePath;
-
-            var fileExists = File.Exists(filePath);
-
-            _dbConnection = new SQLiteConnection(cs);
-            _dbConnection.Open();
-
-            if (!fileExists)
-            {
-                CreateDatabase();
-            }
-
-            //TODO - Add database schema validation? - Alex
-        }
-
         private void CreateDatabase()
         {
             try
             {
-                var cmd = new SQLiteCommand(_dbConnection);
-                cmd.CommandText = "CREATE TABLE IF NOT EXISTS videofile (id INTEGER PRIMARY KEY, filepath TEXT)";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText = "CREATE TABLE IF NOT EXISTS job (id INTEGER PRIMARY KEY, videofile INTEGER, FOREIGN KEY(videofile) REFERENCES videofile(id))";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText =
-                    "CREATE TABLE IF NOT EXISTS movement (id INTEGER PRIMARY KEY, job INTEGER, approach TEXT, exit TEXT, movementtype TEXT, objecttype TEXT, synthetic BOOLEAN, FOREIGN KEY(job) REFERENCES job(id))";
-                cmd.ExecuteNonQuery();
-                cmd.CommandText =
-                    "CREATE TABLE IF NOT EXISTS stateestimate (id INTEGER PRIMARY KEY, movement INTEGER, x REAL, y REAL, vx REAL, vy REAL, red REAL, blue REAL, green REAL, size REAL, vsize REAL, pathlength REAL, FOREIGN KEY(movement) REFERENCES movement(id))";
-                cmd.ExecuteNonQuery();
+                var cmd_create_job_table = new NpgsqlCommand(
+                    "CREATE TABLE public.job (id INTEGER PRIMARY KEY, videopath TEXT, regionconfiguration TEXT, groundtruthpath TEXT, created_at TIMESTAMP)",
+                    _dbConnection);
+                cmd_create_job_table.ExecuteNonQuery();
+
+                var cmd_create_movement_table = new NpgsqlCommand(
+                    "CREATE TABLE public.movement (id INTEGER PRIMARY KEY, job INTEGER, approach TEXT, exit TEXT, movementtype TEXT, objecttype TEXT, synthetic BOOLEAN, FOREIGN KEY(job) REFERENCES job(id))",
+                    _dbConnection);
+                cmd_create_movement_table.ExecuteNonQuery();
+
+                var cmd_create_stateestimate_table = new NpgsqlCommand(
+                    "CREATE TABLE public.stateestimate (id INTEGER PRIMARY KEY, movement INTEGER, x REAL, y REAL, vx REAL, vy REAL, red REAL, blue REAL, green REAL, size REAL, vsize REAL, pathlength REAL, FOREIGN KEY(movement) REFERENCES movement(id))",
+                _dbConnection);
+                cmd_create_stateestimate_table.ExecuteNonQuery();
+
             }
             catch (Exception ex)
             {
@@ -290,21 +273,20 @@ namespace VTC.Actors
         {
             try
             {
-                if ((_dbConnection.State & ConnectionState.Open) != 0)
-                {
-                    _dbConnection.Close();
-                }
+                var cmd_drop_job_table = new NpgsqlCommand(
+                    "DROP TABLE job",
+                    _dbConnection);
+                cmd_drop_job_table.ExecuteNonQuery();
 
-                //Delete database
-                var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                const string filename = "VTC.sqlite3";
-                var filePath = Path.Combine(appDataFolder, "VTC", filename);
-                File.Delete(filePath);
+                var cmd_drop_movement_table = new NpgsqlCommand(
+                    "DROP TABLE movement",
+                    _dbConnection);
+                cmd_drop_movement_table.ExecuteNonQuery();
 
-                //Make a new one
-                var cs = "PRAGMA foreign_keys = ON; URI=file:" + filePath;
-                _dbConnection = new SQLiteConnection(cs);
-                _dbConnection.Open();
+                var cmd_drop_stateestimate_table = new NpgsqlCommand(
+                    "DROP TABLE stateestimate",
+                    _dbConnection);
+                cmd_drop_stateestimate_table.ExecuteNonQuery();
 
                 CreateDatabase();
             }
@@ -388,7 +370,7 @@ namespace VTC.Actors
             
             msg.ManualCountsPath = _currentJob.GroundTruthPath;
             msg.VideoFilePath = _currentJob.VideoPath;
-            msg.JobGuid = _currentJob.JobGuid;
+            msg.JobId = _currentJob.Id;
             msg.OutputFolderPath = _currentOutputFolder;
 
             _automationProcessingCompleteMessageQueue.Send(msg);
@@ -573,7 +555,7 @@ namespace VTC.Actors
                     if (movement == null) continue;
                     if (movement.Ignored) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
-                    var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), d.FirstDetectionFrame, false);
+                    var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), d.FirstDetectionFrame, false, _currentJob.Id);
                     IncrementTurnStatistics(editedMovement);
                     editedMovement.Save(_dbConnection);
 
@@ -1033,6 +1015,7 @@ namespace VTC.Actors
 
         void UpdateBatchJob(BatchVideoJob job)
         { 
+            job.Save(_dbConnection);
             _currentJob = job;    
         }
 
@@ -1043,7 +1026,7 @@ namespace VTC.Actors
             public string OutputFolderPath = "";
             public string ConfigurationName = "";
             public string ManualCountsPath = "";
-            public Guid JobGuid;
+            public int JobId;
         }
     }
 }

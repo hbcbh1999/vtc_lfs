@@ -9,13 +9,13 @@ namespace VTC.Messages
 {
     class RegionConfigLookupResponseMessage
     {
-        public RegionConfigLookupResponseMessage(RegionConfig config, Guid jobGuid)
+        public RegionConfigLookupResponseMessage(RegionConfig config, int jobId)
         {
             Configuration = config;
-            JobGuid = jobGuid;
+            JobId = jobId;
         }
 
-        public Guid JobGuid;
+        public int JobId;
         public RegionConfig Configuration;
     }
 }

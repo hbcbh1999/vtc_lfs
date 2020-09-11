@@ -7,7 +7,7 @@ using VTC.Common;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Data.SQLite;
+using Npgsql;
 
 namespace VTC.Common
 {
@@ -45,7 +45,11 @@ namespace VTC.Common
 
         [DataMember] public bool Ignored;
 
-        public Movement(string approach, string exit, Turn turn, ObjectType objectType, StateEstimateList stateEstimates, DateTime timeStamp, int frame, bool ignored)
+        [DataMember] public int JobId;
+
+        [DataMember] public int Id;
+
+        public Movement(string approach, string exit, Turn turn, ObjectType objectType, StateEstimateList stateEstimates, DateTime timeStamp, int frame, bool ignored, int job = 0)
         {
             Approach = approach;
             Exit = exit;
@@ -55,6 +59,7 @@ namespace VTC.Common
             Timestamp = timeStamp;
             FirstDetectionFrame = frame;
             Ignored = ignored;
+            JobId = job;
         }
 
         public Movement()
@@ -97,22 +102,25 @@ namespace VTC.Common
             return missRatio;
         }
 
-        public void Save(SQLiteConnection dbConnection)
+        public void Save(NpgsqlConnection dbConnection)
         {
             try
             {
-                var command = dbConnection.CreateCommand();
-                command.CommandText = $"INSERT INTO movement(job,approach,exit,movementtype,objecttype,synthetic) VALUES(NULL,'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}',0)";
-                command.ExecuteNonQuery();
+                var result = new NpgsqlCommand(
+                    $"INSERT INTO movement(job_id,approach,exit,movementtype,objecttype,synthetic) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}',false) RETURNING id",
+                    dbConnection).ExecuteScalar();
+                
+                Id = int.Parse(result.ToString());
 
                 foreach (var s in StateEstimates)
                 {
+                    s.MovementId = Id;
                     s.Save(dbConnection);
                 }
             }
             catch (Exception e)
             {
-                Debug.WriteLine("TrajectoryLogger.Save:" + e.Message);
+                Debug.WriteLine("Movement.Save:" + e.Message);
             }
         }
     }
