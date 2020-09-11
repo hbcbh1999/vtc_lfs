@@ -13,11 +13,11 @@ namespace VTC.Common
     {
         [Description("Postgres username.")]
         [DataMember]
-        public string Username { get; set; }
+        public string Username { get; set; } = "postgres";
 
         [Description("Postgres password.")]
         [DataMember]
-        public string Password { get; set; }
+        public string Password { get; set; } = "password";
 
         [Description("Path to logo image for display in GUI.")]
         [DataMember]
