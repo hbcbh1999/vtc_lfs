@@ -102,7 +102,7 @@ namespace VTC.Common
             try
             {
                 var command = dbConnection.CreateCommand();
-                command.CommandText = $"INSERT INTO movement(videoreport,approach,exit,movementtype,objecttype,synthetic) VALUES(NULL,'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}',0)";
+                command.CommandText = $"INSERT INTO movement(job,approach,exit,movementtype,objecttype,synthetic) VALUES(NULL,'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}',0)";
                 command.ExecuteNonQuery();
 
                 foreach (var s in StateEstimates)

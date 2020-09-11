@@ -31,7 +31,6 @@ namespace VTC
    public partial class TrafficCounter : Form
    {
         #region VideoDisplays
-        private VideoDisplay _mainDisplay;
         private VideoMux _videoMux;
         #endregion
 
@@ -435,9 +434,7 @@ namespace VTC
         #region Rendering
         private void CreateVideoWindows()
         {
-            _mainDisplay = new VideoDisplay("Main", new Point(25, 25));
             _videoMux = new VideoMux();
-            _videoMux.AddDisplay(_mainDisplay.ImageBox, _mainDisplay.LayerName);
             _videoMux.Show();
         }
 
@@ -445,7 +442,7 @@ namespace VTC
         {
             try
             {
-                _mainDisplay.Update(stateImage);   
+                _videoMux.UpdateImage(stateImage);
             }
             catch (Exception ex)
             {

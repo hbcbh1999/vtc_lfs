@@ -48,7 +48,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\bin\</OutputPath>
+    <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
@@ -78,9 +78,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Alturos.Yolo, Version=2.6.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Alturos.Yolo.2.6.4\lib\net461\Alturos.Yolo.dll</HintPath>
-    </Reference>
     <Reference Include="Emgu.CV.Bitmap, Version=4.4.0.4061, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
       <HintPath>..\packages\Emgu.CV.Bitmap.4.4.0.4061\lib\netstandard2.0\Emgu.CV.Bitmap.dll</HintPath>
     </Reference>
@@ -162,12 +159,8 @@
     <Compile Include="GPUDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImageAnalyzer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VTC.Common\VTC.Common.csproj">
-      <Project>{4c7016df-c1a1-485d-846c-22c7eabb4368}</Project>
-      <Name>VTC.Common</Name>
-    </ProjectReference>
+    <Compile Include="YoloWrapperNoGPU.cs" />
+    <Compile Include="YoloWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -175,6 +168,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="License-LGPL.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VTC.Common\VTC.Common.csproj">
+      <Project>{4c7016df-c1a1-485d-846c-22c7eabb4368}</Project>
+      <Name>VTC.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -187,26 +186,20 @@ mkdir "$(TargetDir)DetectionNetwork"
 cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-yolov3.cfg" "$(TargetDir)DetectionNetwork"
 cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-yolov3_final.weights" "$(TargetDir)DetectionNetwork"
 cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-obj.names" "$(TargetDir)DetectionNetwork"
+cp "$(SolutionDir)ThirdParty\DarknetV3\yolo_cpp_dll.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\DarknetV3\yolo_cpp_dll_no_gpu.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\Darknet\pthreadGC2.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\Darknet\pthreadVC2.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\CUDA9.1\deviceQuery.exe" $(TargetDir)
-cp "$(SolutionDir)ThirdParty\CUDA10.1\cudnn64_7.dll" $(TargetDir)\x64
-cp "$(SolutionDir)ThirdParty\CUDA10.2\cublas64_10.dll" $(TargetDir)\x64
-cp "$(SolutionDir)ThirdParty\CUDA10.2\cudart64_102.dll" $(TargetDir)\x64
-cp "$(SolutionDir)ThirdParty\CUDA10.2\curand64_10.dll" $(TargetDir)\x64
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cublas64_10.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cudart64_101.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\curand64_10.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cudnn64_7.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cublasLt64_10.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\OpenCV3.4.6\opencv_ffmpeg346_64.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\OpenCV3.4.6\opencv_world346.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\OpenCV3.4.6\opencv_world346d.dll" $(TargetDir)</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\Emgu.CV.runtime.windows.4.4.0.4061\build\Emgu.CV.runtime.windows.targets" Condition="Exists('..\packages\Emgu.CV.runtime.windows.4.4.0.4061\build\Emgu.CV.runtime.windows.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Emgu.CV.runtime.windows.4.4.0.4061\build\Emgu.CV.runtime.windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Emgu.CV.runtime.windows.4.4.0.4061\build\Emgu.CV.runtime.windows.targets'))" />
-    <Error Condition="!Exists('..\packages\Alturos.Yolo.2.6.4\build\net461\Alturos.Yolo.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Alturos.Yolo.2.6.4\build\net461\Alturos.Yolo.targets'))" />
-  </Target>
-  <Import Project="..\packages\Alturos.Yolo.2.6.4\build\net461\Alturos.Yolo.targets" Condition="Exists('..\packages\Alturos.Yolo.2.6.4\build\net461\Alturos.Yolo.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
