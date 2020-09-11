@@ -354,9 +354,8 @@ namespace VTC.Actors
                     PostCaptureSourceCompleteMSMQ();
                 }
             }
-            catch(Exception ex)
-            { 
-                Log(ex.Message, LogLevel.Error, "LoggingActor");    
+            catch(Exception ex) {
+            Log(ex.Message, LogLevel.Error, "LoggingActor");    
             }
             
             GenerateReport();   

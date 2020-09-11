@@ -112,9 +112,9 @@ namespace VTC.Classifier
                     }
                 }
 
-                //Detector = new YoloWrapper(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, selectedYoloNamesFilepath, 0, cpuMode);
-                var cfg = new Alturos.Yolo.YoloConfiguration(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, selectedYoloNamesFilepath);
-                Detector = new YoloWrapper(cfg);
+                Detector = new YoloWrapper(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, selectedYoloNamesFilepath, 0, cpuMode);
+                //var cfg = new Alturos.Yolo.YoloConfiguration(selectedYoloCfgFilepath, selectedYoloWeightsFilepath, selectedYoloNamesFilepath);
+                //Detector = new YoloWrapper(cfg);
 
                 //if (cpuMode)
                 //{
@@ -143,17 +143,13 @@ namespace VTC.Classifier
         public List<Measurement> DetectFrameYolo(Image<Bgr, byte> frame)
         {
             List<Measurement> measurements = new List<Measurement>();
-            var converter = new ImageConverter();
-
             IEnumerable<YoloItem> detectionArray = new List<YoloItem>(MaxObjects);
-
+            var converter = new ImageConverter();
+            var convertedBytes = (byte[]) converter.ConvertTo(frame.ToBitmap(), typeof(byte[]));
+            
             if(Detector != null)
             {
-                //IntPtr unmanagedPtr = Marshal.AllocHGlobal(frame.Bytes.Length);
-                //Marshal.Copy(frame.Bytes, 0, unmanagedPtr, frame.Bytes.Length);
-                //detectionArray = Detector.Detect(unmanagedPtr, frame.Bytes.Length);
-                Detector.Detect(frame.Bytes);
-                //Marshal.FreeHGlobal(unmanagedPtr);
+                detectionArray = Detector.Detect(convertedBytes);
             }
 
             for (int i = 0; i < detectionArray.Count(); i++)
