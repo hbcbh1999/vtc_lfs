@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using Akka.Actor;
 using NLog;
-using VTC.BatchProcessing;
 using VTC.CaptureSource;
 using VTC.Common;
 using VTC.Common.RegionConfig;
@@ -76,7 +75,7 @@ namespace VTC.Actors
             );
 
             Receive<CheckVideoProcessingRequestsIPCMessage>(message =>
-                CheckVideoProcessingRequestsIPC()
+                CheckForNewJobs()
             );
 
             Receive<RegionConfigLookupResponseMessage>(message =>
@@ -109,6 +108,10 @@ namespace VTC.Actors
             }
             
             DequeueVideo();
+        }
+
+        private void CheckForNewJobs()
+        {
         }
 
         private void DequeueVideo()
@@ -209,7 +212,7 @@ namespace VTC.Actors
         private void Heartbeat()
         {
             Context.Parent.Tell(new ActorHeartbeatMessage(Self));
-            CheckVideoProcessingRequestsIPC();
+            //TODO: Call function to check for new jobs here
             Context.System.Scheduler.ScheduleTellOnce(5000, Self, new ActorHeartbeatMessage(Self), Self);
             Self.Tell(new CheckVideoProcessingRequestsIPCMessage());
         }
@@ -227,81 +230,6 @@ namespace VTC.Actors
             _cameras.Clear();
             _videoJobs.AddRange(newVideoJobs);
             DequeueVideo();
-        }
-
-        private void CheckVideoProcessingRequestsIPC()
-        {
-            if (!IsMSMQInstalled())
-            {
-                return;
-            }
-
-            if (!VideoProcessingRequestQueueExists())
-            {
-                return;
-            }
-
-            GetVideoProcessingRequestsMSMQ();
-        }
-
-        private bool IsMSMQInstalled()
-        {
-            List<ServiceController> services = ServiceController.GetServices().ToList();
-            ServiceController msQue = services.Find(o => o.ServiceName == "MSMQ");
-            if (msQue?.Status == ServiceControllerStatus.Running)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool VideoProcessingRequestQueueExists()
-        {
-            return MessageQueue.Exists(@".\private$\VTCVideoProcessRequest");
-        }
-
-        private void GetVideoProcessingRequestsMSMQ()
-        {
-            if (_configActor == null)
-            {
-                return;
-            }
-
-            try
-            {
-                using (MessageQueue msmq = new MessageQueue(@".\private$\VTCVideoProcessRequest"))
-                {
-                    System.Messaging.Message[] messages = msmq.GetAllMessages();
-                    for (int i = 0; i < messages.Count(); i++)
-                    {
-                        var msg = msmq.Receive(new TimeSpan(0));
-                        if (msg == null) continue;
-                        msg.Formatter =
-                            new XmlMessageFormatter(new Type[1] { typeof(VideoProcessingRequestMessage) });
-                        
-                        var vprm = (VideoProcessingRequestMessage) msg.Body;
-                        //MessageBox.Show("Video processing request: " + vprm.VideoFilePath + ", " + vprm.ConfigurationName + ", " + vprm.ManualCountsPath);
-
-                        //_updateInfoUiDelegate?.Invoke("Video processing request: " + vprm.VideoFilePath + ", " + vprm.ConfigurationName + ", " + vprm.ManualCountsPath);
-
-                        //At this point we don't have the RegionConfig object associated with this file. We need
-                        //to convert the ConfigurationName (String) into a RegionConfig object. 
-
-                        var bvj = new BatchVideoJob();
-                        bvj.Id = vprm.JobId;
-                        bvj.VideoPath = vprm.VideoFilePath;
-                        bvj.GroundTruthPath = vprm.ManualCountsPath;
-                        _automationRequestJobs.Add(vprm,bvj);
-
-                        var rcnlm = new RegionConfigNameLookupMessage(vprm.ConfigurationName,bvj.Id);
-                        _configActor.Tell(rcnlm);
-                    }
-                }
-            }
-            catch (MessageQueueException e)
-            {
-            }   
         }
 
         private void AssociateJobWithConfiguration(RegionConfig config, int jobId)

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Akka.Actor;
 using NLog;
-using VTC.BatchProcessing;
 using VTC.CaptureSource;
 using VTC.Common.RegionConfig;
 using VTC.Kernel.Video;

@@ -12,14 +12,13 @@ using NLog;
 using VTC.CaptureSource;
 using VTC.Kernel.Video;
 using VTC.Common;
-using VTC.BatchProcessing;
 using Akka.Actor;
 using Akka.Configuration;
+using Sentry;
+using Sentry.Protocol;
 using VTC.Actors;
 using VTC.Messages;
 using VTC.UI;
-using SharpRaven;
-using SharpRaven.Data;
 using VTC.Classifier;
 using VTC.UserConfiguration;
 
@@ -49,9 +48,9 @@ namespace VTC
 
         private Logger _userLogger = LogManager.GetLogger("userlog"); // special logger for user messages
 
-        private UserConfig _userConfig = new UserConfig();
+        private const string _dsn = "https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715";
 
-        RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
+        private UserConfig _userConfig = new UserConfig();
 
         public delegate void UpdateInfoUIDelegate(string infoString);
         public delegate void UpdateStatsUIDelegate(string statString);
@@ -66,6 +65,8 @@ namespace VTC
        {           
             InitializeComponent();
 
+            SentrySdk.Init(_dsn);
+
             _isLicensed = isLicensed;
 
            LoadUserConfig();
@@ -75,18 +76,17 @@ namespace VTC
             if (_isLicensed)
             {
                 _userLogger.Log(LogLevel.Info, "License: Active");
-                var ev = new SentryEvent("Launch");
-                ev.Level = ErrorLevel.Info;
-                ev.Tags.Add("License", "Active");
-                ravenClient.Capture(ev);
+                var ev = new SentryEvent {Level = SentryLevel.Info};
+                ev.SetTag("License", "Active");
+                SentrySdk.CaptureEvent(ev);
             }
             else
             {
                 _userLogger.Log(LogLevel.Info, "License: Unactivated");
-                var ev = new SentryEvent("Launch");
-                ev.Level = ErrorLevel.Info;
-                ev.Tags.Add("License", "Unactivated");
-                ravenClient.Capture(ev);
+                var ev = new SentryEvent();
+                ev.Level = SentryLevel.Info;
+                ev.SetTag("License", "Unactivated");
+                SentrySdk.CaptureEvent(ev);
             }
 
             var gpuDetector = new GPUDetector();

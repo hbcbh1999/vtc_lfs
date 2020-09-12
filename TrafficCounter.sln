@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC.db", "VTC.db\VTC.db.csproj", "{221F2F6B-13B9-4859-ACD6-3C104A22DA3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VTC Report Generator", "VTC Report Generator\VTC Report Generator.csproj", "{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -181,6 +183,18 @@ Global
 		{221F2F6B-13B9-4859-ACD6-3C104A22DA3D}.Release|x64.Build.0 = Release|Any CPU
 		{221F2F6B-13B9-4859-ACD6-3C104A22DA3D}.Release|x86.ActiveCfg = Release|Any CPU
 		{221F2F6B-13B9-4859-ACD6-3C104A22DA3D}.Release|x86.Build.0 = Release|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Debug|x64.Build.0 = Debug|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Debug|x86.Build.0 = Debug|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Release|x64.ActiveCfg = Release|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Release|x64.Build.0 = Release|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Release|x86.ActiveCfg = Release|Any CPU
+		{D5367C97-CA39-4EC4-AC61-631D60D3ECB7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

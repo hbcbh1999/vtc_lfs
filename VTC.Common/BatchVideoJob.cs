@@ -4,12 +4,12 @@ using System.Drawing;
 using Npgsql;
 using VTC.Common.RegionConfig;
 
-namespace VTC.BatchProcessing
+namespace VTC.Common
 {
     public class BatchVideoJob
     {
         public string VideoPath;
-        public RegionConfig RegionConfiguration;
+        public RegionConfig.RegionConfig RegionConfiguration;
         public string GroundTruthPath;
         public int Id;
 

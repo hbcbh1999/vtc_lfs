@@ -9,7 +9,6 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using Newtonsoft.Json;
 using NLog;
-using SharpRaven.Data;
 using VTC.Classifier;
 using VTC.Common;
 using VTC.Common.RegionConfig;

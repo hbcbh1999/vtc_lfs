@@ -27,22 +27,34 @@ namespace VTC.CaptureSource
             Console.WriteLine(s);
             var fpsString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video,0,"FrameRate");
             var rotationString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video,0,"Rotation");
-            var encodedDateString = mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video, 0, "Encoded_Date");
-            var trimmedEncodedDateString = encodedDateString.Substring(4);
+            var dateModified = File.GetLastWriteTimeUtc(_path);
+            var selectedFileDate = dateModified;
+            try
+            {
+                var encodedDateString =
+                    mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video, 0, "Encoded_Date");
+
+                if (encodedDateString.Length > 23)
+                {
+                    var trimmedEncodedDateString = encodedDateString.Substring(4);
+                    selectedFileDate = DateTime.ParseExact(trimmedEncodedDateString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
+                        DateTimeStyles.None);
+
+                    if (selectedFileDate < dateModified)
+                    {
+                        _startDate = selectedFileDate;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            _startDate = selectedFileDate;
 
             try
             {
-                _startDate = DateTime.ParseExact(trimmedEncodedDateString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
-                    DateTimeStyles.None);
-            }
-            catch (FormatException ex)
-            {
-                _startDate = DateTime.Now;
-            }
-            
-            try
-            {
-                _fps = Double.Parse(fpsString);
+                _fps = fpsString.Length > 0 ? Double.Parse(fpsString) : 24.0;
             }
             catch(FormatException ex)
             {
@@ -51,7 +63,7 @@ namespace VTC.CaptureSource
 
             try
             {
-                _rotation = Double.Parse(rotationString);
+                _rotation = rotationString.Length > 0 ? Double.Parse(rotationString) : 0.0;
             }
             catch (FormatException ex)
             {

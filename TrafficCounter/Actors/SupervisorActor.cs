@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Akka;
 using Akka.Actor;
 using NLog;
-using SharpRaven.Data;
 using VTC.Common;
 using VTC.Kernel.Video;
 using VTC.Messages;

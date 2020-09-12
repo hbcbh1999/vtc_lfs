@@ -178,8 +178,14 @@
     <Reference Include="NvAPIWrapper, Version=0.8.0.98, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
       <HintPath>..\packages\NvAPIWrapper.Net.0.8.0.98\lib\net45\NvAPIWrapper.dll</HintPath>
     </Reference>
-    <Reference Include="SharpRaven, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpRaven.2.4.0\lib\net45\SharpRaven.dll</HintPath>
+    <Reference Include="Sentry, Version=2.1.6.0, Culture=neutral, PublicKeyToken=fba2ec45388e2af0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sentry.2.1.6\lib\net461\Sentry.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.PlatformAbstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=fba2ec45388e2af0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sentry.PlatformAbstractions.1.1.1\lib\net471\Sentry.PlatformAbstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.Protocol, Version=2.1.6.0, Culture=neutral, PublicKeyToken=fba2ec45388e2af0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sentry.Protocol.2.1.6\lib\net46\Sentry.Protocol.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -281,7 +287,6 @@
     <Compile Include="Actors\ProcessingActor.cs" />
     <Compile Include="Actors\SequencingActor.cs" />
     <Compile Include="Actors\SupervisorActor.cs" />
-    <Compile Include="BatchProcessing\BatchVideoJob.cs" />
     <Compile Include="CaptureSource\SystemCamera.cs" />
     <Compile Include="CaptureSource\VideoFileCapture.cs" />
     <Compile Include="CaptureSource\CaptureSource.cs" />

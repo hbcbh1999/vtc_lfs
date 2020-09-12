@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VTC.BatchProcessing;
+using VTC.Common;
 
 namespace VTC.Messages
 {

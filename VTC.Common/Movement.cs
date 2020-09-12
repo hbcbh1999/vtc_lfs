@@ -82,8 +82,7 @@ namespace VTC.Common
                 return false;
 
             var other = (Movement) obj;
-            return other.Approach == Approach && other.Exit == Exit && other.TrafficObjectType == TrafficObjectType &&
-                   other.TurnType == TurnType;
+            return other.Approach == Approach && other.Exit == Exit;
         }
 
         public override int GetHashCode()

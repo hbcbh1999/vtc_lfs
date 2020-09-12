@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -19,15 +20,14 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using NLog;
 using Npgsql;
-using SharpRaven;
-using SharpRaven.Data;
+using Sentry;
+using Sentry.Protocol;
 using VTC.Classifier;
 using VTC.Common;
 using VTC.Common.RegionConfig;
 using VTC.Kernel;
 using VTC.Messages;
 using VTC.Remote;
-using VTC.BatchProcessing;
 using VTC.db;
 using VTC.Reporting;
 using VTC.UserConfiguration;
@@ -70,8 +70,6 @@ namespace VTC.Actors
         private TrafficCounter.UpdateDebugDelegate _updateDebugDelegate;
 
         private YoloIntegerNameMapping _yoloNameMapping = new YoloIntegerNameMapping();
-
-        RavenClient ravenClient = new RavenClient("https://5cdde3c580914972844fda3e965812ae@sentry.io/1248715");
 
         private VTC.Common.UserConfig _userConfig = new UserConfig();
 
@@ -310,7 +308,8 @@ namespace VTC.Actors
             Logger.Log(level, actorName + ":" + text);
             if (level == LogLevel.Error)
             {
-                ravenClient.Capture(new SentryEvent(text));
+                var ev = new SentryEvent {Level = SentryLevel.Error, Message = actorName + ": " + text};
+                SentrySdk.CaptureEvent(ev);
             }
         }
 
@@ -322,48 +321,16 @@ namespace VTC.Actors
 
         private void OnCaptureSourceComplete()
         {
-            try
-            {
-                if (IsMSMQInstalled())
-                {
-                    PostCaptureSourceCompleteMSMQ();
-                }
-            }
-            catch(Exception ex) {
-            Log(ex.Message, LogLevel.Error, "LoggingActor");    
-            }
-            
             GenerateReport();   
-        }
-
-        private bool IsMSMQInstalled()
-        {
-            List<ServiceController> services = ServiceController.GetServices().ToList();
-            ServiceController msQue = services.Find(o => o.ServiceName == "MSMQ");
-            if (msQue?.Status == ServiceControllerStatus.Running)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private void PostCaptureSourceCompleteMSMQ()
-        {
-            var msg = new VideoProcessingCompleteNotificationMessage();
-            
-            msg.ManualCountsPath = _currentJob.GroundTruthPath;
-            msg.VideoFilePath = _currentJob.VideoPath;
-            msg.JobId = _currentJob.Id;
-            msg.OutputFolderPath = _currentOutputFolder;
-
-            _automationProcessingCompleteMessageQueue.Send(msg);
         }
 
         private void GenerateReport()
         {
             try
             {
+                var movements = DatabaseManager.GetMovementsByJob(_dbConnection, _currentJob.Id);
+                
+
                 var folderPath = _currentOutputFolder;
                 GenerateRegionsLegendImage(folderPath);
 
@@ -375,22 +342,14 @@ namespace VTC.Actors
                 }
 
                 SummaryReportGenerator.CopyAssetsToExportFolder(folderPath);
-                foreach(var type in Enum.GetValues(typeof(ObjectType)).Cast<ObjectType>())
-                {
-                    if(type != ObjectType.Unknown)
-                    {
-                        SummaryReportGenerator.GenerateSummaryReportHTML(folderPath, _currentVideoName, tnow, type.ToString().ToLower());
-                    }
-                }
 
-                SummaryReportGenerator.GenerateAllVehiclesSummaryReportHTML(folderPath, _currentVideoName, tnow);
+                SummaryReportGenerator.GenerateSummaryReportHtml(folderPath, _currentVideoName, tnow, movements);
 
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
 
-                var ev = new SentryEvent("Report generated");
-                 ev.Level = ErrorLevel.Info;
-                 ev.Tags.Add("Path", folderPath);
-                 ravenClient.Capture(ev);
+                var ev = new SentryEvent {Level = SentryLevel.Error, Message = "Report generated"};
+                ev.SetTag("Path", folderPath);
+                SentrySdk.CaptureEvent(ev);
             }
             catch (NullReferenceException e)
             {
@@ -456,12 +415,11 @@ namespace VTC.Actors
             _currentVideoName = message.CaptureSource.Name;
             CreateOrReplaceOutputFolderIfExists();
 
-            var ev = new SentryEvent("New video source");
-            ev.Level = ErrorLevel.Info;
-            ev.Tags.Add("Name", message.CaptureSource.Name);
-            ravenClient.Capture(ev);
-            _videoStartTime = message.CaptureSource.StartDateTime();
+            var ev = new SentryEvent { Level = SentryLevel.Info, Message = "New video source" };
+            ev.SetTag("Name", message.CaptureSource.Name);
+            SentrySdk.CaptureEvent(ev);
 
+            _videoStartTime = message.CaptureSource.StartDateTime();
             _liveMode = message.CaptureSource.IsLiveCapture();
             _fps = message.CaptureSource.FPS();
         }

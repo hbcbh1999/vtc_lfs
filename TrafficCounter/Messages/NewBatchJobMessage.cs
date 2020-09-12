@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Akka;
 using Akka.Actor;
-using VTC.BatchProcessing;
+using VTC.Common;
 
 namespace VTC.Messages
 {

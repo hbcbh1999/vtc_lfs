@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 using Npgsql;
 using VTC.Common;
 
@@ -93,6 +94,18 @@ namespace VTC.db
                 "DELETE FROM public.job",
                 connection);
             cmdDropJobTable.ExecuteNonQuery();
+        }
+
+        public static List<Movement> GetMovementsByJob(NpgsqlConnection connection, int jobId)
+        {
+            var movements = connection.Query<Movement>($"Select * FROM movement WHERE job_id = {jobId}").ToList();
+            return movements;
+        }
+
+        public static List<BatchVideoJob> GetAllJobs(NpgsqlConnection connection)
+        {
+            var jobs = connection.Query<BatchVideoJob>("Select * FROM job").ToList();
+            return jobs;
         }
     }
 }

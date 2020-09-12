@@ -167,6 +167,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BatchVideoJob.cs" />
     <Compile Include="CommonFunctions.cs" />
     <Compile Include="DetectionClasses.cs" />
     <Compile Include="ObjectType.cs" />
