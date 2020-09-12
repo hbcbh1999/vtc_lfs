@@ -12,13 +12,14 @@ namespace VTC.Reporting
     using System.Linq;
     using System.Text;
     using System.Collections.Generic;
+    using VTC.Common;
     using System;
     
     /// <summary>
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+    #line 1 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.html"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
     public partial class SummaryReportTemplate : SummaryReportTemplateBase
     {
@@ -28,57 +29,77 @@ namespace VTC.Reporting
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\n<!DOCTYPE html>\r\n<html>\r\n<head>\r\n<title>Summary Report</title>\r\n\r\n<script src=\"" +
-                    "https://code.jquery.com/jquery-2.2.4.min.js\" ></script>\r\n<link rel=\"icon\" href=\"" +
-                    "./ReportAssets/favicon.ico\">\r\n<link href=\"https://maxcdn.bootstrapcdn.com/bootst" +
-                    "rap/3.3.6/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-1q8mTJOASx8j" +
-                    "1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\">\r\n" +
-                    "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" +
-                    "\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9a" +
-                    "J7xS\" crossorigin=\"anonymous\"></script>\r\n<script src=\"ReportAssets/jquery.sparkl" +
-                    "ine.min.js\" type=\"text/javascript\"></script>\r\n<script src=\"./ReportAssets/report" +
-                    ".js\"></script>\r\n<meta charset=\"UTF-8\">\r\n<title>TMC</title>\r\n<link rel=\"styleshee" +
-                    "t\" href=\"ReportAssets/report.css\" type=\"text/css\">\r\n<link href=\'https://fonts.go" +
-                    "ogleapis.com/css?family=Roboto:400,100,100italic,300,400italic,300italic,500,500" +
-                    "italic,700,700italic,900,900italic|Lato:400,100,100italic,300,300italic,400itali" +
-                    "c,700,700italic,900,900italic|Roboto+Condensed:400,300,300italic,400italic,700,7" +
-                    "00italic|Source+Sans+Pro:400,200,200italic,300,300italic,400italic,600,600italic" +
-                    ",700,700italic,900,900italic|Montserrat:400,700|Fjalla+One\' rel=\'stylesheet\' typ" +
-                    "e=\'text/css\'>\r\n<link href=\'https://fonts.googleapis.com/css?family=Inconsolata:4" +
-                    "00,700|Roboto+Mono:400,100,100italic,300,300italic,400italic,500,500italic,700,7" +
-                    "00italic|Source+Code+Pro:400,200,300,500,700,600,900|Droid+Sans+Mono\' rel=\'style" +
-                    "sheet\' type=\'text/css\'>\r\n<link href=\'https://fonts.googleapis.com/css?family=Ope" +
-                    "n+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800italic,800\' re" +
-                    "l=\'stylesheet\' type=\'text/css\'>\r\n\r\n</head>\r\n\r\n<div class=\"container\" id=\"main\">\r" +
-                    "\n\r\n<div id=\"docheader\">\r\n  <h4>Turn Movement Count </h4>\r\n  <h4><span class=\"lig" +
-                    "ht\">Location: </span>");
+            this.Write("\r\n<!DOCTYPE html>\r\n<html>\r\n<head>\r\n<title>Summary Report</title>\r\n\r\n<link rel=\"ic" +
+                    "on\" href=\"./ReportAssets/favicon.ico\">\r\n<link rel=\"stylesheet\" href=\"https://sta" +
+                    "ckpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" integrity=\"sha384" +
+                    "-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z\" crossorigin=\"" +
+                    "anonymous\">\r\n<script src=\"https://code.jquery.com/jquery-3.5.1.slim.min.js\" inte" +
+                    "grity=\"sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj\" " +
+                    "crossorigin=\"anonymous\"></script>\r\n<script src=\"https://cdn.jsdelivr.net/npm/pop" +
+                    "per.js@1.16.1/dist/umd/popper.min.js\" integrity=\"sha384-9/reFTGAW83EW2RDu2S0VKaI" +
+                    "zap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN\" crossorigin=\"anonymous\"></script>\r\n<sc" +
+                    "ript src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" +
+                    "\" integrity=\"sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMM" +
+                    "V+rV\" crossorigin=\"anonymous\"></script>\r\n<script src=\"./ReportAssets/report.js\">" +
+                    "</script>\r\n<meta charset=\"UTF-8\">\r\n<title>TMC</title>\r\n<link rel=\"stylesheet\" hr" +
+                    "ef=\"ReportAssets/report.css\" type=\"text/css\">\r\n<link href=\'https://fonts.googlea" +
+                    "pis.com/css?family=Roboto:400,100,100italic,300,400italic,300italic,500,500itali" +
+                    "c,700,700italic,900,900italic|Lato:400,100,100italic,300,300italic,400italic,700" +
+                    ",700italic,900,900italic|Roboto+Condensed:400,300,300italic,400italic,700,700ita" +
+                    "lic|Source+Sans+Pro:400,200,200italic,300,300italic,400italic,600,600italic,700," +
+                    "700italic,900,900italic|Montserrat:400,700|Fjalla+One\' rel=\'stylesheet\' type=\'te" +
+                    "xt/css\'>\r\n<link href=\'https://fonts.googleapis.com/css?family=Inconsolata:400,70" +
+                    "0|Roboto+Mono:400,100,100italic,300,300italic,400italic,500,500italic,700,700ita" +
+                    "lic|Source+Code+Pro:400,200,300,500,700,600,900|Droid+Sans+Mono\' rel=\'stylesheet" +
+                    "\' type=\'text/css\'>\r\n<link href=\'https://fonts.googleapis.com/css?family=Open+San" +
+                    "s:400,300,300italic,400italic,600,600italic,700,700italic,800italic,800\' rel=\'st" +
+                    "ylesheet\' type=\'text/css\'>\r\n\r\n</head>\r\n<body>\r\n\r\n<div class=\"container\" id=\"main" +
+                    "\">\r\n\r\n    <div id=\"docheader\" class=\"row\">\r\n        <div class=\"col\">\r\n         " +
+                    "   <h4>Turn Movement Count </h4>\r\n            <h4><span class=\"light\">Location: " +
+                    "</span>");
             
-            #line 32 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 35 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.html"
             this.Write(this.ToStringHelper.ToStringWithCulture(Location));
             
             #line default
             #line hidden
-            this.Write("</h4>\r\n  <h4><span class=\"light\">Date: </span>");
+            this.Write("</h4>\r\n            <h4><span class=\"light\">Date: </span>");
             
-            #line 33 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 36 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.html"
             this.Write(this.ToStringHelper.ToStringWithCulture(VideoTime));
             
             #line default
             #line hidden
-            this.Write("</h4>\r\n</div>\r\n\r\n<div class=\"row text-center\">\r\n    <img id=\"legend\" src=\"./Regio" +
-                    "nsLegend.png\">\r\n  </div>\r\n\r\n</div>\r\n\r\n<footer>\r\n  <p>Counts generated by &nbsp; " +
-                    "<img id=\"logoicon\" src=\"./ReportAssets/favicon.ico\"> VTC on ");
+            this.Write("</h4>\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"row text-center\">\r\n        <" +
+                    "img id=\"legend\" src=\"./RegionsLegend.png\">\r\n    </div>\r\n    \r\n    <div class=\"ro" +
+                    "w\">\r\n        <div class=\"col\">\r\n            <h4><span class=\"light\">Total Vehicl" +
+                    "es: </span>");
             
-            #line 43 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 46 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.html"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Movements.Where(m => m.TrafficObjectType != ObjectType.Person).Count()));
+            
+            #line default
+            #line hidden
+            this.Write("</h4>\r\n            <h4><span class=\"light\">Total Pedestrians: </span>");
+            
+            #line 47 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.html"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Movements.Where(m => m.TrafficObjectType == ObjectType.Person).Count()));
+            
+            #line default
+            #line hidden
+            this.Write("</h4>\r\n        </div>\r\n    </div>\r\n\r\n</div>\r\n\r\n<footer>\r\n  <p>Counts generated by" +
+                    " &nbsp; <img id=\"logoicon\" src=\"./ReportAssets/favicon.ico\"> VTC on ");
+            
+            #line 54 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.html"
             this.Write(this.ToStringHelper.ToStringWithCulture(DateTime.Now));
             
             #line default
             #line hidden
-            this.Write("</p> \r\n</footer>\r\n\r\n<body>\r\n\r\n");
+            this.Write("</p> \r\n</footer>\r\n\r\n</body>\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 48 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+        #line 59 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.html"
 
 public List<VTC.Common.Movement> Movements;
 public string Location = "";
