@@ -230,7 +230,7 @@ namespace VTC.Common
             try
             {
                 var cmd = new NpgsqlCommand(
-                    $"INSERT INTO stateestimate(movement_id,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES({MovementId},{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})",
+                    $"INSERT INTO public.stateestimate(movementid,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES({MovementId},{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})",
                     dbConnection);
                 cmd.ExecuteNonQuery();
             }

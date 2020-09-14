@@ -126,10 +126,10 @@
     </Compile>
     <Compile Include="Remote\RemoteServer.cs" />
     <Compile Include="SummaryReportGenerator.cs" />
-    <Compile Include="SummaryReportTemplate1.cs">
+    <Compile Include="SummaryReportTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>SummaryReportTemplate.html</DependentUpon>
+      <DependentUpon>SummaryReportTemplate.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -156,9 +156,9 @@
     <Content Include="ReportAssets\report.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SummaryReportTemplate.html">
+    <Content Include="SummaryReportTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>SummaryReportTemplate1.cs</LastGenOutput>
+      <LastGenOutput>SummaryReportTemplate.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

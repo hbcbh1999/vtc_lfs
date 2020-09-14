@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -50,8 +51,9 @@ namespace VTC.Reporting
             try
             {
                 var reportPath = Path.Combine(exportPath, "Report.html");
-                var summaryReport = new SummaryReportTemplate {Movements = movements, Location = location, VideoTime = videoTime}.TransformText();
-                File.WriteAllText(reportPath, summaryReport); //Save 
+                var approachNames = GetAllUniqueApproachNames(movements);
+                var summaryReport = new SummaryReportTemplate {Movements = movements, Location = location, VideoTime = videoTime, ApproachNames = approachNames }.TransformText();
+                File.WriteAllText(reportPath, summaryReport); //Save
             }
             catch (IOException e)
             {

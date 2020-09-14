@@ -11,6 +11,7 @@ namespace VTC.Common
         public string VideoPath;
         public RegionConfig.RegionConfig RegionConfiguration;
         public string GroundTruthPath;
+        public DateTime Timestamp;
         public int Id;
 
         public void Save(NpgsqlConnection dbConnection)
@@ -18,7 +19,7 @@ namespace VTC.Common
             try
             {
                 var result = new NpgsqlCommand(
-                    $"INSERT INTO job(videopath,regionconfiguration,groundtruthpath,created_at) VALUES('{VideoPath}','{RegionConfiguration.Title}','{GroundTruthPath}','{DateTime.Now}') RETURNING id",
+                    $"INSERT INTO public.job(videopath,regionconfigurationname,groundtruthpath,timestamp) VALUES('{VideoPath}','{RegionConfiguration.Title}','{GroundTruthPath}','{DateTime.Now}') RETURNING id",
                     dbConnection).ExecuteScalar();
                 Id = int.Parse(result.ToString());
             }

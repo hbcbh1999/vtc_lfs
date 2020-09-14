@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -42,36 +44,60 @@ namespace VTC.db
 
         public static void CreateJobTable(NpgsqlConnection connection)
         {
-            var cmd = new NpgsqlCommand(Resource1.CreateJobTableSQL, connection);
-            cmd.ExecuteNonQuery();
+            try
+            {
+                var cmd = new NpgsqlCommand(Resource1.CreateJobTableSQL, connection);
+                cmd.ExecuteNonQuery();
+            }
+            catch (PostgresException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            
         }
 
         public static void CreateMovementTable(NpgsqlConnection connection)
         {
-            var cmd = new NpgsqlCommand(Resource1.CreateMovementTableSQL, connection);
-            cmd.ExecuteNonQuery();
+            try
+            {
+                var cmd = new NpgsqlCommand(Resource1.CreateMovementTableSQL, connection);
+                cmd.ExecuteNonQuery();
+            }
+            catch (PostgresException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
         }
 
         public static void CreateStateEstimateTable(NpgsqlConnection connection)
         {
-            var cmd = new NpgsqlCommand(Resource1.CreateStateEstimateTableSQL, connection);
-            cmd.ExecuteNonQuery();
+            try
+            {
+                var cmd = new NpgsqlCommand(Resource1.CreateStateEstimateTableSQL, connection);
+                cmd.ExecuteNonQuery();
+            }
+            catch (PostgresException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
         }
 
         public static void ResetDatabase(NpgsqlConnection connection)
         {
             var cmdDropStateEstimateTable = new NpgsqlCommand(
-                "DROP TABLE public.stateestimate",
+                "DROP TABLE IF EXISTS public.stateestimate",
                 connection);
             cmdDropStateEstimateTable.ExecuteNonQuery();
 
             var cmdDropMovementTable = new NpgsqlCommand(
-                "DROP TABLE public.movement",
+                "DROP TABLE IF EXISTS public.movement",
                 connection);
             cmdDropMovementTable.ExecuteNonQuery();
 
             var cmdDropJobTable = new NpgsqlCommand(
-                "DROP TABLE public.job",
+                "DROP TABLE IF EXISTS public.job",
                 connection);
             cmdDropJobTable.ExecuteNonQuery();
 
@@ -98,7 +124,7 @@ namespace VTC.db
 
         public static List<Movement> GetMovementsByJob(NpgsqlConnection connection, int jobId)
         {
-            var movements = connection.Query<Movement>($"Select * FROM movement WHERE job_id = {jobId}").ToList();
+            var movements = connection.Query<Movement>($"Select * FROM movement WHERE jobid = {jobId}").ToList();
             return movements;
         }
 

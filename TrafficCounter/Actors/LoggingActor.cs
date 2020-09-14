@@ -251,33 +251,6 @@ namespace VTC.Actors
             return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
         }
 
-        private void CreateDatabase()
-        {
-            try
-            {
-                var cmd_create_job_table = new NpgsqlCommand(
-                    "CREATE TABLE public.job (id INTEGER PRIMARY KEY, videopath TEXT, regionconfiguration TEXT, groundtruthpath TEXT, created_at TIMESTAMP)",
-                    _dbConnection);
-                cmd_create_job_table.ExecuteNonQuery();
-
-                var cmd_create_movement_table = new NpgsqlCommand(
-                    "CREATE TABLE public.movement (id INTEGER PRIMARY KEY, job INTEGER, approach TEXT, exit TEXT, movementtype TEXT, objecttype TEXT, synthetic BOOLEAN, FOREIGN KEY(job) REFERENCES job(id))",
-                    _dbConnection);
-                cmd_create_movement_table.ExecuteNonQuery();
-
-                var cmd_create_stateestimate_table = new NpgsqlCommand(
-                    "CREATE TABLE public.stateestimate (id INTEGER PRIMARY KEY, movement INTEGER, x REAL, y REAL, vx REAL, vy REAL, red REAL, blue REAL, green REAL, size REAL, vsize REAL, pathlength REAL, FOREIGN KEY(movement) REFERENCES movement(id))",
-                _dbConnection);
-                cmd_create_stateestimate_table.ExecuteNonQuery();
-
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(LogLevel.Error,"LoggingActor.CreateDatabase: " + ex.Message);
-            }
-
-        }
-
         private void CreateOrReplaceOutputFolderIfExists()
         {
             //Create output folder
@@ -497,7 +470,7 @@ namespace VTC.Actors
                     if (movement == null) continue;
                     if (movement.Ignored) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
-                    var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), d.FirstDetectionFrame, false, _currentJob.Id);
+                    var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), false, _currentJob.Id);
                     IncrementTurnStatistics(editedMovement);
                     editedMovement.Save(_dbConnection);
 

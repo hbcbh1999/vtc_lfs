@@ -263,7 +263,7 @@ namespace VTC.Kernel
                 stateEstimates[0].Vx = stateEstimates[1].Vx;
                 stateEstimates[0].Vy = stateEstimates[1].Vy;
 
-                var m = new Movement(path.Approach, path.Exit, path.TurnType, ObjectType.Car, stateEstimates, DateTime.Now, 0,  path.Ignored);
+                var m = new Movement(path.Approach, path.Exit, path.TurnType, ObjectType.Car, stateEstimates, DateTime.Now, path.Ignored);
                 examplePaths.Add(m);
             }
 
@@ -305,7 +305,7 @@ namespace VTC.Kernel
                     roadline.ExitCentroidY = exitVertex.Y;
 
                     var trackedObject = PolygonTrajectorySynthesizer.SyntheticTrajectory(approachVertex, exitVertex, roadline);
-                    var movement = new Movement(approach.DisplayName, exit.DisplayName, turnType, objectType, trackedObject.StateHistory, DateTime.Now, 0, false);
+                    var movement = new Movement(approach.DisplayName, exit.DisplayName, turnType, objectType, trackedObject.StateHistory, DateTime.Now, false);
                     movements.Add(movement);
                 }
             }
@@ -363,7 +363,7 @@ namespace VTC.Kernel
                         foreach(var exitRoadline in exitRoadlines)
                         { 
                             var trackedObject = PolygonTrajectorySynthesizer.SyntheticTrajectory(approachVertex, exitVertex, approachRoadline, exitRoadline);
-                            var movement = new Movement(approachA.DisplayName, exitB.DisplayName, turnType, objectType, trackedObject.StateHistory, DateTime.Now, 0, false);
+                            var movement = new Movement(approachA.DisplayName, exitB.DisplayName, turnType, objectType, trackedObject.StateHistory, DateTime.Now,false);
                             movements.Add(movement);
                         }
                     }

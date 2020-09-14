@@ -47,9 +47,11 @@ namespace VTC.Common
 
         [DataMember] public int JobId;
 
+        [DataMember] public bool Synthetic;
+
         [DataMember] public int Id;
 
-        public Movement(string approach, string exit, Turn turn, ObjectType objectType, StateEstimateList stateEstimates, DateTime timeStamp, int frame, bool ignored, int job = 0)
+        public Movement(string approach, string exit, Turn turn, ObjectType objectType, StateEstimateList stateEstimates, DateTime timeStamp, bool ignored, int job = 0)
         {
             Approach = approach;
             Exit = exit;
@@ -57,7 +59,6 @@ namespace VTC.Common
             TrafficObjectType = objectType;
             StateEstimates = stateEstimates;
             Timestamp = timeStamp;
-            FirstDetectionFrame = frame;
             Ignored = ignored;
             JobId = job;
         }
@@ -106,7 +107,7 @@ namespace VTC.Common
             try
             {
                 var result = new NpgsqlCommand(
-                    $"INSERT INTO movement(job_id,approach,exit,movementtype,objecttype,synthetic) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}',false) RETURNING id",
+                    $"INSERT INTO public.movement(jobid,approach,exit,turntype,trafficobjecttype,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}',{Synthetic},{Ignored}) RETURNING id",
                     dbConnection).ExecuteScalar();
                 
                 Id = int.Parse(result.ToString());
