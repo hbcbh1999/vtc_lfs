@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -51,7 +52,7 @@ namespace VTC.Kernel
         /// list is assumed to be complete.</param>
         /// <param name="ct">Token for breaking out of execution</param>
         /// <param name="timestep">Time (in seconds) since previous set of measurements/detections.</param>
-        public void Update(Measurement[] detections, CancellationToken ct, double timestep)
+        public void Update(Measurement[] detections, double timestep)
         {
             int numDetections = detections.Length;
 
@@ -68,13 +69,10 @@ namespace VTC.Kernel
             List<Node<StateHypothesis>> childNodeList = _hypothesisTree.GetLeafNodes();
             foreach (Node<StateHypothesis> childNode in childNodeList) //For each lowest-level hypothesis node
             {
-                if (ct.IsCancellationRequested)
-                    break;
-
                 // Update child node
                 if (numDetections > 0)
                 {
-                    GenerateChildNodes(detections, childNode, ct, timestep);
+                    GenerateChildNodes(detections, childNode, timestep);
                 }
                 else
                 {
@@ -112,6 +110,7 @@ namespace VTC.Kernel
             }
 
             VelocityField.TryInsertVelocitiesAsync(pointVelocityDic);
+
             UpdateTrajectoriesList();
 
             _numProcessedFrames++;
@@ -142,7 +141,8 @@ namespace VTC.Kernel
         /// list is assumed to be complete.</param>
         /// <param name="hypothesisNode">The node to build the new hypotheses from</param>
         /// <param name="ct">Token for breaking out of execution</param>
-        private void GenerateChildNodes(Measurement[] detections, Node<StateHypothesis> hypothesisNode, CancellationToken ct, double timestep)
+        /// <param name="timestep">Time-difference in seconds between this and previous frame.</param>
+        private void GenerateChildNodes(Measurement[] detections, Node<StateHypothesis> hypothesisNode, double timestep)
         {
             //Allocate matrix one column for each existing vehicle plus one column for new vehicles and one for false positives, one row for each object detection event
             int numExistingTargets = hypothesisNode.NodeData.Vehicles.Count;
@@ -150,11 +150,13 @@ namespace VTC.Kernel
 
             //Got detections
             DenseMatrix falseAssignmentMatrix = DenseMatrix.Create(numDetections, numDetections, (x, y) => double.MinValue);
-            double[] falseAssignmentDiagonal = Enumerable.Repeat(Math.Log10(_regionConfig.LambdaF), numDetections).ToArray();
+            double falseAssignmentCost = Math.Log10(_regionConfig.LambdaF);
+            double[] falseAssignmentDiagonal = Enumerable.Repeat(falseAssignmentCost, numDetections).ToArray();
             falseAssignmentMatrix.SetDiagonal(falseAssignmentDiagonal); //Represents a false positive
 
             DenseMatrix newTargetMatrix = DenseMatrix.Create(numDetections, numDetections, (x, y) => double.MinValue);
-            double[] newTargetDiagonal = Enumerable.Repeat(Math.Log10(_regionConfig.LambdaN), numDetections).ToArray();
+            double newTargetCost = Math.Log10(_regionConfig.LambdaN);
+            double[] newTargetDiagonal = Enumerable.Repeat(newTargetCost, numDetections).ToArray();
             newTargetMatrix.SetDiagonal(newTargetDiagonal); //Represents a new object to track
 
             StateEstimate[] targetStateEstimates = hypothesisNode.NodeData.GetStateEstimates();
@@ -173,7 +175,7 @@ namespace VTC.Kernel
                 newTargetMatrix
                 );
 
-            GenerateChildHypotheses(detections, numDetections, hypothesisNode, numExistingTargets, hypothesisExpanded, ct, timestep);
+            GenerateChildHypotheses(detections, numDetections, hypothesisNode, numExistingTargets, hypothesisExpanded, timestep);
         }
 
         /// <summary>
@@ -184,8 +186,8 @@ namespace VTC.Kernel
         /// <param name="hypothesisParent">Hypothesis node to add child hypotheses to</param>
         /// <param name="numExistingTargets">Number of currently detected targets</param>
         /// <param name="hypothesisExpanded">Hypothesis matrix</param>
-        /// <param name="ct">Token for breaking out of execution</param>
-        private void GenerateChildHypotheses(Measurement[] coords, int numDetections, Node<StateHypothesis> hypothesisParent, int numExistingTargets, DenseMatrix hypothesisExpanded, CancellationToken ct, Double timestep)
+        /// <param name="timestep">Time difference in seconds between this and previous frame.</param>
+        private void GenerateChildHypotheses(Measurement[] coords, int numDetections, Node<StateHypothesis> hypothesisParent, int numExistingTargets, DenseMatrix hypothesisExpanded, Double timestep)
         {
             //Calculate K-best assignment using Murty's algorithm
             double[,] costs = hypothesisExpanded.ToArray();
@@ -193,15 +195,12 @@ namespace VTC.Kernel
                 for (int j = 0; j < costs.GetLength(1); j++)
                     costs[i, j] = -costs[i, j];
 
-            List<int[]> kBest = OptAssign.FindKBestAssignments(costs, _regionConfig.KHypotheses, ct);
+            List<int[]> kBest = OptAssign.FindKBestAssignments(costs, _regionConfig.KHypotheses);
             int numTargetsCreated = 0;
 
             //Generate child hypotheses from k-best assignments
             for (int i = 0; i < kBest.Count; i++)
             {
-                if (ct.IsCancellationRequested)
-                    break;
-
                 int[] assignment = kBest[i];
                 StateHypothesis childHypothesis = new StateHypothesis(_regionConfig.MissThreshold);
                 hypothesisParent.AddChild(childHypothesis);
@@ -371,7 +370,9 @@ namespace VTC.Kernel
                     double mahalanobisDistance = Math.Sqrt(mahalanobis[0, 0]);
 
                     if (mahalanobisDistance > ValidationRegionDeviation)
+                    {
                         ambiguityMatrix[j, i + 1] = Double.MinValue;
+                    }
                     else
                     {
                         ambiguityMatrix[j, i + 1] = Math.Log10(_regionConfig.Pd * norm.Density(mahalanobisDistance) / (1 - _regionConfig.Pd));

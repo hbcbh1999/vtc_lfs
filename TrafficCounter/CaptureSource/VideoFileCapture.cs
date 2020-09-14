@@ -34,7 +34,7 @@ namespace VTC.CaptureSource
                 var encodedDateString =
                     mi.Get(MediaInfo.DotNetWrapper.Enumerations.StreamKind.Video, 0, "Encoded_Date");
 
-                if (encodedDateString.Length > 23)
+                if (encodedDateString.Length >= 23)
                 {
                     var trimmedEncodedDateString = encodedDateString.Substring(4);
                     selectedFileDate = DateTime.ParseExact(trimmedEncodedDateString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,

@@ -290,23 +290,23 @@ namespace VTC.Actors
         {
             if (_config == null)
             {
-                _loggingActor.Tell(new LogMessage("RegionConfig is null.", LogLevel.Error, "ProcessingActor"));
-                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+                _loggingActor?.Tell(new LogMessage("RegionConfig is null.", LogLevel.Error, "ProcessingActor"));
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
             }
             else if (_config.RoiMask == null)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is null.", LogLevel.Error, "ProcessingActor"));
-                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+                _loggingActor?.Tell(new LogMessage("ProcessingActor: ROI mask is null.", LogLevel.Error, "ProcessingActor"));
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
             }
             else if (_config.RoiMask.Count < 3)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask has " + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Error, "ProcessingActor"));
-                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+                _loggingActor?.Tell(new LogMessage("ProcessingActor: ROI mask has " + _config.RoiMask.Count + " vertices; 3 or more expected.", LogLevel.Error, "ProcessingActor"));
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
             }
             else if (!_config.RoiMask.PolygonClosed)
             {
-                _loggingActor.Tell(new LogMessage("ProcessingActor: ROI mask is not a closed polygon.", LogLevel.Error, "ProcessingActor"));
-                _configurationActor.Tell(new RequestConfigurationMessage(Self));
+                _loggingActor?.Tell(new LogMessage("ProcessingActor: ROI mask is not a closed polygon.", LogLevel.Error, "ProcessingActor"));
+                _configurationActor?.Tell(new RequestConfigurationMessage(Self));
             }
         }
 

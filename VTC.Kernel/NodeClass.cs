@@ -371,7 +371,7 @@ namespace VTC.Kernel
 
         public DenseMatrix R(double size)
         {
-            var measurementRadius = Math.Sqrt(size);
+            var measurementRadius = Math.Sqrt(Math.Abs(size)); // "Size" can occasionally become negative in a predicted value due to a negative VSize propagation.
             DenseMatrix matrixR = new DenseMatrix(6, 6)
             {
                 [0, 0] = _rPosition * measurementRadius,

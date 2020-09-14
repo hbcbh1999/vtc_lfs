@@ -142,28 +142,7 @@ namespace VTC.Kernel.Vistas
                 while (DiscardedMeasurementArrayQueue.Count > MeasurementArrayQueueMaxLength)
                     DiscardedMeasurementArrayQueue.Dequeue();
 
-                var cts = new CancellationTokenSource();
-                var ct = cts.Token;
-                var mhtTask = Task.Run(() => _mht.Update(MeasurementsArray, ct, timestep));
-                if (!_debugMode)
-                {
-                    if (mhtTask.Wait(TimeSpan.FromMilliseconds(MHTMaxUpdateTimeMs)))
-                    {
-                    }
-                    else
-                    {
-                        cts.Cancel();
-                        while (!mhtTask.IsCompleted)
-                        {
-                        }
-                    }
-                }
-                else
-                {
-                    while (!mhtTask.IsCompleted)
-                    {
-                    }
-                }
+                _mht.Update(MeasurementsArray, timestep);
 
                 GC.KeepAlive(newFrame);
             }

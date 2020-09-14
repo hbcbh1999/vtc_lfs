@@ -9,6 +9,9 @@ namespace VTC.Kernel
     // Version 1.3, released 22nd May 2010.
     public static class HungarianAlgorithm
     {
+
+        private const int IterationLimit = 1000;
+
         /// <summary>
         /// Finds the optimal assignments for a given matrix of agents and costed tasks such that the total cost is
         /// minimized.
@@ -111,7 +114,7 @@ namespace VTC.Kernel
             for (int i = 0; i < h; i++)
             for (int j = 0; j < w; j++)
             {
-                if (double.IsPositiveInfinity(costs[i, j]))
+                if (double.IsPositiveInfinity(costs[i, j]) || double.IsNaN(costs[i,j]))
                     costs[i, j] = double.MaxValue;
                 if (double.IsNegativeInfinity(costs[i, j]))
                     costs[i, j] = double.MinValue;
@@ -153,8 +156,15 @@ namespace VTC.Kernel
             var path = new Location[w * h];
             Location pathStart = default(Location);
             var step = 1;
+            var iter = 0;
             while (step != -1)
             {
+                iter++;
+                if (iter >= IterationLimit)
+                {
+                    break;
+                }
+
                 switch (step)
                 {
                     case 1:

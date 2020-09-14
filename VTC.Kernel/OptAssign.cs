@@ -19,30 +19,7 @@ namespace VTC.Kernel
 
     public class OptAssign
     {
-        //This class takes an expanded assignment cost matrix and returns the k-best assignments.
-        public static List<int[]> FindKBestAssignments(int[,] costs, int k)
-        {
-            int numTargets = costs.GetLength(0);
-            if (k > numTargets)
-                k = numTargets;
-
-            List<int[]> kBestAssignments = new List<int[]>();
-            for (int i = 0; i < k; i++)
-            {
-                int[] thisAssignment = BestAssignment(costs);
-                kBestAssignments.Add(thisAssignment);
-                if (k > (i + 1))
-                {
-                List<MurtyNode> partition = partition_assignment(thisAssignment);
-                MurtyNode bestNode = FindBestNode(costs, partition);
-                costs = adjusted_cost(costs, bestNode);
-                    }
-            }
-
-            return kBestAssignments;
-        }
-
-        public static List<int[]> FindKBestAssignments(double[,] costs, int k, CancellationToken ct)
+        public static List<int[]> FindKBestAssignments(double[,] costs, int k)
         {
             double[,] tempCosts = (double[,]) costs.Clone();
             int numTargets = tempCosts.GetLength(0);
@@ -52,9 +29,6 @@ namespace VTC.Kernel
             List<int[]> kBestAssignments = new List<int[]>();
             for (int i = 0; i < k; i++)
             {
-                if (ct.IsCancellationRequested)
-                    break;
-
                 int[] thisAssignment = BestAssignment(tempCosts);
                 kBestAssignments.Add(thisAssignment);
                 if (k > (i + 1))

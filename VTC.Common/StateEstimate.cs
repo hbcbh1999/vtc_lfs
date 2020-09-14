@@ -95,10 +95,10 @@ namespace VTC.Common
             updatedState.Y = zNext[2, 0];
             updatedState.Vx = zNext[1, 0];
             updatedState.Vy = zNext[3, 0];
-            updatedState.Red = zNext[4, 0];
-            updatedState.Green = zNext[5, 0];
-            updatedState.Blue = zNext[6, 0];
-            updatedState.Size = zNext[7, 0];
+            updatedState.Red = Math.Abs(zNext[4, 0]);
+            updatedState.Green = Math.Abs(zNext[5, 0]);
+            updatedState.Blue = Math.Abs(zNext[6, 0]);
+            updatedState.Size = Math.Abs(zNext[7, 0]);
             updatedState.VSize = zNext[8, 0];
 
             updatedState.CovX = pNext[0, 0];
