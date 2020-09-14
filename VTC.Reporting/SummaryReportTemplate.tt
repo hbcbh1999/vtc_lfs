@@ -31,42 +31,79 @@
 
     <div id="docheader" class="row">
         <div class="col">
-            <h4>Turn Movement Count </h4>
             <h4><span class="light">Location: </span><#= Location #></h4>
             <h4><span class="light">Date: </span><#= VideoTime #></h4>
         </div>
     </div>
 
     <div class="row text-center">
-        <img id="legend" src="./RegionsLegend.png">
-    </div>
-    
-    <div class="row">
         <div class="col">
-            <h2>Totals - by class</h2>
+            <img id="legend" src="./RegionsLegend.png">
         </div>
     </div>
 
-    <#  foreach (ObjectType t in Enum.GetValues(typeof(ObjectType))) { #>
     <div class="row">
         <div class="col">
-            <h4><span class="light">Total (<#= t.ToString() #>):</span><#= Movements.Where(m => m.TrafficObjectType == t).Count() #></h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <#  foreach (ObjectType t in Enum.GetValues(typeof(ObjectType))) { #>
+                        <th scope="col">
+                        <#= t.ToString() #>
+                        </th>
+                    <# } #>
+                    <th scope="col">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <#  foreach (ObjectType t in Enum.GetValues(typeof(ObjectType))) { #>
+                     <td>
+                        <#= Movements.Where(m => m.TrafficObjectType == t).Count() #>
+                     </td>
+                    <# } #>
+                    <td><#= Movements.Count() #></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-    <# } #>
     
-    <div class="row">
-        <div class="col">
-            <h2>Totals - by approach</h2>
+    <# foreach (string approach in ApproachNames) { #>
+
+        <div class="row mt-3">
+            <div class="col">
+                <h2><#= approach #></h2>
+            </div>
         </div>
-    </div>
     
-    <#  foreach (string approach in ApproachNames) { #>
-    <div class="row">
-        <div class="col">
-            <h4><span class="light">Total (<#= approach #>):</span><#= Movements.Where(m => m.Approach == approach).Count() #></h4>
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                    <tr>
+                    <th scope="col"></th>
+                    <#  foreach (string exit in ExitNames) { #>
+                        <th scope="col"><#= exit #></th>
+                    <# } #>
+                    <th scope="col">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <#  foreach (var bin in BinnedMovements15) { #>
+                    <tr>
+                        <th scope="row"><#= bin.Interval.StartTime #></th>
+                        <# foreach(string exit in ExitNames) { #>
+                            <td><#= bin.Where(m => m.Exit == exit && m.Approach == approach).Count() #></td>
+                        <# } #>
+                        <td><#= bin.Where(m => m.Approach == approach).Count() #></td>
+                    </tr>
+                    <# } #>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+
     <# } #>
 
 </div>
@@ -79,7 +116,9 @@
 
 <#+
 public List<VTC.Common.Movement> Movements;
+public List<VTC.Common.BinnedMovements> BinnedMovements15;
 public string Location = "";
 public DateTime VideoTime;
-public List<string> ApproachNames;
+public string[] ApproachNames;
+public string[] ExitNames;
 #>

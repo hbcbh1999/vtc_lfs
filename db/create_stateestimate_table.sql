@@ -5,23 +5,28 @@
 CREATE TABLE public.stateestimate
 (
     id bigint NOT NULL DEFAULT nextval('stateestimate_id_seq'::regclass),
-    movement_id bigint NOT NULL DEFAULT nextval('stateestimate_movement_id_seq'::regclass),
-    x real,
-    y real,
-    vx real,
-    vy real,
-    red real,
-    blue real,
-    green real,
-    size real,
-    vsize real,
-    pathlength real,
-    CONSTRAINT stateestimate_pkey PRIMARY KEY (id),
-    CONSTRAINT movement_fkey FOREIGN KEY (movement_id)
-        REFERENCES public.movement (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    x double precision,
+    y double precision,
+    covx double precision,
+    covy double precision,
+    vx double precision,
+    vy double precision,
+    covvx double precision[],
+    covvy double precision,
+    red double precision,
+    green double precision,
+    blue double precision,
+    covred double precision,
+    covgreen double precision,
+    covblue double precision,
+    size double precision,
+    covsize double precision,
+    vsize double precision,
+    pathlength double precision,
+    movementid bigint NOT NULL DEFAULT nextval('"stateestimate_MovementId_seq"'::regclass),
+    totalmisseddetections integer,
+    successivemisseddetections integer,
+    CONSTRAINT stateestimate_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;

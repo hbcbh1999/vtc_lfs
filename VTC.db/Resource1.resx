@@ -121,15 +121,98 @@
     <value>SELECT 1 FROM pg_database WHERE datname='roadometry'</value>
   </data>
   <data name="CreateDatabaseSQL" xml:space="preserve">
-    <value />
+    <value>-- Database: roadometry
+
+-- DROP DATABASE roadometry;
+
+CREATE DATABASE roadometry
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_United States.1252'
+    LC_CTYPE = 'English_United States.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;</value>
   </data>
   <data name="CreateJobTableSQL" xml:space="preserve">
-    <value />
+    <value>-- Table: public.job
+
+-- DROP TABLE public.job;
+
+CREATE TABLE public.job
+(
+    id integer NOT NULL DEFAULT nextval('job_id_seq'::regclass),
+    videopath text COLLATE pg_catalog."default",
+    groundtruthpath text COLLATE pg_catalog."default",
+    regionconfigurationname text COLLATE pg_catalog."default",
+    "timestamp" time with time zone,
+    CONSTRAINT job_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.job
+    OWNER to postgres;</value>
   </data>
   <data name="CreateMovementTableSQL" xml:space="preserve">
-    <value />
+    <value>-- Table: public.movement
+
+-- DROP TABLE public.movement;
+
+CREATE TABLE public.movement
+(
+    id bigint NOT NULL DEFAULT nextval('movement_id_seq'::regclass),
+    approach text COLLATE pg_catalog."default",
+    exit text COLLATE pg_catalog."default",
+    turntype text COLLATE pg_catalog."default",
+    trafficobjecttype text COLLATE pg_catalog."default",
+    "timestamp" timestamp with time zone,
+    ignored boolean,
+    synthetic boolean,
+    jobid integer NOT NULL DEFAULT nextval('"movement_JobId_seq"'::regclass),
+    CONSTRAINT movement_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.movement
+    OWNER to postgres;</value>
   </data>
   <data name="CreateStateEstimateTableSQL" xml:space="preserve">
-    <value />
+    <value>-- Table: public.stateestimate
+
+-- DROP TABLE public.stateestimate;
+
+CREATE TABLE public.stateestimate
+(
+    id bigint NOT NULL DEFAULT nextval('stateestimate_id_seq'::regclass),
+    x double precision,
+    y double precision,
+    covx double precision,
+    covy double precision,
+    vx double precision,
+    vy double precision,
+    covvx double precision[],
+    covvy double precision,
+    red double precision,
+    green double precision,
+    blue double precision,
+    covred double precision,
+    covgreen double precision,
+    covblue double precision,
+    size double precision,
+    covsize double precision,
+    vsize double precision,
+    pathlength double precision,
+    movementid bigint NOT NULL DEFAULT nextval('"stateestimate_MovementId_seq"'::regclass),
+    totalmisseddetections integer,
+    successivemisseddetections integer,
+    CONSTRAINT stateestimate_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.stateestimate
+    OWNER to postgres;</value>
   </data>
 </root>

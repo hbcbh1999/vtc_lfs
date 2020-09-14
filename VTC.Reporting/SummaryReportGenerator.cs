@@ -46,13 +46,29 @@ namespace VTC.Reporting
             return approachNames;
         }
 
+        public static List<string> GetAllUniqueExitNames(List<Movement> movements)
+        {
+            var names = new List<string>();
+            foreach (var m in movements)
+            {
+                if (!names.Contains(m.Exit))
+                {
+                    names.Add(m.Exit);
+                }
+            }
+
+            return names;
+        }
+
         public static void GenerateSummaryReportHtml(string exportPath, string location, DateTime videoTime, List<Movement> movements)
         {
             try
             {
                 var reportPath = Path.Combine(exportPath, "Report.html");
-                var approachNames = GetAllUniqueApproachNames(movements);
-                var summaryReport = new SummaryReportTemplate {Movements = movements, Location = location, VideoTime = videoTime, ApproachNames = approachNames }.TransformText();
+                var approachNames = GetAllUniqueApproachNames(movements).OrderByDescending(name => name).Reverse().ToArray();
+                var exitNames = GetAllUniqueExitNames(movements).OrderByDescending(name => name).Reverse().ToArray();
+                var binnedMovements15 = BinnedMovements.BinMovementsByTime(movements, 15);
+                var summaryReport = new SummaryReportTemplate {Movements = movements, Location = location, VideoTime = videoTime, ApproachNames = approachNames, BinnedMovements15 = binnedMovements15 , ExitNames = exitNames}.TransformText();
                 File.WriteAllText(reportPath, summaryReport); //Save
             }
             catch (IOException e)

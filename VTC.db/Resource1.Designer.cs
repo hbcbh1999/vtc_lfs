@@ -70,7 +70,18 @@ namespace VTC.db {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to -- Database: roadometry
+        ///
+        ///-- DROP DATABASE roadometry;
+        ///
+        ///CREATE DATABASE roadometry
+        ///    WITH 
+        ///    OWNER = postgres
+        ///    ENCODING = &apos;UTF8&apos;
+        ///    LC_COLLATE = &apos;English_United States.1252&apos;
+        ///    LC_CTYPE = &apos;English_United States.1252&apos;
+        ///    TABLESPACE = pg_default
+        ///    CONNECTION LIMIT = -1;.
         /// </summary>
         internal static string CreateDatabaseSQL {
             get {
@@ -79,7 +90,24 @@ namespace VTC.db {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to -- Table: public.job
+        ///
+        ///-- DROP TABLE public.job;
+        ///
+        ///CREATE TABLE public.job
+        ///(
+        ///    id integer NOT NULL DEFAULT nextval(&apos;job_id_seq&apos;::regclass),
+        ///    videopath text COLLATE pg_catalog.&quot;default&quot;,
+        ///    groundtruthpath text COLLATE pg_catalog.&quot;default&quot;,
+        ///    regionconfigurationname text COLLATE pg_catalog.&quot;default&quot;,
+        ///    &quot;timestamp&quot; time with time zone,
+        ///    CONSTRAINT job_pkey PRIMARY KEY (id)
+        ///)
+        ///
+        ///TABLESPACE pg_default;
+        ///
+        ///ALTER TABLE public.job
+        ///    OWNER to postgres;.
         /// </summary>
         internal static string CreateJobTableSQL {
             get {
@@ -88,7 +116,21 @@ namespace VTC.db {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to -- Table: public.movement
+        ///
+        ///-- DROP TABLE public.movement;
+        ///
+        ///CREATE TABLE public.movement
+        ///(
+        ///    id bigint NOT NULL DEFAULT nextval(&apos;movement_id_seq&apos;::regclass),
+        ///    approach text COLLATE pg_catalog.&quot;default&quot;,
+        ///    exit text COLLATE pg_catalog.&quot;default&quot;,
+        ///    turntype text COLLATE pg_catalog.&quot;default&quot;,
+        ///    trafficobjecttype text COLLATE pg_catalog.&quot;default&quot;,
+        ///    &quot;timestamp&quot; timestamp with time zone,
+        ///    ignored boolean,
+        ///    synthetic boolean,
+        ///    jobid integer NOT NULL DEFAULT nextval(&apos;&quot;movement_Jo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CreateMovementTableSQL {
             get {
@@ -97,7 +139,25 @@ namespace VTC.db {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to -- Table: public.stateestimate
+        ///
+        ///-- DROP TABLE public.stateestimate;
+        ///
+        ///CREATE TABLE public.stateestimate
+        ///(
+        ///    id bigint NOT NULL DEFAULT nextval(&apos;stateestimate_id_seq&apos;::regclass),
+        ///    x double precision,
+        ///    y double precision,
+        ///    covx double precision,
+        ///    covy double precision,
+        ///    vx double precision,
+        ///    vy double precision,
+        ///    covvx double precision[],
+        ///    covvy double precision,
+        ///    red double precision,
+        ///    green double precision,
+        ///    blue double precision,
+        ///    covred double precis [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string CreateStateEstimateTableSQL {
             get {

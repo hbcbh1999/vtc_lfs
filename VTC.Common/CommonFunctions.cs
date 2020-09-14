@@ -17,5 +17,12 @@ namespace VTC.Common
                 default: return input.First().ToString().ToUpper() + input.Substring(1);
             }
         }
+
+        //This function taken from user 'dtb' on StackOverflow
+        //https://stackoverflow.com/questions/7029353/how-can-i-round-up-the-time-to-the-nearest-x-minutes
+        private static DateTime RoundUp(DateTime dt, TimeSpan d)
+        {
+            return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
+        }
     }
 }

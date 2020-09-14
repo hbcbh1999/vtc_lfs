@@ -55,17 +55,16 @@ namespace VTC.Reporting
                     "s:400,300,300italic,400italic,600,600italic,700,700italic,800italic,800\' rel=\'st" +
                     "ylesheet\' type=\'text/css\'>\r\n\r\n</head>\r\n<body>\r\n\r\n<div class=\"container\" id=\"main" +
                     "\">\r\n\r\n    <div id=\"docheader\" class=\"row\">\r\n        <div class=\"col\">\r\n         " +
-                    "   <h4>Turn Movement Count </h4>\r\n            <h4><span class=\"light\">Location: " +
-                    "</span>");
+                    "   <h4><span class=\"light\">Location: </span>");
             
-            #line 35 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 34 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Location));
             
             #line default
             #line hidden
             this.Write("</h4>\r\n            <h4><span class=\"light\">Date: </span>");
             
-            #line 36 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 35 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(VideoTime));
             
             #line default
@@ -75,70 +74,168 @@ namespace VTC.Reporting
     </div>
 
     <div class=""row text-center"">
-        <img id=""legend"" src=""./RegionsLegend.png"">
-    </div>
-    
-    <div class=""row"">
         <div class=""col"">
-            <h2>Totals - by class</h2>
+            <img id=""legend"" src=""./RegionsLegend.png"">
         </div>
     </div>
 
-    ");
+    <div class=""row"">
+        <div class=""col"">
+            <table class=""table"">
+                <thead>
+                <tr>
+                    ");
             
             #line 50 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
   foreach (ObjectType t in Enum.GetValues(typeof(ObjectType))) { 
             
             #line default
             #line hidden
-            this.Write("    <div class=\"row\">\r\n        <div class=\"col\">\r\n            <h4><span class=\"li" +
-                    "ght\">Total (");
+            this.Write("                        <th scope=\"col\">\r\n                        ");
             
-            #line 53 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 52 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(t.ToString()));
             
             #line default
             #line hidden
-            this.Write("):</span>");
+            this.Write("\r\n                        </th>\r\n                    ");
             
-            #line 53 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Movements.Where(m => m.TrafficObjectType == t).Count()));
-            
-            #line default
-            #line hidden
-            this.Write("</h4>\r\n        </div>\r\n    </div>\r\n    ");
-            
-            #line 56 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 54 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("    \r\n    <div class=\"row\">\r\n        <div class=\"col\">\r\n            <h2>Totals - " +
-                    "by approach</h2>\r\n        </div>\r\n    </div>\r\n    \r\n    ");
+            this.Write("                    <th scope=\"col\">Total</th>\r\n                </tr>\r\n          " +
+                    "      </thead>\r\n                <tbody>\r\n                <tr>\r\n                 " +
+                    "   ");
             
-            #line 64 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-  foreach (string approach in ApproachNames) { 
+            #line 60 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+  foreach (ObjectType t in Enum.GetValues(typeof(ObjectType))) { 
             
             #line default
             #line hidden
-            this.Write("    <div class=\"row\">\r\n        <div class=\"col\">\r\n            <h4><span class=\"li" +
-                    "ght\">Total (");
+            this.Write("                     <td>\r\n                        ");
             
-            #line 67 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 62 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Movements.Where(m => m.TrafficObjectType == t).Count()));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n                     </td>\r\n                    ");
+            
+            #line 64 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("                    <td>");
+            
+            #line 65 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Movements.Count()));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n   " +
+                    "     </div>\r\n    </div>\r\n    \r\n    ");
+            
+            #line 72 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+ foreach (string approach in ApproachNames) { 
+            
+            #line default
+            #line hidden
+            this.Write("\r\n        <div class=\"row mt-3\">\r\n            <div class=\"col\">\r\n                " +
+                    "<h2>");
+            
+            #line 76 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(approach));
             
             #line default
             #line hidden
-            this.Write("):</span>");
+            this.Write(@"</h2>
+            </div>
+        </div>
+    
+        <div class=""row"">
+            <div class=""col"">
+                <table class=""table"">
+                    <thead>
+                    <tr>
+                    <th scope=""col""></th>
+                    ");
             
-            #line 67 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Movements.Where(m => m.Approach == approach).Count()));
+            #line 86 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+  foreach (string exit in ExitNames) { 
             
             #line default
             #line hidden
-            this.Write("</h4>\r\n        </div>\r\n    </div>\r\n    ");
+            this.Write("                        <th scope=\"col\">");
             
-            #line 70 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 87 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(exit));
+            
+            #line default
+            #line hidden
+            this.Write("</th>\r\n                    ");
+            
+            #line 88 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("                    <th scope=\"col\">Total</th>\r\n                    </tr>\r\n      " +
+                    "              </thead>\r\n                    <tbody>\r\n                    ");
+            
+            #line 93 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+  foreach (var bin in BinnedMovements15) { 
+            
+            #line default
+            #line hidden
+            this.Write("                    <tr>\r\n                        <th scope=\"row\">");
+            
+            #line 95 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(bin.Interval.StartTime));
+            
+            #line default
+            #line hidden
+            this.Write("</th>\r\n                        ");
+            
+            #line 96 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+ foreach(string exit in ExitNames) { 
+            
+            #line default
+            #line hidden
+            this.Write("                            <td>");
+            
+            #line 97 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(bin.Where(m => m.Exit == exit && m.Approach == approach).Count()));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n                        ");
+            
+            #line 98 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("                        <td>");
+            
+            #line 99 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(bin.Where(m => m.Approach == approach).Count()));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n                    </tr>\r\n                    ");
+            
+            #line 101 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("                    </tbody>\r\n                </table>\r\n            </div>\r\n     " +
+                    "   </div>\r\n\r\n    ");
+            
+            #line 107 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
  } 
             
             #line default
@@ -146,7 +243,7 @@ namespace VTC.Reporting
             this.Write("\r\n</div>\r\n\r\n<footer>\r\n  <p>Counts generated by &nbsp; <img id=\"logoicon\" src=\"./R" +
                     "eportAssets/favicon.ico\"> VTC on ");
             
-            #line 75 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 112 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DateTime.Now));
             
             #line default
@@ -155,12 +252,14 @@ namespace VTC.Reporting
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 80 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+        #line 117 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
 
 public List<VTC.Common.Movement> Movements;
+public List<VTC.Common.BinnedMovements> BinnedMovements15;
 public string Location = "";
 public DateTime VideoTime;
-public List<string> ApproachNames;
+public string[] ApproachNames;
+public string[] ExitNames;
 
         
         #line default

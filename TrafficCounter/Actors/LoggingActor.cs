@@ -75,20 +75,10 @@ namespace VTC.Actors
 
         private List<Movement> MovementTransmitBuffer = new List<Movement>();
 
-        private MessageQueue _automationProcessingCompleteMessageQueue;
 
         public LoggingActor()
         {
             InitializeEventConfig();
-
-            try
-            {
-                _automationProcessingCompleteMessageQueue = new MessageQueue(@".\private$\vtcvideoprocesscompletenotification");
-                _automationProcessingCompleteMessageQueue.Formatter = new XmlMessageFormatter(new Type[] { typeof(VideoProcessingCompleteNotificationMessage) });
-            }
-            catch (MessageQueueException ex)
-            {
-            }
 
             mts = new MultipleTrajectorySynthesizer();
 
@@ -242,13 +232,6 @@ namespace VTC.Actors
         {
             Log("New file creation time " + dt, LogLevel.Info, "LoggingActor");
             _videoStartTime = dt;
-        }
-
-        //This function taken from user 'dtb' on StackOverflow
-        //https://stackoverflow.com/questions/7029353/how-can-i-round-up-the-time-to-the-nearest-x-minutes
-        private DateTime RoundUp(DateTime dt, TimeSpan d)
-        {
-            return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
         }
 
         private void CreateOrReplaceOutputFolderIfExists()

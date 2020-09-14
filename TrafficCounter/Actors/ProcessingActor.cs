@@ -20,8 +20,6 @@ namespace VTC.Actors
 {
     class ProcessingActor: ReceiveActor
     {
-        private const int BROADCAST_BACKGROUND_TIMER_MS = 60000;
-
         private Vista _vista;
 
         public delegate void UpdateUIDelegate(TrafficCounterUIUpdateInfo updateInfo);
@@ -31,7 +29,6 @@ namespace VTC.Actors
 
         private IActorRef _loggingActor;
         private IActorRef _configurationActor;
-        private IActorRef _sequencingActor;
 
         private UInt64 _processedFramesThisBin;
         private DateTime _processedFramesStartTime = DateTime.Now;
@@ -42,8 +39,6 @@ namespace VTC.Actors
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
 
         private double _fps;
-
-        private VTC.Common.UserConfig _userConfig = new UserConfig();
 
         public ProcessingActor()
         {
@@ -141,35 +136,44 @@ namespace VTC.Actors
 
         private void NewFrameHandler(Image<Bgr, byte> frame, double timestep)
         {
-            _mostRecentFrame = frame.Clone();
-            _vista?.Update(frame,timestep);
-            _processedFramesThisBin++;
-            _processedFramesTotal++;
-
-            if (!_gotFirstFrame)
+            try
             {
-                _gotFirstFrame = true;
-                _processedFramesStartTime = DateTime.Now;
-                Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromMilliseconds(1), Self, new RequestBackgroundFrameMessage(), Self);
-            }
+                _mostRecentFrame = frame.Clone();
+                _vista?.Update(frame, timestep);
+                _processedFramesThisBin++;
+                _processedFramesTotal++;
 
-            if (_vista != null)
-            {
-                var stateImage = _vista.GetCurrentStateImage(frame);
-                var tui = new TrafficCounterUIUpdateInfo();
-                tui.Frame = frame;
-                tui.Fps = _fps;
-                tui.Measurements = _vista.MeasurementsArray;
-                tui.StateImage = stateImage;
-                tui.StateEstimates = _vista.CurrentVehicles.Select(v => v.StateHistory.Last()).ToArray();
-                _updateUiDelegate?.Invoke(tui); 
-                stateImage.Dispose();
-                _loggingActor?.Tell(new FrameCountMessage(_processedFramesTotal));
-                // Now update child class specific stats
-                var args = new TrackingEvents.TrajectoryListEventArgs { TrackedObjects = _vista.DeletedVehicles };
-                _loggingActor?.Tell(new TrackingEventMessage(args));
+                if (!_gotFirstFrame)
+                {
+                    _gotFirstFrame = true;
+                    _processedFramesStartTime = DateTime.Now;
+                    Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromMilliseconds(1), Self,
+                        new RequestBackgroundFrameMessage(), Self);
+                }
+
+                if (_vista != null)
+                {
+                    var stateImage = _vista.GetCurrentStateImage(frame);
+                    var tui = new TrafficCounterUIUpdateInfo();
+                    tui.Frame = frame;
+                    tui.Fps = _fps;
+                    tui.Measurements = _vista.MeasurementsArray;
+                    tui.StateImage = stateImage;
+                    tui.StateEstimates = _vista.CurrentVehicles.Select(v => v.StateHistory.Last()).ToArray();
+                    _updateUiDelegate?.Invoke(tui);
+                    stateImage.Dispose();
+                    _loggingActor?.Tell(new FrameCountMessage(_processedFramesTotal));
+                    // Now update child class specific stats
+                    var args = new TrackingEvents.TrajectoryListEventArgs {TrackedObjects = _vista.DeletedVehicles};
+                    _loggingActor?.Tell(new TrackingEventMessage(args));
+                }
+
+                frame.Dispose();
             }
-            frame.Dispose();
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
+            }
         }
 
         private void UpdateVideoDimensionsHandler(UpdateVideoDimensionsMessage message)
@@ -203,13 +207,21 @@ namespace VTC.Actors
 
         private void CalculateFramerate()
         {
-            var currentTime = DateTime.Now;
-            var sampleTime = currentTime - _processedFramesStartTime;
-            var fps = _processedFramesThisBin / sampleTime.TotalSeconds;
-            _processedFramesStartTime = DateTime.Now;
-            _processedFramesThisBin = 0;
-            _fps = fps;
-            _loggingActor.Tell(new LogMessage($"FPS: {_fps}", LogLevel.Debug, "ProcessingActor"));
+            try
+            {
+                var currentTime = DateTime.Now;
+                var sampleTime = currentTime - _processedFramesStartTime;
+                var fps = _processedFramesThisBin / sampleTime.TotalSeconds;
+                _processedFramesStartTime = DateTime.Now;
+                _processedFramesThisBin = 0;
+                _fps = fps;
+                _loggingActor.Tell(new LogMessage($"FPS: {_fps}", LogLevel.Debug, "ProcessingActor"));
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
+            }
+            
         }
 
         private void UpdateConfig(RegionConfig config)
@@ -272,8 +284,6 @@ namespace VTC.Actors
         private void SendInitializedNotifications()
         {
             _loggingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug, "ProcessingActor"));
-            _sequencingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug, "ProcessingActor"));
-            _sequencingActor?.Tell(new LogMessage("ProcessingActor initialized.", LogLevel.Debug, "ProcessingActor"));
         }
 
         private void CheckConfiguration()

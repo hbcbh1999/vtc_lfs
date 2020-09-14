@@ -107,7 +107,7 @@ namespace VTC.Common
             try
             {
                 var result = new NpgsqlCommand(
-                    $"INSERT INTO public.movement(jobid,approach,exit,turntype,trafficobjecttype,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}',{Synthetic},{Ignored}) RETURNING id",
+                    $"INSERT INTO public.movement(jobid,approach,exit,turntype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp}',{Synthetic},{Ignored}) RETURNING id",
                     dbConnection).ExecuteScalar();
                 
                 Id = int.Parse(result.ToString());

@@ -5,18 +5,15 @@
 CREATE TABLE public.movement
 (
     id bigint NOT NULL DEFAULT nextval('movement_id_seq'::regclass),
-    job_id integer NOT NULL DEFAULT nextval('movement_job_id_seq'::regclass),
     approach text COLLATE pg_catalog."default",
     exit text COLLATE pg_catalog."default",
-    movementtype text COLLATE pg_catalog."default",
-    objecttype text COLLATE pg_catalog."default",
+    turntype text COLLATE pg_catalog."default",
+    trafficobjecttype text COLLATE pg_catalog."default",
+    "timestamp" timestamp with time zone,
+    ignored boolean,
     synthetic boolean,
-    CONSTRAINT movement_pkey PRIMARY KEY (id),
-    CONSTRAINT job_fkey FOREIGN KEY (job_id)
-        REFERENCES public.job (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    jobid integer NOT NULL DEFAULT nextval('"movement_JobId_seq"'::regclass),
+    CONSTRAINT movement_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;
