@@ -19,9 +19,9 @@ namespace VTC.Reporting
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+    #line 1 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class SummaryReportTemplate : SummaryReportTemplateBase
+    public partial class CSVReportTemplate : CSVReportTemplateBase
     {
 #line hidden
         /// <summary>
@@ -29,237 +29,118 @@ namespace VTC.Reporting
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\n<!DOCTYPE html>\r\n<html>\r\n<head>\r\n<title>Summary Report</title>\r\n\r\n<link rel=\"ic" +
-                    "on\" href=\"./ReportAssets/favicon.ico\">\r\n<link rel=\"stylesheet\" href=\"https://sta" +
-                    "ckpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" integrity=\"sha384" +
-                    "-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z\" crossorigin=\"" +
-                    "anonymous\">\r\n<script src=\"https://code.jquery.com/jquery-3.5.1.slim.min.js\" inte" +
-                    "grity=\"sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj\" " +
-                    "crossorigin=\"anonymous\"></script>\r\n<script src=\"https://cdn.jsdelivr.net/npm/pop" +
-                    "per.js@1.16.1/dist/umd/popper.min.js\" integrity=\"sha384-9/reFTGAW83EW2RDu2S0VKaI" +
-                    "zap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN\" crossorigin=\"anonymous\"></script>\r\n<sc" +
-                    "ript src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" +
-                    "\" integrity=\"sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMM" +
-                    "V+rV\" crossorigin=\"anonymous\"></script>\r\n<script src=\"./ReportAssets/report.js\">" +
-                    "</script>\r\n<meta charset=\"UTF-8\">\r\n<title>TMC</title>\r\n<link rel=\"stylesheet\" hr" +
-                    "ef=\"ReportAssets/report.css\" type=\"text/css\">\r\n<link href=\'https://fonts.googlea" +
-                    "pis.com/css?family=Roboto:400,100,100italic,300,400italic,300italic,500,500itali" +
-                    "c,700,700italic,900,900italic|Lato:400,100,100italic,300,300italic,400italic,700" +
-                    ",700italic,900,900italic|Roboto+Condensed:400,300,300italic,400italic,700,700ita" +
-                    "lic|Source+Sans+Pro:400,200,200italic,300,300italic,400italic,600,600italic,700," +
-                    "700italic,900,900italic|Montserrat:400,700|Fjalla+One\' rel=\'stylesheet\' type=\'te" +
-                    "xt/css\'>\r\n<link href=\'https://fonts.googleapis.com/css?family=Inconsolata:400,70" +
-                    "0|Roboto+Mono:400,100,100italic,300,300italic,400italic,500,500italic,700,700ita" +
-                    "lic|Source+Code+Pro:400,200,300,500,700,600,900|Droid+Sans+Mono\' rel=\'stylesheet" +
-                    "\' type=\'text/css\'>\r\n<link href=\'https://fonts.googleapis.com/css?family=Open+San" +
-                    "s:400,300,300italic,400italic,600,600italic,700,700italic,800italic,800\' rel=\'st" +
-                    "ylesheet\' type=\'text/css\'>\r\n\r\n</head>\r\n<body>\r\n\r\n<div class=\"container\" id=\"main" +
-                    "\">\r\n\r\n    <div id=\"docheader\" class=\"row\">\r\n        <div class=\"col\">\r\n         " +
-                    "   <h4><span class=\"light\">Location: </span>");
+            this.Write("Timestamp,");
             
-            #line 34 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Location));
+            #line 8 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+ for(int i=0; i < ApproachExitPairs.Count(); i++) { 
             
             #line default
             #line hidden
-            this.Write("</h4>\r\n            <h4><span class=\"light\">Date: </span>");
             
-            #line 35 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(VideoTime));
-            
-            #line default
-            #line hidden
-            this.Write(@"</h4>
-        </div>
-    </div>
-
-    <div class=""row text-center"">
-        <div class=""col"">
-            <img id=""legend"" src=""./RegionsLegend.png"">
-        </div>
-    </div>
-
-    <div class=""row"">
-        <div class=""col"">
-            <table class=""table"">
-                <thead>
-                <tr>
-                    ");
-            
-            #line 50 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-  foreach (ObjectType t in Enum.GetValues(typeof(ObjectType))) { 
+            #line 8 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ApproachExitPairs[i].Approach));
             
             #line default
             #line hidden
-            this.Write("                        <th scope=\"col\">\r\n                        ");
+            this.Write(" to ");
             
-            #line 52 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(t.ToString()));
+            #line 8 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ApproachExitPairs[i].Exit));
             
             #line default
             #line hidden
-            this.Write("\r\n                        </th>\r\n                    ");
             
-            #line 54 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 8 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+ if (i < ApproachExitPairs.Count() - 1) { 
+            
+            #line default
+            #line hidden
+            this.Write(",");
+            
+            #line 8 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("                    <th scope=\"col\">Total</th>\r\n                </tr>\r\n          " +
-                    "      </thead>\r\n                <tbody>\r\n                <tr>\r\n                 " +
-                    "   ");
             
-            #line 60 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-  foreach (ObjectType t in Enum.GetValues(typeof(ObjectType))) { 
-            
-            #line default
-            #line hidden
-            this.Write("                     <td>\r\n                        ");
-            
-            #line 62 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Movements.Where(m => m.TrafficObjectType == t).Count()));
-            
-            #line default
-            #line hidden
-            this.Write("\r\n                     </td>\r\n                    ");
-            
-            #line 64 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 8 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("                    <td>");
             
-            #line 65 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Movements.Count()));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n   " +
-                    "     </div>\r\n    </div>\r\n    \r\n    ");
-            
-            #line 72 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
- foreach (string approach in ApproachNames) { 
+            #line 9 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+ WriteLine(""); 
             
             #line default
             #line hidden
-            this.Write("\r\n        <div class=\"row mt-5\">\r\n            <div class=\"col\">\r\n                " +
-                    "<h2>");
             
-            #line 76 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(approach));
-            
-            #line default
-            #line hidden
-            this.Write(@"</h2>
-            </div>
-        </div>
-    
-        <div class=""row mb-5"">
-            <div class=""col"">
-                <table class=""table"">
-                    <thead>
-                    <tr>
-                    <th scope=""col""></th>
-                    ");
-            
-            #line 86 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-  foreach (string exit in ExitNames) { 
-            
-            #line default
-            #line hidden
-            this.Write("                        <th scope=\"col\">");
-            
-            #line 87 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(exit));
-            
-            #line default
-            #line hidden
-            this.Write("</th>\r\n                    ");
-            
-            #line 88 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
- } 
-            
-            #line default
-            #line hidden
-            this.Write("                    <th scope=\"col\">Total</th>\r\n                    </tr>\r\n      " +
-                    "              </thead>\r\n                    <tbody>\r\n                    ");
-            
-            #line 93 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 10 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
   foreach (var bin in BinnedMovements15) { 
             
             #line default
             #line hidden
-            this.Write("                    <tr>\r\n                        <th scope=\"row\">");
+            this.Write("    ");
             
-            #line 95 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 11 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(bin.Interval.StartTime));
             
             #line default
             #line hidden
-            this.Write("</th>\r\n                        ");
+            this.Write(",");
             
-            #line 96 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
- foreach(string exit in ExitNames) { 
-            
-            #line default
-            #line hidden
-            this.Write("                            <td>");
-            
-            #line 97 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(bin.Where(m => m.Exit == exit && m.Approach == approach).Count()));
+            #line 11 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+ for(int i=0; i < ApproachExitPairs.Count(); i++) { 
             
             #line default
             #line hidden
-            this.Write("</td>\r\n                        ");
+            this.Write("        ");
             
-            #line 98 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 12 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(bin.Where(m => m.Approach == ApproachExitPairs[i].Approach && m.Exit == ApproachExitPairs[i].Exit).Count()));
+            
+            #line default
+            #line hidden
+            
+            #line 12 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+ if (i < ApproachExitPairs.Count() - 1) { 
+            
+            #line default
+            #line hidden
+            this.Write(",");
+            
+            #line 12 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("                        <td>");
+            this.Write("    ");
             
-            #line 99 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(bin.Where(m => m.Approach == approach).Count()));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n                    </tr>\r\n                    ");
-            
-            #line 101 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 13 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("                    </tbody>\r\n                </table>\r\n            </div>\r\n     " +
-                    "   </div>\r\n\r\n    ");
+            this.Write("    ");
             
-            #line 107 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+            #line 14 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
+ WriteLine(""); 
+            
+            #line default
+            #line hidden
+            
+            #line 15 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("\r\n</div>\r\n\r\n<footer>\r\n  <p>Counts generated by &nbsp; <img id=\"logoicon\" src=\"./R" +
-                    "eportAssets/favicon.ico\"> VTC on ");
-            
-            #line 112 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DateTime.Now));
-            
-            #line default
-            #line hidden
-            this.Write("</p> \r\n</footer>\r\n\r\n</body>\r\n\r\n");
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 117 "C:\VTCProject\vtc_lfs\VTC.Reporting\SummaryReportTemplate.tt"
+        #line 16 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
 
-public List<VTC.Common.Movement> Movements;
 public List<VTC.Common.BinnedMovements> BinnedMovements15;
-public string Location = "";
-public DateTime VideoTime;
-public string[] ApproachNames;
-public string[] ExitNames;
+public List<(string Approach, string Exit)> ApproachExitPairs;
 
         
         #line default
@@ -273,7 +154,7 @@ public string[] ExitNames;
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class SummaryReportTemplateBase
+    public class CSVReportTemplateBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

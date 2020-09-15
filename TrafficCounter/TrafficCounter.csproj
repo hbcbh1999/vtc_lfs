@@ -312,7 +312,6 @@
     <Compile Include="Messages\GenerateDailyReportMessage.cs" />
     <Compile Include="Messages\LoadUserConfigMessage.cs" />
     <Compile Include="Messages\UpdateDebugHandlerMessage.cs" />
-    <Compile Include="Messages\VideoMetadataMessage.cs" />
     <Compile Include="Messages\CopyGroundtruthMessage.cs" />
     <Compile Include="Messages\ActorMessage.cs" />
     <Compile Include="Messages\ActorStatusMessage.cs" />

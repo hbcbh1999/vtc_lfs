@@ -29,7 +29,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("Q_position: position movement covariance. Decrease for objects with smooth movement; increase for objects with complex movement.")]
         [DataMember]
-        public double Q_position { get; set; } = 200;
+        public double Q_position { get; set; } = 100;
 
         [Description("Q_color: color-change covariance. Decrease for scenes with consistent lighting; increase for scenes with variable lighting.")]
         [DataMember]
@@ -49,7 +49,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("Initial Vx covariance: increase for scenes with rapidly-moving vehicles. Decrease for scenes with slowly-moving vehicles.")]
         [DataMember]
-        public double VehicleInitialCovVX { get; set; } = 1500;
+        public double VehicleInitialCovVX { get; set; } = 3000;
 
         [Description("Initial Y covariance: increase for scenes with nearby vehicles. Decrease for scenes with far-away vehicles.")]
         [DataMember]
@@ -57,7 +57,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("Initial Vy covariance: increase for scenes with rapidly-moving vehicles. Decrease for scenes with slowly-moving vehicles.")]
         [DataMember]
-        public double VehicleInitialCovVY { get; set; } = 1500;
+        public double VehicleInitialCovVY { get; set; } = 3000;
 
         [Description("Initial R covariance: initial assumption on R-channel color certainty.")]
         [DataMember]
@@ -73,7 +73,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("Compensation gain: how aggressively the tracker seeks a lost object.")]
         [DataMember]
-        public double CompensationGain { get; set; } = 15;
+        public double CompensationGain { get; set; } = 5;
 
         [Description("MinObjectSize: objects with less than this many pixels will be ignored.")]
         [DataMember]
@@ -85,7 +85,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("MissThreshold: if an object is not detected for this many frames, it will be considered to be gone.")]
         [DataMember]
-        public int MissThreshold { get; set; } = 10;
+        public int MissThreshold { get; set; } = 5;
 
         [Description("Lambda-F: The odds of a false-positive object detection per frame.")]
         [DataMember]
@@ -97,7 +97,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("Pd: probability of detecting a particular vehicle.")]
         [DataMember]
-        public double Pd { get; set; } = 0.98;
+        public double Pd { get; set; } = 0.95;
 
         [Description("Px: probability of a particular vehicle exiting the scene in any frame.")]
         [DataMember]
@@ -109,11 +109,11 @@ namespace VTC.Common.RegionConfig
 
         [Description("Q_size: object size change. Increase for scenes where objects appear to change in size significantly, i.e. for fish-eye or wide-angle lenses.")]
         [DataMember]
-        public double Q_size { get; set; } = 95000;
+        public double Q_size { get; set; } = 9500;
 
         [Description("R_size: size measurement uncertainty. Increase if objects are being 'lost' by trackers. Decrease if trackers are swapping.")]
         [DataMember]
-        public double R_size { get; set; } = 500;
+        public double R_size { get; set; } = 250;
 
         [Description("MinPathLength: Object trajectories shorter than this length (in pixels) are discarded without being counted.")]
         [DataMember]
@@ -145,7 +145,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("Smoothness threshold: this parameter allows VTC to reject jagged, discontinuous trajectories.")]
         [DataMember]
-        public double SmoothnessThreshold { get; set; } = 1.4;
+        public double SmoothnessThreshold { get; set; } = 0.1;
 
         [Description("Movement-length ratio: this parameter allows VTC to reject trajectories with low net-movement-to-integrated-path-length ratio.")]
         [DataMember]
@@ -153,7 +153,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("Overlap ratio: when overlap filtering is enabled, this area-ratio threshold is applied to detect overlap and eliminate double detections.")]
         [DataMember]
-        public double OverlapRatio { get; set; } = 0.9;
+        public double OverlapRatio { get; set; } = 0.8;
 
         [Description("Site token: copy this from the web dashboard for your site.")]
         [DataMember]
@@ -173,7 +173,7 @@ namespace VTC.Common.RegionConfig
 
         [Description("FilterOverlap: Filter overlapping bounding-boxes.")]
         [DataMember]
-        public bool FilterOverlap { get; set; } = false;
+        public bool FilterOverlap { get; set; } = true;
 
         [Description("StrictContainment: Set to 'true' to evaluate polygon containment for a bird's-eye perspective.")]
         [DataMember]

@@ -125,7 +125,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Remote\RemoteServer.cs" />
-    <Compile Include="SummaryReportGenerator.cs" />
+    <Compile Include="ReportGenerator.cs" />
+    <Compile Include="CSVReportTemplate.cs">
+      <DependentUpon>CSVReportTemplate.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="SummaryReportTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -155,6 +160,10 @@
     <Content Include="ReportAssets\report.html" />
     <Content Include="ReportAssets\report.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CSVReportTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CSVReportTemplate.cs</LastGenOutput>
     </Content>
     <Content Include="SummaryReportTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>

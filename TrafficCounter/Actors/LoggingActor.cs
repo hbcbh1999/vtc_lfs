@@ -150,10 +150,6 @@ namespace VTC.Actors
                 CopyGroundTruth(message.GroundTruthPath)
             );
 
-            Receive<VideoMetadataMessage>(message => 
-                LogVideoMetadata(message.VM)
-            );
-
             Receive<FrameCountMessage>(message => 
                 UpdateFrameCount(message.Count)
             );
@@ -248,9 +244,6 @@ namespace VTC.Actors
             Log("(CreateOrReplaceOutputFolderIfExists) " + folderPath, LogLevel.Info, "LoggingActor");
 
             _turnStats.Clear();
-
-            var filepath = Path.Combine(folderPath, "Movements.json");
-            File.Create(filepath);     
             _currentOutputFolder = folderPath;
         }
         
@@ -292,14 +285,9 @@ namespace VTC.Actors
 
                 var tnow = VideoTime();
 
-                using (StreamWriter outputFile = new StreamWriter(folderPath + @"\Version.txt", true))
-                {
-                    outputFile.WriteLine(Assembly.GetExecutingAssembly().GetName().Version);
-                }
-
-                SummaryReportGenerator.CopyAssetsToExportFolder(folderPath);
-
-                SummaryReportGenerator.GenerateSummaryReportHtml(folderPath, _currentVideoName, tnow, movements);
+                ReportGenerator.CopyAssetsToExportFolder(folderPath);
+                ReportGenerator.GenerateSummaryReportHtml(folderPath, _currentVideoName, tnow, movements);
+                ReportGenerator.GenerateCSVReportHtml(folderPath, _currentVideoName, tnow, movements);
 
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
 
@@ -813,18 +801,6 @@ namespace VTC.Actors
                 Log("(CopyGroundTruth) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite, LogLevel.Error, "LoggingActor");
             }
             
-        }
-
-        private void LogVideoMetadata(VideoMetadata vm)
-        {
-            var folderPath = _currentOutputFolder;
-            if (!Directory.Exists(folderPath)) return;
-
-            using (var outputFile = new StreamWriter(folderPath + @"\video_metadata.json", false))
-            {
-                var ser = new DataContractJsonSerializer(typeof(VideoMetadata));  
-                ser.WriteObject(outputFile.BaseStream, vm);  
-            }
         }
 
         private void UpdateFrameCount(UInt64 count)

@@ -9,11 +9,9 @@ using NLog;
 
 namespace VTC.Reporting
 {
-    public class SummaryReportGenerator
+    public class ReportGenerator
     {
-
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
-
         public static void CopyAssetsToExportFolder(string exportPath)
         {
             try
@@ -60,6 +58,19 @@ namespace VTC.Reporting
             return names;
         }
 
+        public static List<(string Approach,string Exit)> GetAllUniqueApproachExitPairs(List<Movement> movements)
+        {
+            List<(string Approach, string Exit)> pairs = new List<(string Approach, string Exit)>();
+            foreach (var m in movements)
+            {
+                if (!pairs.Contains((m.Approach, m.Exit)))
+                {
+                    pairs.Add((m.Approach,m.Exit));
+                }
+            }
+            return pairs;
+        }
+
         public static void GenerateSummaryReportHtml(string exportPath, string location, DateTime videoTime, List<Movement> movements)
         {
             try
@@ -70,6 +81,27 @@ namespace VTC.Reporting
                 var binnedMovements15 = BinnedMovements.BinMovementsByTime(movements, 15);
                 var summaryReport = new SummaryReportTemplate {Movements = movements, Location = location, VideoTime = videoTime, ApproachNames = approachNames, BinnedMovements15 = binnedMovements15 , ExitNames = exitNames}.TransformText();
                 File.WriteAllText(reportPath, summaryReport); //Save
+            }
+            catch (IOException e)
+            {
+                Logger.Log(LogLevel.Error, e, e.Message);
+#if DEBUG
+                throw;
+#endif          
+            }
+
+        }
+
+        public static void GenerateCSVReportHtml(string exportPath, string location, DateTime videoTime, List<Movement> movements)
+        {
+            try
+            {
+                var reportPath = Path.Combine(exportPath, "15-minute binned counts.csv");
+                var pairs = GetAllUniqueApproachExitPairs(movements);
+                
+                var binnedMovements15 = BinnedMovements.BinMovementsByTime(movements, 15);
+                var csvReport = new CSVReportTemplate { BinnedMovements15 = binnedMovements15, ApproachExitPairs = pairs }.TransformText();
+                File.WriteAllText(reportPath, csvReport); //Save
             }
             catch (IOException e)
             {

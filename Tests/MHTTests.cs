@@ -20,12 +20,11 @@ namespace Tests
             var mht = new MultipleHypothesisTracker(rc, vc);
             var timestep = 0.1;
             var maxFrame = 10;
-            var ct = new System.Threading.CancellationToken();
             
             for(int i=0;i<maxFrame;i++)
             {   
                 var detections = sg.GetNextFrame();
-                mht.Update(detections.ToArray(), ct, timestep);
+                mht.Update(detections.ToArray(), timestep);
 
                 Assert.AreEqual(mht.MostLikelyStateHypothesis().Vehicles.Count, 0);
             }
@@ -44,20 +43,15 @@ namespace Tests
             var mht = new MultipleHypothesisTracker(rc, vc);
             var timestep = 0.1;
             var maxFrame = 100;
-            
-            var ct = new System.Threading.CancellationToken();
+
             var totalDetectionCount = 0;
 
-            var DetectionsByFrame = new Dictionary<int,List<Measurement>>();
-            var StateHypothesisList = new Dictionary<int, StateHypothesis>();
 
             for (int i = 0; i < maxFrame; i++)
             {
                 var detections = sg.GetNextFrame();
-                DetectionsByFrame.Add(i,detections);
-                mht.Update(detections.ToArray(), ct, timestep);
+                mht.Update(detections.ToArray(), timestep);
                 var hypothesis = mht.MostLikelyStateHypothesis();
-                StateHypothesisList.Add(i,hypothesis);
                 var trackedVehicleCount = hypothesis.Vehicles.Count;
                 totalDetectionCount += detections.Count;
 
