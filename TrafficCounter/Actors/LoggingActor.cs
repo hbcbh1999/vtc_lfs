@@ -240,10 +240,6 @@ namespace VTC.Actors
                 Directory.Delete(folderPath, true);
             }
             Directory.CreateDirectory(folderPath);
-
-            Log("(CreateOrReplaceOutputFolderIfExists) " + folderPath, LogLevel.Info, "LoggingActor");
-
-            _turnStats.Clear();
             _currentOutputFolder = folderPath;
         }
         
@@ -277,8 +273,9 @@ namespace VTC.Actors
         {
             try
             {
+
                 var movements = DatabaseManager.GetMovementsByJob(_dbConnection, _currentJob.Id);
-                
+                CreateOrReplaceOutputFolderIfExists();
 
                 var folderPath = _currentOutputFolder;
                 GenerateRegionsLegendImage(folderPath);
@@ -330,7 +327,8 @@ namespace VTC.Actors
                     maskedBackground = maskedBackground.Add(mask);
                 }
 
-                var g = Graphics.FromImage(maskedBackground.ToBitmap());
+                var bmp = maskedBackground.ToBitmap();
+                var g = Graphics.FromImage(bmp);
                 foreach (var p in _regionConfig.Regions)
                 {
                     if (p.Value.Count <= 2) continue;
@@ -342,7 +340,7 @@ namespace VTC.Actors
                         new SolidBrush(Color.Black), x - size.Width / 2, y);
                 }
 
-                maskedBackground.Save(Path.Combine(folderPath,
+                bmp.Save(Path.Combine(folderPath,
                     "RegionsLegend.png"));
             }
             catch (Exception ex)
@@ -356,8 +354,8 @@ namespace VTC.Actors
         {
             Logger.Log(LogLevel.Info, "New video source " + message.CaptureSource.Name);
 
+            ClearTurnStats();
             _currentVideoName = message.CaptureSource.Name;
-            CreateOrReplaceOutputFolderIfExists();
 
             var ev = new SentryEvent { Level = SentryLevel.Info, Message = "New video source" };
             ev.SetTag("Name", message.CaptureSource.Name);
@@ -375,13 +373,7 @@ namespace VTC.Actors
             try
             {
                 _regionConfig = config;
-                const string filename = "Synthetic Trajectories";
-                if (Directory.Exists(_currentOutputFolder))
-                {
-                    var folderPath = _currentOutputFolder;
-                    var filepath = Path.Combine(folderPath, filename);
-                    mts.GenerateSyntheticTrajectories(_regionConfig);
-                }
+                mts.GenerateSyntheticTrajectories(_regionConfig);
             }
             catch (Exception ex)
             {
@@ -402,12 +394,6 @@ namespace VTC.Actors
             if (_yoloNameMapping == null)
             {
                 Log("_yoloNameMapping is null in TrajectoryListHandler.", LogLevel.Error, "LoggingActor");
-                return;
-            }
-
-            if (_currentOutputFolder == null)
-            {
-                Log("_currentOutputFolder is null in TrajectoryListHandler.", LogLevel.Error, "LoggingActor");
                 return;
             }
 
