@@ -156,7 +156,7 @@ namespace VTC.Actors
             );
 
             Receive<ResetDatabaseMessage>(message =>
-                DatabaseManager.ResetDatabase(_dbConnection)
+                ResetDatabase()
             );
 
             Receive<LoadUserConfigMessage>(message => 
@@ -218,10 +218,17 @@ namespace VTC.Actors
         private void InitializeDatabase()
         {
             _dbConnection = DatabaseManager.OpenConnection(_userConfig);
-            var dbExists = DatabaseManager.CheckIfDatabaseExists(_dbConnection);
-            if (!dbExists)
+        }
+
+        private void ResetDatabase()
+        {
+            try
             {
-                DatabaseManager.CreateDatabase(_dbConnection);
+                DatabaseManager.ResetDatabase(_dbConnection, _userConfig);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, ex.Message);
             }
         }
 
@@ -444,7 +451,7 @@ namespace VTC.Actors
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
                     var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), false, _currentJob.Id);
                     IncrementTurnStatistics(editedMovement);
-                    editedMovement.Save(_dbConnection);
+                    editedMovement.Save(_dbConnection,_userConfig);
 
                     if (_regionConfig.SendToServer)
                     {
@@ -890,7 +897,7 @@ namespace VTC.Actors
 
         void UpdateBatchJob(BatchVideoJob job)
         { 
-            job.Save(_dbConnection);
+            job.Save(_dbConnection, _userConfig);
             _currentJob = job;    
         }
 

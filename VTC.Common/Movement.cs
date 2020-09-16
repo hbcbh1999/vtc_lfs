@@ -9,6 +9,7 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using Npgsql;
+using System.Data.SQLite;
 
 namespace VTC.Common
 {
@@ -46,13 +47,13 @@ namespace VTC.Common
 
         [DataMember] public bool Ignored;
 
-        [DataMember] public int JobId;
+        [DataMember] public long JobId;
 
         [DataMember] public bool Synthetic;
 
-        [DataMember] public int Id;
+        [DataMember] public long Id;
 
-        public Movement(string approach, string exit, Turn turn, ObjectType objectType, StateEstimateList stateEstimates, DateTime timeStamp, bool ignored, int job = 0)
+        public Movement(string approach, string exit, Turn turn, ObjectType objectType, StateEstimateList stateEstimates, DateTime timeStamp, bool ignored, long job = 0)
         {
             Approach = approach;
             Exit = exit;
@@ -76,15 +77,15 @@ namespace VTC.Common
 
         public override bool Equals(object obj)
         {
-            var typeThat = obj.GetType();
-            if(typeThat != typeof(Movement) && !typeThat.IsSubclassOf(typeof(Movement)))
-                return false;
-
-            if (obj == null)
-                return false;
+            if (obj != null)
+            {
+                var typeThat = obj.GetType();
+                if(typeThat != typeof(Movement) && !typeThat.IsSubclassOf(typeof(Movement)))
+                    return false;
+            }
 
             var other = (Movement) obj;
-            return other.Approach == Approach && other.Exit == Exit;
+            return other != null && (other.Approach == Approach && other.Exit == Exit);
         }
 
         public override int GetHashCode()
@@ -94,7 +95,7 @@ namespace VTC.Common
 
         public int CompareTo(Movement that)
         {
-            return ToString().CompareTo(that.ToString());
+            return string.Compare(ToString(), that.ToString(), StringComparison.Ordinal);
         }
 
         public double MissRatio()
@@ -103,21 +104,37 @@ namespace VTC.Common
             return missRatio;
         }
 
-        public void Save(DbConnection dbConnection)
+        public void Save(DbConnection dbConnection, UserConfig config)
         {
             try
             {
-                var cmd = dbConnection.CreateCommand();
-                cmd.CommandText =
-                    $"INSERT INTO public.movement(jobid,approach,exit,turntype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp}',{Synthetic},{Ignored}) RETURNING id";
-                var result = cmd.ExecuteScalar();
-                Id = int.Parse(result.ToString());
+                var transaction = dbConnection.BeginTransaction();
+                if (config.SQLite)
+                {
+                    var sqliteConnection = (SQLiteConnection) dbConnection;
+                    var cmd = sqliteConnection.CreateCommand();
+                    cmd.CommandText =
+                        $"INSERT INTO movement(jobid,approach,exit,movementtype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp}',{(Synthetic ? 1 : 0)},{(Ignored ? 1 : 0)})";
+                    cmd.Transaction = (SQLiteTransaction) transaction;
+                    cmd.ExecuteNonQuery();
+                    Id = sqliteConnection.LastInsertRowId;
+                }
+                else
+                {
+                    var cmd = dbConnection.CreateCommand();
+                    cmd.CommandText =
+                        $"INSERT INTO movement(jobid,approach,exit,turntype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp}',{Synthetic},{Ignored}) RETURNING id";
+                    cmd.Transaction = transaction;
+                    var result = cmd.ExecuteScalar();
+                    Id = int.Parse(result.ToString());
+                }
 
                 foreach (var s in StateEstimates)
                 {
                     s.MovementId = Id;
                     s.Save(dbConnection);
                 }
+                transaction.Commit();
             }
             catch (Exception e)
             {

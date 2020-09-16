@@ -61,107 +61,126 @@ namespace VTC.db {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT 1 FROM pg_database WHERE datname=&apos;roadometry&apos;.
+        ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string CheckIfDatabaseExistsSQL {
+        internal static string CreateJobIdSeqPostgresql {
             get {
-                return ResourceManager.GetString("CheckIfDatabaseExistsSQL", resourceCulture);
+                return ResourceManager.GetString("CreateJobIdSeqPostgresql", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -- Database: roadometry
-        ///
-        ///-- DROP DATABASE roadometry;
-        ///
-        ///CREATE DATABASE roadometry
-        ///    WITH 
-        ///    OWNER = postgres
-        ///    ENCODING = &apos;UTF8&apos;
-        ///    LC_COLLATE = &apos;English_United States.1252&apos;
-        ///    LC_CTYPE = &apos;English_United States.1252&apos;
-        ///    TABLESPACE = pg_default
-        ///    CONNECTION LIMIT = -1;.
+        ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string CreateDatabaseSQL {
+        internal static string CreateJobTablePostgresql {
             get {
-                return ResourceManager.GetString("CreateDatabaseSQL", resourceCulture);
+                return ResourceManager.GetString("CreateJobTablePostgresql", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -- Table: public.job
-        ///
-        ///-- DROP TABLE public.job;
-        ///
-        ///CREATE TABLE public.job
-        ///(
-        ///    id integer NOT NULL DEFAULT nextval(&apos;job_id_seq&apos;::regclass),
-        ///    videopath text COLLATE pg_catalog.&quot;default&quot;,
-        ///    groundtruthpath text COLLATE pg_catalog.&quot;default&quot;,
-        ///    regionconfigurationname text COLLATE pg_catalog.&quot;default&quot;,
-        ///    &quot;timestamp&quot; time with time zone,
-        ///    CONSTRAINT job_pkey PRIMARY KEY (id)
-        ///)
-        ///
-        ///TABLESPACE pg_default;
-        ///
-        ///ALTER TABLE public.job
-        ///    OWNER to postgres;.
+        ///   Looks up a localized string similar to CREATE TABLE job (id INTEGER PRIMARY KEY, videopath TEXT, regionconfigurationname TEXT, groundtruthpath TEXT, timestamp TEXT).
         /// </summary>
-        internal static string CreateJobTableSQL {
+        internal static string CreateJobTableSQLite {
             get {
-                return ResourceManager.GetString("CreateJobTableSQL", resourceCulture);
+                return ResourceManager.GetString("CreateJobTableSQLite", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -- Table: public.movement
-        ///
-        ///-- DROP TABLE public.movement;
-        ///
-        ///CREATE TABLE public.movement
-        ///(
-        ///    id bigint NOT NULL DEFAULT nextval(&apos;movement_id_seq&apos;::regclass),
-        ///    approach text COLLATE pg_catalog.&quot;default&quot;,
-        ///    exit text COLLATE pg_catalog.&quot;default&quot;,
-        ///    turntype text COLLATE pg_catalog.&quot;default&quot;,
-        ///    trafficobjecttype text COLLATE pg_catalog.&quot;default&quot;,
-        ///    &quot;timestamp&quot; timestamp with time zone,
-        ///    ignored boolean,
-        ///    synthetic boolean,
-        ///    jobid integer NOT NULL DEFAULT nextval(&apos;&quot;movement_Jo [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string CreateMovementTableSQL {
+        internal static string CreateMovementIdSeqPostgresql {
             get {
-                return ResourceManager.GetString("CreateMovementTableSQL", resourceCulture);
+                return ResourceManager.GetString("CreateMovementIdSeqPostgresql", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to -- Table: public.stateestimate
-        ///
-        ///-- DROP TABLE public.stateestimate;
-        ///
-        ///CREATE TABLE public.stateestimate
-        ///(
-        ///    id bigint NOT NULL DEFAULT nextval(&apos;stateestimate_id_seq&apos;::regclass),
-        ///    x double precision,
-        ///    y double precision,
-        ///    covx double precision,
-        ///    covy double precision,
-        ///    vx double precision,
-        ///    vy double precision,
-        ///    covvx double precision[],
-        ///    covvy double precision,
-        ///    red double precision,
-        ///    green double precision,
-        ///    blue double precision,
-        ///    covred double precis [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string CreateStateEstimateTableSQL {
+        internal static string CreateMovementJobIdSeqPostgresql {
             get {
-                return ResourceManager.GetString("CreateStateEstimateTableSQL", resourceCulture);
+                return ResourceManager.GetString("CreateMovementJobIdSeqPostgresql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CREATE TABLE movement (
+        ///	id	INTEGER PRIMARY KEY,
+        ///	jobid	INTEGER,
+        ///	approach	TEXT,
+        ///	exit	TEXT,
+        ///	movementtype	TEXT,
+        ///	trafficobjecttype	TEXT,
+        ///	timestamp	TEXT,
+        ///	synthetic	INTEGER,
+        ///	ignored	INTEGER,
+        ///	FOREIGN KEY(jobid) REFERENCES job(id)
+        ///).
+        /// </summary>
+        internal static string CreateMovementTableSQLite {
+            get {
+                return ResourceManager.GetString("CreateMovementTableSQLite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string CreateMovementTableSQLPostgresql {
+            get {
+                return ResourceManager.GetString("CreateMovementTableSQLPostgresql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string CreateStateEstimateIdSeqPostgresql {
+            get {
+                return ResourceManager.GetString("CreateStateEstimateIdSeqPostgresql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string CreateStateEstimateMovementIdSeqPostgresql {
+            get {
+                return ResourceManager.GetString("CreateStateEstimateMovementIdSeqPostgresql", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CREATE TABLE stateestimate (
+        ///	id	INTEGER PRIMARY KEY,
+        ///	movementid	INTEGER,
+        ///	x	REAL,
+        ///	y	REAL,
+        ///	vx	REAL,
+        ///	vy	REAL,
+        ///	red	REAL,
+        ///	blue	REAL,
+        ///	green	REAL,
+        ///	size	REAL,
+        ///	vsize	REAL,
+        ///	pathlength	REAL,
+        ///	FOREIGN KEY(movementid) REFERENCES movement(id)
+        ///).
+        /// </summary>
+        internal static string CreateStateEstimateTableSQLite {
+            get {
+                return ResourceManager.GetString("CreateStateEstimateTableSQLite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string CreateStateEstimateTableSQLPostgresql {
+            get {
+                return ResourceManager.GetString("CreateStateEstimateTableSQLPostgresql", resourceCulture);
             }
         }
     }

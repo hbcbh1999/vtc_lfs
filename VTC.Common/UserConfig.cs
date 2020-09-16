@@ -74,5 +74,9 @@ namespace VTC.Common
         [Description("Path for storage of movement-count logs and reports.")]
         [DataMember]
         public string OutputPath { get; set; }
+
+        [Description("If this flag is set, a local SQLite database will be used intead of Postgres.")]
+        [DataMember]
+        public bool SQLite { get; set; } = true;
     }
 }

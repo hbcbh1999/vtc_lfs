@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using Npgsql;
 using VTC.Common.RegionConfig;
+using System.Data.SQLite;
 
 namespace VTC.Common
 {
@@ -13,17 +14,31 @@ namespace VTC.Common
         public RegionConfig.RegionConfig RegionConfiguration;
         public string GroundTruthPath;
         public DateTime Timestamp;
-        public int Id;
+        public long Id;
 
-        public void Save(DbConnection dbConnection)
+        public void Save(DbConnection dbConnection,UserConfig config)
         {
             try
             {
-                var cmd = dbConnection.CreateCommand();
-                cmd.CommandText =
-                    $"INSERT INTO public.job(videopath,regionconfigurationname,groundtruthpath,timestamp) VALUES('{VideoPath}','{RegionConfiguration.Title}','{GroundTruthPath}','{DateTime.Now}') RETURNING id";
-                var result = cmd.ExecuteScalar();
-                Id = int.Parse(result.ToString());
+                if (config.SQLite)
+                {
+                    var sqliteConnection = (SQLiteConnection) dbConnection;
+                    var cmd = sqliteConnection.CreateCommand();
+                    cmd.CommandText =
+                        $"INSERT INTO job(videopath,regionconfigurationname,groundtruthpath,timestamp) VALUES('{VideoPath}','{RegionConfiguration.Title}','{GroundTruthPath}','{DateTime.Now}')";
+                    var result = cmd.ExecuteScalar();
+                    Id = sqliteConnection.LastInsertRowId;
+                }
+                else
+                {
+                    var cmd = dbConnection.CreateCommand();
+                    cmd.CommandText =
+                        $"INSERT INTO job(videopath,regionconfigurationname,groundtruthpath,timestamp) VALUES('{VideoPath}','{RegionConfiguration.Title}','{GroundTruthPath}','{DateTime.Now}') RETURNING id";
+                    var result = cmd.ExecuteScalar();
+                    Id = int.Parse(result.ToString());
+                }
+
+                
             }
             catch (Exception e)
             {

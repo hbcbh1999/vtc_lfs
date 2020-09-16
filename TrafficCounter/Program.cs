@@ -42,13 +42,13 @@ namespace VTC
             var context = new LicensedFormContext(publicKey, CreateTrafficCounterForm, appArgument);
 
             if (null != context.MainForm)
-            try{
-            Application.Run(context); 
-            }
-            catch(AccessViolationException ex)
-            { 
-                Logger.Log(LogLevel.Error, ex.Message);       
-            }
+                try{
+                    Application.Run(context); 
+                }
+                catch(AccessViolationException ex)
+                { 
+                    Logger.Log(LogLevel.Error, ex.Message);       
+                }
         }
 
         private static Form CreateTrafficCounterForm(bool isLicensed, string args)

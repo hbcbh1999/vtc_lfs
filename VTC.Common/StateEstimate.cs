@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Windows.Forms;
 using MathNet.Numerics.LinearAlgebra.Double;
 using Npgsql;
+using System.Data.SQLite;
 
 namespace VTC.Common
 {
@@ -41,12 +42,12 @@ namespace VTC.Common
         public double VSize;
         public double CovVSize;
 
-        public double PathLength;    //Total path length travelled so far
+        public double PathLength;    //Total path length traveled so far
 
         public int TotalMissedDetections; //Total number of times this object has not been detected during its lifetime
         public int SuccessiveMissedDetections; //Successive number of times this object has not been detected since the last detection
 
-        public int MovementId;
+        public long MovementId;
 
         public Dictionary<int, int> ClassDetectionCounts = new Dictionary<int, int>();
 
@@ -232,7 +233,7 @@ namespace VTC.Common
             {
                 var cmd = dbConnection.CreateCommand();
                 cmd.CommandText =
-                    $"INSERT INTO public.stateestimate(movementid,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES({MovementId},{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})";
+                    $"INSERT INTO stateestimate(movementid,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES({MovementId},{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})";
                 var result = cmd.ExecuteNonQuery();
             }
             catch (Exception e)
