@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -225,14 +226,14 @@ namespace VTC.Common
             return -1;
         }
 
-        public void Save(NpgsqlConnection dbConnection)
+        public void Save(DbConnection dbConnection)
         {
             try
             {
-                var cmd = new NpgsqlCommand(
-                    $"INSERT INTO public.stateestimate(movementid,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES({MovementId},{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})",
-                    dbConnection);
-                cmd.ExecuteNonQuery();
+                var cmd = dbConnection.CreateCommand();
+                cmd.CommandText =
+                    $"INSERT INTO public.stateestimate(movementid,x,y,vx,vy,red,blue,green,size,vsize,pathlength) VALUES({MovementId},{X},{Y},{Vx},{Vy},{Red},{Blue},{Green},{Size},{VSize},{PathLength})";
+                var result = cmd.ExecuteNonQuery();
             }
             catch (Exception e)
             {

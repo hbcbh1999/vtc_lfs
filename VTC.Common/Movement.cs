@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VTC.Common;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using Npgsql;
@@ -102,14 +103,14 @@ namespace VTC.Common
             return missRatio;
         }
 
-        public void Save(NpgsqlConnection dbConnection)
+        public void Save(DbConnection dbConnection)
         {
             try
             {
-                var result = new NpgsqlCommand(
-                    $"INSERT INTO public.movement(jobid,approach,exit,turntype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp}',{Synthetic},{Ignored}) RETURNING id",
-                    dbConnection).ExecuteScalar();
-                
+                var cmd = dbConnection.CreateCommand();
+                cmd.CommandText =
+                    $"INSERT INTO public.movement(jobid,approach,exit,turntype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp}',{Synthetic},{Ignored}) RETURNING id";
+                var result = cmd.ExecuteScalar();
                 Id = int.Parse(result.ToString());
 
                 foreach (var s in StateEstimates)

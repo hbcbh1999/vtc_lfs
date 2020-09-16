@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
@@ -52,7 +53,7 @@ namespace VTC.Actors
         private DateTime _videoStartTime = DateTime.Now;
         private string _currentOutputFolder;
         private BatchVideoJob _currentJob;
-        private NpgsqlConnection _dbConnection;
+        private DbConnection _dbConnection;
 
         private MultipleTrajectorySynthesizer mts;
 
@@ -338,6 +339,20 @@ namespace VTC.Actors
                     var size = TextRenderer.MeasureText(p.Key, font);
                     g.DrawString(p.Key, font,
                         new SolidBrush(Color.Black), x - size.Width / 2, y);
+                }
+
+                var examplePaths = mts.GenerateExamplePathTrajectories(_regionConfig);
+                foreach (var st in examplePaths)
+                {
+                    
+                    var font = new Font(FontFamily.GenericSansSerif, (float)10.0);
+                    var size = TextRenderer.MeasureText(st.Approach, font);
+                    g.DrawString(st.Approach, font,
+                        new SolidBrush(Color.Black),(float) st.StateEstimates.First().X - (float) (size.Width / 2.0), (float) st.StateEstimates.First().Y);
+
+                    size = TextRenderer.MeasureText(st.Exit, font);
+                    g.DrawString(st.Exit, font,
+                        new SolidBrush(Color.Black), (float)st.StateEstimates.Last().X - (float)(size.Width / 2.0), (float)st.StateEstimates.Last().Y);
                 }
 
                 bmp.Save(Path.Combine(folderPath,

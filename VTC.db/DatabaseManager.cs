@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
@@ -13,7 +14,7 @@ namespace VTC.db
 {
     public static class DatabaseManager
     {
-        public static NpgsqlConnection OpenConnection(UserConfig config)
+        public static DbConnection OpenConnection(UserConfig config)
         {
             var cs = $"Host={config.DatabaseUrl};Port={config.DatabasePort};Username={config.Username};Password={config.Password};Database={config.DatabaseName}";
             var dbConnection = new NpgsqlConnection(cs);
@@ -21,32 +22,35 @@ namespace VTC.db
             return dbConnection;
         }
 
-        public static void CreateDatabase(NpgsqlConnection connection)
+        public static void CreateDatabase(DbConnection connection)
         {
-            var cmd = new NpgsqlCommand(Resource1.CreateDatabaseSQL, connection);
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = Resource1.CreateDatabaseSQL;
             cmd.ExecuteNonQuery();
             CreateTables(connection);
         }
 
-        public static bool CheckIfDatabaseExists(NpgsqlConnection connection)
+        public static bool CheckIfDatabaseExists(DbConnection connection)
         {
-            var cmd = new NpgsqlCommand(Resource1.CheckIfDatabaseExistsSQL, connection);
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = Resource1.CheckIfDatabaseExistsSQL;
             var dbExists = cmd.ExecuteScalar() != null;
             return dbExists;
         }
 
-        public static void CreateTables(NpgsqlConnection connection)
+        public static void CreateTables(DbConnection connection)
         {
             CreateJobTable(connection);
             CreateMovementTable(connection);
             CreateStateEstimateTable(connection);
         }
 
-        public static void CreateJobTable(NpgsqlConnection connection)
+        public static void CreateJobTable(DbConnection connection)
         {
             try
             {
-                var cmd = new NpgsqlCommand(Resource1.CreateJobTableSQL, connection);
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = Resource1.CreateJobTableSQL;
                 cmd.ExecuteNonQuery();
             }
             catch (PostgresException ex)
@@ -56,11 +60,12 @@ namespace VTC.db
             
         }
 
-        public static void CreateMovementTable(NpgsqlConnection connection)
+        public static void CreateMovementTable(DbConnection connection)
         {
             try
-            {
-                var cmd = new NpgsqlCommand(Resource1.CreateMovementTableSQL, connection);
+            { 
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = Resource1.CreateMovementTableSQL;
                 cmd.ExecuteNonQuery();
             }
             catch (PostgresException ex)
@@ -70,11 +75,12 @@ namespace VTC.db
 
         }
 
-        public static void CreateStateEstimateTable(NpgsqlConnection connection)
+        public static void CreateStateEstimateTable(DbConnection connection)
         {
             try
             {
-                var cmd = new NpgsqlCommand(Resource1.CreateStateEstimateTableSQL, connection);
+                var cmd = connection.CreateCommand();
+                cmd.CommandText = Resource1.CreateStateEstimateTableSQL;
                 cmd.ExecuteNonQuery();
             }
             catch (PostgresException ex)
@@ -84,53 +90,47 @@ namespace VTC.db
 
         }
 
-        public static void ResetDatabase(NpgsqlConnection connection)
+        public static void ResetDatabase(DbConnection connection)
         {
-            var cmdDropStateEstimateTable = new NpgsqlCommand(
-                "DROP TABLE IF EXISTS public.stateestimate",
-                connection);
+            var cmdDropStateEstimateTable = connection.CreateCommand();
+            cmdDropStateEstimateTable.CommandText = "DROP TABLE IF EXISTS public.stateestimate";
             cmdDropStateEstimateTable.ExecuteNonQuery();
 
-            var cmdDropMovementTable = new NpgsqlCommand(
-                "DROP TABLE IF EXISTS public.movement",
-                connection);
+            var cmdDropMovementTable = connection.CreateCommand();
+            cmdDropMovementTable.CommandText = "DROP TABLE IF EXISTS public.movement";
             cmdDropMovementTable.ExecuteNonQuery();
 
-            var cmdDropJobTable = new NpgsqlCommand(
-                "DROP TABLE IF EXISTS public.job",
-                connection);
+            var cmdDropJobTable = connection.CreateCommand();
+            cmdDropJobTable.CommandText = "DROP TABLE IF EXISTS public.job";
             cmdDropJobTable.ExecuteNonQuery();
 
             CreateTables(connection);
         }
 
-        public static void DeleteDatabaseLogs(NpgsqlConnection connection)
+        public static void DeleteDatabaseLogs(DbConnection connection)
         {
-            var cmdDropStateEstimateTable = new NpgsqlCommand(
-                "DELETE FROM public.stateestimate",
-                connection);
+            var cmdDropStateEstimateTable = connection.CreateCommand();
+            cmdDropStateEstimateTable.CommandText = "DELETE FROM public.stateestimate";
             cmdDropStateEstimateTable.ExecuteNonQuery();
 
-            var cmdDropMovementTable = new NpgsqlCommand(
-                "DELETE FROM public.movement",
-                connection);
+            var cmdDropMovementTable = connection.CreateCommand();
+            cmdDropMovementTable.CommandText = "DELETE FROM public.movement";
             cmdDropMovementTable.ExecuteNonQuery();
 
-            var cmdDropJobTable = new NpgsqlCommand(
-                "DELETE FROM public.job",
-                connection);
+            var cmdDropJobTable = connection.CreateCommand();
+            cmdDropJobTable.CommandText = "DELETE FROM public.job";
             cmdDropJobTable.ExecuteNonQuery();
         }
 
-        public static List<Movement> GetMovementsByJob(NpgsqlConnection connection, int jobId)
+        public static List<Movement> GetMovementsByJob(DbConnection connection, int jobId)
         {
-            var movements = connection.Query<Movement>($"Select * FROM movement WHERE jobid = {jobId}").ToList();
+            var movements = connection.Query<Movement>($"SELECT * FROM movement WHERE jobid = {jobId}").ToList();
             return movements;
         }
 
-        public static List<BatchVideoJob> GetAllJobs(NpgsqlConnection connection)
+        public static List<BatchVideoJob> GetAllJobs(DbConnection connection)
         {
-            var jobs = connection.Query<BatchVideoJob>("Select * FROM job").ToList();
+            var jobs = connection.Query<BatchVideoJob>("SELECT * FROM job").ToList();
             return jobs;
         }
     }

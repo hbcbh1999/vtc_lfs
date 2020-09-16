@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Drawing;
 using Npgsql;
@@ -14,13 +15,14 @@ namespace VTC.Common
         public DateTime Timestamp;
         public int Id;
 
-        public void Save(NpgsqlConnection dbConnection)
+        public void Save(DbConnection dbConnection)
         {
             try
             {
-                var result = new NpgsqlCommand(
-                    $"INSERT INTO public.job(videopath,regionconfigurationname,groundtruthpath,timestamp) VALUES('{VideoPath}','{RegionConfiguration.Title}','{GroundTruthPath}','{DateTime.Now}') RETURNING id",
-                    dbConnection).ExecuteScalar();
+                var cmd = dbConnection.CreateCommand();
+                cmd.CommandText =
+                    $"INSERT INTO public.job(videopath,regionconfigurationname,groundtruthpath,timestamp) VALUES('{VideoPath}','{RegionConfiguration.Title}','{GroundTruthPath}','{DateTime.Now}') RETURNING id";
+                var result = cmd.ExecuteScalar();
                 Id = int.Parse(result.ToString());
             }
             catch (Exception e)

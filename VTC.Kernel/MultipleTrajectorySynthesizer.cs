@@ -229,7 +229,7 @@ namespace VTC.Kernel
             TrajectoryPrototypes.AddRange(examplePaths);
         }
 
-        List<Movement> GenerateExamplePathTrajectories(RegionConfig config)
+        public List<Movement> GenerateExamplePathTrajectories(RegionConfig config)
         {
             List<Movement> examplePaths = new List<Movement>();
             foreach (var path in config.ExamplePaths)

@@ -65,7 +65,7 @@ namespace VTC.Common
 
         [Description("Port of postgres database for recieving measurements.")]
         [DataMember]
-        public int DatabasePort { get; set; } = 5434;
+        public int DatabasePort { get; set; } = 5432;
 
         [Description("Name of postgres database for recieving measurements.")]
         [DataMember]
