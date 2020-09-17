@@ -158,7 +158,6 @@
     <Compile Include="GPU.cs" />
     <Compile Include="GPUDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ImageAnalyzer.cs" />
     <Compile Include="YoloWrapperNoGPU.cs" />
     <Compile Include="YoloWrapper.cs" />
   </ItemGroup>
@@ -187,15 +186,21 @@ cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-yolov3.cfg" "$(TargetDir)DetectionNet
 cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-yolov3_final.weights" "$(TargetDir)DetectionNetwork"
 cp "$(SolutionDir)ThirdParty\DarknetV3\VTC-obj.names" "$(TargetDir)DetectionNetwork"
 cp "$(SolutionDir)ThirdParty\DarknetV3\yolo_cpp_dll.dll" $(TargetDir)
-cp "$(SolutionDir)ThirdParty\DarknetV3\yolo_cpp_dll_no_gpu.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\Darknet\pthreadGC2.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\Darknet\pthreadVC2.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\CUDA9.1\deviceQuery.exe" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\CUDA10.1\cublas64_10.dll" $(TargetDir)
-cp "$(SolutionDir)ThirdParty\CUDA10.1\cudart64_101.dll" $(TargetDir)
-cp "$(SolutionDir)ThirdParty\CUDA10.1\curand64_10.dll" $(TargetDir)
-cp "$(SolutionDir)ThirdParty\CUDA10.1\cudnn64_7.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\CUDA10.1\cublasLt64_10.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cudart32_101.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cudart64_101.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cudnn64_7.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cufft64_10.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cufftw64_10.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cuinj64_101.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\curand64_10.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cusolver64_10.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\cusparse64_10.dll" $(TargetDir)
+cp "$(SolutionDir)ThirdParty\CUDA10.1\nvcuda.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\OpenCV3.4.6\opencv_ffmpeg346_64.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\OpenCV3.4.6\opencv_world346.dll" $(TargetDir)
 cp "$(SolutionDir)ThirdParty\OpenCV3.4.6\opencv_world346d.dll" $(TargetDir)</PostBuildEvent>

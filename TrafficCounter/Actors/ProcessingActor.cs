@@ -9,6 +9,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using Newtonsoft.Json;
 using NLog;
+using Sentry.Protocol;
 using VTC.Classifier;
 using VTC.Common;
 using VTC.Common.RegionConfig;
@@ -99,7 +100,8 @@ namespace VTC.Actors
                 if (_vista.CpuMode)
                 {
                     MessageBox.Show(
-                        "VTC is running on CPU. To process footage faster, use a CUDA-capable nVidia GPU with 6GB VRAM minimum. See hardware specs on Roadometry website for details.", "Processing Rate Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);                    
+                        "VTC requires a CUDA-capable nVidia GPU with 6GB VRAM minimum. See hardware specs on Roadometry website for details.", "CUDA Unavailable", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Application.Exit();
                 }
 
                 Context.System.Scheduler.ScheduleTellRepeatedly(5000, 5000, Self, new CalculateFrameRateMessage(), Self);
