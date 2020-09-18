@@ -14,6 +14,8 @@ using VTC.Kernel.Video;
 using VTC.Common;
 using Akka.Actor;
 using Akka.Configuration;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Sentry;
 using Sentry.Protocol;
 using VTC.Actors;
@@ -56,6 +58,8 @@ namespace VTC
         public delegate void UpdateStatsUIDelegate(string statString);
         public delegate void UpdateDebugDelegate(string debugString);
 
+        private TelemetryClient _telemetry;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -66,6 +70,8 @@ namespace VTC
             InitializeComponent();
 
             SentrySdk.Init(_dsn);
+            _telemetry = new TelemetryClient();
+            
 
             _isLicensed = isLicensed;
 
@@ -79,6 +85,7 @@ namespace VTC
                 var ev = new SentryEvent {Level = SentryLevel.Info};
                 ev.SetTag("License", "Active");
                 SentrySdk.CaptureEvent(ev);
+                _telemetry.TrackEvent("Launch", new Dictionary<string, string>{{"License","Active"},{"User",Environment.UserName}});
             }
             else
             {
@@ -87,6 +94,7 @@ namespace VTC
                 ev.Level = SentryLevel.Info;
                 ev.SetTag("License", "Unactivated");
                 SentrySdk.CaptureEvent(ev);
+                _telemetry.TrackEvent("Launch", new Dictionary<string, string> { { "License", "Unactivated" },{ "User", Environment.UserName } });
             }
 
             var gpuDetector = new GPUDetector();

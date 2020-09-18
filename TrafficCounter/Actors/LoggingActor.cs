@@ -19,6 +19,7 @@ using System.Windows.Forms;
 using Akka.Actor;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using Microsoft.ApplicationInsights;
 using NLog;
 using Npgsql;
 using Sentry;
@@ -76,6 +77,7 @@ namespace VTC.Actors
 
         private List<Movement> MovementTransmitBuffer = new List<Movement>();
 
+        private TelemetryClient _telemetry;
 
         public LoggingActor()
         {
@@ -179,6 +181,7 @@ namespace VTC.Actors
                 UpdateBatchJob(message.Job)
             );
 
+            _telemetry = new TelemetryClient();
             InitializeDatabase();
 
             Self.Tell(new LoadUserConfigMessage());
@@ -263,6 +266,7 @@ namespace VTC.Actors
             {
                 var ev = new SentryEvent {Level = SentryLevel.Error, Message = actorName + ": " + text};
                 SentrySdk.CaptureEvent(ev);
+                _telemetry.TrackEvent(actorName,new Dictionary<string, string>{{"Message",text}});
             }
         }
 
@@ -297,8 +301,8 @@ namespace VTC.Actors
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
 
                 var ev = new SentryEvent {Level = SentryLevel.Error, Message = "Report generated"};
-                ev.SetTag("Path", folderPath);
                 SentrySdk.CaptureEvent(ev);
+                _telemetry.TrackEvent("Reported Generated");
             }
             catch (NullReferenceException e)
             {
@@ -380,8 +384,8 @@ namespace VTC.Actors
             _currentVideoName = message.CaptureSource.Name;
 
             var ev = new SentryEvent { Level = SentryLevel.Info, Message = "New video source" };
-            ev.SetTag("Name", message.CaptureSource.Name);
             SentrySdk.CaptureEvent(ev);
+            _telemetry.TrackEvent("New video source", new Dictionary<string, string> {{"Name",message.CaptureSource.Name}});
 
             _videoStartTime = message.CaptureSource.StartDateTime();
             _liveMode = message.CaptureSource.IsLiveCapture();
