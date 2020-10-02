@@ -124,6 +124,12 @@ namespace VTC.Actors
                 if (_currentJob.RegionConfiguration != null)
                 {
                     var captureSource = LoadCameraFromFilename(_currentJob.VideoPath);
+
+                    var overrideTimeForm = new VideoDateTimeForm(captureSource.StartDateTime());
+                    overrideTimeForm.ShowDialog();
+                    _currentJob.Timestamp = overrideTimeForm.OverrideTime;
+                    captureSource._startDate = overrideTimeForm.OverrideTime;
+
                     _frameGrabActor.Tell(new NewVideoSourceMessage(captureSource));
                     _currentVideoName = captureSource.Name;
                     _frameGrabActor.Tell(new UpdateVideoPropertiesMessage(captureSource.FPS(), captureSource.FrameCount));

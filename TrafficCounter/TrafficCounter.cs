@@ -334,12 +334,6 @@ namespace VTC
                     break;
             }
 
-            // Add video file as source, if provided
-            if (UseLocalVideo(cameraSelectionString))
-            {
-                LoadCameraFromFilename(cameraSelectionString);
-            }
-
             //List all video input devices.
             var systemCameras = DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice);
 
