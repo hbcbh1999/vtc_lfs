@@ -33,11 +33,9 @@ namespace VTC
         #endregion
 
         #region Mode Flags
-        private readonly bool _unitTestsMode;
         private readonly bool _isLicensed = false;
         #endregion
 
-        private readonly IActorRef _supervisorActor;
         private readonly ActorSystem _actorSystem;
 
         private readonly DateTime _applicationStartTime;
@@ -104,13 +102,6 @@ namespace VTC
                 Application.Exit();
             }
 
-            // check if app should run in unit test visualization mode
-            _unitTestsMode = false;
-            if ("-tests".Equals(appArgument, StringComparison.OrdinalIgnoreCase))
-            {
-                _unitTestsMode = DetectTestScenarios("OptAssignTest.dll");
-            }
-
             //Disable eventhandler for the changing combobox index.
             CameraComboBox.SelectedIndexChanged -= CameraComboBox_SelectedIndexChanged;
 
@@ -140,11 +131,8 @@ namespace VTC
             _supervisorActor.Tell(new UpdateActorStatusHandlerMessage(UpdateActorStatusIndicators));
 
            // otherwise - run in standard mode
-           if (!_unitTestsMode)
-           {
-               InitializeCameraSelection(appArgument);
-           }
-        }
+           InitializeCameraSelection(appArgument);
+       }
 
         private void UpdateUI(TrafficCounterUIUpdateInfo updateInfo)
         {
@@ -482,7 +470,6 @@ namespace VTC
 
             //Create new output folder
             loggingActor.Tell(new NewVideoSourceMessage(_selectedCaptureSource));
-            DateTime videoTime = DateTime.Now;
             loggingActor.Tell(new FileCreationTimeMessage(_selectedCaptureSource.StartDateTime()));
 
             //Change the capture device.

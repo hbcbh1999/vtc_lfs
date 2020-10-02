@@ -452,6 +452,12 @@
     <Compile Include="UI\TrafficCounterUIUpdateInfo.cs" />
     <Compile Include="UserConfiguration\FileUserConfigDAL.cs" />
     <Compile Include="UserConfiguration\IUserConfigDataAccessLayer.cs" />
+    <Compile Include="VideoDateTimeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VideoDateTimeForm.Designer.cs">
+      <DependentUpon>VideoDateTimeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="VideoDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -508,6 +514,9 @@
     <EmbeddedResource Include="TrafficCounter.resx">
       <SubType>Designer</SubType>
       <DependentUpon>TrafficCounter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VideoDateTimeForm.resx">
+      <DependentUpon>VideoDateTimeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VideoDisplay.resx">
       <DependentUpon>VideoDisplay.cs</DependentUpon>

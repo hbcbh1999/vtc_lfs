@@ -133,7 +133,6 @@ namespace VTC.Actors
                     _loggingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
                     _loggingActor.Tell(new CopyGroundtruthMessage(_currentJob.GroundTruthPath));
                     _loggingActor.Tell(new NewBatchJobMessage(_currentJob));
-                    var vm = VideoMetadata.ExtractFromVideo(_currentJob.VideoPath);
                     _frameGrabActor.Tell(new GetNextFrameMessage());
                 }
                 else
