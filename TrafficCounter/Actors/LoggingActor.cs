@@ -295,7 +295,7 @@ namespace VTC.Actors
                 var tnow = VideoTime();
 
                 ReportGenerator.CopyAssetsToExportFolder(folderPath);
-                ReportGenerator.GenerateSummaryReportHtml(folderPath, _currentVideoName, tnow, movements);
+                ReportGenerator.GenerateSummaryReportHtml(folderPath, _currentVideoName,  _currentJob.StartDateTime, movements);
                 ReportGenerator.GenerateCSVReportHtml(folderPath, _currentVideoName, tnow, movements);
 
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));

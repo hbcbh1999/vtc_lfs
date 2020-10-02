@@ -13,7 +13,7 @@ namespace VTC.Common
         public string VideoPath;
         public RegionConfig.RegionConfig RegionConfiguration;
         public string GroundTruthPath;
-        public DateTime Timestamp;
+        public DateTime StartDateTime;
         public long Id;
 
         public void Save(DbConnection dbConnection,UserConfig config)

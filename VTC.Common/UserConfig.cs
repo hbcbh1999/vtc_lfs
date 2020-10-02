@@ -78,5 +78,9 @@ namespace VTC.Common
         [Description("If this flag is set, a local SQLite database will be used intead of Postgres.")]
         [DataMember]
         public bool SQLite { get; set; } = true;
+
+        [Description("If this flag is set, the user will be presented with a dialog to override each video-file's timestamp.")]
+        [DataMember]
+        public bool AllowUserOverrideDatetime { get; set; } = true;
     }
 }
