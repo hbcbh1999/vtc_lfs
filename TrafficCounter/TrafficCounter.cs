@@ -126,9 +126,9 @@ namespace VTC
                 ");
 
             _actorSystem = ActorSystem.Create("VTCActorSystem", config);
-            _supervisorActor = _actorSystem.ActorOf(Props.Create(typeof(SupervisorActor)).WithDispatcher("synchronized-dispatcher"), "SupervisorActor");
-            _supervisorActor.Tell(new CreateAllActorsMessage(UpdateUI, UpdateStatsUI, UpdateInfoBox, UpdateUIAccessoryInfo, UpdateDebugInfo));
-            _supervisorActor.Tell(new UpdateActorStatusHandlerMessage(UpdateActorStatusIndicators));
+            var supervisorActor = _actorSystem.ActorOf(Props.Create(typeof(SupervisorActor)).WithDispatcher("synchronized-dispatcher"), "SupervisorActor");
+            supervisorActor.Tell(new CreateAllActorsMessage(UpdateUI, UpdateStatsUI, UpdateInfoBox, UpdateUIAccessoryInfo, UpdateDebugInfo));
+            supervisorActor.Tell(new UpdateActorStatusHandlerMessage(UpdateActorStatusIndicators));
 
            // otherwise - run in standard mode
            InitializeCameraSelection(appArgument);
