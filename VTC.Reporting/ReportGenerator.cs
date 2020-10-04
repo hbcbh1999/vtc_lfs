@@ -92,16 +92,26 @@ namespace VTC.Reporting
 
         }
 
-        public static void GenerateCSVReportHtml(string exportPath, string location, DateTime videoTime, List<Movement> movements)
+        public static void GenerateCSVReport(string exportPath, string location, DateTime videoTime, List<Movement> movements)
         {
             try
             {
-                var reportPath = Path.Combine(exportPath, "15-minute binned counts.csv");
                 var pairs = GetAllUniqueApproachExitPairs(movements);
                 
                 var binnedMovements15 = BinnedMovements.BinMovementsByTime(movements, 15);
-                var csvReport = new CSVReportTemplate { BinnedMovements15 = binnedMovements15, ApproachExitPairs = pairs }.TransformText();
-                File.WriteAllText(reportPath, csvReport); //Save
+                var csvReport15 = new CSVReportTemplate { BinnedMovements = binnedMovements15, ApproachExitPairs = pairs }.TransformText();
+                var reportPath15 = Path.Combine(exportPath, "15-minute binned counts.csv");
+                File.WriteAllText(reportPath15, csvReport15);
+
+                var binnedMovements60 = BinnedMovements.BinMovementsByTime(movements, 60);
+                var csvReport60 = new CSVReportTemplate { BinnedMovements = binnedMovements60, ApproachExitPairs = pairs }.TransformText();
+                var reportPath60 = Path.Combine(exportPath, "60-minute binned counts.csv");
+                File.WriteAllText(reportPath60, csvReport60);
+
+                var binnedMovements5 = BinnedMovements.BinMovementsByTime(movements, 5);
+                var csvReport5 = new CSVReportTemplate { BinnedMovements = binnedMovements5, ApproachExitPairs = pairs }.TransformText();
+                var reportPath5 = Path.Combine(exportPath, "5-minute binned counts.csv");
+                File.WriteAllText(reportPath5, csvReport5);
             }
             catch (IOException e)
             {

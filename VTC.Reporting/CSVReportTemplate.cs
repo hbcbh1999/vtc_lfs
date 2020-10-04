@@ -76,7 +76,7 @@ namespace VTC.Reporting
             #line hidden
             
             #line 10 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
-  foreach (var bin in BinnedMovements15) { 
+  foreach (var bin in BinnedMovements) { 
             
             #line default
             #line hidden
@@ -139,7 +139,7 @@ namespace VTC.Reporting
         
         #line 16 "C:\VTCProject\vtc_lfs\VTC.Reporting\CSVReportTemplate.tt"
 
-public List<VTC.Common.BinnedMovements> BinnedMovements15;
+public List<VTC.Common.BinnedMovements> BinnedMovements;
 public List<(string Approach, string Exit)> ApproachExitPairs;
 
         
