@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using Npgsql;
 using System.Data.SQLite;
+using System.Globalization;
 
 namespace VTC.Common
 {
@@ -114,7 +115,7 @@ namespace VTC.Common
                     var sqliteConnection = (SQLiteConnection) dbConnection;
                     var cmd = sqliteConnection.CreateCommand();
                     cmd.CommandText =
-                        $"INSERT INTO movement(jobid,approach,exit,movementtype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp}',{(Synthetic ? 1 : 0)},{(Ignored ? 1 : 0)})";
+                        $"INSERT INTO movement(jobid,approach,exit,movementtype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp.ToString(CultureInfo.InvariantCulture)}',{(Synthetic ? 1 : 0)},{(Ignored ? 1 : 0)})";
                     cmd.Transaction = (SQLiteTransaction) transaction;
                     cmd.ExecuteNonQuery();
                     Id = sqliteConnection.LastInsertRowId;
@@ -123,7 +124,7 @@ namespace VTC.Common
                 {
                     var cmd = dbConnection.CreateCommand();
                     cmd.CommandText =
-                        $"INSERT INTO movement(jobid,approach,exit,turntype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp}',{Synthetic},{Ignored}) RETURNING id";
+                        $"INSERT INTO movement(jobid,approach,exit,turntype,trafficobjecttype,timestamp,synthetic,ignored) VALUES({JobId},'{Approach}','{Exit}','{TurnType}','{TrafficObjectType}','{Timestamp.ToString(CultureInfo.InvariantCulture)}',{Synthetic},{Ignored}) RETURNING id";
                     cmd.Transaction = transaction;
                     var result = cmd.ExecuteScalar();
                     Id = int.Parse(result.ToString());

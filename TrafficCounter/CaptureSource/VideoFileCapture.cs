@@ -54,7 +54,7 @@ namespace VTC.CaptureSource
 
             try
             {
-                _fps = fpsString.Length > 0 ? Double.Parse(fpsString) : 24.0;
+                _fps = fpsString.Length > 0 ? Double.Parse(fpsString,CultureInfo.InvariantCulture) : 24.0;
             }
             catch(FormatException ex)
             {
