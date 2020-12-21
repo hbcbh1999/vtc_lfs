@@ -24,6 +24,11 @@ namespace VTC.Common
         {
             List<BinnedMovements> binList = new List<BinnedMovements>(movements.Count);
 
+            if (movements.Count == 0)
+            {
+                return binList;
+            }
+
             DateTime startTime = movements.Select(m => m.Timestamp).OrderByDescending(t => t).Last();
             DateTime endTime = movements.Select(m => m.Timestamp).OrderByDescending(t => t).First();
             DateTime startTimeRounded = startTime.Floor(TimeSpan.FromMinutes(binSizeMinutes));

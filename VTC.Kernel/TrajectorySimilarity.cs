@@ -38,6 +38,13 @@ namespace VTC.Kernel
 
         public static Movement MatchNearestTrajectory(TrackedObject d, string classType, int minPathLength, List<Movement> trajectoryPrototypes)
         {
+            //If no trajectories have been configured, we want this function to behave nicely for new users, so we count everything (instead of counting nothing).
+            if (trajectoryPrototypes.Count == 0)
+            {
+                var movement = new Movement("Unknown", "Unknown", Turn.Unknown, ObjectType.Unknown, d.StateHistory, DateTime.Now, false);
+                return movement;
+            }
+
             var matchedTrajectoryName = BestMatchTrajectory(d.StateHistory, trajectoryPrototypes, classType);
             return matchedTrajectoryName;
         }

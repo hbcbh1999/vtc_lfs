@@ -27,8 +27,16 @@ namespace VTC.RegionConfiguration
             var thumbnail = frame.Convert<Emgu.CV.Structure.Bgr, float>();
             for (int i = 0; i < 100; i++)
             {
-                var thumbnail2 = captureSource.QueryFrame().Convert<Emgu.CV.Structure.Bgr, float>();
-                thumbnail.AccumulateWeighted(thumbnail2, 0.01);
+                var tempFrame = captureSource.QueryFrame();
+                if(tempFrame != null)
+                { 
+                    var tempFrameConverted = tempFrame.Convert<Emgu.CV.Structure.Bgr, float>();
+                    thumbnail.AccumulateWeighted(tempFrameConverted, 0.01);
+                }
+                else
+                {
+                   System.Diagnostics.Debug.WriteLine("Frame " + i + " was null in RegionConfigSelectorView");
+                }
             }
 
             var control = new RegionConfigSelectorControl(regionConfigs, thumbnail, captureSource.Name)

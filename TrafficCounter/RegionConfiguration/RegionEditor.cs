@@ -68,8 +68,24 @@ namespace VTC.RegionConfiguration
                     {
                         name = $"{cs.Name} ({i++})";
                     }
-                    Image<Bgr,float> thumbnailBase = cs.QueryFrame().Convert<Bgr, float>();
-                    _thumbnails[name] = thumbnailBase;
+                    var gotFrame = false;
+                    var attempts = 0;
+                    while(!gotFrame && attempts < 100)
+                    {
+                        var frame = cs.QueryFrame();
+                        if(frame != null)
+                        {
+                            var frameConverted = frame.Convert<Bgr, float>();
+                            _thumbnails[name] = frameConverted;
+                            gotFrame = true;
+                            break;
+                        }
+                        attempts++;
+                    }
+                    if(gotFrame == false)
+                    {
+                        Logger.Log(LogLevel.Error, "Region Editor was unable to obtain a frame from " + name);
+                    }
                 }
                 catch (Exception e) //Todo: Make this more specific
                 {
