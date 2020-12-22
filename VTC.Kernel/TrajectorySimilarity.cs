@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
-using NDtw;
-using NDtw.Preprocessing;
 using VTC.Common;
 
 namespace VTC.Kernel

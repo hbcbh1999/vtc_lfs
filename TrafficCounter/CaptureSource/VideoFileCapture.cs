@@ -74,9 +74,20 @@ namespace VTC.CaptureSource
 
         protected override VideoCapture GetCapture()
         {
-            var capture = new VideoCapture(_path);
-            FrameCount = capture.GetCaptureProperty(CapProp.FrameCount);
-            return capture;
+            // .mkv files seem to be incompatible with the default back-end
+            if(Path.GetExtension(_path) == ".mkv")
+            {
+                var capture = new VideoCapture(_path);
+                FrameCount = capture.GetCaptureProperty(CapProp.FrameCount);
+                return capture;
+                
+            }
+            else //GoPro files require the Msmf back-end to be decoded correctly. Default does not work.
+            {
+                var capture = new VideoCapture(_path, VideoCapture.API.Msmf);
+                FrameCount = capture.GetCaptureProperty(CapProp.FrameCount);
+                return capture;
+            }
         }
 
         public override bool IsLiveCapture()

@@ -13,6 +13,7 @@ namespace VTC.CaptureSource
     {
         private VideoCapture _cameraCapture;
         private static readonly Logger Logger = LogManager.GetLogger("main.form");
+        private Image<Bgr, byte> _frame = new Image<Bgr, byte>(640,480);
 
         public int Width
         {
@@ -66,32 +67,36 @@ namespace VTC.CaptureSource
                 if (_cameraCapture != null)
                 {
                     {
-                        var frame = _cameraCapture.QueryFrame();
-                        if (frame == null)
+                        using(var frame = _cameraCapture.QueryFrame())
                         {
-                            if (_cameraCapture.CaptureSource == VideoCapture.CaptureModuleType.Camera)
+                            if (frame == null)
                             {
-                                //_captureComplete = true;
-                                //CaptureTerminatedEvent?.Invoke();
-                            }
-                            else
-                            {
-                                _captureComplete = true;
-                                CaptureCompleteEvent?.Invoke();
+                                if (_cameraCapture.CaptureSource == VideoCapture.CaptureModuleType.Camera)
+                                {
+                                    //_captureComplete = true;
+                                    //CaptureTerminatedEvent?.Invoke();
+                                }
+                                else
+                                {
+                                    _captureComplete = true;
+                                    CaptureCompleteEvent?.Invoke();
+                                }
+
+                                return null;
                             }
 
-                            return null;
-                        }
+                            var tnow = DateTime.Now;
+                            var tdelta = tnow - _lastFrameTime;
+                            var tdeltaSafe = (tdelta.Ticks == 0) ? new TimeSpan(1) : tdelta;
+                            if (IsLiveCapture())
+                            {
+                                _fps = 1.0 / ((tdeltaSafe).Milliseconds / 1000.0);
+                            }
+                            _lastFrameTime = tnow;
 
-                        var tnow = DateTime.Now;
-                        var tdelta = tnow - _lastFrameTime;
-                        var tdeltaSafe = (tdelta.Ticks == 0) ? new TimeSpan(1) : tdelta;
-                        if(IsLiveCapture())
-                        {
-                            _fps = 1.0/((tdeltaSafe).Milliseconds/1000.0);
+                            _frame = frame.ToImage<Bgr, byte>().Resize(640, 480, Inter.Cubic);
                         }
-                        _lastFrameTime = tnow;
-                        return frame.ToImage<Bgr, byte>().Resize(640, 480, Inter.Cubic);
+                        return _frame;
                     }
                 }
             }
