@@ -642,5 +642,63 @@ namespace VTC
                 MessageBox.Show("Ok, the database has been reset.");
             }
         }
+
+        public class FilenameNumericalComparator : IComparer<string>
+        {
+            public int Compare(string a, string b)
+            {
+                var filenameA = Path.GetFileName(a);
+                var filenameB = Path.GetFileName(b);
+                bool successA = Int32.TryParse(filenameA, out var intA);
+                bool successB = Int32.TryParse(filenameB, out var intB);
+
+                if (!successA || !successB)
+                {
+                    return 0;
+                }
+
+                if (intA == intB)
+                {
+                    return 0;
+                }
+
+                if (intA < intB)
+                {
+                    return -1;
+                }
+
+                return 1;
+            }
+        }
+        
+        private void loadSplitVideoButton_Click(object sender, EventArgs e)
+        {
+            var dr = selectVideoFilesDialog.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                var loggingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/LoggingActor");
+                var configurationActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/ConfigurationActor");
+                var sequencingActor = _actorSystem.ActorSelection("akka://VTCActorSystem/user/SupervisorActor/SequencingActor");
+
+                var videoJobs = new List<BatchVideoJob>();
+                var videoPathsList = selectVideoFilesDialog.FileNames.ToList();
+
+                videoPathsList.Sort(new FilenameNumericalComparator());
+
+                sequencingActor?.Tell(new BeginSplitVideoMessage());
+                loggingActor?.Tell(new BeginSplitVideoMessage());
+
+                foreach (var job in videoPathsList.Select(p => new BatchVideoJob { VideoPath = p }))
+                {
+                    loggingActor?.Tell(new SplitVideoJobsMessage(videoJobs));
+                    videoJobs.Add(job);
+                }
+
+                configurationActor.Tell(new SplitVideoJobsMessage(videoJobs));
+                configurationActor.Tell(new CamerasMessage(_cameras));
+                configurationActor.Tell(new CurrentJobMessage(videoJobs.First()));
+                btnConfigureRegions_Click(null, null);
+            }
+        }
     }
 }

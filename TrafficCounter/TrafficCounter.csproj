@@ -320,6 +320,7 @@
     <Compile Include="CaptureSource\CaptureSource.cs" />
     <Compile Include="CaptureSource\IpCamera.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Messages\BeginSplitVideoMessage.cs" />
     <Compile Include="Messages\InitializedNotificationMessage.cs" />
     <Compile Include="Messages\ClearStatsMessage.cs" />
     <Compile Include="Messages\InitializationCompleteMessage.cs" />
@@ -382,6 +383,7 @@
     <Compile Include="Messages\UpdateUiHandlerMessage.cs" />
     <Compile Include="Messages\UpdateVideoDimensionsMessage.cs" />
     <Compile Include="Messages\UpdateVideoPropertiesMessage.cs" />
+    <Compile Include="Messages\SplitVideoJobsMessage.cs" />
     <Compile Include="Messages\VideoJobsMessage.cs" />
     <Compile Include="Messages\CheckVideoProcessingRequestsIPCMessage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

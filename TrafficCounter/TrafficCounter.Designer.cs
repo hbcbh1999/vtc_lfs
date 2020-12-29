@@ -67,6 +67,7 @@ namespace VTC
             this.aboutButton = new System.Windows.Forms.Button();
             this.resetCountsButton = new System.Windows.Forms.Button();
             this.resetDatabaseButton = new System.Windows.Forms.Button();
+            this.loadSplitVideoButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // timeActiveTextBox
@@ -93,11 +94,11 @@ namespace VTC
             this.tbVistaStats.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.tbVistaStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbVistaStats.Location = new System.Drawing.Point(12, 385);
+            this.tbVistaStats.Location = new System.Drawing.Point(12, 418);
             this.tbVistaStats.Multiline = true;
             this.tbVistaStats.Name = "tbVistaStats";
             this.tbVistaStats.ReadOnly = true;
-            this.tbVistaStats.Size = new System.Drawing.Size(442, 279);
+            this.tbVistaStats.Size = new System.Drawing.Size(442, 308);
             this.tbVistaStats.TabIndex = 6;
             // 
             // CameraComboBox
@@ -105,7 +106,7 @@ namespace VTC
             this.CameraComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CameraComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.CameraComboBox.FormattingEnabled = true;
-            this.CameraComboBox.Location = new System.Drawing.Point(12, 35);
+            this.CameraComboBox.Location = new System.Drawing.Point(12, 22);
             this.CameraComboBox.Name = "CameraComboBox";
             this.CameraComboBox.Size = new System.Drawing.Size(240, 23);
             this.CameraComboBox.TabIndex = 1;
@@ -114,7 +115,7 @@ namespace VTC
             // btnConfigureRegions
             // 
             this.btnConfigureRegions.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.btnConfigureRegions.Location = new System.Drawing.Point(12, 146);
+            this.btnConfigureRegions.Location = new System.Drawing.Point(12, 186);
             this.btnConfigureRegions.Name = "btnConfigureRegions";
             this.btnConfigureRegions.Size = new System.Drawing.Size(115, 24);
             this.btnConfigureRegions.TabIndex = 4;
@@ -134,7 +135,7 @@ namespace VTC
             this.SelectVideosButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SelectVideosButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SelectVideosButton.ForeColor = System.Drawing.Color.White;
-            this.SelectVideosButton.Location = new System.Drawing.Point(12, 63);
+            this.SelectVideosButton.Location = new System.Drawing.Point(12, 51);
             this.SelectVideosButton.Name = "SelectVideosButton";
             this.SelectVideosButton.Size = new System.Drawing.Size(240, 44);
             this.SelectVideosButton.TabIndex = 2;
@@ -152,7 +153,7 @@ namespace VTC
             // infoBox
             // 
             this.infoBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.infoBox.Location = new System.Drawing.Point(12, 257);
+            this.infoBox.Location = new System.Drawing.Point(12, 290);
             this.infoBox.Multiline = true;
             this.infoBox.Name = "infoBox";
             this.infoBox.ReadOnly = true;
@@ -162,7 +163,7 @@ namespace VTC
             // generateReportButton
             // 
             this.generateReportButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.generateReportButton.Location = new System.Drawing.Point(133, 146);
+            this.generateReportButton.Location = new System.Drawing.Point(133, 186);
             this.generateReportButton.Name = "generateReportButton";
             this.generateReportButton.Size = new System.Drawing.Size(115, 24);
             this.generateReportButton.TabIndex = 65;
@@ -173,7 +174,7 @@ namespace VTC
             // trackedObjectsTextbox
             // 
             this.trackedObjectsTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.trackedObjectsTextbox.Location = new System.Drawing.Point(12, 213);
+            this.trackedObjectsTextbox.Location = new System.Drawing.Point(12, 246);
             this.trackedObjectsTextbox.Multiline = true;
             this.trackedObjectsTextbox.Name = "trackedObjectsTextbox";
             this.trackedObjectsTextbox.ReadOnly = true;
@@ -346,7 +347,7 @@ namespace VTC
             // debugTextbox
             // 
             this.debugTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.debugTextbox.Location = new System.Drawing.Point(12, 321);
+            this.debugTextbox.Location = new System.Drawing.Point(12, 354);
             this.debugTextbox.Multiline = true;
             this.debugTextbox.Name = "debugTextbox";
             this.debugTextbox.ReadOnly = true;
@@ -356,7 +357,7 @@ namespace VTC
             // userSettingsButton
             // 
             this.userSettingsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.userSettingsButton.Location = new System.Drawing.Point(12, 116);
+            this.userSettingsButton.Location = new System.Drawing.Point(12, 156);
             this.userSettingsButton.Name = "userSettingsButton";
             this.userSettingsButton.Size = new System.Drawing.Size(115, 24);
             this.userSettingsButton.TabIndex = 92;
@@ -368,7 +369,7 @@ namespace VTC
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.label9.Location = new System.Drawing.Point(170, 19);
+            this.label9.Location = new System.Drawing.Point(170, 6);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(76, 13);
             this.label9.TabIndex = 93;
@@ -377,7 +378,7 @@ namespace VTC
             // aboutButton
             // 
             this.aboutButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.aboutButton.Location = new System.Drawing.Point(133, 116);
+            this.aboutButton.Location = new System.Drawing.Point(133, 156);
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Size = new System.Drawing.Size(115, 24);
             this.aboutButton.TabIndex = 94;
@@ -388,7 +389,7 @@ namespace VTC
             // resetCountsButton
             // 
             this.resetCountsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.resetCountsButton.Location = new System.Drawing.Point(12, 176);
+            this.resetCountsButton.Location = new System.Drawing.Point(12, 216);
             this.resetCountsButton.Name = "resetCountsButton";
             this.resetCountsButton.Size = new System.Drawing.Size(115, 24);
             this.resetCountsButton.TabIndex = 95;
@@ -399,7 +400,7 @@ namespace VTC
             // resetDatabaseButton
             // 
             this.resetDatabaseButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.resetDatabaseButton.Location = new System.Drawing.Point(133, 176);
+            this.resetDatabaseButton.Location = new System.Drawing.Point(133, 216);
             this.resetDatabaseButton.Name = "resetDatabaseButton";
             this.resetDatabaseButton.Size = new System.Drawing.Size(115, 24);
             this.resetDatabaseButton.TabIndex = 96;
@@ -407,12 +408,27 @@ namespace VTC
             this.resetDatabaseButton.UseVisualStyleBackColor = true;
             this.resetDatabaseButton.Click += new System.EventHandler(this.resetDatabaseButton_Click);
             // 
+            // loadSplitVideoButton
+            // 
+            this.loadSplitVideoButton.BackColor = System.Drawing.Color.DodgerBlue;
+            this.loadSplitVideoButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.loadSplitVideoButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.loadSplitVideoButton.ForeColor = System.Drawing.Color.White;
+            this.loadSplitVideoButton.Location = new System.Drawing.Point(12, 101);
+            this.loadSplitVideoButton.Name = "loadSplitVideoButton";
+            this.loadSplitVideoButton.Size = new System.Drawing.Size(240, 44);
+            this.loadSplitVideoButton.TabIndex = 97;
+            this.loadSplitVideoButton.Text = "Load split video";
+            this.loadSplitVideoButton.UseVisualStyleBackColor = false;
+            this.loadSplitVideoButton.Click += new System.EventHandler(this.loadSplitVideoButton_Click);
+            // 
             // TrafficCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(468, 676);
+            this.ClientSize = new System.Drawing.Size(468, 738);
+            this.Controls.Add(this.loadSplitVideoButton);
             this.Controls.Add(this.resetDatabaseButton);
             this.Controls.Add(this.resetCountsButton);
             this.Controls.Add(this.aboutButton);
@@ -491,5 +507,6 @@ namespace VTC
         private Button aboutButton;
         private Button resetCountsButton;
         private Button resetDatabaseButton;
+        private Button loadSplitVideoButton;
     }
 }

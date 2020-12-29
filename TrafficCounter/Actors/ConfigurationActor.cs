@@ -30,6 +30,8 @@ namespace VTC.Actors
         private List<BatchVideoJob> _videoJobs = new List<BatchVideoJob>();
         private Image<Bgr,byte> _backgroundFrame;
 
+        private bool _splitVideoMode = false;
+
         private static readonly string RegionConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                                                               "\\VTC\\regionConfig.xml";
         private readonly IRegionConfigDataAccessLayer _regionConfigDataAccessLayer = new FileRegionConfigDal(RegionConfigSavePath);
@@ -75,6 +77,10 @@ namespace VTC.Actors
 
             Receive<VideoJobsMessage>(message =>
                 UpdateVideoJobs(message.VideoJobsList)
+            );
+
+            Receive<SplitVideoJobsMessage>(message =>
+                UpdateSplitVideoJobs(message.VideoJobsList)
             );
 
             Receive<RegionConfigNameLookupMessage>(message =>
@@ -137,6 +143,13 @@ namespace VTC.Actors
 
         private void UpdateVideoJobs(List<BatchVideoJob> jobs)
         {
+            _splitVideoMode = false;
+            _videoJobs = jobs;
+        }
+
+        private void UpdateSplitVideoJobs(List<BatchVideoJob> jobs)
+        {
+            _splitVideoMode = true;
             _videoJobs = jobs;
         }
 
@@ -176,37 +189,58 @@ namespace VTC.Actors
                             _currentJob.RegionConfiguration = regionEditor.SelectedRegionConfig;
                         }
                     }
-            }
+                }
                 else
                 {
-                var captureSourceLookup = _videoJobs.ToDictionary(v => v, v => new VideoFileCapture(v.VideoPath));
-                captureSourceLookup.Values.ToList().ForEach(c => c.Init());
+                    var captureSourceLookup = _videoJobs.ToDictionary(v => v, v => new VideoFileCapture(v.VideoPath));
+                    captureSourceLookup.Values.ToList().ForEach(c => c.Init());
 
-                //Reload configs to ensure they're fresh, in case a new RegionConfig has been saved since the ConfigurationActor started.
-                _regionConfigs = _regionConfigDataAccessLayer.LoadRegionConfigList();
+                    //Reload configs to ensure they're fresh, in case a new RegionConfig has been saved since the ConfigurationActor started.
+                    _regionConfigs = _regionConfigDataAccessLayer.LoadRegionConfigList();
 
-                var view = new RegionConfigSelectorView(_regionConfigDataAccessLayer);
-                var model = new RegionConfigSelectorModel(captureSourceLookup.Values.ToList<ICaptureSource>(), _regionConfigs);
-                view.SetModel(model);
-
-                if (view.ShowDialog() == DialogResult.OK)
-                {
-                    // Get results
-                    var results = view.GetRegionConfigSelections();
-
-                    foreach (var job in _videoJobs)
+                    var view = new RegionConfigSelectorView(_regionConfigDataAccessLayer);
+                    if (_splitVideoMode)
                     {
-                        var captureSource = captureSourceLookup[job];
-                        job.RegionConfiguration = results[captureSource];
+                        //If the configuration actor is currently in split-mode, the dialog should only allow the user to select one configuration which will be
+                        //used for all videos.
+                        var model = new RegionConfigSelectorModel(captureSourceLookup.Values.ToList<ICaptureSource>().GetRange(0,1), _regionConfigs);
+                        view.SetModel(model);
+                    }
+                    else
+                    {
+                        var model = new RegionConfigSelectorModel(captureSourceLookup.Values.ToList<ICaptureSource>(), _regionConfigs);
+                        view.SetModel(model);
                     }
 
-                    _sequencingActor.Tell(new VideoJobsMessage(_videoJobs));
+
+                    if (view.ShowDialog() == DialogResult.OK)
+                    {
+                        // Get results
+                        var results = view.GetRegionConfigSelections();
+                        var firstCaptureSource = captureSourceLookup[_videoJobs.First()];
+                        foreach (var job in _videoJobs)
+                        {
+                            var captureSource = captureSourceLookup[job];
+
+                            if (_splitVideoMode)
+                            {
+                                job.RegionConfiguration = results[firstCaptureSource];
+                            }
+                            else
+                            {
+                                job.RegionConfiguration = results[captureSource];
+                            }
+                        }
+
+                        _sequencingActor.Tell(new VideoJobsMessage(_videoJobs));
                     }
-                return;
-            }
-            // Update regionconfigs with any possible changes
-            _regionConfigs = _regionConfigDataAccessLayer.LoadRegionConfigList();
-            _loggingActor.Tell(new LogUserMessage("Region configuration updated.", LogLevel.Info, "ConfigurationActor"));
+                    
+                    return;
+                }
+                
+                // Update regionconfigs with any possible changes
+                _regionConfigs = _regionConfigDataAccessLayer.LoadRegionConfigList();
+                _loggingActor.Tell(new LogUserMessage("Region configuration updated.", LogLevel.Info, "ConfigurationActor"));
             }
             catch (Exception ex)
             {

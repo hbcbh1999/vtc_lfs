@@ -54,6 +54,8 @@ namespace VTC.Actors
         private string _currentOutputFolder;
         private BatchVideoJob _currentJob;
         private DbConnection _dbConnection;
+        private bool _splitVideoMode = false;
+        private bool _receivedFirstSplitVideo = false;
 
         private MultipleTrajectorySynthesizer mts;
 
@@ -178,6 +180,10 @@ namespace VTC.Actors
                 UpdateBatchJob(message.Job)
             );
 
+            Receive<BeginSplitVideoMessage>(message =>
+                BeginSplitVideoMode()
+            );
+
             InitializeDatabase();
 
             Self.Tell(new LoadUserConfigMessage());
@@ -237,6 +243,12 @@ namespace VTC.Actors
             _videoStartTime = dt;
         }
 
+        private void BeginSplitVideoMode()
+        {
+            _splitVideoMode = true;
+            _receivedFirstSplitVideo = false;
+        }
+
         private void CreateOrReplaceOutputFolderIfExists()
         {
             //Create output folder
@@ -273,7 +285,9 @@ namespace VTC.Actors
 
         private void OnCaptureSourceComplete()
         {
-            GenerateReport();   
+            GenerateReport();
+            _splitVideoMode = false;
+            _receivedFirstSplitVideo = false;
         }
 
         private void GenerateReport()
@@ -374,15 +388,24 @@ namespace VTC.Actors
         {
             Logger.Log(LogLevel.Info, "New video source " + message.CaptureSource.Name);
 
-            ClearTurnStats();
-            _currentVideoName = message.CaptureSource.Name;
+            
+            if (_splitVideoMode == false || _receivedFirstSplitVideo == false)
+            {
+                ClearTurnStats();
 
-            var ev = new SentryEvent { Level = SentryLevel.Info, Message = "New video source" };
-            SentrySdk.CaptureEvent(ev);
+                _currentVideoName = message.CaptureSource.Name;
+                var ev = new SentryEvent { Level = SentryLevel.Info, Message = "New video source" };
+                SentrySdk.CaptureEvent(ev);
 
-            _videoStartTime = message.CaptureSource.StartDateTime();
-            _liveMode = message.CaptureSource.IsLiveCapture();
-            _fps = message.CaptureSource.FPS();
+                _videoStartTime = message.CaptureSource.StartDateTime();
+                _liveMode = message.CaptureSource.IsLiveCapture();
+                _fps = message.CaptureSource.FPS();
+            }
+
+            if (_splitVideoMode)
+            {
+                _receivedFirstSplitVideo = true;
+            }
         }
 
         private void UpdateConfig(RegionConfig config)

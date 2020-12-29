@@ -33,6 +33,9 @@ namespace VTC.Actors
         private IActorRef _processingActor;
         private bool _processingActorInitialized = false;
 
+        private bool _splitVideoMode = false;
+        private bool _startedFirstSplitVideo = false;
+
         private IActorRef _configActor;
         private Dictionary<VideoProcessingRequestMessage, BatchVideoJob> _automationRequestJobs;
         private string _currentVideoName = "";
@@ -94,6 +97,10 @@ namespace VTC.Actors
                 UpdateInitializationStatus(message.Actor)
             );
 
+            Receive<BeginSplitVideoMessage>(message =>
+                BeginSplitVideoMode()
+            );
+
             Self.Tell(new ActorHeartbeatMessage(Self));
 
             Self.Tell(new LoadUserConfigMessage());
@@ -118,31 +125,48 @@ namespace VTC.Actors
         {
             if (_videoJobs.Count > 0)
             {
-                _loggingActor?.Tell(new LogUserMessage("Loading video from batch", LogLevel.Info, "SequencingActor"));
+                if (_splitVideoMode)
+                {
+                    _loggingActor?.Tell(new LogUserMessage("Loading split-video from batch", LogLevel.Info, "SequencingActor"));
+                }
+                else
+                {
+                    _loggingActor?.Tell(new LogUserMessage("Loading video from batch", LogLevel.Info, "SequencingActor"));
+                }
+
+                
                 _currentJob = _videoJobs.First();
 
                 if (_currentJob.RegionConfiguration != null)
                 {
                     var captureSource = LoadCameraFromFilename(_currentJob.VideoPath);
 
-                    _currentJob.StartDateTime = DateTime.Now;
-                    
-                    if (_userConfig.AllowUserOverrideDatetime)
+                    if (!_splitVideoMode || !_startedFirstSplitVideo)
                     {
-                        var overrideTimeForm = new VideoDateTimeForm(captureSource.StartDateTime());
-                        overrideTimeForm.ShowDialog();
-                        captureSource._startDate = overrideTimeForm.OverrideTime;
+                        _currentJob.StartDateTime = DateTime.Now;
+
+                        if (_userConfig.AllowUserOverrideDatetime)
+                        {
+                            var overrideTimeForm = new VideoDateTimeForm(captureSource.StartDateTime());
+                            overrideTimeForm.ShowDialog();
+                            captureSource._startDate = overrideTimeForm.OverrideTime;
+                        }
                     }
 
                     _frameGrabActor.Tell(new NewVideoSourceMessage(captureSource));
                     _currentVideoName = captureSource.Name;
                     _frameGrabActor.Tell(new UpdateVideoPropertiesMessage(captureSource.FPS(), captureSource.FrameCount));
-                    _loggingActor.Tell(new NewVideoSourceMessage(captureSource));
-                    _loggingActor.Tell(new FileCreationTimeMessage(captureSource.StartDateTime()));
-                    _processingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
-                    _loggingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
-                    _loggingActor.Tell(new CopyGroundtruthMessage(_currentJob.GroundTruthPath));
-                    _loggingActor.Tell(new NewBatchJobMessage(_currentJob));
+
+                    if (_splitVideoMode == false || _startedFirstSplitVideo == false)
+                    {
+                        _loggingActor.Tell(new NewVideoSourceMessage(captureSource));
+                        _loggingActor.Tell(new FileCreationTimeMessage(captureSource.StartDateTime()));
+                        _processingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
+                        _loggingActor.Tell(new UpdateRegionConfigurationMessage(_currentJob.RegionConfiguration));
+                        _loggingActor.Tell(new CopyGroundtruthMessage(_currentJob.GroundTruthPath));
+                        _loggingActor.Tell(new NewBatchJobMessage(_currentJob));
+                    }
+
                     _frameGrabActor.Tell(new GetNextFrameMessage());
                 }
                 else
@@ -151,8 +175,13 @@ namespace VTC.Actors
                     UserLog("Ignoring job without configuration");
                 }
 
-                _videoJobs.Remove(_currentJob);
+                if (_splitVideoMode && _startedFirstSplitVideo == false)
+                {
+                    _startedFirstSplitVideo = true;
+                    UserLog("Start processing first segment.");
+                }
 
+                _videoJobs.Remove(_currentJob);
             }
             else
             {
@@ -165,6 +194,9 @@ namespace VTC.Actors
                 }
 
                 UserLog("Movement counts saved to " + outputPathString);
+
+                _splitVideoMode = false;
+                _startedFirstSplitVideo = false;
             }
         }
 
@@ -263,6 +295,11 @@ namespace VTC.Actors
             //When all videos have recieved their configuration callbacks, begin processing
             _cameras.Clear();
             DequeueVideo();
+        }
+
+        private void BeginSplitVideoMode()
+        {
+            _splitVideoMode = true;
         }
 
         private void LoadUserConfig()
