@@ -125,11 +125,12 @@ namespace VTC.Actors
                 {
                     var captureSource = LoadCameraFromFilename(_currentJob.VideoPath);
 
+                    _currentJob.StartDateTime = DateTime.Now;
+                    
                     if (_userConfig.AllowUserOverrideDatetime)
                     {
                         var overrideTimeForm = new VideoDateTimeForm(captureSource.StartDateTime());
                         overrideTimeForm.ShowDialog();
-                        _currentJob.StartDateTime = overrideTimeForm.OverrideTime;
                         captureSource._startDate = overrideTimeForm.OverrideTime;
                     }
 

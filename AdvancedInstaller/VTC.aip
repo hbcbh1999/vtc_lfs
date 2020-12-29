@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<DOCUMENT Type="Advanced Installer" CreateVersion="14.6" version="17.5" Modules="enterprise" RootPath="." Language="en" Id="{176F7798-5715-420E-9B5F-71EE47F29DB2}">
+<DOCUMENT Type="Advanced Installer" CreateVersion="14.6" version="17.8" Modules="enterprise" RootPath="." Language="en" Id="{176F7798-5715-420E-9B5F-71EE47F29DB2}">
   <COMPONENT cid="caphyon.advinst.msicomp.MsiPropsComponent">
     <ROW Property="AI_BITMAP_DISPLAY_MODE" Value="0" MultiBuildValue="DefaultBuild:2"/>
     <ROW Property="AI_FINDEXE_TITLE" Value="Select the installation package for [|ProductName]" ValueLocId="AI.Property.FindExeTitle"/>
@@ -22,7 +22,7 @@
     <ROW Property="ProductCode" Value="1033:{F246D294-6F0C-42DF-9519-1E6A3AE210EF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="VTC"/>
-    <ROW Property="ProductVersion" Value="2.0.3" Type="32"/>
+    <ROW Property="ProductVersion" Value="2.0.4" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{61CC6191-A4B3-4513-B3EE-E13E694060B0}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -63,6 +63,8 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="AI_ExePath" ComponentId="{E6BF0315-A771-49D1-9659-0745CA91654E}" Directory_="APPDIR" Attributes="260" KeyPath="AI_ExePath"/>
     <ROW Component="APPDIR" ComponentId="{238635D7-965D-4504-A254-5AB6C688C050}" Directory_="APPDIR" Attributes="0"/>
+    <ROW Component="Accord.Video.dll" ComponentId="{F528F193-80CC-4E80-803A-A0A83F5DA0E4}" Directory_="APPDIR" Attributes="0" KeyPath="Accord.Video.dll"/>
+    <ROW Component="Accord.dll" ComponentId="{845D025E-639D-4990-9C51-A472B09EA304}" Directory_="APPDIR" Attributes="0" KeyPath="Accord.dll"/>
     <ROW Component="Akka.dll" ComponentId="{2D95BB0B-EF20-4240-8E5C-89A7A9EE3082}" Directory_="APPDIR" Attributes="0" KeyPath="Akka.dll"/>
     <ROW Component="BigLogo.png" ComponentId="{BC6EEEB5-59FF-409D-ACC9-7331FDADF514}" Directory_="ReportAssets_Dir" Attributes="0" KeyPath="BigLogo.png" Type="0"/>
     <ROW Component="Dapper.dll" ComponentId="{83BD9D40-E4A3-4B61-9A4C-C008260EC6DA}" Directory_="APPDIR" Attributes="0" KeyPath="Dapper.dll"/>
@@ -171,7 +173,6 @@
     <ROW Component="msvcp140_codecvt_ids.dll" ComponentId="{CE309B6D-1B59-4280-AFDF-75CF78B2227E}" Directory_="x64_Dir" Attributes="256" KeyPath="msvcp140_codecvt_ids.dll"/>
     <ROW Component="nvcuda.dll" ComponentId="{B87C8D08-6DB1-4753-A635-E0013085434D}" Directory_="APPDIR" Attributes="256" KeyPath="nvcuda.dll"/>
     <ROW Component="opencv_ffmpeg346_64.dll" ComponentId="{2A375418-1461-4B47-9B59-F799100C2AF6}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_ffmpeg346_64.dll"/>
-    <ROW Component="opencv_ffmpeg410_64.dll" ComponentId="{FC6C7FD1-DEB4-4031-8AF2-EFA6946EB69D}" Directory_="x64_Dir" Attributes="256" KeyPath="opencv_ffmpeg410_64.dll"/>
     <ROW Component="opencv_videoio_ffmpeg440_64.dll" ComponentId="{1E9CF2BE-7EEA-48AD-89DB-EA9D9EE45880}" Directory_="x64_Dir" Attributes="256" KeyPath="opencv_videoio_ffmpeg440_64.dll"/>
     <ROW Component="opencv_world346.dll" ComponentId="{0CBF2B48-C652-4A7D-B24A-9DC89F5A1F46}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_world346.dll"/>
     <ROW Component="opencv_world346d.dll" ComponentId="{F0F4BEC6-9F5D-42AC-A225-72A8B33AB4FB}" Directory_="APPDIR" Attributes="256" KeyPath="opencv_world346d.dll"/>
@@ -296,7 +297,6 @@
     <ROW File="VTCSupervisor.exe" Component_="VTCSupervisor.exe" FileName="VTCSUP~1.EXE|VTC Supervisor.exe" Attributes="0" SourcePath="..\bin\VTC Supervisor.exe" SelfReg="false" DigSign="true"/>
     <ROW File="VTCSupervisor.exe.config" Component_="Logo.ico" FileName="VTCSUP~1.CON|VTC Supervisor.exe.config" Attributes="0" SourcePath="..\bin\VTC Supervisor.exe.config" SelfReg="false"/>
     <ROW File="VTCSupervisor.pdb" Component_="VTCSupervisor.exe" FileName="VTCSUP~1.PDB|VTC Supervisor.pdb" Attributes="0" SourcePath="..\bin\VTC Supervisor.pdb" SelfReg="false"/>
-    <ROW File="opencv_ffmpeg410_64.dll" Component_="opencv_ffmpeg410_64.dll" FileName="OPENCV~1.DLL|opencv_ffmpeg410_64.dll" Attributes="0" SourcePath="..\bin\x64\opencv_ffmpeg410_64.dll" SelfReg="false"/>
     <ROW File="Dapper.dll" Component_="Dapper.dll" FileName="Dapper.dll" Attributes="0" SourcePath="..\bin\Dapper.dll" SelfReg="false"/>
     <ROW File="Dapper.xml" Component_="Logo.ico" FileName="Dapper.xml" Attributes="0" SourcePath="..\bin\Dapper.xml" SelfReg="false"/>
     <ROW File="Emgu.CV.Bitmap.dll" Component_="Emgu.CV.Bitmap.dll" FileName="EMGUCV~3.DLL|Emgu.CV.Bitmap.dll" Attributes="0" SourcePath="..\bin\Emgu.CV.Bitmap.dll" SelfReg="false"/>
@@ -400,6 +400,11 @@
     <ROW File="nvcuda.dll" Component_="nvcuda.dll" FileName="nvcuda.dll" Attributes="0" SourcePath="..\bin\nvcuda.dll" SelfReg="false"/>
     <ROW File="System.Diagnostics.DiagnosticSource.dll" Component_="System.Diagnostics.DiagnosticSource.dll" FileName="SYSTE~18.DLL|System.Diagnostics.DiagnosticSource.dll" Attributes="0" SourcePath="..\bin\System.Diagnostics.DiagnosticSource.dll" SelfReg="false"/>
     <ROW File="System.Diagnostics.DiagnosticSource.xml" Component_="Logo.ico" FileName="SYSTE~15.XML|System.Diagnostics.DiagnosticSource.xml" Attributes="0" SourcePath="..\bin\System.Diagnostics.DiagnosticSource.xml" SelfReg="false"/>
+    <ROW File="Accord.dll" Component_="Accord.dll" FileName="Accord.dll" Attributes="0" SourcePath="..\bin\Accord.dll" SelfReg="false"/>
+    <ROW File="Accord.dll.config" Component_="Logo.ico" FileName="ACCORD~1.CON|Accord.dll.config" Attributes="0" SourcePath="..\bin\Accord.dll.config" SelfReg="false"/>
+    <ROW File="Accord.Video.dll" Component_="Accord.Video.dll" FileName="ACCORD~1.DLL|Accord.Video.dll" Attributes="0" SourcePath="..\bin\Accord.Video.dll" SelfReg="false"/>
+    <ROW File="Accord.Video.xml" Component_="Logo.ico" FileName="ACCORD~1.XML|Accord.Video.xml" Attributes="0" SourcePath="..\bin\Accord.Video.xml" SelfReg="false"/>
+    <ROW File="Accord.xml" Component_="Logo.ico" FileName="Accord.xml" Attributes="0" SourcePath="..\bin\Accord.xml" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -617,7 +622,6 @@
     <ROW Feature_="MainFeature" Component_="msvcp140_2.dll"/>
     <ROW Feature_="MainFeature" Component_="msvcp140_codecvt_ids.dll"/>
     <ROW Feature_="MainFeature" Component_="opencv_ffmpeg346_64.dll"/>
-    <ROW Feature_="MainFeature" Component_="opencv_ffmpeg410_64.dll"/>
     <ROW Feature_="MainFeature" Component_="opencv_videoio_ffmpeg440_64.dll"/>
     <ROW Feature_="MainFeature" Component_="opencv_world346.dll"/>
     <ROW Feature_="MainFeature" Component_="opencv_world346d.dll"/>
@@ -646,6 +650,8 @@
     <ROW Feature_="MainFeature" Component_="Microsoft.ApplicationInsights.dll"/>
     <ROW Feature_="MainFeature" Component_="nvcuda.dll"/>
     <ROW Feature_="MainFeature" Component_="System.Diagnostics.DiagnosticSource.dll"/>
+    <ROW Feature_="MainFeature" Component_="Accord.dll"/>
+    <ROW Feature_="MainFeature" Component_="Accord.Video.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFontsComponent">
     <ROW File_="RalewayBlack.ttf"/>

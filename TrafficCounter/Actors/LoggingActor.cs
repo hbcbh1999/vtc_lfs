@@ -19,7 +19,6 @@ using System.Windows.Forms;
 using Akka.Actor;
 using Emgu.CV;
 using Emgu.CV.Structure;
-using Microsoft.ApplicationInsights;
 using NLog;
 using Npgsql;
 using Sentry;
@@ -76,8 +75,6 @@ namespace VTC.Actors
         private VTC.Common.UserConfig _userConfig = new UserConfig();
 
         private List<Movement> MovementTransmitBuffer = new List<Movement>();
-
-        private TelemetryClient _telemetry;
 
         public LoggingActor()
         {
@@ -181,7 +178,6 @@ namespace VTC.Actors
                 UpdateBatchJob(message.Job)
             );
 
-            _telemetry = new TelemetryClient();
             InitializeDatabase();
 
             Self.Tell(new LoadUserConfigMessage());
@@ -266,7 +262,6 @@ namespace VTC.Actors
             {
                 var ev = new SentryEvent {Level = SentryLevel.Error, Message = actorName + ": " + text};
                 SentrySdk.CaptureEvent(ev);
-                _telemetry.TrackEvent(actorName,new Dictionary<string, string>{{"Message",text}});
             }
         }
 
@@ -295,14 +290,13 @@ namespace VTC.Actors
                 var tnow = VideoTime();
 
                 ReportGenerator.CopyAssetsToExportFolder(folderPath);
-                ReportGenerator.GenerateSummaryReportHtml(folderPath, _currentVideoName,  _currentJob.StartDateTime, movements);
+                ReportGenerator.GenerateSummaryReportHtml(folderPath, _currentVideoName,  tnow, movements);
                 ReportGenerator.GenerateCSVReport(folderPath, _currentVideoName, tnow, movements);
 
                 _sequencingActor?.Tell(new CaptureSourceCompleteMessage(folderPath));
 
                 var ev = new SentryEvent {Level = SentryLevel.Error, Message = "Report generated"};
                 SentrySdk.CaptureEvent(ev);
-                _telemetry.TrackEvent("Reported Generated");
             }
             catch (NullReferenceException e)
             {
@@ -385,7 +379,6 @@ namespace VTC.Actors
 
             var ev = new SentryEvent { Level = SentryLevel.Info, Message = "New video source" };
             SentrySdk.CaptureEvent(ev);
-            _telemetry.TrackEvent("New video source", new Dictionary<string, string> {{"Name",message.CaptureSource.Name}});
 
             _videoStartTime = message.CaptureSource.StartDateTime();
             _liveMode = message.CaptureSource.IsLiveCapture();
@@ -438,9 +431,19 @@ namespace VTC.Actors
                         YoloIntegerNameMapping.GetObjectNameFromClassInteger(mostFrequentClassId,
                             _yoloNameMapping.IntegerToObjectName);
 
-                    if (mostLikelyClassType == "person" && _regionConfig.CountPedestriansAsMotorcycles)
+                    if (mostLikelyClassType == "person" && _userConfig.CountPedestriansAsMotorcycles)
                     {
                         mostLikelyClassType = "motorcycle";
+                    }
+
+                    if (mostLikelyClassType == "motorcycle" && _userConfig.CountMotorcyclesAsCars)
+                    {
+                        mostLikelyClassType = "car";
+                    }
+
+                    if (mostLikelyClassType == "bus" && _userConfig.CountBusesAsTrucks)
+                    {
+                        mostLikelyClassType = "truck";
                     }
 
                     var validity = TrajectorySimilarity.ValidateTrajectory(d,  _regionConfig.MinPathLength, _regionConfig.MissRatioThreshold, _regionConfig.PositionCovarianceThreshold, _regionConfig.SmoothnessThreshold, _regionConfig.MovementLengthRatio);

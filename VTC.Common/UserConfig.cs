@@ -82,5 +82,17 @@ namespace VTC.Common
         [Description("If this flag is set, the user will be presented with a dialog to override each video-file's timestamp.")]
         [DataMember]
         public bool AllowUserOverrideDatetime { get; set; } = true;
+
+        [Description("If this flag is set, pedestrians are counted as motorcycles.")]
+        [DataMember]
+        public bool CountPedestriansAsMotorcycles { get; set; } = false;
+        
+        [Description("If this flag is set, motorcycles are counted as cars.")]
+        [DataMember]
+        public bool CountMotorcyclesAsCars { get; set; } = false;
+
+        [Description("If this flag is set, buses are counted as trucks.")]
+        [DataMember]
+        public bool CountBusesAsTrucks { get; set; } = false;
     }
 }

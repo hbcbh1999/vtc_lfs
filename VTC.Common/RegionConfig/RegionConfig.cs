@@ -163,10 +163,6 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public bool SendToServer { get; set; } = false;
 
-        [Description("CountPedestriansAsMotorcycles: Replace any objects counted as pedestrians with motorcycle-counts.")]
-        [DataMember]
-        public bool CountPedestriansAsMotorcycles { get; set; } = false;
-
         [Description("DisableUTurns: Do not classify any movements as U-turns.")]
         [DataMember]
         public bool DisableUTurns { get; set; } = false;
