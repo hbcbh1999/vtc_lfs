@@ -17,7 +17,7 @@
    version="1.1"
    inkscape:version="0.92.1 r15371"
    sodipodi:docname="SplashScreen.svg"
-   inkscape:export-filename="C:\VTCProject\vtc_lfs\TrafficCounter\SplashScreenRoadometry.png"
+   inkscape:export-filename="C:\VTCProject\vtc_lfs\AdvancedInstaller\DialogBackground.png"
    inkscape:export-xdpi="89.800003"
    inkscape:export-ydpi="89.800003">
   <defs
@@ -121,8 +121,8 @@
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="226.4416"
-     inkscape:cy="153.18087"
+     inkscape:cx="176.80166"
+     inkscape:cy="181.67962"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -133,7 +133,7 @@
      fit-margin-bottom="0"
      inkscape:window-width="1920"
      inkscape:window-height="1057"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      borderlayer="true"

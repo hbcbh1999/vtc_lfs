@@ -188,7 +188,7 @@ namespace VTC.Actors
                 UserLog("Batch complete.");
 
                 var outputPathString = _userConfig.OutputPath;
-                if(outputPathString == "" || outputPathString == null)
+                if(string.IsNullOrEmpty(outputPathString))
                 {
                     outputPathString = "desktop";
                 }
