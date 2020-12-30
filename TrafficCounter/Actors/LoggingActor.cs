@@ -356,7 +356,8 @@ namespace VTC.Actors
                     var y = p.Value.Centroid.Y;
                     var font = new Font(FontFamily.GenericSansSerif, (float)14.0);
                     var size = TextRenderer.MeasureText(p.Key, font);
-                    g.DrawString(p.Key, font,
+                    var name = RemapRegionName(p.Key);
+                    g.DrawString(name, font,
                         new SolidBrush(Color.Black), x - size.Width / 2, y);
                 }
 
@@ -479,7 +480,9 @@ namespace VTC.Actors
                     if (movement == null) continue;
                     if (movement.Ignored) continue;
                     var uppercaseClassType = CommonFunctions.FirstCharToUpper(mostLikelyClassType);
-                    var editedMovement = new Movement(movement.Approach, movement.Exit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), false, _currentJob.Id);
+                    var mappedApproach = RemapApproachName(movement.Approach);
+                    var mappedExit = RemapExitName(movement.Exit);
+                    var editedMovement = new Movement(mappedApproach, mappedExit, movement.TurnType, (ObjectType) Enum.Parse(typeof(ObjectType),uppercaseClassType), d.StateHistory, VideoTime(), false, _currentJob.Id);
                     IncrementTurnStatistics(editedMovement);
                     editedMovement.Save(_dbConnection,_userConfig);
 
@@ -523,6 +526,71 @@ namespace VTC.Actors
             { 
                 Log("(TrajectoryListHandler) " + ex.Message + ", " + ex.InnerException + " in " + ex.StackTrace + " at " + ex.TargetSite, LogLevel.Error, "LoggingActor");
             }
+        }
+
+        private string RemapApproachName(string approach)
+        {
+            if (approach == "Approach 1" && _regionConfig.Approach1Name != "")
+            {
+                return _regionConfig.Approach1Name;
+            }
+
+            if (approach == "Approach 2" && _regionConfig.Approach2Name != "")
+            {
+                return _regionConfig.Approach2Name;
+            }
+
+            if (approach == "Approach 3" && _regionConfig.Approach3Name != "")
+            {
+                return _regionConfig.Approach3Name;
+            }
+
+            if (approach == "Approach 4" && _regionConfig.Approach4Name != "")
+            {
+                return _regionConfig.Approach4Name;
+            }
+
+            return approach;
+        }
+
+        private string RemapExitName(string exit)
+        {
+            if (exit == "Exit 1" && _regionConfig.Exit1Name != "")
+            {
+                return _regionConfig.Exit1Name;
+            }
+
+            if (exit == "Exit 2" && _regionConfig.Exit2Name != "")
+            {
+                return _regionConfig.Exit2Name;
+            }
+
+            if (exit == "Exit 3" && _regionConfig.Exit3Name != "")
+            {
+                return _regionConfig.Exit3Name;
+            }
+
+            if (exit == "Exit 4" && _regionConfig.Exit4Name != "")
+            {
+                return _regionConfig.Exit4Name;
+            }
+
+            return exit;
+        }
+
+        string RemapRegionName(string region)
+        {
+            if (region.Contains("Approach"))
+            {
+                return RemapApproachName(region);
+            }
+
+            if (region.Contains("Exit"))
+            {
+                return RemapExitName(region);
+            }
+
+            return region;
         }
 
         private void IncrementTurnStatistics(Movement tp)

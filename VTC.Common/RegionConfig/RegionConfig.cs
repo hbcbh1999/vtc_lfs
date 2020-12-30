@@ -175,6 +175,37 @@ namespace VTC.Common.RegionConfig
         [DataMember]
         public bool StrictContainment { get; set; } = false;
 
+        [Description("Approach 1 name: Use this field to customize the name of this approach in output reports.")]
+        [DataMember]
+        public string Approach1Name { get; set; } = "";
+
+        [Description("Approach 2 name: Use this field to customize the name of this approach in output reports.")]
+        [DataMember]
+        public string Approach2Name { get; set; } = "";
+
+        [Description("Approach 3 name: Use this field to customize the name of this approach in output reports.")]
+        [DataMember]
+        public string Approach3Name { get; set; } = "";
+
+        [Description("Approach 4 name: Use this field to customize the name of this approach in output reports.")]
+        [DataMember]
+        public string Approach4Name { get; set; } = "";
+
+        [Description("Exit 1 name: Use this field to customize the name of this exit in output reports.")]
+        [DataMember]
+        public string Exit1Name { get; set; } = "";
+
+        [Description("Exit 2 name: Use this field to customize the name of this exit in output reports.")]
+        [DataMember]
+        public string Exit2Name { get; set; } = "";
+
+        [Description("Exit 3 name: Use this field to customize the name of this exit in output reports.")]
+        [DataMember]
+        public string Exit3Name { get; set; } = "";
+
+        [Description("Exit 4 name: Use this field to customize the name of this exit in output reports.")]
+        [DataMember]
+        public string Exit4Name { get; set; } = "";
 
         public RegionConfig()
         {
