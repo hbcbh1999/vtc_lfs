@@ -16,6 +16,7 @@ using VTC.Common.RegionConfig;
 using VTC.Kernel.Vistas;
 using VTC.Messages;
 using VTC.UI;
+using VTC.UserConfiguration;
 
 namespace VTC.Actors
 {
@@ -27,6 +28,7 @@ namespace VTC.Actors
         private UpdateUIDelegate _updateUiDelegate;
 
         private RegionConfig _config;
+        private UserConfig _userConfig;
 
         private IActorRef _loggingActor;
         private IActorRef _configurationActor;
@@ -90,12 +92,14 @@ namespace VTC.Actors
                     SendInitializedNotifications()
                 );
 
+                LoadUserConfig();
+
                 Self.Tell(new ActorHeartbeatMessage(Self));
 
                 Context.System.Scheduler.ScheduleTellRepeatedly(new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5), Context.Parent, new ActorHeartbeatMessage(Self), Self);
 
                 _config = new RegionConfig();
-                _vista = new Vista(640, 480, _config);
+                _vista = new Vista(640, 480, _config, _userConfig);
 
                 if (_vista.CpuMode)
                 {
@@ -315,6 +319,15 @@ namespace VTC.Actors
         private void Log(string text, LogLevel level)
         {
             Logger.Log(level, "ProcessingActor: " + text);
+        }
+
+        private void LoadUserConfig()
+        {
+            string UserConfigSavePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                        "\\VTC\\userConfig.xml";
+            IUserConfigDataAccessLayer _userConfigDataAccessLayer = new FileUserConfigDal(UserConfigSavePath);
+
+            _userConfig = _userConfigDataAccessLayer.LoadUserConfig();
         }
     }
 }

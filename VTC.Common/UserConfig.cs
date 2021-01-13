@@ -94,5 +94,9 @@ namespace VTC.Common
         [Description("If this flag is set, buses are counted as trucks.")]
         [DataMember]
         public bool CountBusesAsTrucks { get; set; } = false;
+
+        [Description("Display polygon regions at runtime.")]
+        [DataMember]
+        public bool DisplayPolygons { get; set; } = true;
     }
 }

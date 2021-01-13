@@ -6,6 +6,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using System.Threading;
 using System.Threading.Tasks;
+using Emgu.CV.CvEnum;
 using VTC.Common;
 using Point = System.Drawing.Point;
 using NLog;
@@ -25,6 +26,7 @@ namespace VTC.Kernel.Vistas
         #region Static colors
 
         private static readonly Bgr WhiteColor = new Bgr(Color.White);
+        private static readonly Bgr BlueColor = new Bgr(Color.Blue);
         private static readonly Bgr StateColorGreen = new Bgr(0.0, 255.0, 0.0);
         private static readonly Bgr StateColorRed = new Bgr(0.0, 0.0, 255.0);
 
@@ -59,6 +61,7 @@ namespace VTC.Kernel.Vistas
         private bool _debugMode = false;   //Prevent cancellation token from killing MHT update
 
         private RegionConfig _regionConfiguration;
+        private UserConfig _userConfiguration;
         public RegionConfig RegionConfiguration
         {
             get
@@ -90,7 +93,7 @@ namespace VTC.Kernel.Vistas
             return ExitText + " " + number;
         }
 
-        public Vista(int width, int height, RegionConfig regionConfiguration)
+        public Vista(int width, int height, RegionConfig regionConfiguration, UserConfig userConfiguration)
         {
             Console.WriteLine("New vista created");
             var tempLogger = LogManager.GetLogger("userlog");
@@ -105,6 +108,8 @@ namespace VTC.Kernel.Vistas
 
             tempLogger.Log(LogLevel.Info, "Vista: Initializer: Initializing configuration.");
             RegionConfiguration = regionConfiguration ?? new RegionConfig();
+
+            _userConfiguration = userConfiguration;
 
             tempLogger.Log(LogLevel.Info, "Vista: Initializer: Updating configuration.");
             UpdateRegionConfiguration(RegionConfiguration);
@@ -296,6 +301,16 @@ namespace VTC.Kernel.Vistas
             var stateImage = frame.Clone();
 
             List<TrackedObject> vehicles = _mht.MostLikelyStateHypothesis().Vehicles;
+
+            //if (_userConfiguration.DisplayPolygons)
+            //{
+            //    foreach (var r in _regionConfiguration.Regions)
+            //    {
+            //        stateImage.Draw(r.Value.ToArray(), BlueColor,1);
+            //        //var m = r.Value.GetMask(stateImage.Width, stateImage.Height, BlueColor);
+            //        //stateImage = stateImage.Add(m.Convert<Bgr, byte>());
+            //    }
+            //}
 
             vehicles.ForEach(delegate(TrackedObject vehicle)
             {
