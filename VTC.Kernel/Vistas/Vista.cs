@@ -302,15 +302,21 @@ namespace VTC.Kernel.Vistas
 
             List<TrackedObject> vehicles = _mht.MostLikelyStateHypothesis().Vehicles;
 
-            //if (_userConfiguration.DisplayPolygons)
-            //{
-            //    foreach (var r in _regionConfiguration.Regions)
-            //    {
-            //        stateImage.Draw(r.Value.ToArray(), BlueColor,1);
-            //        //var m = r.Value.GetMask(stateImage.Width, stateImage.Height, BlueColor);
-            //        //stateImage = stateImage.Add(m.Convert<Bgr, byte>());
-            //    }
-            //}
+            if (_userConfiguration.DisplayPolygons)
+            {
+                foreach (var r in _regionConfiguration.Regions)
+                {
+                    var pts = r.Value.ToArray();
+                    if (pts.Length > 0)
+                    {
+                        stateImage.DrawPolyline(pts, true, BlueColor);
+                    }
+                    //stateImage.Draw(r.Value.ToArray(), BlueColor, 1);
+                    //var m = r.Value.GetMask(stateImage.Width, stateImage.Height, BlueColor);
+                    //stateImage = stateImage.Add(m.Convert<Bgr, byte>());
+
+                }
+            }
 
             vehicles.ForEach(delegate(TrackedObject vehicle)
             {

@@ -530,22 +530,22 @@ namespace VTC.Actors
 
         private string RemapApproachName(string approach)
         {
-            if (approach == "Approach 1" && _regionConfig.Approach1Name != "")
+            if (approach == "Approach 1" && !string.IsNullOrEmpty(_regionConfig.Approach1Name))
             {
                 return _regionConfig.Approach1Name;
             }
 
-            if (approach == "Approach 2" && _regionConfig.Approach2Name != "")
+            if (approach == "Approach 2" && !string.IsNullOrEmpty(_regionConfig.Approach2Name))
             {
                 return _regionConfig.Approach2Name;
             }
 
-            if (approach == "Approach 3" && _regionConfig.Approach3Name != "")
+            if (approach == "Approach 3" && !string.IsNullOrEmpty(_regionConfig.Approach3Name))
             {
                 return _regionConfig.Approach3Name;
             }
 
-            if (approach == "Approach 4" && _regionConfig.Approach4Name != "")
+            if (approach == "Approach 4" && !string.IsNullOrEmpty(_regionConfig.Approach4Name))
             {
                 return _regionConfig.Approach4Name;
             }
@@ -555,22 +555,22 @@ namespace VTC.Actors
 
         private string RemapExitName(string exit)
         {
-            if (exit == "Exit 1" && _regionConfig.Exit1Name != "")
+            if (exit == "Exit 1" && !string.IsNullOrEmpty(_regionConfig.Exit1Name))
             {
                 return _regionConfig.Exit1Name;
             }
 
-            if (exit == "Exit 2" && _regionConfig.Exit2Name != "")
+            if (exit == "Exit 2" && !string.IsNullOrEmpty(_regionConfig.Exit2Name))
             {
                 return _regionConfig.Exit2Name;
             }
 
-            if (exit == "Exit 3" && _regionConfig.Exit3Name != "")
+            if (exit == "Exit 3" && !string.IsNullOrEmpty(_regionConfig.Exit3Name))
             {
                 return _regionConfig.Exit3Name;
             }
 
-            if (exit == "Exit 4" && _regionConfig.Exit4Name != "")
+            if (exit == "Exit 4" && !string.IsNullOrEmpty(_regionConfig.Exit4Name))
             {
                 return _regionConfig.Exit4Name;
             }
